@@ -12,6 +12,8 @@
 		"src/core/utils/SavedData.js",
 		"src/container/SavedDataHandler.js",
 		"src/container/Features.js",
-		"src/container/Container.js"
+		"src/container/Container.js",
+		"src/container/ContainerPlugin.js",
+		"src/container/plugins/*.js"
 	]
 }

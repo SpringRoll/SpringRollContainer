@@ -1291,10 +1291,7 @@
 (function(document, undefined)
 {
 	//Import classes
-	var SavedData = include('springroll.SavedData'),
-		EventDispatcher = include('springroll.EventDispatcher'),
-		PageVisibility = include('springroll.PageVisibility'),
-		SavedDataHandler = include('springroll.SavedDataHandler'),
+	var EventDispatcher = include('springroll.EventDispatcher'),
 		Features = include('springroll.Features'),
 		Bellhop = include('Bellhop'),
 		$ = include('jQuery');
@@ -1326,11 +1323,8 @@
 		 * @property {Object} options
 		 * @readOnly
 		 */
-		this.options = options = $.extend(
-		{
-			pauseFocusSelector: '.pause-on-focus'
-		}, options ||
-		{});
+		this.options = options ||
+		{};
 
 		/**
 		 * The name of this class
@@ -1349,55 +1343,6 @@
 		 * @property {Element} dom
 		 */
 		this.dom = this.main[0];
-
-		/**
-		 * Reference to the help button
-		 * @property {jquery} helpButton
-		 */
-		this.helpButton = $(options.helpButton)
-			.click(onPlayHelp.bind(this));
-
-		/**
-		 * Reference to the captions button
-		 * @property {jquery} captionsButton
-		 */
-		this.captionsButton = $(options.captionsButton)
-			.click(onCaptionsToggle.bind(this));
-
-		/**
-		 * Reference to the all sound mute button
-		 * @property {jquery} soundButton
-		 */
-		this.soundButton = $(options.soundButton)
-			.click(onSoundToggle.bind(this));
-
-		/**
-		 * Reference to the music mute button
-		 * @property {jquery} musicButton
-		 */
-		this.musicButton = $(options.musicButton)
-			.click(onMusicToggle.bind(this));
-
-		/**
-		 * Reference to the sound effects mute button
-		 * @property {jquery} sfxButton
-		 */
-		this.sfxButton = $(options.sfxButton)
-			.click(onSFXToggle.bind(this));
-
-		/**
-		 * Reference to the voice-over mute button
-		 * @property {jquery} voButton
-		 */
-		this.voButton = $(options.voButton)
-			.click(onVOToggle.bind(this));
-
-		/**
-		 * Reference to the pause application button
-		 * @property {jquery} pauseButton
-		 */
-		this.pauseButton = $(options.pauseButton)
-			.click(onPauseToggle.bind(this));
 
 		/**
 		 * Communication layer between the container and application
@@ -1425,6 +1370,514 @@
 		 */
 		this.loading = false;
 
+		// Bind close failed handler
+		this._onCloseFailed = this._onCloseFailed.bind(this);
+
+		// Setup plugins
+		var plugins = Container._plugins;
+		for (var i = 0; i < plugins.length; i++)
+		{
+			plugins[i].setup.call(this);
+		}
+	};
+
+	//Reference to the prototype
+	var s = EventDispatcher.prototype;
+	var p = EventDispatcher.extend(Container);
+
+	/**
+	 * The collection of Container plugins
+	 * @property {Array} _plugins
+	 * @static
+	 * @private
+	 */
+	Container._plugins = [];
+
+	/**
+	 * Open a application or path
+	 * @method _internalOpen
+	 * @protected
+	 * @param {string} path The full path to the application to load
+	 * @param {Object} [options] The open options
+	 * @param {Boolean} [options.singlePlay=false] If we should play in single play mode
+	 * @param {Object} [options.playOptions=null] The optional play options
+	 */
+	p._internalOpen = function(path, options)
+	{
+		options = $.extend(
+		{
+			singlePlay: false,
+			playOptions: null
+		}, options);
+
+		this.reset();
+
+		// Dispatch event for unsupported browsers
+		// and then bail, don't continue with loading the application
+		var err = Features.basic();
+		if (err)
+		{
+			/**
+			 * Fired when the application is unsupported
+			 * @event unsupported
+			 * @param {String} err The error message
+			 */
+			return this.trigger('unsupported', err);
+		}
+
+		this.loading = true;
+
+		this.initClient();
+
+		// Open plugins
+		var plugins = Container._plugins;
+		for (var i = 0; i < plugins.length; i++)
+		{
+			plugins[i].open.call(this);
+		}
+
+		//Open the application in the iframe
+		this.main
+			.addClass('loading')
+			.prop('src', path);
+
+		// Respond with data when we're ready
+		this.client.respond('singlePlay', options.singlePlay);
+		this.client.respond('playOptions', options.playOptions);
+
+		/**
+		 * Event when request to open an application has begin either by
+		 * calling `openPath` or `openRemote`
+		 * @event open
+		 */
+		this.trigger('open');
+	};
+
+	/**
+	 * Open a application or path
+	 * @method openPath
+	 * @param {string} path The full path to the application to load
+	 * @param {Object} [options] The open options
+	 * @param {Boolean} [options.singlePlay=false] If we should play in single play mode
+	 * @param {Object} [options.playOptions=null] The optional play options
+	 */
+	p.openPath = function(path, options, playOptions)
+	{
+		options = options ||
+		{};
+
+		// This should be deprecated, support for old function signature
+		if (typeof options === "boolean")
+		{
+			options = {
+				singlePlay: singlePlay,
+				playOptions: playOptions
+			};
+		}
+		this._internalOpen(path, options);
+	};
+
+	/**
+	 * Set up communication layer between site and application.
+	 * May be called from subclasses if they create/destroy Bellhop instances.
+	 * @protected
+	 * @method initClient
+	 */
+	p.initClient = function()
+	{
+		//Setup communication layer between site and application
+		this.client = new Bellhop();
+		this.client.connect(this.dom);
+
+		//Handle bellhop events coming from the application
+		this.client.on(
+		{
+			loading: onLoading.bind(this),
+			loadDone: onLoadDone.bind(this), // @deprecated use 'loaded' instead
+			loaded: onLoadDone.bind(this),
+			endGame: onEndGame.bind(this),
+			localError: onLocalError.bind(this)
+		});
+	};
+
+	/**
+	 * Removes the Bellhop communication layer altogether.
+	 * @protected
+	 * @method destroyClient
+	 */
+	p.destroyClient = function()
+	{
+		if (this.client)
+		{
+			this.client.destroy();
+			this.client = null;
+		}
+	};
+
+	/**
+	 * Handle the local errors
+	 * @method onLocalError
+	 * @private
+	 * @param  {Event} event Bellhop event
+	 */
+	var onLocalError = function(event)
+	{
+		this.trigger(event.type, event.data);
+	};
+
+	/**
+	 * The game is starting to load
+	 * @method onLoading
+	 * @private
+	 */
+	var onLoading = function()
+	{
+		/**
+		 * Event when a application start loading, first even received
+		 * from the Application.
+		 * @event opening
+		 */
+		this.trigger('opening');
+	};
+
+	/**
+	 * Reset the mutes for audio and captions
+	 * @method onLoadDone
+	 * @private
+	 */
+	var onLoadDone = function()
+	{
+		this.loading = false;
+		this.loaded = true;
+		this.main.removeClass('loading');
+
+		var plugins = Container._plugins;
+		for (var i = 0; i < plugins.length; i++)
+		{
+			plugins[i].opened.call(this);
+		}
+
+		/**
+		 * Event when the application gives the load done signal
+		 * @event opened
+		 */
+		this.trigger('opened');
+	};
+
+	/**
+	 * The application ended and destroyed itself
+	 * @method onEndGame
+	 * @private
+	 */
+	var onEndGame = function()
+	{
+		this.reset();
+	};
+
+	/**
+	 * Reset all the buttons back to their original setting
+	 * and clear the iframe.
+	 * @method reset
+	 */
+	p.reset = function()
+	{
+		var wasLoaded = this.loaded || this.loading;
+
+		// Destroy in the reverse priority order
+		if (wasLoaded)
+		{
+			var plugins = Container._plugins;
+			for (var i = plugins.length - 1; i >= 0; i--)
+			{
+				plugins[i].close.call(this);
+			}
+		}
+
+		// Remove bellhop instance
+		this.destroyClient();
+
+		// Reset state
+		this.loaded = false;
+		this.loading = false;
+
+		// Clear the iframe src location
+		this.main.attr('src', '')
+			.removeClass('loading');
+
+		if (wasLoaded)
+		{
+			this.off('localError', this._onCloseFailed);
+
+			/**
+			 * Event when a application closes
+			 * @event closed
+			 */
+			this.trigger('closed');
+		}
+	};
+
+	/**
+	 * Tell the application to start closing
+	 * @method close
+	 */
+	p.close = function()
+	{
+		if (this.loading || this.loaded)
+		{
+			/**
+			 * Event when a application starts closing
+			 * @event close
+			 */
+			this.trigger('close');
+
+			/**
+			 * There was an uncaught iframe error destroying the game on closing
+			 * @event localError
+			 * @param {Error} error The error triggered
+			 */
+			this.once('localError', this._onCloseFailed);
+
+			// Start the close
+			this.client.send('close');
+		}
+		else
+		{
+			this.reset();
+		}
+	};
+
+	/**
+	 * If there was an error when closing, reset the container
+	 * @method _onCloseFailed
+	 * @private
+	 */
+	p._onCloseFailed = function()
+	{
+		this.reset(); // force close the app
+	};
+
+	/**
+	 * Destroy and don't use after this
+	 * @method destroy
+	 */
+	p.destroy = function()
+	{
+		this.reset();
+
+		s.destroy.call(this);
+
+		// Destroy in the reverse priority order
+		var plugins = Container._plugins;
+		for (var i = plugins.length - 1; i >= 0; i--)
+		{
+			plugins[i].teardown.call(this);
+		}
+
+		this.main = null;
+		this.options = null;
+		this.dom = null;
+	};
+
+	namespace('springroll').Container = Container;
+
+}(document));
+/**
+ * @module Core
+ * @namespace springroll
+ */
+(function()
+{
+	var Container;
+
+	/**
+	 * Responsible for creating properties, methods to 
+	 * the SpringRoll Container when it's created.
+	 *
+	 *	var plugin = new ContainerPlugin();
+	 *	plugin.setup = function()
+	 *	{
+	 *		// Do setup here
+	 *	};
+	 *
+	 * @class ContainerPlugin
+	 * @constructor
+	 * @param {int} [priority=0] The priority, higher priority
+	 *        plugins are setup, preloaded and destroyed first.
+	 */
+	var ContainerPlugin = function(priority)
+	{
+		if (!Container)
+		{
+			Container = include('springroll.Container');
+		}
+
+		/**
+		 * The priority of the plugin. Higher numbers handled first. This should be set
+		 * in the constructor of the extending ContainerPlugin.
+		 * @property {int} priority
+		 * @default 0
+		 * @private
+		 */
+		this.priority = priority || 0;
+
+		/**
+		 * When the Container is being initialized. This function 
+		 * is bound to the Container. This should be overridden.
+		 * @method setup
+		 */
+		this.setup = function() {};
+
+		/**
+		 * Called when an application is opening and before the 
+		 * app has completely finished loading.
+		 * @method open 
+		 */
+		this.open = function() {};
+
+		/**
+		 * Called when an application is opening and before the 
+		 * app has completely finished loading.
+		 * @method opened 
+		 */
+		this.opened = function() {};
+
+		/**
+		 * Called when an application is closed completely.
+		 * @method close 
+		 */
+		this.close = function() {};
+
+		/**
+		 * When the Container is being destroyed. This function 
+		 * is bound to the Container. This should be overridden.
+		 * @method teardown
+		 */
+		this.teardown = function() {};
+
+		// Add the plugin to Container
+		Container._plugins.push(this);
+		Container._plugins.sort(function(a, b)
+		{
+			return b.priority - a.priority;
+		});
+	};
+
+	// Assign to namespace
+	namespace('springroll').ContainerPlugin = ContainerPlugin;
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedData = springroll.SavedData;
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(100);
+
+	plugin.setup = function()
+	{
+		/**
+		 * Should we send bellhop messages for the mute (etc) buttons?
+		 * @property {Boolean} sendMutes
+		 * @default true
+		 */
+		this.sendMutes = true;
+
+		/**
+		 * Abstract method to handle the muting
+		 * @method _setMuteProp
+		 * @protected
+		 * @param {string} prop The name of the property to save
+		 * @param {jquery} button Reference to the jquery button
+		 * @param {boolean} muted  If the button is muted
+		 */
+		this._setMuteProp = function(prop, button, muted)
+		{
+			button.removeClass('unmuted muted')
+				.addClass(muted ? 'muted' : 'unmuted');
+
+			SavedData.write(prop, muted);
+			if (this.client && this.sendMutes)
+			{
+				this.client.send(prop, muted);
+			}
+		};
+
+		/**
+		 * Disable a button
+		 * @method disableButton
+		 * @private
+		 * @param {jquery} button The button to disable
+		 */
+		this._disableButton = function(button)
+		{
+			button.removeClass('enabled')
+				.addClass('disabled');
+		};
+	};
+
+	plugin.teardown = function()
+	{
+		delete this._disableButton;
+		delete this._setMuteProp;
+		delete this.sendMutes;
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedData = include('springroll.SavedData');
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(70);
+
+	/**
+	 * The name of the saved property for the captions styles
+	 * @property {string} CAPTIONS_STYLES
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var CAPTIONS_STYLES = 'captionsStyles';
+
+	/**
+	 * The map of the default caption style settings
+	 * @property {object} DEFAULT_CAPTIONS_STYLES
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var DEFAULT_CAPTIONS_STYLES = {
+		size: "md",
+		background: "black-semi",
+		color: "white",
+		edge: "none",
+		font: "arial",
+		align: "top"
+	};
+
+	/**
+	 * The name of the saved property if the captions are muted or not
+	 * @property {string} CAPTIONS_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var CAPTIONS_MUTED = 'captionsMuted';
+
+	plugin.setup = function()
+	{
 		/**
 		 * The collection of captions styles
 		 * @property {string} _captionsStyles
@@ -1435,6 +1888,233 @@
 			DEFAULT_CAPTIONS_STYLES,
 			SavedData.read(CAPTIONS_STYLES) ||
 			{}
+		);
+
+		/**
+		 * Reference to the captions button
+		 * @property {jquery} captionsButton
+		 */
+		this.captionsButton = $(this.options.captionsButton)
+			.click(function()
+				{
+					this.captionsMuted = !this.captionsMuted;
+				}
+				.bind(this));
+
+		/**
+		 * Set the captions are enabled or not
+		 * @property {boolean} captionsMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, CAPTIONS_MUTED,
+		{
+			set: function(muted)
+			{
+				this._captionsMuted = muted;
+				this._setMuteProp(CAPTIONS_MUTED, this.captionsButton, muted);
+			},
+			get: function()
+			{
+				return this._captionsMuted;
+			}
+		});
+
+		/**
+		 * Set the captions styles
+		 * @method setCaptionsStyles
+		 * @param {object|String} [styles] The style options or the name of the
+		 * property (e.g., "color", "edge", "font", "background", "size")
+		 * @param {string} [styles.color='white'] The text color, the default is white
+		 * @param {string} [styles.edge='none'] The edge style, default is none
+		 * @param {string} [styles.font='arial'] The font style, default is arial
+		 * @param {string} [styles.background='black-semi'] The background style, black semi-transparent
+		 * @param {string} [styles.size='md'] The font style default is medium
+		 * @param {string} [styles.align='top'] The align style default is top of the window
+		 * @param {string} [value] If setting styles parameter as a string, this is the value of the property.
+		 */
+		this.setCaptionsStyles = function(styles, value)
+		{
+			if (typeof styles === "object")
+			{
+				Object.merge(
+					this._captionsStyles,
+					styles ||
+					{}
+				);
+			}
+			else if (typeof styles === "string")
+			{
+				this._captionsStyles[styles] = value;
+			}
+
+			styles = this._captionsStyles;
+
+			// Do some validation on the style settings
+			if (true)
+			{
+				if (!styles.color || !/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color))
+				{
+					throw "Setting captions color style is invalid value : " + styles.color;
+				}
+				if (!styles.background || !/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(styles.background))
+				{
+					throw "Setting captions background style is invalid value : " + styles.background;
+				}
+				if (!styles.size || !/^(xs|sm|md|lg|xl)$/.test(styles.size))
+				{
+					throw "Setting captions size style is invalid value : " + styles.size;
+				}
+				if (!styles.edge || !/^(raise|depress|uniform|drop|none)$/.test(styles.edge))
+				{
+					throw "Setting captions edge style is invalid value : " + styles.edge;
+				}
+				if (!styles.font || !/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(styles.font))
+				{
+					throw "Setting captions font style is invalid value : " + styles.font;
+				}
+				if (!styles.align || !/^(top|bottom)$/.test(styles.align))
+				{
+					throw "Setting captions align style is invalid value : " + styles.align;
+				}
+			}
+
+			SavedData.write(CAPTIONS_STYLES, styles);
+			if (this.client)
+			{
+				this.client.send(CAPTIONS_STYLES, styles);
+			}
+		};
+
+		/**
+		 * Get the captions styles
+		 * @method getCaptionsStyles
+		 * @param {string} [prop] The optional property, values are "size", "edge", "font", "background", "color"
+		 * @return {object} The collection of styles, see setCaptionsStyles for more info.
+		 */
+		this.getCaptionsStyles = function(prop)
+		{
+			var styles = this._captionsStyles;
+			return prop ? styles[prop] : styles;
+		};
+
+		/**
+		 * Reset the captions styles
+		 * @method clearCaptionsStyles
+		 */
+		this.clearCaptionsStyles = function()
+		{
+			this._captionsStyles = Object.merge(
+			{}, DEFAULT_CAPTIONS_STYLES);
+			this.setCaptionsStyles();
+		};
+
+		// Handle the features request
+		this.on('features', function(features)
+		{
+			this.captionsButton.hide();
+			if (features.captions) this.captionsButton.show();
+		});
+
+		//Set the defaults if we have none for the controls
+		if (SavedData.read(CAPTIONS_MUTED) === null)
+		{
+			this.captionsMuted = true;
+		}
+	};
+
+	plugin.opened = function()
+	{
+		this.captionsButton.removeClass('disabled');
+		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
+	};
+
+	plugin.close = function()
+	{
+		this._disableButton(this.captionsButton);
+	};
+
+	plugin.teardown = function()
+	{
+		delete this.captionsButton;
+		delete this._captionsStyles;
+		delete this.getCaptionsStyles;
+		delete this.setCaptionsStyles;
+		delete this.clearCaptionsStyles;
+		delete this._captionsMuted;
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(90);
+
+	plugin.open = function()
+	{
+		this._onFeatures = onFeatures.bind(this);
+		this.client.on('features', this._onFeatures);
+	};
+
+	plugin.close = function()
+	{
+		this.client.off('features', this._onFeatures);
+		delete this._onFeatures;
+	};
+
+	var onFeatures = function(event)
+	{
+		/**
+		 * The features supported by the application
+		 * @event features
+		 * @param {Boolean} data.vo If VO vo context is supported
+		 * @param {Boolean} data.music If music context is supported
+		 * @param {Boolean} data.sound If Sound is supported
+		 * @param {Boolean} data.sfx If SFX context is supported
+		 * @param {Boolean} data.captions If captions is supported
+		 * @param {Boolean} data.hints If hinting is supported
+		 */
+		this.trigger('features', event.data);
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var PageVisibility = include('springroll.PageVisibility');
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(90);
+
+	plugin.setup = function()
+	{
+		// Add the default option for pauseFocusSelector
+		this.options = $.extend(
+			{
+				pauseFocusSelector: '.pause-on-focus'
+			},
+			this.options);
+
+		/**
+		 * Handle the page visiblity change events, like opening a new tab
+		 * or blurring the current page.
+		 * @property {springroll.PageVisibility} _pageVisibility
+		 * @private
+		 */
+		this._pageVisibility = new PageVisibility(
+			onContainerFocus.bind(this),
+			onContainerBlur.bind(this)
 		);
 
 		/**
@@ -1468,67 +2148,80 @@
 		 */
 		this._focusTimer = null;
 
-		/**
-		 * If the application is currently paused manually
-		 * @property {boolean} _isManualPause
-		 * @private
-		 * @default false
-		 */
-		this._isManualPause = false;
-
-		/**
-		 * If the current application is paused
-		 * @property {Boolean} _paused
-		 * @private
-		 * @default false
-		 */
-		this._paused = false;
-
-		/**
-		 * Should we send bellhop messages for the mute (etc) buttons?
-		 * @property {Boolean} sendMutes
-		 * @default true
-		 */
-		this.sendMutes = true;
-
-		/**
-		 * The external handler class, must include `remove`, `write`, `read` methods
-		 * make it possible to use something else to handle the external, default
-		 * is to use cookies/localStorage. See {{#crossLink "springroll.SavedDataHandler"}}{{/crossLink}}
-		 * as an example.
-		 * @property {Object} userDataHandler
-		 * @default springroll.SavedDataHandler
-		 */
-		this.userDataHandler = new SavedDataHandler();
-
-		//Set the defaults if we have none for the controls
-		if (SavedData.read(CAPTIONS_MUTED) === null)
-		{
-			this.captionsMuted = true;
-		}
-		if (SavedData.read(SOUND_MUTED) === null)
-		{
-			this.soundMuted = false;
-		}
-
-		this._pageVisibility = new PageVisibility(
-			onContainerFocus.bind(this),
-			onContainerBlur.bind(this)
-		);
-
 		// Focus on the window on focusing on anything else
 		// without the .pause-on-focus class
-		this._onDocClick = _onDocClick.bind(this);
+		this._onDocClick = onDocClick.bind(this);
 		$(document).on('focus click', this._onDocClick);
 
-		// Bind close failed handler
-		this._onCloseFailed = this._onCloseFailed.bind(this);
+		/**
+		 * Focus on the iframe's contentWindow
+		 * @method focus
+		 */
+		this.focus = function()
+		{
+			this.dom.contentWindow.focus();
+		};
+
+		/**
+		 * Unfocus on the iframe's contentWindow
+		 * @method blur
+		 */
+		this.blur = function()
+		{
+			this.dom.contentWindow.blur();
+		};
+
+		/**
+		 * Manage the focus change events sent from window and iFrame
+		 * @method manageFocus
+		 * @protected
+		 */
+		this.manageFocus = function()
+		{
+			// Unfocus on the iframe
+			if (this._keepFocus)
+			{
+				this.blur();
+			}
+
+			// we only need one delayed call, at the end of any
+			// sequence of rapidly-fired blur/focus events
+			if (this._focusTimer)
+			{
+				clearTimeout(this._focusTimer);
+			}
+
+			// Delay setting of 'paused' in case we get another focus event soon.
+			// Focus events are sent to the container asynchronously, and this was
+			// causing rapid toggling of the pause state and related issues,
+			// especially in Internet Explorer
+			this._focusTimer = setTimeout(
+				function()
+				{
+					this._focusTimer = null;
+					// A manual pause cannot be overriden by focus events.
+					// User must click the resume button.
+					if (this._isManualPause) return;
+
+					this.paused = this._containerBlurred && this._appBlurred;
+
+					// Focus on the content window when blurring the app
+					// but selecting the container
+					if (this._keepFocus && !this._containerBlurred && this._appBlurred)
+					{
+						this.focus();
+					}
+
+				}.bind(this),
+				100
+			);
+		};
 
 		// On elements with the class name pause-on-focus
 		// we will pause the game until a blur event to that item
 		// has been sent
 		var self = this;
-		$(options.pauseFocusSelector).on('focus', function()
+		$(this.options.pauseFocusSelector).on('focus', function()
 		{
 			self._isManualPause = self.paused = true;
 			$(this).one('blur', function()
@@ -1539,99 +2232,13 @@
 		});
 	};
 
-	//Reference to the prototype
-	var s = EventDispatcher.prototype;
-	var p = EventDispatcher.extend(Container);
-
-	/**
-	 * Fired when the pause state is toggled
-	 * @event pause
-	 * @param {boolean} paused If the application is now paused
-	 */
-
-	/**
-	 * Fired when the application resumes from a paused state
-	 * @event resumed
-	 */
-
-	/**
-	 * Fired when the application becomes paused
-	 * @event paused
-	 */
-
-	/**
-	 * Fired when the application is unsupported
-	 * @event unsupported
-	 * @param {String} err The error message
-	 */
-
-	/**
-	 * Fired when the API cannot be called
-	 * @event remoteFailed
-	 */
-
-	/**
-	 * There was a problem with the API call
-	 * @event remoteError
-	 */
-
-	/**
-	 * There was an uncaught iframe error destroying the game on closing
-	 * @event localError
-	 * @param {Error} error The error triggered
-	 */
-
-	/**
-	 * Event when the application gives the load done signal
-	 * @event opened
-	 */
-
-	/**
-	 * Event when a application starts closing
-	 * @event close
-	 */
-
-	/**
-	 * Event when a application closes
-	 * @event closed
-	 */
-
-	/**
-	 * Event when request to open an application has begin either by
-	 * calling `openPath` or `openRemote`
-	 * @event open
-	 */
-
-	/**
-	 * Event when a application start loading, first even received
-	 * from the Application.
-	 * @event opening
-	 */
-
-	/**
-	 * Fired when the enabled status of the help button changes
-	 * @event helpEnabled
-	 * @param {boolean} enabled If the help button is enabled
-	 */
-
-	/**
-	 * The features supported by the application
-	 * @event features
-	 * @param {Boolean} data.vo If VO vo context is supported
-	 * @param {Boolean} data.music If music context is supported
-	 * @param {Boolean} data.sound If Sound is supported
-	 * @param {Boolean} data.sfx If SFX context is supported
-	 * @param {Boolean} data.captions If captions is supported
-	 * @param {Boolean} data.hints If hinting is supported
-	 */
-
 	/**
 	 * When the document is clicked
 	 * @method _onDocClicked
 	 * @private
 	 * @param  {Event} e Click or focus event
 	 */
-	var _onDocClick = function(e)
+	var onDocClick = function(e)
 	{
 		if (!this.loaded) return;
 
@@ -1642,273 +2249,14 @@
 	};
 
 	/**
-	 * Open a application or path
-	 * @method _internalOpen
-	 * @private
-	 * @param {string} path The full path to the application to load
-	 * @param {Object} [options] The open options
-	 * @param {Boolean} [options.singlePlay=false] If we should play in single play mode
-	 * @param {Object} [options.playOptions=null] The optional play options
-	 */
-	p._internalOpen = function(path, options)
-	{
-		options = $.extend(
-		{
-			singlePlay: false,
-			playOptions: null
-		}, options);
-
-		this.reset();
-
-		// Dispatch event for unsupported browsers
-		// and then bail, don't continue with loading the application
-		var err = Features.basic();
-		if (err)
-		{
-			return this.trigger('unsupported', err);
-		}
-
-		this.loading = true;
-
-		this.initClient();
-
-		//Open the application in the iframe
-		this.main
-			.addClass('loading')
-			.prop('src', path);
-
-		// Respond with data when we're ready
-		this.client.respond('singlePlay', options.singlePlay);
-		this.client.respond('playOptions', options.playOptions);
-
-		this.trigger('open');
-	};
-
-	/**
-	 * Open a application or path
-	 * @method openPath
-	 * @param {string} path The full path to the application to load
-	 * @param {Object} [options] The open options
-	 * @param {Boolean} [options.singlePlay=false] If we should play in single play mode
-	 * @param {Object} [options.playOptions=null] The optional play options
-	 */
-	p.openPath = function(path, options, playOptions)
-	{
-		options = options ||
-		{};
-
-		// This should be deprecated, support for old function signature
-		if (typeof options === "boolean")
-		{
-			options = {
-				singlePlay: singlePlay,
-				playOptions: playOptions
-			};
-		}
-		this._internalOpen(path, options);
-	};
-
-	/**
-	 * Open application based on an API Call to SpringRoll Connect
-	 * @method openRemote
-	 * @param {string} api The path to API call, this can be a full URL
-	 * @param {Object} [options] The open options
-	 * @param {Boolean} [options.singlePlay=false] If we should play in single play mode
-	 * @param {Object} [options.playOptions=null] The optional play options
-	 * @param {String} [options.query=''] The application query string options (e.g., "?level=1")
-	 */
-	p.openRemote = function(api, options, playOptions)
-	{
-		// This should be deprecated, support for old function signature
-		if (typeof options === "boolean")
-		{
-			options = {
-				singlePlay: singlePlay,
-				playOptions: playOptions
-			};
-		}
-		options = $.extend(
-		{
-			query: '',
-			playOptions: null,
-			singlePlay: false
-		}, options);
-
-		this.release = null;
-
-		$.getJSON(api, function(result)
-				{
-					if (this._destroyed) return;
-
-					if (!result.success)
-					{
-						return this.trigger('remoteError', result.error);
-					}
-					var release = result.data;
-
-					var err = Features.test(release.capabilities);
-
-					if (err)
-					{
-						return this.trigger('unsupported', err);
-					}
-
-					this.release = release;
-
-					// Open the application
-					this._internalOpen(release.url + options.query, options);
-				}
-				.bind(this))
-			.fail(function()
-				{
-					if (this._destroyed) return;
-					return this.trigger('remoteFailed');
-				}
-				.bind(this));
-	};
-
-	/**
-	 * Set up communication layer between site and application.
-	 * May be called from subclasses if they create/destroy Bellhop instances.
-	 * @protected
-	 * @method initClient
-	 */
-	p.initClient = function()
-	{
-		//Setup communication layer between site and application
-		this.client = new Bellhop();
-		this.client.connect(this.dom);
-
-		//Handle bellhop events coming from the application
-		this.client.on(
-		{
-			loading: onLoading.bind(this),
-			loadDone: onLoadDone.bind(this), // @deprecated use 'loaded' instead
-			loaded: onLoadDone.bind(this),
-			endGame: onEndGame.bind(this),
-			focus: onFocus.bind(this),
-			helpEnabled: onHelpEnabled.bind(this),
-			features: onFeatures.bind(this),
-			keepFocus: onKeepFocus.bind(this),
-			userDataRemove: onUserDataRemove.bind(this),
-			userDataRead: onUserDataRead.bind(this),
-			userDataWrite: onUserDataWrite.bind(this),
-			localError: onLocalError.bind(this)
-		});
-	};
-
-	/**
-	 * Removes the Bellhop communication layer altogether.
-	 * @protected
-	 * @method destroyClient
-	 */
-	p.destroyClient = function()
-	{
-		if (this.client)
-		{
-			this.client.destroy();
-			this.client = null;
-		}
-	};
-
-	/**
-	 * Handler for the userDataRemove event
-	 * @method onUserDataRemove
+	 * Handle the keep focus event for the window
+	 * @method onKeepFocus
 	 * @private
 	 */
-	var onUserDataRemove = function(event)
+	var onKeepFocus = function(event)
 	{
-		var client = this.client;
-		this.userDataHandler.remove(event.data, function()
-		{
-			client.send(event.type);
-		});
-	};
-
-	/**
-	 * Handler for the userDataRead event
-	 * @method onUserDataRead
-	 * @private
-	 */
-	var onUserDataRead = function(event)
-	{
-		var client = this.client;
-		this.userDataHandler.read(event.data, function(value)
-		{
-			client.send(event.type, value);
-		});
-	};
-
-	/**
-	 * Handler for the userDataWrite event
-	 * @method onUserDataWrite
-	 * @private
-	 */
-	var onUserDataWrite = function(event)
-	{
-		var data = event.data;
-		var client = this.client;
-		this.userDataHandler.write(data.name, data.value, function()
-		{
-			client.send(event.type);
-		});
-	};
-
-	/**
-	 * Handle the local errors
-	 * @method onLocalError
-	 * @private
-	 * @param  {Event} event Bellhop event
-	 */
-	var onLocalError = function(event)
-	{
-		this.trigger(event.type, event.data);
-	};
-
-	/**
-	 * The game is starting to load
-	 * @method onLoading
-	 * @private
-	 */
-	var onLoading = function()
-	{
-		this.trigger('opening');
-	};
-
-	/**
-	 * Reset the mutes for audio and captions
-	 * @method onLoadDone
-	 * @private
-	 */
-	var onLoadDone = function()
-	{
-		this.loading = false;
-		this.loaded = true;
-		this.main.removeClass('loading');
-
-		this.captionsButton.removeClass('disabled');
-		this.soundButton.removeClass('disabled');
-		this.sfxButton.removeClass('disabled');
-		this.voButton.removeClass('disabled');
-		this.musicButton.removeClass('disabled');
-		this.pauseButton.removeClass('disabled');
-
-		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
-		this.soundMuted = !!SavedData.read(SOUND_MUTED);
-		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
-		this.sfxMuted = !!SavedData.read(SFX_MUTED);
-		this.voMuted = !!SavedData.read(VO_MUTED);
-
-		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
-
-		// Loading is done
-		this.trigger('opened');
-
-		// Focus on the content
-		this.focus();
-
-		// Reset the paused state
-		this.paused = this._paused;
+		this._keepFocus = !!event.data;
+		this.manageFocus();
 	};
 
 	/**
@@ -1948,171 +2296,79 @@
 		this.manageFocus();
 	};
 
-	/**
-	 * Focus on the iframe's contentWindow
-	 * @method focus
-	 */
-	p.focus = function()
+	plugin.open = function()
 	{
-		this.dom.contentWindow.focus();
-	};
-
-	/**
-	 * Unfocus on the iframe's contentWindow
-	 * @method blur
-	 */
-	p.blur = function()
-	{
-		this.dom.contentWindow.blur();
-	};
-
-	/**
-	 * Manage the focus change events sent from window and iFrame
-	 * @method manageFocus
-	 * @protected
-	 */
-	p.manageFocus = function()
-	{
-		// Unfocus on the iframe
-		if (this._keepFocus)
+		this.client.on(
 		{
-			this.blur();
-		}
+			focus: onFocus.bind(this),
+			keepFocus: onKeepFocus.bind(this),
+		});
+	};
 
-		// we only need one delayed call, at the end of any
-		// sequence of rapidly-fired blur/focus events
+	plugin.opened = function()
+	{
+		this.focus();
+	};
+
+	plugin.close = function()
+	{
+		// Stop the focus timer if it's running
 		if (this._focusTimer)
 		{
 			clearTimeout(this._focusTimer);
 		}
-
-		// Delay setting of 'paused' in case we get another focus event soon.
-		// Focus events are sent to the container asynchronously, and this was
-		// causing rapid toggling of the pause state and related issues,
-		// especially in Internet Explorer
-		this._focusTimer = setTimeout(
-			function()
-			{
-				this._focusTimer = null;
-				// A manual pause cannot be overriden by focus events.
-				// User must click the resume button.
-				if (this._isManualPause) return;
-
-				this.paused = this._containerBlurred && this._appBlurred;
-
-				// Focus on the content window when blurring the app
-				// but selecting the container
-				if (this._keepFocus && !this._containerBlurred && this._appBlurred)
-				{
-					this.focus();
-				}
-
-			}.bind(this),
-			100
-		);
 	};
 
-	/**
-	 * Handle the application features
-	 * @method onFeatures
-	 * @param {event} event The bellhop features
-	 * @private
-	 */
-	var onFeatures = function(event)
+	plugin.teardown = function()
 	{
-		var features = event.data;
-
-		this.voButton.hide();
-		this.musicButton.hide();
-		this.soundButton.hide();
-		this.captionsButton.hide();
-		this.helpButton.hide();
-
-		if (features.vo) this.voButton.show();
-		if (features.music) this.musicButton.show();
-		if (features.sound) this.soundButton.show();
-		if (features.captions) this.captionsButton.show();
-		if (features.hints) this.helpButton.show();
-
-		this.trigger('features', features);
-	};
-
-	/**
-	 * Handle the keep focus event for the window
-	 * @method onKeepFocus
-	 * @private
-	 */
-	var onKeepFocus = function(event)
-	{
-		this._keepFocus = !!event.data;
-		this.manageFocus();
-	};
-
-	/**
-	 * Reset the mutes for audio and captions
-	 * @method onHelpEnabled
-	 * @private
-	 */
-	var onHelpEnabled = function(event)
-	{
-		this.helpEnabled = !!event.data;
-	};
-
-	/**
-	 * Handler when the play hint button is clicked
-	 * @method onPlayHelp
-	 * @private
-	 */
-	var onPlayHelp = function()
-	{
-		if (!this.paused && !this.helpButton.hasClass('disabled'))
+		$(this.options.pauseFocusSelector).off('focus');
+		$(document).off('focus click', this._onDocClick);
+		delete this._onDocClick;
+		if (this._pageVisibility)
 		{
-			this.client.send('playHelp');
+			this._pageVisibility.destroy();
+			delete this._pageVisibility;
 		}
+		delete this.focus;
+		delete this.blur;
+		delete this.manageFocus;
+		delete this._appBlurred;
+		delete this._focusTimer;
+		delete this._keepFocus;
+		delete this._containerBlurred;
 	};
 
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
 	/**
-	 * The application ended and destroyed itself
-	 * @method onEndGame
-	 * @private
+	 * @class Container
 	 */
-	var onEndGame = function()
-	{
-		this.reset();
-	};
+	var plugin = new springroll.ContainerPlugin(50);
 
-	/**
-	 * Handler when the captions mute button is clicked
-	 * @method onCaptionsToggle
-	 * @private
-	 */
-	var onCaptionsToggle = function()
+	plugin.setup = function()
 	{
-		this.captionsMuted = !this.captionsMuted;
-	};
+		/**
+		 * Reference to the help button
+		 * @property {jquery} helpButton
+		 */
+		this.helpButton = $(this.options.helpButton)
+			.click(function()
+				{
+					if (!this.paused && !this.helpButton.hasClass('disabled'))
+					{
+						this.client.send('playHelp');
+					}
+				}
+				.bind(this));
 
-	/**
-	 * If the current application is paused
-	 * @property {Boolean} paused
-	 * @default false
-	 */
-	Object.defineProperty(p, 'paused',
-	{
-		set: function(paused)
+		// Handle pause
+		this.on('pause', function(paused)
 		{
-			this._paused = paused;
-
-			if (this.client)
-			{
-				this.client.send('pause', paused);
-			}
-			this.trigger(paused ? 'paused' : 'resumed');
-			this.trigger('pause', paused);
-
-			// Set the pause button state
-			this.pauseButton.removeClass('unpaused paused')
-				.addClass(paused ? 'paused' : 'unpaused');
-
 			// Disable the help button when paused if it's active
 			if (paused && !this.helpButton.hasClass('disabled'))
 			{
@@ -2124,32 +2380,456 @@
 				this.helpButton.removeData('paused');
 				this.helpEnabled = true;
 			}
-		},
-		get: function()
+		});
+
+		/**
+		 * Set the captions are muted
+		 * @property {Boolean} helpEnabled
+		 */
+		Object.defineProperty(this, 'helpEnabled',
 		{
-			return this._paused;
-		}
-	});
+			set: function(enabled)
+			{
+				this._helpEnabled = enabled;
+				this.helpButton.removeClass('disabled enabled')
+					.addClass(enabled ? 'enabled' : 'disabled');
+
+				/**
+				 * Fired when the enabled status of the help button changes
+				 * @event helpEnabled
+				 * @param {boolean} enabled If the help button is enabled
+				 */
+				this.trigger('helpEnabled', enabled);
+			},
+			get: function()
+			{
+				return this._helpEnabled;
+			}
+		});
+
+		// Handle features changed
+		this.on('features', function(features)
+			{
+				this.helpButton.hide();
+				if (features.hints) this.helpButton.show();
+			}
+			.bind(this));
+	};
+
+	plugin.open = function()
+	{
+		this.client.on('helpEnabled', function(event)
+			{
+				this.helpEnabled = !!event.data;
+			}
+			.bind(this));
+	};
+
+	plugin.close = function()
+	{
+		this.client.off('helpEnabled');
+		this.helpEnabled = false;
+	};
+
+	plugin.teardown = function()
+	{
+		delete this.helpButton;
+		delete this._helpEnabled;
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(80);
+
+	plugin.setup = function()
+	{
+		/**
+		 * Reference to the pause application button
+		 * @property {jquery} pauseButton
+		 */
+		this.pauseButton = $(this.options.pauseButton)
+			.click(onPauseToggle.bind(this));
+
+		/**
+		 * If the application is currently paused manually
+		 * @property {boolean} _isManualPause
+		 * @private
+		 * @default false
+		 */
+		this._isManualPause = false;
+
+		/**
+		 * If the current application is paused
+		 * @property {Boolean} _paused
+		 * @private
+		 * @default false
+		 */
+		this._paused = false;
+
+		/**
+		 * If the current application is paused
+		 * @property {Boolean} paused
+		 * @default false
+		 */
+		Object.defineProperty(this, 'paused',
+		{
+			set: function(paused)
+			{
+				this._paused = paused;
+
+				if (this.client)
+				{
+					this.client.send('pause', paused);
+				}
+				/**
+				 * Fired when the pause state is toggled
+				 * @event pause
+				 * @param {boolean} paused If the application is now paused
+				 */
+				/**
+				 * Fired when the application resumes from a paused state
+				 * @event resumed
+				 */
+				/**
+				 * Fired when the application becomes paused
+				 * @event paused
+				 */
+				this.trigger(paused ? 'paused' : 'resumed');
+				this.trigger('pause', paused);
+
+				// Set the pause button state
+				this.pauseButton.removeClass('unpaused paused')
+					.addClass(paused ? 'paused' : 'unpaused');
+			},
+			get: function()
+			{
+				return this._paused;
+			}
+		});
+	};
 
 	/**
-	 * Set the captions are muted
-	 * @property {Boolean} helpEnabled
+	 * Toggle the current paused state of the application
+	 * @method onPauseToggle
+	 * @private
 	 */
-	Object.defineProperty(p, 'helpEnabled',
+	var onPauseToggle = function()
 	{
-		set: function(enabled)
-		{
-			this._helpEnabled = enabled;
-			this.helpButton.removeClass('disabled enabled')
-				.addClass(enabled ? 'enabled' : 'disabled');
+		this.paused = !this.paused;
+		this._isManualPause = this.paused;
+	};
 
-			this.trigger('helpEnabled', enabled);
-		},
-		get: function()
+
+	plugin.open = function() {};
+
+	plugin.opened = function()
+	{
+		this.pauseButton.removeClass('disabled');
+
+		// Reset the paused state
+		this.paused = this._paused;
+	};
+
+	plugin.close = function()
+	{
+		this._disableButton(this.pauseButton);
+		this.paused = false;
+	};
+
+	plugin.teardown = function()
+	{
+		delete this.pauseButton;
+		delete this._isManualPause;
+		delete this._paused;
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var $ = include('jQuery');
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(30);
+
+	plugin.setup = function()
+	{
+		/**
+		 * The release object from SpringRoll Connect
+		 * @property {Object} release
+		 */
+		this.release = null;
+
+		/**
+		 * Open application based on an API Call to SpringRoll Connect
+		 * @method openRemote
+		 * @param {string} api The path to API call, this can be a full URL
+		 * @param {Object} [options] The open options
+		 * @param {Boolean} [options.singlePlay=false] If we should play in single play mode
+		 * @param {Object} [options.playOptions=null] The optional play options
+		 * @param {String} [options.query=''] The application query string options (e.g., "?level=1")
+		 */
+		this.openRemote = function(api, options, playOptions)
 		{
-			return this._helpEnabled;
+			// This should be deprecated, support for old function signature
+			if (typeof options === "boolean")
+			{
+				options = {
+					singlePlay: singlePlay,
+					playOptions: playOptions
+				};
+			}
+			options = $.extend(
+			{
+				query: '',
+				playOptions: null,
+				singlePlay: false
+			}, options);
+
+			this.release = null;
+
+			$.getJSON(api, function(result)
+					{
+						if (this._destroyed) return;
+
+						if (!result.success)
+						{
+							/**
+							 * There was a problem with the API call
+							 * @event remoteError
+							 */
+							return this.trigger('remoteError', result.error);
+						}
+						var release = result.data;
+
+						var err = Features.test(release.capabilities);
+
+						if (err)
+						{
+							return this.trigger('unsupported', err);
+						}
+
+						this.release = release;
+
+						// Open the application
+						this._internalOpen(release.url + options.query, options);
+					}
+					.bind(this))
+				.fail(function()
+					{
+						if (this._destroyed) return;
+
+						/**
+						 * Fired when the API cannot be called
+						 * @event remoteFailed
+						 */
+						return this.trigger('remoteFailed');
+					}
+					.bind(this));
+		};
+	};
+
+	plugin.teardown = function()
+	{
+		delete this.openRemote;
+		delete this.release;
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedData = include('springroll.SavedData');
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(60);
+
+	/**
+	 * The name of the saved property if the sound is muted or not
+	 * @property {string} SOUND_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var SOUND_MUTED = 'soundMuted';
+
+	/**
+	 * The name of the saved property if the music is muted or not
+	 * @property {string} MUSIC_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var MUSIC_MUTED = 'musicMuted';
+
+	/**
+	 * The name of the saved property if the voice-over is muted or not
+	 * @property {string} VO_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var VO_MUTED = 'voMuted';
+
+	/**
+	 * The name of the saved property if the effects are muted or not
+	 * @property {string} SFX_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var SFX_MUTED = 'sfxMuted';
+
+	plugin.setup = function()
+	{
+		/**
+		 * Reference to the all sound mute button
+		 * @property {jquery} soundButton
+		 */
+		this.soundButton = $(this.options.soundButton)
+			.click(onSoundToggle.bind(this));
+
+		/**
+		 * Reference to the music mute button
+		 * @property {jquery} musicButton
+		 */
+		this.musicButton = $(this.options.musicButton)
+			.click(onMusicToggle.bind(this));
+
+		/**
+		 * Reference to the sound effects mute button
+		 * @property {jquery} sfxButton
+		 */
+		this.sfxButton = $(this.options.sfxButton)
+			.click(onSFXToggle.bind(this));
+
+		/**
+		 * Reference to the voice-over mute button
+		 * @property {jquery} voButton
+		 */
+		this.voButton = $(this.options.voButton)
+			.click(onVOToggle.bind(this));
+
+		/**
+		 * Check for when all mutes are muted or unmuted
+		 * @method _checkSoundMute
+		 * @private
+		 */
+		this._checkSoundMute = function()
+		{
+			this.soundMuted = this.sfxMuted && this.voMuted && this.musicMuted;
+		};
+
+		/**
+		 * Set the all sound is enabled or not
+		 * @property {boolean} soundMuted
+		 * @default false
+		 */
+		Object.defineProperty(this, SOUND_MUTED,
+		{
+			set: function(muted)
+			{
+				this._soundMuted = muted;
+				this._setMuteProp(SOUND_MUTED, this.soundButton, muted);
+			},
+			get: function()
+			{
+				return this._soundMuted;
+			}
+		});
+
+		/**
+		 * Set the voice-over audio is muted
+		 * @property {boolean} voMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, VO_MUTED,
+		{
+			set: function(muted)
+			{
+				this._voMuted = muted;
+				this._setMuteProp(VO_MUTED, this.voButton, muted);
+			},
+			get: function()
+			{
+				return this._voMuted;
+			}
+		});
+
+		/**
+		 * Set the music audio is muted
+		 * @property {boolean} musicMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, MUSIC_MUTED,
+		{
+			set: function(muted)
+			{
+				this._musicMuted = muted;
+				this._setMuteProp(MUSIC_MUTED, this.musicButton, muted);
+			},
+			get: function()
+			{
+				return this._musicMuted;
+			}
+		});
+
+		/**
+		 * Set the sound effect audio is muted
+		 * @property {boolean} sfxMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, SFX_MUTED,
+		{
+			set: function(muted)
+			{
+				this._sfxMuted = muted;
+				this._setMuteProp(SFX_MUTED, this.sfxButton, muted);
+			},
+			get: function()
+			{
+				return this._sfxMuted;
+			}
+		});
+
+		//Set the defaults if we have none for the controls
+		if (SavedData.read(SOUND_MUTED) === null)
+		{
+			this.soundMuted = false;
 		}
-	});
+
+		this.on('features', function(features)
+			{
+				this.voButton.hide();
+				this.musicButton.hide();
+				this.soundButton.hide();
+				this.sfxButton.hide();
+
+				if (features.vo) this.voButton.show();
+				if (features.music) this.musicButton.show();
+				if (features.sound) this.soundButton.show();
+				if (features.sfxButton) this.sfxButton.show();
+			}
+			.bind(this));
+	};
 
 	/**
 	 * Handler when the sound mute button is clicked
@@ -2198,417 +2878,121 @@
 		this._checkSoundMute();
 	};
 
-	/**
-	 * Check for when all mutes are muted or unmuted
-	 * @method _checkSoundMute
-	 * @private
-	 */
-	p._checkSoundMute = function()
+	plugin.open = function() {};
+
+	plugin.opened = function()
 	{
-		this.soundMuted = this.sfxMuted && this.voMuted && this.musicMuted;
+		this.soundButton.removeClass('disabled');
+		this.sfxButton.removeClass('disabled');
+		this.voButton.removeClass('disabled');
+		this.musicButton.removeClass('disabled');
+
+		this.soundMuted = !!SavedData.read(SOUND_MUTED);
+		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
+		this.sfxMuted = !!SavedData.read(SFX_MUTED);
+		this.voMuted = !!SavedData.read(VO_MUTED);
+	};
+
+	plugin.close = function()
+	{
+		this._disableButton(this.soundButton);
+		this._disableButton(this.musicButton);
+		this._disableButton(this.voButton);
+		this._disableButton(this.sfxButton);
+	};
+
+	plugin.teardown = function()
+	{
+		delete this.voButton;
+		delete this.sfxButton;
+		delete this.musicButton;
+		delete this.soundButton;
+		delete this._checkSoundMute;
+	};
+
+}());
+/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedDataHandler = include('springroll.SavedDataHandler');
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(40);
+
+	plugin.setup = function()
+	{
+		/**
+		 * The external handler class, must include `remove`, `write`, `read` methods
+		 * make it possible to use something else to handle the external, default
+		 * is to use cookies/localStorage. See {{#crossLink "springroll.SavedDataHandler"}}{{/crossLink}}
+		 * as an example.
+		 * @property {Object} userDataHandler
+		 * @default springroll.SavedDataHandler
+		 */
+		this.userDataHandler = new SavedDataHandler();
+	};
+
+	plugin.open = function()
+	{
+		this.client.on(
+		{
+			userDataRemove: onUserDataRemove.bind(this),
+			userDataRead: onUserDataRead.bind(this),
+			userDataWrite: onUserDataWrite.bind(this),
+		});
 	};
 
 	/**
-	 * Toggle the current paused state of the application
-	 * @method onPauseToggle
+	 * Handler for the userDataRemove event
+	 * @method onUserDataRemove
 	 * @private
 	 */
-	var onPauseToggle = function()
+	var onUserDataRemove = function(event)
 	{
-		this.paused = !this.paused;
-		this._isManualPause = this.paused;
+		var client = this.client;
+		this.userDataHandler.remove(event.data, function()
+		{
+			client.send(event.type);
+		});
 	};
 
 	/**
-	 * The name of the saved property if the captions are muted or not
-	 * @property {string} CAPTIONS_MUTED
-	 * @static
+	 * Handler for the userDataRead event
+	 * @method onUserDataRead
 	 * @private
-	 * @final
 	 */
-	var CAPTIONS_MUTED = 'captionsMuted';
-
-	/**
-	 * The name of the saved property if the sound is muted or not
-	 * @property {string} SOUND_MUTED
-	 * @static
-	 * @private
-	 * @final
-	 */
-	var SOUND_MUTED = 'soundMuted';
-
-	/**
-	 * The name of the saved property if the music is muted or not
-	 * @property {string} MUSIC_MUTED
-	 * @static
-	 * @private
-	 * @final
-	 */
-	var MUSIC_MUTED = 'musicMuted';
-
-	/**
-	 * The name of the saved property if the voice-over is muted or not
-	 * @property {string} VO_MUTED
-	 * @static
-	 * @private
-	 * @final
-	 */
-	var VO_MUTED = 'voMuted';
-
-	/**
-	 * The name of the saved property if the effects are muted or not
-	 * @property {string} SFX_MUTED
-	 * @static
-	 * @private
-	 * @final
-	 */
-	var SFX_MUTED = 'sfxMuted';
-
-	/**
-	 * The name of the saved property for the captions styles
-	 * @property {string} CAPTIONS_STYLES
-	 * @static
-	 * @private
-	 * @final
-	 */
-	var CAPTIONS_STYLES = 'captionsStyles';
-
-	/**
-	 * The map of the default caption style settings
-	 * @property {object} DEFAULT_CAPTIONS_STYLES
-	 * @static
-	 * @private
-	 * @final
-	 */
-	var DEFAULT_CAPTIONS_STYLES = {
-		size: "md",
-		background: "black-semi",
-		color: "white",
-		edge: "none",
-		font: "arial",
-		align: "top"
+	var onUserDataRead = function(event)
+	{
+		var client = this.client;
+		this.userDataHandler.read(event.data, function(value)
+		{
+			client.send(event.type, value);
+		});
 	};
 
 	/**
-	 * Abstract method to handle the muting
-	 * @method _setMuteProp
-	 * @param {string} prop The name of the property to save
-	 * @param {jquery} button Reference to the jquery button
-	 * @param {boolean} muted  If the button is muted
-	 */
-	p._setMuteProp = function(prop, button, muted)
-	{
-		button.removeClass('unmuted muted')
-			.addClass(muted ? 'muted' : 'unmuted');
-
-		SavedData.write(prop, muted);
-		if (this.client && this.sendMutes)
-		{
-			this.client.send(prop, muted);
-		}
-	};
-
-	/**
-	 * Set the captions styles
-	 * @method setCaptionsStyles
-	 * @param {object|String} [styles] The style options or the name of the
-	 * property (e.g., "color", "edge", "font", "background", "size")
-	 * @param {string} [styles.color='white'] The text color, the default is white
-	 * @param {string} [styles.edge='none'] The edge style, default is none
-	 * @param {string} [styles.font='arial'] The font style, default is arial
-	 * @param {string} [styles.background='black-semi'] The background style, black semi-transparent
-	 * @param {string} [styles.size='md'] The font style default is medium
-	 * @param {string} [styles.align='top'] The align style default is top of the window
-	 * @param {string} [value] If setting styles parameter as a string, this is the value of the property.
-	 */
-	p.setCaptionsStyles = function(styles, value)
-	{
-		if (typeof styles === "object")
-		{
-			Object.merge(
-				this._captionsStyles,
-				styles ||
-				{}
-			);
-		}
-		else if (typeof styles === "string")
-		{
-			this._captionsStyles[styles] = value;
-		}
-
-		styles = this._captionsStyles;
-
-		// Do some validation on the style settings
-		if (true)
-		{
-			if (!styles.color || !/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color))
-			{
-				throw "Setting captions color style is invalid value : " + styles.color;
-			}
-			if (!styles.background || !/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(styles.background))
-			{
-				throw "Setting captions background style is invalid value : " + styles.background;
-			}
-			if (!styles.size || !/^(xs|sm|md|lg|xl)$/.test(styles.size))
-			{
-				throw "Setting captions size style is invalid value : " + styles.size;
-			}
-			if (!styles.edge || !/^(raise|depress|uniform|drop|none)$/.test(styles.edge))
-			{
-				throw "Setting captions edge style is invalid value : " + styles.edge;
-			}
-			if (!styles.font || !/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(styles.font))
-			{
-				throw "Setting captions font style is invalid value : " + styles.font;
-			}
-			if (!styles.align || !/^(top|bottom)$/.test(styles.align))
-			{
-				throw "Setting captions align style is invalid value : " + styles.align;
-			}
-		}
-
-		SavedData.write(CAPTIONS_STYLES, styles);
-		if (this.client)
-		{
-			this.client.send(CAPTIONS_STYLES, styles);
-		}
-	};
-
-	/**
-	 * Get the captions styles
-	 * @method getCaptionsStyles
-	 * @param {string} [prop] The optional property, values are "size", "edge", "font", "background", "color"
-	 * @return {object} The collection of styles, see setCaptionsStyles for more info.
-	 */
-	p.getCaptionsStyles = function(prop)
-	{
-		var styles = this._captionsStyles;
-		return prop ? styles[prop] : styles;
-	};
-
-	/**
-	 * Reset the captions styles
-	 * @method clearCaptionsStyles
-	 */
-	p.clearCaptionsStyles = function()
-	{
-		this._captionsStyles = Object.merge(
-		{}, DEFAULT_CAPTIONS_STYLES);
-		this.setCaptionsStyles();
-	};
-
-	/**
-	 * Set the captions are enabled or not
-	 * @property {boolean} captionsMuted
-	 * @default true
-	 */
-	Object.defineProperty(p, CAPTIONS_MUTED,
-	{
-		set: function(muted)
-		{
-			this._captionsMuted = muted;
-			this._setMuteProp(CAPTIONS_MUTED, this.captionsButton, muted);
-		},
-		get: function()
-		{
-			return this._captionsMuted;
-		}
-	});
-
-	/**
-	 * Set the all sound is enabled or not
-	 * @property {boolean} soundMuted
-	 * @default false
-	 */
-	Object.defineProperty(p, SOUND_MUTED,
-	{
-		set: function(muted)
-		{
-			this._soundMuted = muted;
-			this._setMuteProp(SOUND_MUTED, this.soundButton, muted);
-		},
-		get: function()
-		{
-			return this._soundMuted;
-		}
-	});
-
-	/**
-	 * Set the voice-over audio is muted
-	 * @property {boolean} voMuted
-	 * @default true
-	 */
-	Object.defineProperty(p, VO_MUTED,
-	{
-		set: function(muted)
-		{
-			this._voMuted = muted;
-			this._setMuteProp(VO_MUTED, this.voButton, muted);
-		},
-		get: function()
-		{
-			return this._voMuted;
-		}
-	});
-
-	/**
-	 * Set the music audio is muted
-	 * @property {boolean} musicMuted
-	 * @default true
-	 */
-	Object.defineProperty(p, MUSIC_MUTED,
-	{
-		set: function(muted)
-		{
-			this._musicMuted = muted;
-			this._setMuteProp(MUSIC_MUTED, this.musicButton, muted);
-		},
-		get: function()
-		{
-			return this._musicMuted;
-		}
-	});
-
-	/**
-	 * Set the sound effect audio is muted
-	 * @property {boolean} sfxMuted
-	 * @default true
-	 */
-	Object.defineProperty(p, SFX_MUTED,
-	{
-		set: function(muted)
-		{
-			this._sfxMuted = muted;
-			this._setMuteProp(SFX_MUTED, this.sfxButton, muted);
-		},
-		get: function()
-		{
-			return this._sfxMuted;
-		}
-	});
-
-	/**
-	 * Reset all the buttons back to their original setting
-	 * and clear the iframe.
-	 * @method reset
-	 */
-	p.reset = function()
-	{
-		var wasLoaded = this.loaded || this.loading;
-
-		// Stop the focus timer if it's running
-		if (this._focusTimer)
-		{
-			clearTimeout(this._focusTimer);
-		}
-
-		// Remove bellhop instance
-		this.destroyClient();
-
-		// Disable the hint button
-		this.helpEnabled = false;
-
-		disableButton(this.soundButton);
-		disableButton(this.captionsButton);
-		disableButton(this.musicButton);
-		disableButton(this.voButton);
-		disableButton(this.sfxButton);
-		disableButton(this.pauseButton);
-
-		// Reset state
-		this.loaded = false;
-		this.loading = false;
-		this.paused = false;
-
-		// Clear the iframe src location
-		this.main.attr('src', '')
-			.removeClass('loading');
-
-		if (wasLoaded)
-		{
-			this.off('localError', this._onCloseFailed);
-			this.trigger('closed');
-		}
-	};
-
-	/**
-	 * Tell the application to start closing
-	 * @method close
-	 */
-	p.close = function()
-	{
-		if (this.loading || this.loaded)
-		{
-			this.trigger('close');
-
-			// If any errors are handled on close, 
-			// then we'll force close the container
-			this.once('localError', this._onCloseFailed);
-
-			// Start the close
-			this.client.send('close');
-		}
-		else
-		{
-			this.reset();
-		}
-	};
-
-	/**
-	 * If there was an error when closing, reset the container
-	 * @method _onCloseFailed
+	 * Handler for the userDataWrite event
+	 * @method onUserDataWrite
 	 * @private
 	 */
-	p._onCloseFailed = function()
+	var onUserDataWrite = function(event)
 	{
-		this.reset(); // force close the app
+		var data = event.data;
+		var client = this.client;
+		this.userDataHandler.write(data.name, data.value, function()
+		{
+			client.send(event.type);
+		});
 	};
 
-	/**
-	 * Disable a button
-	 * @method disableButton
-	 * @private
-	 * @param {jquery} button The button to disable
-	 */
-	var disableButton = function(button)
+	plugin.teardown = function()
 	{
-		button.removeClass('enabled')
-			.addClass('disabled');
-	};
-
-	/**
-	 * Destroy and don't use after this
-	 * @method destroy
-	 */
-	p.destroy = function()
-	{
-		this.reset();
-
-		s.destroy.call(this);
-
-		// Remove listener
-		$(document).off('focus click', this._onDocClick);
-
-		this.main = null;
-		this.options = null;
-		this.dom = null;
-
-		this._onDocClick = null;
 		this.userDataHandler = null;
-		this.helpButton = null;
-		this.soundButton = null;
-		this.pauseButton = null;
-		this.captionsButton = null;
-		this.musicButton = null;
-		this.voButton = null;
-		this.sfxButton = null;
-
-		if (this._pageVisibility)
-		{
-			this._pageVisibility.destroy();
-			this._pageVisibility = null;
-		}
 	};
 
-	namespace('springroll').Container = Container;
-}(document));
+}());
