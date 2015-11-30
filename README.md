@@ -2,6 +2,20 @@
 
 The `<iframe>` controller for interacting with SpringRoll applications either by [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect) or accessing locally. The Container works both in the context of a Cordova-based application or on a webserver.
 
+## Installation
+
+Install with [Bower](http://bower.io/).
+
+```bash
+bower install springroll-container
+```
+
+Install with [NPM](https://www.npmjs.com/).
+
+```bash
+npm install springroll-container
+```
+
 ## Usage 
 
 Basic usage for opening a SpringRoll application via a local path. This can be used to open a game with a relative or absolute (e.g. "http://...") path.
