@@ -2559,6 +2559,7 @@
 (function()
 {
 	var $ = include('jQuery');
+	var Features = include('springroll.Features');
 
 	/**
 	 * @class Container
