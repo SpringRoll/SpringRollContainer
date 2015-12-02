@@ -59,10 +59,16 @@
 		this.opened = function() {};
 
 		/**
-		 * Called when an application is closed completely.
+		 * Called when an application has begun to be closed.
 		 * @method close 
 		 */
 		this.close = function() {};
+
+		/**
+		 * Called when an application is closed completely.
+		 * @method closed
+		 */
+		this.closed = function() {};
 
 		/**
 		 * When the Container is being destroyed. This function 

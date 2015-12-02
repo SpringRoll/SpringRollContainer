@@ -303,7 +303,7 @@
 			var plugins = Container._plugins;
 			for (var i = plugins.length - 1; i >= 0; i--)
 			{
-				plugins[i].close.call(this);
+				plugins[i].closed.call(this);
 			}
 		}
 
@@ -338,6 +338,12 @@
 	{
 		if (this.loading || this.loaded)
 		{
+			var plugins = Container._plugins;
+			for (var i = plugins.length - 1; i >= 0; i--)
+			{
+				plugins[i].close.call(this);
+			}
+
 			/**
 			 * Event when a application starts closing
 			 * @event close

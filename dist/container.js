@@ -1589,7 +1589,7 @@
 			var plugins = Container._plugins;
 			for (var i = plugins.length - 1; i >= 0; i--)
 			{
-				plugins[i].close.call(this);
+				plugins[i].closed.call(this);
 			}
 		}
 
@@ -1624,6 +1624,12 @@
 	{
 		if (this.loading || this.loaded)
 		{
+			var plugins = Container._plugins;
+			for (var i = plugins.length - 1; i >= 0; i--)
+			{
+				plugins[i].close.call(this);
+			}
+
 			/**
 			 * Event when a application starts closing
 			 * @event close
@@ -1742,10 +1748,16 @@
 		this.opened = function() {};
 
 		/**
-		 * Called when an application is closed completely.
+		 * Called when an application has begun to be closed.
 		 * @method close 
 		 */
 		this.close = function() {};
+
+		/**
+		 * Called when an application is closed completely.
+		 * @method closed
+		 */
+		this.closed = function() {};
 
 		/**
 		 * When the Container is being destroyed. This function 
@@ -2506,8 +2518,11 @@
 				this.trigger('pause', paused);
 
 				// Set the pause button state
-				this.pauseButton.removeClass('unpaused paused')
-					.addClass(paused ? 'paused' : 'unpaused');
+				if (this.pauseButton)
+				{
+					this.pauseButton.removeClass('unpaused paused')
+						.addClass(paused ? 'paused' : 'unpaused');
+				}
 			},
 			get: function()
 			{
@@ -2526,9 +2541,6 @@
 		this.paused = !this.paused;
 		this._isManualPause = this.paused;
 	};
-
-
-	plugin.open = function() {};
 
 	plugin.opened = function()
 	{

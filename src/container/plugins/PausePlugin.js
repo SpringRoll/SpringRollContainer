@@ -66,8 +66,11 @@
 				this.trigger('pause', paused);
 
 				// Set the pause button state
-				this.pauseButton.removeClass('unpaused paused')
-					.addClass(paused ? 'paused' : 'unpaused');
+				if (this.pauseButton)
+				{
+					this.pauseButton.removeClass('unpaused paused')
+						.addClass(paused ? 'paused' : 'unpaused');
+				}
 			},
 			get: function()
 			{
@@ -86,9 +89,6 @@
 		this.paused = !this.paused;
 		this._isManualPause = this.paused;
 	};
-
-
-	plugin.open = function() {};
 
 	plugin.opened = function()
 	{
