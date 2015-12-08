@@ -156,9 +156,21 @@
 	{
 		if (!this.loaded) return;
 
-		if (!$(e.target).filter(this.options.pauseFocusSelector).length)
+		var target;
+
+		// Firefox support
+		if (e.originalEvent.explicitOriginalTarget)
+		{
+			target = $(e.originalEvent.explicitOriginalTarget);
+		}
+		else
+		{
+			target = $(e.target);
+		}
+		if (!target.filter(this.options.pauseFocusSelector).length)
 		{
 			this.focus();
+			return false;
 		}
 	};
 

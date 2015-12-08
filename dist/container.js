@@ -1,4 +1,4 @@
-/*! SpringRoll Container 0.5.0 */
+/*! SpringRoll Container 0.5.1 */
 /**
  * @module Core
  * @namespace window
@@ -2254,9 +2254,21 @@
 	{
 		if (!this.loaded) return;
 
-		if (!$(e.target).filter(this.options.pauseFocusSelector).length)
+		var target;
+
+		// Firefox support
+		if (e.originalEvent.explicitOriginalTarget)
+		{
+			target = $(e.originalEvent.explicitOriginalTarget);
+		}
+		else
+		{
+			target = $(e.target);
+		}
+		if (!target.filter(this.options.pauseFocusSelector).length)
 		{
 			this.focus();
+			return false;
 		}
 	};
 
