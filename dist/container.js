@@ -1381,6 +1381,15 @@
 		}
 	};
 
+	/**
+	 * The current version of the library
+	 * @property {String} version
+	 * @static
+	 * @readOnly
+	 * @default "0.5.1"
+	 */
+	Container.version = "0.5.1";
+
 	//Reference to the prototype
 	var s = EventDispatcher.prototype;
 	var p = EventDispatcher.extend(Container);
