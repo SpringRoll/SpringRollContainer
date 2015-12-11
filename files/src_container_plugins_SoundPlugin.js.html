@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>SpringRoll Container v0.5.2 API Documentation : src/container/plugins/SoundPlugin.js</title>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+	<link rel='shortcut icon' type='image/png' href='../assets/images/favicon.ico?v=0.5.2'>
+	<link href='//fonts.googleapis.com/css?family=Titillium+Web:300,200,600' rel='stylesheet' type='text/css'>
+	<link rel='stylesheet' type='text/css' href='../assets/css/libraries.css?v=0.5.2'>
+	<link rel='stylesheet' type='text/css' href='../assets/css/main.css?v=0.5.2'>
+</head>
+<body>
+<header>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class='container'>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#docs-navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href='https://github.com/SpringRoll/SpringRollContainer'>
+						<img src='../assets/images/logo.png?v=0.5.2' class="logo">
+					<span class='project-name'>SpringRoll Container</span>
+					<span class="sr-only">API Documentation for:</span>
+					<span class='version hidden-xs'>v0.5.2</span>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="docs-navbar">
+	      <ul class="scope-toggles text-center nav navbar-nav navbar-right">
+					<li><input class='scope-toggle' 
+						id='toggle-inherited' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Inherited' 
+						data-off='Inherited' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-protected' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Protected' 
+						data-off='Protected' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-private' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Private' 
+						data-off='Private' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-deprecated' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Deprecated' 
+						data-off='Deprecated' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>
+<div class='container'>
+<div class='row'>
+<nav id='sidebar' class='col-sm-4 col-md-3'>
+<h2>APIs</h2>
+<div class='input-group'>
+  <div class='input-group-addon'>
+    <span class='glyphicon glyphicon-search'></span>
+  </div>
+  <input type='search' class='form-control' id='api-filter' placeholder='Type to filter APIs'>
+  <span class='collapsed btn-close glyphicon glyphicon-remove-sign hidden'></span>
+</div>
+<nav class='navbar navbar-default'>
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="btn-group" role="group" aria-label="...">
+    <button type="button" class="sidebar-toggle collapsed btn btn-default" id='toggle-classes' data-target='#classes-collapse'>
+      Classes
+      <span class='collapsed glyphicon glyphicon-chevron-up'></span>
+      <span class='expanded glyphicon glyphicon-chevron-down'></span>
+    </button>
+    <button type="button" class="sidebar-toggle collapsed btn btn-default" id='toggle-modules' data-target='#modules-collapse'>
+      Modules
+      <span class='collapsed glyphicon glyphicon-chevron-up'></span>
+      <span class='expanded glyphicon glyphicon-chevron-down'></span>
+    </button>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class='collapse' id='classes-collapse'>
+    <ul class='nav navbar-nav'>
+        <li class='public'>
+          <a href='../classes/springroll.Container.html'>springroll.Container</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.ContainerPlugin.html'>springroll.ContainerPlugin</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.Features.html'>springroll.Features</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.SavedDataHandler.html'>springroll.SavedDataHandler</a>
+        </li>
+    </ul>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class='collapse' id='modules-collapse'>
+    <ul class='nav navbar-nav'>
+        <li class=''>
+          <a href='../modules/Container.html'>Container</a>
+        </li>
+        <li class=''>
+          <a href='../modules/Core.html'>Core</a>
+        </li>
+    </ul>
+  </div>
+  <!-- /.container-fluid -->
+</nav></nav>
+<div class='col-sm-8 col-md-9'>
+<div id='docs-main' class='apidocs'>
+<h1 class="file-heading">File:SoundPlugin.js</h1>
+
+<div class="file">
+<pre class="code prettyprint linenums">/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedData = include(&#x27;springroll.SavedData&#x27;);
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(60);
+
+	/**
+	 * The name of the saved property if the sound is muted or not
+	 * @property {string} SOUND_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var SOUND_MUTED = &#x27;soundMuted&#x27;;
+
+	/**
+	 * The name of the saved property if the music is muted or not
+	 * @property {string} MUSIC_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var MUSIC_MUTED = &#x27;musicMuted&#x27;;
+
+	/**
+	 * The name of the saved property if the voice-over is muted or not
+	 * @property {string} VO_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var VO_MUTED = &#x27;voMuted&#x27;;
+
+	/**
+	 * The name of the saved property if the effects are muted or not
+	 * @property {string} SFX_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var SFX_MUTED = &#x27;sfxMuted&#x27;;
+
+	plugin.setup = function()
+	{
+		/**
+		 * Reference to the all sound mute button
+		 * @property {jquery} soundButton
+		 */
+		this.soundButton = $(this.options.soundButton)
+			.click(onSoundToggle.bind(this));
+
+		/**
+		 * Reference to the music mute button
+		 * @property {jquery} musicButton
+		 */
+		this.musicButton = $(this.options.musicButton)
+			.click(onMusicToggle.bind(this));
+
+		/**
+		 * Reference to the sound effects mute button
+		 * @property {jquery} sfxButton
+		 */
+		this.sfxButton = $(this.options.sfxButton)
+			.click(onSFXToggle.bind(this));
+
+		/**
+		 * Reference to the voice-over mute button
+		 * @property {jquery} voButton
+		 */
+		this.voButton = $(this.options.voButton)
+			.click(onVOToggle.bind(this));
+
+		/**
+		 * Check for when all mutes are muted or unmuted
+		 * @method _checkSoundMute
+		 * @private
+		 */
+		this._checkSoundMute = function()
+		{
+			this.soundMuted = this.sfxMuted &amp;&amp; this.voMuted &amp;&amp; this.musicMuted;
+		};
+
+		/**
+		 * Set the all sound is enabled or not
+		 * @property {boolean} soundMuted
+		 * @default false
+		 */
+		Object.defineProperty(this, SOUND_MUTED,
+		{
+			set: function(muted)
+			{
+				this._soundMuted = muted;
+				this._setMuteProp(SOUND_MUTED, this.soundButton, muted);
+			},
+			get: function()
+			{
+				return this._soundMuted;
+			}
+		});
+
+		/**
+		 * Set the voice-over audio is muted
+		 * @property {boolean} voMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, VO_MUTED,
+		{
+			set: function(muted)
+			{
+				this._voMuted = muted;
+				this._setMuteProp(VO_MUTED, this.voButton, muted);
+			},
+			get: function()
+			{
+				return this._voMuted;
+			}
+		});
+
+		/**
+		 * Set the music audio is muted
+		 * @property {boolean} musicMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, MUSIC_MUTED,
+		{
+			set: function(muted)
+			{
+				this._musicMuted = muted;
+				this._setMuteProp(MUSIC_MUTED, this.musicButton, muted);
+			},
+			get: function()
+			{
+				return this._musicMuted;
+			}
+		});
+
+		/**
+		 * Set the sound effect audio is muted
+		 * @property {boolean} sfxMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, SFX_MUTED,
+		{
+			set: function(muted)
+			{
+				this._sfxMuted = muted;
+				this._setMuteProp(SFX_MUTED, this.sfxButton, muted);
+			},
+			get: function()
+			{
+				return this._sfxMuted;
+			}
+		});
+
+		//Set the defaults if we have none for the controls
+		if (SavedData.read(SOUND_MUTED) === null)
+		{
+			this.soundMuted = false;
+		}
+
+		this.on(&#x27;features&#x27;, function(features)
+			{
+				this.voButton.hide();
+				this.musicButton.hide();
+				this.soundButton.hide();
+				this.sfxButton.hide();
+
+				if (features.vo) this.voButton.show();
+				if (features.music) this.musicButton.show();
+				if (features.sound) this.soundButton.show();
+				if (features.sfxButton) this.sfxButton.show();
+			}
+			.bind(this));
+	};
+
+	/**
+	 * Handler when the sound mute button is clicked
+	 * @method onSoundToggle
+	 * @private
+	 */
+	var onSoundToggle = function()
+	{
+		var muted = !this.soundMuted;
+		this.soundMuted = muted;
+		this.musicMuted = muted;
+		this.voMuted = muted;
+		this.sfxMuted = muted;
+	};
+
+	/**
+	 * Handler when the music mute button is clicked
+	 * @method onMusicToggle
+	 * @private
+	 */
+	var onMusicToggle = function()
+	{
+		this.musicMuted = !this.musicMuted;
+		this._checkSoundMute();
+	};
+
+	/**
+	 * Handler when the voice-over mute button is clicked
+	 * @method onVOToggle
+	 * @private
+	 */
+	var onVOToggle = function()
+	{
+		this.voMuted = !this.voMuted;
+		this._checkSoundMute();
+	};
+
+	/**
+	 * Handler when the voice-over mute button is clicked
+	 * @method onSFXToggle
+	 * @private
+	 */
+	var onSFXToggle = function()
+	{
+		this.sfxMuted = !this.sfxMuted;
+		this._checkSoundMute();
+	};
+
+	plugin.open = function() {};
+
+	plugin.opened = function()
+	{
+		this.soundButton.removeClass(&#x27;disabled&#x27;);
+		this.sfxButton.removeClass(&#x27;disabled&#x27;);
+		this.voButton.removeClass(&#x27;disabled&#x27;);
+		this.musicButton.removeClass(&#x27;disabled&#x27;);
+
+		this.soundMuted = !!SavedData.read(SOUND_MUTED);
+		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
+		this.sfxMuted = !!SavedData.read(SFX_MUTED);
+		this.voMuted = !!SavedData.read(VO_MUTED);
+	};
+
+	plugin.close = function()
+	{
+		this._disableButton(this.soundButton);
+		this._disableButton(this.musicButton);
+		this._disableButton(this.voButton);
+		this._disableButton(this.sfxButton);
+	};
+
+	plugin.teardown = function()
+	{
+		this.voButton.off(&#x27;click&#x27;);
+		this.sfxButton.off(&#x27;click&#x27;);
+		this.musicButton.off(&#x27;click&#x27;);
+		this.soundButton.off(&#x27;click&#x27;);
+		delete this.voButton;
+		delete this.sfxButton;
+		delete this.musicButton;
+		delete this.soundButton;
+		delete this._checkSoundMute;
+	};
+
+}());</pre>
+</div></div>
+</div>
+</div>
+</div>
+<script src='../assets/js/libraries.js?v=0.5.2'></script>
+<script src='../assets/js/main.js?v=0.5.2'></script>
+</body>
+</html>

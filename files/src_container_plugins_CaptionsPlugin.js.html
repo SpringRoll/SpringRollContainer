@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>SpringRoll Container v0.5.2 API Documentation : src/container/plugins/CaptionsPlugin.js</title>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+	<link rel='shortcut icon' type='image/png' href='../assets/images/favicon.ico?v=0.5.2'>
+	<link href='//fonts.googleapis.com/css?family=Titillium+Web:300,200,600' rel='stylesheet' type='text/css'>
+	<link rel='stylesheet' type='text/css' href='../assets/css/libraries.css?v=0.5.2'>
+	<link rel='stylesheet' type='text/css' href='../assets/css/main.css?v=0.5.2'>
+</head>
+<body>
+<header>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class='container'>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#docs-navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href='https://github.com/SpringRoll/SpringRollContainer'>
+						<img src='../assets/images/logo.png?v=0.5.2' class="logo">
+					<span class='project-name'>SpringRoll Container</span>
+					<span class="sr-only">API Documentation for:</span>
+					<span class='version hidden-xs'>v0.5.2</span>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="docs-navbar">
+	      <ul class="scope-toggles text-center nav navbar-nav navbar-right">
+					<li><input class='scope-toggle' 
+						id='toggle-inherited' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Inherited' 
+						data-off='Inherited' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-protected' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Protected' 
+						data-off='Protected' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-private' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Private' 
+						data-off='Private' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-deprecated' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Deprecated' 
+						data-off='Deprecated' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>
+<div class='container'>
+<div class='row'>
+<nav id='sidebar' class='col-sm-4 col-md-3'>
+<h2>APIs</h2>
+<div class='input-group'>
+  <div class='input-group-addon'>
+    <span class='glyphicon glyphicon-search'></span>
+  </div>
+  <input type='search' class='form-control' id='api-filter' placeholder='Type to filter APIs'>
+  <span class='collapsed btn-close glyphicon glyphicon-remove-sign hidden'></span>
+</div>
+<nav class='navbar navbar-default'>
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="btn-group" role="group" aria-label="...">
+    <button type="button" class="sidebar-toggle collapsed btn btn-default" id='toggle-classes' data-target='#classes-collapse'>
+      Classes
+      <span class='collapsed glyphicon glyphicon-chevron-up'></span>
+      <span class='expanded glyphicon glyphicon-chevron-down'></span>
+    </button>
+    <button type="button" class="sidebar-toggle collapsed btn btn-default" id='toggle-modules' data-target='#modules-collapse'>
+      Modules
+      <span class='collapsed glyphicon glyphicon-chevron-up'></span>
+      <span class='expanded glyphicon glyphicon-chevron-down'></span>
+    </button>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class='collapse' id='classes-collapse'>
+    <ul class='nav navbar-nav'>
+        <li class='public'>
+          <a href='../classes/springroll.Container.html'>springroll.Container</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.ContainerPlugin.html'>springroll.ContainerPlugin</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.Features.html'>springroll.Features</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.SavedDataHandler.html'>springroll.SavedDataHandler</a>
+        </li>
+    </ul>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class='collapse' id='modules-collapse'>
+    <ul class='nav navbar-nav'>
+        <li class=''>
+          <a href='../modules/Container.html'>Container</a>
+        </li>
+        <li class=''>
+          <a href='../modules/Core.html'>Core</a>
+        </li>
+    </ul>
+  </div>
+  <!-- /.container-fluid -->
+</nav></nav>
+<div class='col-sm-8 col-md-9'>
+<div id='docs-main' class='apidocs'>
+<h1 class="file-heading">File:CaptionsPlugin.js</h1>
+
+<div class="file">
+<pre class="code prettyprint linenums">/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedData = include(&#x27;springroll.SavedData&#x27;);
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(70);
+
+	/**
+	 * The name of the saved property for the captions styles
+	 * @property {string} CAPTIONS_STYLES
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var CAPTIONS_STYLES = &#x27;captionsStyles&#x27;;
+
+	/**
+	 * The map of the default caption style settings
+	 * @property {object} DEFAULT_CAPTIONS_STYLES
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var DEFAULT_CAPTIONS_STYLES = {
+		size: &quot;md&quot;,
+		background: &quot;black-semi&quot;,
+		color: &quot;white&quot;,
+		edge: &quot;none&quot;,
+		font: &quot;arial&quot;,
+		align: &quot;top&quot;
+	};
+
+	/**
+	 * The name of the saved property if the captions are muted or not
+	 * @property {string} CAPTIONS_MUTED
+	 * @static
+	 * @private
+	 * @final
+	 */
+	var CAPTIONS_MUTED = &#x27;captionsMuted&#x27;;
+
+	plugin.setup = function()
+	{
+		/**
+		 * The collection of captions styles
+		 * @property {string} _captionsStyles
+		 * @private
+		 */
+		this._captionsStyles = Object.merge(
+			{},
+			DEFAULT_CAPTIONS_STYLES,
+			SavedData.read(CAPTIONS_STYLES) ||
+			{}
+		);
+
+		/**
+		 * Reference to the captions button
+		 * @property {jquery} captionsButton
+		 */
+		this.captionsButton = $(this.options.captionsButton)
+			.click(function()
+				{
+					this.captionsMuted = !this.captionsMuted;
+				}
+				.bind(this));
+
+		/**
+		 * Set the captions are enabled or not
+		 * @property {boolean} captionsMuted
+		 * @default true
+		 */
+		Object.defineProperty(this, CAPTIONS_MUTED,
+		{
+			set: function(muted)
+			{
+				this._captionsMuted = muted;
+				this._setMuteProp(CAPTIONS_MUTED, this.captionsButton, muted);
+			},
+			get: function()
+			{
+				return this._captionsMuted;
+			}
+		});
+
+		/**
+		 * Set the captions styles
+		 * @method setCaptionsStyles
+		 * @param {object|String} [styles] The style options or the name of the
+		 * property (e.g., &quot;color&quot;, &quot;edge&quot;, &quot;font&quot;, &quot;background&quot;, &quot;size&quot;)
+		 * @param {string} [styles.color=&#x27;white&#x27;] The text color, the default is white
+		 * @param {string} [styles.edge=&#x27;none&#x27;] The edge style, default is none
+		 * @param {string} [styles.font=&#x27;arial&#x27;] The font style, default is arial
+		 * @param {string} [styles.background=&#x27;black-semi&#x27;] The background style, black semi-transparent
+		 * @param {string} [styles.size=&#x27;md&#x27;] The font style default is medium
+		 * @param {string} [styles.align=&#x27;top&#x27;] The align style default is top of the window
+		 * @param {string} [value] If setting styles parameter as a string, this is the value of the property.
+		 */
+		this.setCaptionsStyles = function(styles, value)
+		{
+			if (typeof styles === &quot;object&quot;)
+			{
+				Object.merge(
+					this._captionsStyles,
+					styles ||
+					{}
+				);
+			}
+			else if (typeof styles === &quot;string&quot;)
+			{
+				this._captionsStyles[styles] = value;
+			}
+
+			styles = this._captionsStyles;
+
+			// Do some validation on the style settings
+			if (DEBUG)
+			{
+				if (!styles.color || !/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color))
+				{
+					throw &quot;Setting captions color style is invalid value : &quot; + styles.color;
+				}
+				if (!styles.background || !/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(styles.background))
+				{
+					throw &quot;Setting captions background style is invalid value : &quot; + styles.background;
+				}
+				if (!styles.size || !/^(xs|sm|md|lg|xl)$/.test(styles.size))
+				{
+					throw &quot;Setting captions size style is invalid value : &quot; + styles.size;
+				}
+				if (!styles.edge || !/^(raise|depress|uniform|drop|none)$/.test(styles.edge))
+				{
+					throw &quot;Setting captions edge style is invalid value : &quot; + styles.edge;
+				}
+				if (!styles.font || !/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(styles.font))
+				{
+					throw &quot;Setting captions font style is invalid value : &quot; + styles.font;
+				}
+				if (!styles.align || !/^(top|bottom)$/.test(styles.align))
+				{
+					throw &quot;Setting captions align style is invalid value : &quot; + styles.align;
+				}
+			}
+
+			SavedData.write(CAPTIONS_STYLES, styles);
+			if (this.client)
+			{
+				this.client.send(CAPTIONS_STYLES, styles);
+			}
+		};
+
+		/**
+		 * Get the captions styles
+		 * @method getCaptionsStyles
+		 * @param {string} [prop] The optional property, values are &quot;size&quot;, &quot;edge&quot;, &quot;font&quot;, &quot;background&quot;, &quot;color&quot;
+		 * @return {object} The collection of styles, see setCaptionsStyles for more info.
+		 */
+		this.getCaptionsStyles = function(prop)
+		{
+			var styles = this._captionsStyles;
+			return prop ? styles[prop] : styles;
+		};
+
+		/**
+		 * Reset the captions styles
+		 * @method clearCaptionsStyles
+		 */
+		this.clearCaptionsStyles = function()
+		{
+			this._captionsStyles = Object.merge(
+			{}, DEFAULT_CAPTIONS_STYLES);
+			this.setCaptionsStyles();
+		};
+
+		// Handle the features request
+		this.on(&#x27;features&#x27;, function(features)
+		{
+			this.captionsButton.hide();
+			if (features.captions) this.captionsButton.show();
+		});
+
+		//Set the defaults if we have none for the controls
+		if (SavedData.read(CAPTIONS_MUTED) === null)
+		{
+			this.captionsMuted = true;
+		}
+	};
+
+	plugin.opened = function()
+	{
+		this.captionsButton.removeClass(&#x27;disabled&#x27;);
+		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
+	};
+
+	plugin.close = function()
+	{
+		this._disableButton(this.captionsButton);
+	};
+
+	plugin.teardown = function()
+	{
+		this.captionsButton.off(&#x27;click&#x27;);
+		delete this.captionsButton;
+		delete this._captionsStyles;
+		delete this.getCaptionsStyles;
+		delete this.setCaptionsStyles;
+		delete this.clearCaptionsStyles;
+		delete this._captionsMuted;
+	};
+
+}());</pre>
+</div></div>
+</div>
+</div>
+</div>
+<script src='../assets/js/libraries.js?v=0.5.2'></script>
+<script src='../assets/js/main.js?v=0.5.2'></script>
+</body>
+</html>

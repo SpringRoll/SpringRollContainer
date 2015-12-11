@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-	<title>SpringRoll Container v0.5.2 API Documentation : springroll.SavedDataHandler</title>
+	<title>SpringRoll Container v0.5.2 API Documentation : springroll.ContainerPlugin</title>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
@@ -131,26 +131,90 @@
 <div class='col-sm-8 col-md-9'>
 <div id='docs-main' class='apidocs'>
 
-<h1>springroll.SavedDataHandler Class</h1>
+<h1>springroll.ContainerPlugin Class</h1>
 <div class='box meta'>
 
 
 <div class='foundat'>
-Defined in: <a href='../files/src_container_SavedDataHandler.js.html#l10'><code>springroll.SavedDataHandler:10</code></a>
+Defined in: <a href='../files/src_container_ContainerPlugin.js.html#l9'><code>springroll.ContainerPlugin:9</code></a>
 </div>
 
 Module:
-<a href="../modules/Container.html">Container</a>
+<a href="../modules/Core.html">Core</a>
 
 </div>
 
 
 <div class='box intro'>
-<p>Default user data handler for the <a href="../classes/springroll.Container.html" class="crosslink">Container</a> to save data using
-the springroll.SavedData class.</p>
+<p>Responsible for creating properties, methods to
+the SpringRoll Container when it's created.</p>
+<pre class="code prettyprint"><code>var plugin = new ContainerPlugin();
+plugin.setup = function()
+{
+    // Do setup here
+};</code></pre>
 
 </div>
 
+<div class='constructor'>
+<h2>Constructor</h2> <div class='method_springroll.ContainerPlugin method item'>
+<h3 class='name'><a class="deeplink" href="#method_springroll.ContainerPlugin"><span class="glyphicon glyphicon-link"></span></a> <code>springroll.ContainerPlugin</code></h3>
+
+<div class='args'>
+<span class='paren'>(</span>
+<ul class='args-list inline commas'>
+<li class='arg'>
+<code class='optional'>[priority=0]</code>
+</li>
+</ul><span class='paren'>)</span>
+</div>
+
+
+<div class='flags'>
+
+
+
+
+
+</div> 
+
+<div class='meta'>
+<p>
+Defined in
+<a href='../files/src_container_ContainerPlugin.js.html#l9'><code>springroll.ContainerPlugin:9</code></a>
+</p>
+
+
+
+</div>
+
+<div class='description'>
+
+</div>
+
+<div class='params'>
+<h4>Parameters:</h4>
+
+<ul class='params-list'>
+<li class='param'>
+<code class='param-name optional'>[priority=0]</code>
+<span class='type'>Int</span>
+<span class='flag optional' title='This parameter is optional.'>optional</span>
+
+
+<div class='param-description'>
+<p>The priority, higher priority
+plugins are setup, preloaded and destroyed first.</p>
+
+</div>
+
+</li>
+</ul>
+</div>
+
+
+</div>
+</div>
 
 <div id='classdocs' class='tabview'>
 <span id='docs-highlight'></span>
@@ -160,6 +224,9 @@ the springroll.SavedData class.</p>
 </li>
 <li id='tab-methods' class='docs-toggle'>
 <a data-toggle='tab' href='#docs-methods'>Methods</a>
+</li>
+<li id='tab-properties' class='docs-toggle'>
+<a data-toggle='tab' href='#docs-properties'>Properties</a>
 </li>
 </ul>
 
@@ -171,50 +238,58 @@ the springroll.SavedData class.</p>
 
 <ul class='list-group row methods'>
 <li class='col-xs-6 col-md-4 index-item method'>
-<a href='#method_read'>read</a>
+<a href='#method_close'>close</a>
 
-<span class='flag static'>static</span>
 </li>
 <li class='col-xs-6 col-md-4 index-item method'>
-<a href='#method_remove'>remove</a>
+<a href='#method_closed'>closed</a>
 
-<span class='flag static'>static</span>
 </li>
 <li class='col-xs-6 col-md-4 index-item method'>
-<a href='#method_write'>write</a>
+<a href='#method_open'>open</a>
 
-<span class='flag static'>static</span>
+</li>
+<li class='col-xs-6 col-md-4 index-item method'>
+<a href='#method_opened'>opened</a>
+
+</li>
+<li class='col-xs-6 col-md-4 index-item method'>
+<a href='#method_setup'>setup</a>
+
+</li>
+<li class='col-xs-6 col-md-4 index-item method'>
+<a href='#method_teardown'>teardown</a>
+
 </li>
 </ul>
 </div>
 
+<div class='index-section tab-pane properties'>
+<h3>Properties</h3>
+
+<ul class='list-group row properties'>
+<li class='col-xs-6 col-md-4 index-item property private'>
+<a href='#property_priority'>priority</a>
+
+</li>
+</ul>
+</div>
 
 
 </div>
 
 <div role='tabpanel' id='docs-methods' class='tab-pane'>
 
-<div class='method_read method item'>
-<h3 class='name'><a class="deeplink" href="#method_read"><span class="glyphicon glyphicon-link"></span></a> <code>read</code></h3>
+<div class='method_close method item'>
+<h3 class='name'><a class="deeplink" href="#method_close"><span class="glyphicon glyphicon-link"></span></a> <code>close</code></h3>
 
-<div class='args'>
-<span class='paren'>(</span>
-<ul class='args-list inline commas'>
-<li class='arg'>
-<code>name</code>
-</li>
-<li class='arg'>
-<code>callback</code>
-</li>
-</ul><span class='paren'>)</span>
-</div>
+<span class='paren'>()</span>
 
 
 <div class='flags'>
 
 
 
-<span class='flag static'>static</span>
 
 
 </div> 
@@ -222,7 +297,7 @@ the springroll.SavedData class.</p>
 <div class='meta'>
 <p>
 Defined in
-<a href='../files/src_container_SavedDataHandler.js.html#l47'><code>read:47</code></a>
+<a href='../files/src_container_ContainerPlugin.js.html#l61'><code>close:61</code></a>
 </p>
 
 
@@ -230,61 +305,22 @@ Defined in
 </div>
 
 <div class='description'>
-<p>Read a custom setting</p>
+<p>Called when an application has begun to be closed.</p>
 
 </div>
 
-<div class='params'>
-<h4>Parameters:</h4>
-
-<ul class='params-list'>
-<li class='param'>
-<code class='param-name'>name</code>
-<span class='type'><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
 
 
-<div class='param-description'>
-<p>The name of the property</p>
+</div><div class='method_closed method item'>
+<h3 class='name'><a class="deeplink" href="#method_closed"><span class="glyphicon glyphicon-link"></span></a> <code>closed</code></h3>
 
-</div>
-
-</li>
-<li class='param'>
-<code class='param-name'>callback</code>
-<span class='type'><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
-
-
-<div class='param-description'>
-<p>Callback when read is complete, returns the value</p>
-
-</div>
-
-</li>
-</ul>
-</div>
-
-
-</div><div class='method_remove method item'>
-<h3 class='name'><a class="deeplink" href="#method_remove"><span class="glyphicon glyphicon-link"></span></a> <code>remove</code></h3>
-
-<div class='args'>
-<span class='paren'>(</span>
-<ul class='args-list inline commas'>
-<li class='arg'>
-<code>name</code>
-</li>
-<li class='arg'>
-<code class='optional'>[callback]</code>
-</li>
-</ul><span class='paren'>)</span>
-</div>
+<span class='paren'>()</span>
 
 
 <div class='flags'>
 
 
 
-<span class='flag static'>static</span>
 
 
 </div> 
@@ -292,7 +328,7 @@ Defined in
 <div class='meta'>
 <p>
 Defined in
-<a href='../files/src_container_SavedDataHandler.js.html#l20'><code>remove:20</code></a>
+<a href='../files/src_container_ContainerPlugin.js.html#l67'><code>closed:67</code></a>
 </p>
 
 
@@ -300,65 +336,22 @@ Defined in
 </div>
 
 <div class='description'>
-<p>Remove a data setting</p>
+<p>Called when an application is closed completely.</p>
 
 </div>
 
-<div class='params'>
-<h4>Parameters:</h4>
-
-<ul class='params-list'>
-<li class='param'>
-<code class='param-name'>name</code>
-<span class='type'><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
 
 
-<div class='param-description'>
-<p>The name of the property</p>
+</div><div class='method_open method item'>
+<h3 class='name'><a class="deeplink" href="#method_open"><span class="glyphicon glyphicon-link"></span></a> <code>open</code></h3>
 
-</div>
-
-</li>
-<li class='param'>
-<code class='param-name optional'>[callback]</code>
-<span class='type'><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
-<span class='flag optional' title='This parameter is optional.'>optional</span>
-
-
-<div class='param-description'>
-<p>Callback when remove is complete</p>
-
-</div>
-
-</li>
-</ul>
-</div>
-
-
-</div><div class='method_write method item'>
-<h3 class='name'><a class="deeplink" href="#method_write"><span class="glyphicon glyphicon-link"></span></a> <code>write</code></h3>
-
-<div class='args'>
-<span class='paren'>(</span>
-<ul class='args-list inline commas'>
-<li class='arg'>
-<code>name</code>
-</li>
-<li class='arg'>
-<code>value</code>
-</li>
-<li class='arg'>
-<code class='optional'>[callback]</code>
-</li>
-</ul><span class='paren'>)</span>
-</div>
+<span class='paren'>()</span>
 
 
 <div class='flags'>
 
 
 
-<span class='flag static'>static</span>
 
 
 </div> 
@@ -366,7 +359,7 @@ Defined in
 <div class='meta'>
 <p>
 Defined in
-<a href='../files/src_container_SavedDataHandler.js.html#l33'><code>write:33</code></a>
+<a href='../files/src_container_ContainerPlugin.js.html#l47'><code>open:47</code></a>
 </p>
 
 
@@ -374,54 +367,141 @@ Defined in
 </div>
 
 <div class='description'>
-<p>Write a custom setting</p>
+<p>Called when an application is opening and before the
+app has completely finished loading.</p>
 
 </div>
 
-<div class='params'>
-<h4>Parameters:</h4>
-
-<ul class='params-list'>
-<li class='param'>
-<code class='param-name'>name</code>
-<span class='type'><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/String" class="crosslink external" target="_blank">String</a></span>
 
 
-<div class='param-description'>
-<p>The name of the property</p>
+</div><div class='method_opened method item'>
+<h3 class='name'><a class="deeplink" href="#method_opened"><span class="glyphicon glyphicon-link"></span></a> <code>opened</code></h3>
 
-</div>
-
-</li>
-<li class='param'>
-<code class='param-name'>value</code>
-<span class='type'></span>
+<span class='paren'>()</span>
 
 
-<div class='param-description'>
-<p>The value to set the property to</p>
-
-</div>
-
-</li>
-<li class='param'>
-<code class='param-name optional'>[callback]</code>
-<span class='type'><a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Function" class="crosslink external" target="_blank">Function</a></span>
-<span class='flag optional' title='This parameter is optional.'>optional</span>
+<div class='flags'>
 
 
-<div class='param-description'>
-<p>Callback when write is complete</p>
+
+
+
+</div> 
+
+<div class='meta'>
+<p>
+Defined in
+<a href='../files/src_container_ContainerPlugin.js.html#l54'><code>opened:54</code></a>
+</p>
+
+
 
 </div>
 
-</li>
-</ul>
+<div class='description'>
+<p>Called when an application is opening and before the
+app has completely finished loading.</p>
+
 </div>
+
+
+
+</div><div class='method_setup method item'>
+<h3 class='name'><a class="deeplink" href="#method_setup"><span class="glyphicon glyphicon-link"></span></a> <code>setup</code></h3>
+
+<span class='paren'>()</span>
+
+
+<div class='flags'>
+
+
+
+
+
+</div> 
+
+<div class='meta'>
+<p>
+Defined in
+<a href='../files/src_container_ContainerPlugin.js.html#l40'><code>setup:40</code></a>
+</p>
+
+
+
+</div>
+
+<div class='description'>
+<p>When the Container is being initialized. This function
+is bound to the Container. This should be overridden.</p>
+
+</div>
+
+
+
+</div><div class='method_teardown method item'>
+<h3 class='name'><a class="deeplink" href="#method_teardown"><span class="glyphicon glyphicon-link"></span></a> <code>teardown</code></h3>
+
+<span class='paren'>()</span>
+
+
+<div class='flags'>
+
+
+
+
+
+</div> 
+
+<div class='meta'>
+<p>
+Defined in
+<a href='../files/src_container_ContainerPlugin.js.html#l73'><code>teardown:73</code></a>
+</p>
+
+
+
+</div>
+
+<div class='description'>
+<p>When the Container is being destroyed. This function
+is bound to the Container. This should be overridden.</p>
+
+</div>
+
 
 
 </div></div>
 
+<div role='tabpanel' id='docs-properties' class='tab-pane'>
+
+<div class="property_priority property item private">
+<h3 class="name"><a class="deeplink" href="#property_priority"><span class="glyphicon glyphicon-link"></span></a> <code>priority</code></h3>
+<span class="type">Int</span>
+
+
+<span class="flag private">private</span>
+
+
+
+<div class="meta">
+<p>
+Defined in
+<a href="../files/src_container_ContainerPlugin.js.html#l31"><code>priority:31</code></a>
+</p>
+
+
+</div>
+
+<div class="description">
+<p>The priority of the plugin. Higher numbers handled first. This should be set
+in the constructor of the extending ContainerPlugin.</p>
+
+</div>
+
+<p><strong>Default:</strong> 0</p>
+
+
+</div></div>
 
 
 </div>

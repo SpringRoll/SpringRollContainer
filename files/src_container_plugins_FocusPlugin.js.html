@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>SpringRoll Container v0.5.2 API Documentation : src/container/plugins/FocusPlugin.js</title>
+	<meta charset='utf-8'>
+	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+	<link rel='shortcut icon' type='image/png' href='../assets/images/favicon.ico?v=0.5.2'>
+	<link href='//fonts.googleapis.com/css?family=Titillium+Web:300,200,600' rel='stylesheet' type='text/css'>
+	<link rel='stylesheet' type='text/css' href='../assets/css/libraries.css?v=0.5.2'>
+	<link rel='stylesheet' type='text/css' href='../assets/css/main.css?v=0.5.2'>
+</head>
+<body>
+<header>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class='container'>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#docs-navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href='https://github.com/SpringRoll/SpringRollContainer'>
+						<img src='../assets/images/logo.png?v=0.5.2' class="logo">
+					<span class='project-name'>SpringRoll Container</span>
+					<span class="sr-only">API Documentation for:</span>
+					<span class='version hidden-xs'>v0.5.2</span>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse" id="docs-navbar">
+	      <ul class="scope-toggles text-center nav navbar-nav navbar-right">
+					<li><input class='scope-toggle' 
+						id='toggle-inherited' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Inherited' 
+						data-off='Inherited' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-protected' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Protected' 
+						data-off='Protected' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-private' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Private' 
+						data-off='Private' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+					<li><input class='scope-toggle' 
+						id='toggle-deprecated' 
+						type='checkbox' 
+						data-toggle='toggle' 
+						data-on='Deprecated' 
+						data-off='Deprecated' 
+						data-size='mini'
+						data-width='80'>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>
+<div class='container'>
+<div class='row'>
+<nav id='sidebar' class='col-sm-4 col-md-3'>
+<h2>APIs</h2>
+<div class='input-group'>
+  <div class='input-group-addon'>
+    <span class='glyphicon glyphicon-search'></span>
+  </div>
+  <input type='search' class='form-control' id='api-filter' placeholder='Type to filter APIs'>
+  <span class='collapsed btn-close glyphicon glyphicon-remove-sign hidden'></span>
+</div>
+<nav class='navbar navbar-default'>
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="btn-group" role="group" aria-label="...">
+    <button type="button" class="sidebar-toggle collapsed btn btn-default" id='toggle-classes' data-target='#classes-collapse'>
+      Classes
+      <span class='collapsed glyphicon glyphicon-chevron-up'></span>
+      <span class='expanded glyphicon glyphicon-chevron-down'></span>
+    </button>
+    <button type="button" class="sidebar-toggle collapsed btn btn-default" id='toggle-modules' data-target='#modules-collapse'>
+      Modules
+      <span class='collapsed glyphicon glyphicon-chevron-up'></span>
+      <span class='expanded glyphicon glyphicon-chevron-down'></span>
+    </button>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class='collapse' id='classes-collapse'>
+    <ul class='nav navbar-nav'>
+        <li class='public'>
+          <a href='../classes/springroll.Container.html'>springroll.Container</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.ContainerPlugin.html'>springroll.ContainerPlugin</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.Features.html'>springroll.Features</a>
+        </li>
+        <li class='public'>
+          <a href='../classes/springroll.SavedDataHandler.html'>springroll.SavedDataHandler</a>
+        </li>
+    </ul>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class='collapse' id='modules-collapse'>
+    <ul class='nav navbar-nav'>
+        <li class=''>
+          <a href='../modules/Container.html'>Container</a>
+        </li>
+        <li class=''>
+          <a href='../modules/Core.html'>Core</a>
+        </li>
+    </ul>
+  </div>
+  <!-- /.container-fluid -->
+</nav></nav>
+<div class='col-sm-8 col-md-9'>
+<div id='docs-main' class='apidocs'>
+<h1 class="file-heading">File:FocusPlugin.js</h1>
+
+<div class="file">
+<pre class="code prettyprint linenums">/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var PageVisibility = include(&#x27;springroll.PageVisibility&#x27;);
+
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(90);
+
+	plugin.setup = function()
+	{
+		// Add the default option for pauseFocusSelector
+		this.options = $.extend(
+			{
+				pauseFocusSelector: &#x27;.pause-on-focus&#x27;
+			},
+			this.options);
+
+		/**
+		 * Handle the page visiblity change events, like opening a new tab
+		 * or blurring the current page.
+		 * @property {springroll.PageVisibility} _pageVisibility
+		 * @private
+		 */
+		this._pageVisibility = new PageVisibility(
+			onContainerFocus.bind(this),
+			onContainerBlur.bind(this)
+		);
+
+		/**
+		 * Whether the Game is currently &quot;blurred&quot; (not focused) - for pausing/unpausing
+		 * @property {Boolean} _appBlurred
+		 * @private
+		 * @default  false
+		 */
+		this._appBlurred = false;
+
+		/**
+		 * Always keep the focus on the application iframe
+		 * @property {Boolean} _keepFocus
+		 * @private
+		 * @default  false
+		 */
+		this._keepFocus = false;
+
+		/**
+		 * Whether the Container is currently &quot;blurred&quot; (not focused) - for pausing/unpausing
+		 * @property {Boolean} _containerBlurred
+		 * @private
+		 * @default  false
+		 */
+		this._containerBlurred = false;
+
+		/**
+		 * Delays pausing of application to mitigate issues with asynchronous communication
+		 * between Game and Container
+		 * @property {int} _focusTimer
+		 */
+		this._focusTimer = null;
+
+		// Focus on the window on focusing on anything else
+		// without the .pause-on-focus class
+		this._onDocClick = onDocClick.bind(this);
+		$(document).on(&#x27;focus click&#x27;, this._onDocClick);
+
+		/**
+		 * Focus on the iframe&#x27;s contentWindow
+		 * @method focus
+		 */
+		this.focus = function()
+		{
+			this.dom.contentWindow.focus();
+		};
+
+		/**
+		 * Unfocus on the iframe&#x27;s contentWindow
+		 * @method blur
+		 */
+		this.blur = function()
+		{
+			this.dom.contentWindow.blur();
+		};
+
+		/**
+		 * Manage the focus change events sent from window and iFrame
+		 * @method manageFocus
+		 * @protected
+		 */
+		this.manageFocus = function()
+		{
+			// Unfocus on the iframe
+			if (this._keepFocus)
+			{
+				this.blur();
+			}
+
+			// we only need one delayed call, at the end of any
+			// sequence of rapidly-fired blur/focus events
+			if (this._focusTimer)
+			{
+				clearTimeout(this._focusTimer);
+			}
+
+			// Delay setting of &#x27;paused&#x27; in case we get another focus event soon.
+			// Focus events are sent to the container asynchronously, and this was
+			// causing rapid toggling of the pause state and related issues,
+			// especially in Internet Explorer
+			this._focusTimer = setTimeout(
+				function()
+				{
+					this._focusTimer = null;
+					// A manual pause cannot be overriden by focus events.
+					// User must click the resume button.
+					if (this._isManualPause) return;
+
+					this.paused = this._containerBlurred &amp;&amp; this._appBlurred;
+
+					// Focus on the content window when blurring the app
+					// but selecting the container
+					if (this._keepFocus &amp;&amp; !this._containerBlurred &amp;&amp; this._appBlurred)
+					{
+						this.focus();
+					}
+
+				}.bind(this),
+				100
+			);
+		};
+
+		// On elements with the class name pause-on-focus
+		// we will pause the game until a blur event to that item
+		// has been sent
+		var self = this;
+		$(this.options.pauseFocusSelector).on(&#x27;focus&#x27;, function()
+		{
+			self._isManualPause = self.paused = true;
+			$(this).one(&#x27;blur&#x27;, function()
+			{
+				self._isManualPause = self.paused = false;
+				self.focus();
+			});
+		});
+	};
+
+	/**
+	 * When the document is clicked
+	 * @method _onDocClicked
+	 * @private
+	 * @param  {Event} e Click or focus event
+	 */
+	var onDocClick = function(e)
+	{
+		if (!this.loaded) return;
+
+		var target;
+
+		// Firefox support
+		if (e.originalEvent.explicitOriginalTarget)
+		{
+			target = $(e.originalEvent.explicitOriginalTarget);
+		}
+		else
+		{
+			target = $(e.target);
+		}
+		if (!target.filter(this.options.pauseFocusSelector).length)
+		{
+			this.focus();
+			return false;
+		}
+	};
+
+	/**
+	 * Handle the keep focus event for the window
+	 * @method onKeepFocus
+	 * @private
+	 */
+	var onKeepFocus = function(event)
+	{
+		this._keepFocus = !!event.data;
+		this.manageFocus();
+	};
+
+	/**
+	 * Handle focus events sent from iFrame children
+	 * @method onFocus
+	 * @private
+	 */
+	var onFocus = function(e)
+	{
+		this._appBlurred = !e.data;
+		this.manageFocus();
+	};
+
+	/**
+	 * Handle focus events sent from container&#x27;s window
+	 * @method onContainerFocus
+	 * @private
+	 */
+	var onContainerFocus = function(e)
+	{
+		this._containerBlurred = false;
+		this.manageFocus();
+	};
+
+	/**
+	 * Handle blur events sent from container&#x27;s window
+	 * @method onContainerBlur
+	 * @private
+	 */
+	var onContainerBlur = function(e)
+	{
+		//Set both container and application to blurred,
+		//because some blur events are only happening on the container.
+		//If container is blurred because application area was just focused,
+		//the application&#x27;s focus event will override the blur imminently.
+		this._containerBlurred = this._appBlurred = true;
+		this.manageFocus();
+	};
+
+	plugin.open = function()
+	{
+		this.client.on(
+		{
+			focus: onFocus.bind(this),
+			keepFocus: onKeepFocus.bind(this),
+		});
+	};
+
+	plugin.opened = function()
+	{
+		this.focus();
+	};
+
+	plugin.close = function()
+	{
+		// Stop the focus timer if it&#x27;s running
+		if (this._focusTimer)
+		{
+			clearTimeout(this._focusTimer);
+		}
+	};
+
+	plugin.teardown = function()
+	{
+		$(this.options.pauseFocusSelector).off(&#x27;focus&#x27;);
+		$(document).off(&#x27;focus click&#x27;, this._onDocClick);
+		delete this._onDocClick;
+		if (this._pageVisibility)
+		{
+			this._pageVisibility.destroy();
+			delete this._pageVisibility;
+		}
+		delete this.focus;
+		delete this.blur;
+		delete this.manageFocus;
+		delete this._appBlurred;
+		delete this._focusTimer;
+		delete this._keepFocus;
+		delete this._containerBlurred;
+	};
+
+}());</pre>
+</div></div>
+</div>
+</div>
+</div>
+<script src='../assets/js/libraries.js?v=0.5.2'></script>
+<script src='../assets/js/main.js?v=0.5.2'></script>
+</body>
+</html>

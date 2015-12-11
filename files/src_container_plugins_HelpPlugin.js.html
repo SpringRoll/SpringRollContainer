@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-	<title>SpringRoll Container v0.5.2 API Documentation : Container</title>
+	<title>SpringRoll Container v0.5.2 API Documentation : src/container/plugins/HelpPlugin.js</title>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
@@ -130,42 +130,110 @@
 </nav></nav>
 <div class='col-sm-8 col-md-9'>
 <div id='docs-main' class='apidocs'>
-<h1>Container Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File:HelpPlugin.js</h1>
 
-<div class="foundat">
-Defined in: <a href="../files/src_container_SavedDataHandler.js.html#l10"><code>Container:10</code></a>
-</div>
+<div class="file">
+<pre class="code prettyprint linenums">/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(50);
 
-</div>
+	plugin.setup = function()
+	{
+		/**
+		 * Reference to the help button
+		 * @property {jquery} helpButton
+		 */
+		this.helpButton = $(this.options.helpButton)
+			.click(function()
+				{
+					if (!this.paused &amp;&amp; !this.helpButton.hasClass(&#x27;disabled&#x27;))
+					{
+						this.client.send(&#x27;playHelp&#x27;);
+					}
+				}
+				.bind(this));
 
+		// Handle pause
+		this.on(&#x27;pause&#x27;, function(paused)
+		{
+			// Disable the help button when paused if it&#x27;s active
+			if (paused &amp;&amp; !this.helpButton.hasClass(&#x27;disabled&#x27;))
+			{
+				this.helpButton.data(&#x27;paused&#x27;, true);
+				this.helpEnabled = false;
+			}
+			else if (this.helpButton.data(&#x27;paused&#x27;))
+			{
+				this.helpButton.removeData(&#x27;paused&#x27;);
+				this.helpEnabled = true;
+			}
+		});
 
-<div class="box intro">
+		/**
+		 * Set the captions are muted
+		 * @property {Boolean} helpEnabled
+		 */
+		Object.defineProperty(this, &#x27;helpEnabled&#x27;,
+		{
+			set: function(enabled)
+			{
+				this._helpEnabled = enabled;
+				this.helpButton.removeClass(&#x27;disabled enabled&#x27;)
+					.addClass(enabled ? &#x27;enabled&#x27; : &#x27;disabled&#x27;);
 
-</div>
+				/**
+				 * Fired when the enabled status of the help button changes
+				 * @event helpEnabled
+				 * @param {boolean} enabled If the help button is enabled
+				 */
+				this.trigger(&#x27;helpEnabled&#x27;, enabled);
+			},
+			get: function()
+			{
+				return this._helpEnabled;
+			}
+		});
 
+		// Handle features changed
+		this.on(&#x27;features&#x27;, function(features)
+			{
+				this.helpButton.hide();
+				if (features.hints) this.helpButton.show();
+			}
+			.bind(this));
+	};
 
+	plugin.open = function()
+	{
+		this.client.on(&#x27;helpEnabled&#x27;, function(event)
+			{
+				this.helpEnabled = !!event.data;
+			}
+			.bind(this));
+	};
 
-<p>This namespace provides the following classes:</p>
-<ul class="module-classes normal">
-<li class="module-class">
-<a href="../classes/springroll.Container.html">
-springroll.Container
-</a>
-</li>
-<li class="module-class">
-<a href="../classes/springroll.Features.html">
-springroll.Features
-</a>
-</li>
-<li class="module-class">
-<a href="../classes/springroll.SavedDataHandler.html">
-springroll.SavedDataHandler
-</a>
-</li>
-</ul>
+	plugin.close = function()
+	{
+		this.client.off(&#x27;helpEnabled&#x27;);
+		this.helpEnabled = false;
+	};
 
-</div>
+	plugin.teardown = function()
+	{
+		this.helpButton.off(&#x27;click&#x27;);
+		delete this.helpButton;
+		delete this._helpEnabled;
+	};
+
+}());</pre>
+</div></div>
 </div>
 </div>
 </div>

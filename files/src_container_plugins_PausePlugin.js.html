@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-	<title>SpringRoll Container v0.5.2 API Documentation : Container</title>
+	<title>SpringRoll Container v0.5.2 API Documentation : src/container/plugins/PausePlugin.js</title>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
@@ -130,42 +130,125 @@
 </nav></nav>
 <div class='col-sm-8 col-md-9'>
 <div id='docs-main' class='apidocs'>
-<h1>Container Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File:PausePlugin.js</h1>
 
-<div class="foundat">
-Defined in: <a href="../files/src_container_SavedDataHandler.js.html#l10"><code>Container:10</code></a>
-</div>
+<div class="file">
+<pre class="code prettyprint linenums">/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(80);
 
-</div>
+	plugin.setup = function()
+	{
+		/**
+		 * Reference to the pause application button
+		 * @property {jquery} pauseButton
+		 */
+		this.pauseButton = $(this.options.pauseButton)
+			.click(onPauseToggle.bind(this));
 
+		/**
+		 * If the application is currently paused manually
+		 * @property {boolean} _isManualPause
+		 * @private
+		 * @default false
+		 */
+		this._isManualPause = false;
 
-<div class="box intro">
+		/**
+		 * If the current application is paused
+		 * @property {Boolean} _paused
+		 * @private
+		 * @default false
+		 */
+		this._paused = false;
 
-</div>
+		/**
+		 * If the current application is paused
+		 * @property {Boolean} paused
+		 * @default false
+		 */
+		Object.defineProperty(this, &#x27;paused&#x27;,
+		{
+			set: function(paused)
+			{
+				this._paused = paused;
 
+				if (this.client)
+				{
+					this.client.send(&#x27;pause&#x27;, paused);
+				}
+				/**
+				 * Fired when the pause state is toggled
+				 * @event pause
+				 * @param {boolean} paused If the application is now paused
+				 */
+				/**
+				 * Fired when the application resumes from a paused state
+				 * @event resumed
+				 */
+				/**
+				 * Fired when the application becomes paused
+				 * @event paused
+				 */
+				this.trigger(paused ? &#x27;paused&#x27; : &#x27;resumed&#x27;);
+				this.trigger(&#x27;pause&#x27;, paused);
 
+				// Set the pause button state
+				if (this.pauseButton)
+				{
+					this.pauseButton.removeClass(&#x27;unpaused paused&#x27;)
+						.addClass(paused ? &#x27;paused&#x27; : &#x27;unpaused&#x27;);
+				}
+			},
+			get: function()
+			{
+				return this._paused;
+			}
+		});
+	};
 
-<p>This namespace provides the following classes:</p>
-<ul class="module-classes normal">
-<li class="module-class">
-<a href="../classes/springroll.Container.html">
-springroll.Container
-</a>
-</li>
-<li class="module-class">
-<a href="../classes/springroll.Features.html">
-springroll.Features
-</a>
-</li>
-<li class="module-class">
-<a href="../classes/springroll.SavedDataHandler.html">
-springroll.SavedDataHandler
-</a>
-</li>
-</ul>
+	/**
+	 * Toggle the current paused state of the application
+	 * @method onPauseToggle
+	 * @private
+	 */
+	var onPauseToggle = function()
+	{
+		this.paused = !this.paused;
+		this._isManualPause = this.paused;
+	};
 
-</div>
+	plugin.opened = function()
+	{
+		this.pauseButton.removeClass(&#x27;disabled&#x27;);
+
+		// Reset the paused state
+		this.paused = this._paused;
+	};
+
+	plugin.close = function()
+	{
+		this._disableButton(this.pauseButton);
+		this.paused = false;
+	};
+
+	plugin.teardown = function()
+	{
+		this.pauseButton.off(&#x27;click&#x27;);
+		delete this.pauseButton;
+		delete this._isManualPause;
+		delete this._paused;
+	};
+
+}());</pre>
+</div></div>
 </div>
 </div>
 </div>

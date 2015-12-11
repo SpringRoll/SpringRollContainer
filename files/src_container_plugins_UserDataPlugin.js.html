@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang='en'>
 <head>
-	<title>SpringRoll Container v0.5.2 API Documentation : Container</title>
+	<title>SpringRoll Container v0.5.2 API Documentation : src/container/plugins/UserDataPlugin.js</title>
 	<meta charset='utf-8'>
 	<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
@@ -130,42 +130,95 @@
 </nav></nav>
 <div class='col-sm-8 col-md-9'>
 <div id='docs-main' class='apidocs'>
-<h1>Container Module</h1>
-<div class="box clearfix meta">
+<h1 class="file-heading">File:UserDataPlugin.js</h1>
 
-<div class="foundat">
-Defined in: <a href="../files/src_container_SavedDataHandler.js.html#l10"><code>Container:10</code></a>
-</div>
+<div class="file">
+<pre class="code prettyprint linenums">/**
+ * @module Container
+ * @namespace springroll
+ */
+(function()
+{
+	var SavedDataHandler = include(&#x27;springroll.SavedDataHandler&#x27;);
 
-</div>
+	/**
+	 * @class Container
+	 */
+	var plugin = new springroll.ContainerPlugin(40);
 
+	plugin.setup = function()
+	{
+		/**
+		 * The external handler class, must include &#x60;remove&#x60;, &#x60;write&#x60;, &#x60;read&#x60; methods
+		 * make it possible to use something else to handle the external, default
+		 * is to use cookies/localStorage. See {{#crossLink &quot;springroll.SavedDataHandler&quot;}}{{/crossLink}}
+		 * as an example.
+		 * @property {Object} userDataHandler
+		 * @default springroll.SavedDataHandler
+		 */
+		this.userDataHandler = new SavedDataHandler();
+	};
 
-<div class="box intro">
+	plugin.open = function()
+	{
+		this.client.on(
+		{
+			userDataRemove: onUserDataRemove.bind(this),
+			userDataRead: onUserDataRead.bind(this),
+			userDataWrite: onUserDataWrite.bind(this),
+		});
+	};
 
-</div>
+	/**
+	 * Handler for the userDataRemove event
+	 * @method onUserDataRemove
+	 * @private
+	 */
+	var onUserDataRemove = function(event)
+	{
+		var client = this.client;
+		this.userDataHandler.remove(event.data, function()
+		{
+			client.send(event.type);
+		});
+	};
 
+	/**
+	 * Handler for the userDataRead event
+	 * @method onUserDataRead
+	 * @private
+	 */
+	var onUserDataRead = function(event)
+	{
+		var client = this.client;
+		this.userDataHandler.read(event.data, function(value)
+		{
+			client.send(event.type, value);
+		});
+	};
 
+	/**
+	 * Handler for the userDataWrite event
+	 * @method onUserDataWrite
+	 * @private
+	 */
+	var onUserDataWrite = function(event)
+	{
+		var data = event.data;
+		var client = this.client;
+		this.userDataHandler.write(data.name, data.value, function()
+		{
+			client.send(event.type);
+		});
+	};
 
-<p>This namespace provides the following classes:</p>
-<ul class="module-classes normal">
-<li class="module-class">
-<a href="../classes/springroll.Container.html">
-springroll.Container
-</a>
-</li>
-<li class="module-class">
-<a href="../classes/springroll.Features.html">
-springroll.Features
-</a>
-</li>
-<li class="module-class">
-<a href="../classes/springroll.SavedDataHandler.html">
-springroll.SavedDataHandler
-</a>
-</li>
-</ul>
+	plugin.teardown = function()
+	{
+		this.userDataHandler = null;
+	};
 
-</div>
+}());</pre>
+</div></div>
 </div>
 </div>
 </div>
