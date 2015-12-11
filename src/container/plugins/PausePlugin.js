@@ -106,6 +106,7 @@
 
 	plugin.teardown = function()
 	{
+		this.pauseButton.off('click');
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;

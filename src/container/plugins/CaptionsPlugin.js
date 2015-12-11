@@ -205,6 +205,7 @@
 
 	plugin.teardown = function()
 	{
+		this.captionsButton.off('click');
 		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;

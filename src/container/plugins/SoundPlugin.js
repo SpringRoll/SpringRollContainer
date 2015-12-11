@@ -252,6 +252,10 @@
 
 	plugin.teardown = function()
 	{
+		this.voButton.off('click');
+		this.sfxButton.off('click');
+		this.musicButton.off('click');
+		this.soundButton.off('click');
 		delete this.voButton;
 		delete this.sfxButton;
 		delete this.musicButton;

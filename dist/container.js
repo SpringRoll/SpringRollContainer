@@ -1,4 +1,4 @@
-/*! SpringRoll Container 0.5.1 */
+/*! SpringRoll Container 0.5.2 */
 /**
  * @module Core
  * @namespace window
@@ -1386,9 +1386,9 @@
 	 * @property {String} version
 	 * @static
 	 * @readOnly
-	 * @default "0.5.1"
+	 * @default "0.5.2"
 	 */
-	Container.version = "0.5.1";
+	Container.version = "0.5.2";
 
 	//Reference to the prototype
 	var s = EventDispatcher.prototype;
@@ -2057,6 +2057,7 @@
 
 	plugin.teardown = function()
 	{
+		this.captionsButton.off('click');
 		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;
@@ -2466,6 +2467,7 @@
 
 	plugin.teardown = function()
 	{
+		this.helpButton.off('click');
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
@@ -2579,6 +2581,7 @@
 
 	plugin.teardown = function()
 	{
+		this.pauseButton.off('click');
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
@@ -2937,6 +2940,10 @@
 
 	plugin.teardown = function()
 	{
+		this.voButton.off('click');
+		this.sfxButton.off('click');
+		this.musicButton.off('click');
+		this.soundButton.off('click');
 		delete this.voButton;
 		delete this.sfxButton;
 		delete this.musicButton;

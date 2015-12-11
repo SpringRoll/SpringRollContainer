@@ -1,6 +1,6 @@
 {
 	"name": "springroll-container",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"description": "The iframe controller for interacting with SpringRoll applications",
 	"main": "./dist/container.min.js",
 	"author":

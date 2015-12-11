@@ -92,6 +92,7 @@
 
 	plugin.teardown = function()
 	{
+		this.helpButton.off('click');
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
