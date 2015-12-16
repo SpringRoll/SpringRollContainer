@@ -170,7 +170,6 @@
 		if (!target.filter(this.options.pauseFocusSelector).length)
 		{
 			this.focus();
-			return false;
 		}
 	};
 

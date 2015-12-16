@@ -1,4 +1,4 @@
-/*! SpringRoll Container 0.5.2 */
+/*! SpringRoll Container 0.5.3 */
 /**
  * @module Core
  * @namespace window
@@ -1386,9 +1386,9 @@
 	 * @property {String} version
 	 * @static
 	 * @readOnly
-	 * @default "0.5.2"
+	 * @default "0.5.3"
 	 */
-	Container.version = "0.5.2";
+	Container.version = "0.5.3";
 
 	//Reference to the prototype
 	var s = EventDispatcher.prototype;
@@ -2278,7 +2278,6 @@
 		if (!target.filter(this.options.pauseFocusSelector).length)
 		{
 			this.focus();
-			return false;
 		}
 	};
 
