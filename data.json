@@ -2,7 +2,7 @@
     "project": {
         "name": "SpringRoll Container",
         "description": "The iframe controller for interacting with SpringRoll applications",
-        "version": "0.5.2",
+        "version": "0.5.3",
         "url": "https://github.com/SpringRoll/SpringRollContainer"
     },
     "files": {
@@ -705,7 +705,7 @@
         },
         {
             "file": "src/container/plugins/FocusPlugin.js",
-            "line": 177,
+            "line": 176,
             "description": "Handle the keep focus event for the window",
             "itemtype": "method",
             "name": "onKeepFocus",
@@ -717,7 +717,7 @@
         },
         {
             "file": "src/container/plugins/FocusPlugin.js",
-            "line": 188,
+            "line": 187,
             "description": "Handle focus events sent from iFrame children",
             "itemtype": "method",
             "name": "onFocus",
@@ -729,7 +729,7 @@
         },
         {
             "file": "src/container/plugins/FocusPlugin.js",
-            "line": 199,
+            "line": 198,
             "description": "Handle focus events sent from container's window",
             "itemtype": "method",
             "name": "onContainerFocus",
@@ -741,7 +741,7 @@
         },
         {
             "file": "src/container/plugins/FocusPlugin.js",
-            "line": 210,
+            "line": 209,
             "description": "Handle blur events sent from container's window",
             "itemtype": "method",
             "name": "onContainerBlur",
