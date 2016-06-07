@@ -2275,7 +2275,7 @@
 		{
 			target = $(e.target);
 		}
-		if (!target.filter(this.options.pauseFocusSelector).length)
+		if ((!target.filter(this.options.pauseFocusSelector).length) && this._keepFocus)
 		{
 			this.focus();
 		}
