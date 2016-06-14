@@ -216,6 +216,7 @@
 		this.client.on(
 		{
 			loading: onLoading.bind(this),
+			progress: onProgress.bind(this),
 			loadDone: onLoadDone.bind(this), // @deprecated use 'loaded' instead
 			loaded: onLoadDone.bind(this),
 			endGame: onEndGame.bind(this),
@@ -256,11 +257,27 @@
 	var onLoading = function()
 	{
 		/**
-		 * Event when a application start loading, first even received
+		 * Event when a application start loading, first event received
 		 * from the Application.
 		 * @event opening
 		 */
 		this.trigger('opening');
+	};
+
+	/**
+	 * The game preload is progressing
+	 * @method onProgress
+	 * @private
+	 * @param  {Event} event Bellhop event
+	 */
+	var onProgress = function(event)
+	{
+		/**
+		 * Event listing how many assets have loaded as the application loads.
+		 * @event progress
+		 * @param {Number} percentage The amount loaded from 0 to 1
+		 */
+		this.trigger('progress', event.data);
 	};
 
 	/**
