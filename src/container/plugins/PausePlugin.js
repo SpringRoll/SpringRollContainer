@@ -51,33 +51,36 @@
 		{
 			set: function(paused)
 			{
-				this._paused = paused;
-
-				if ((this.client) && (!!this._disablePaused))
+				if (!!this._disablePaused)
 				{
-					this.client.send('pause', paused);
-				}
-				/**
-				 * Fired when the pause state is toggled
-				 * @event pause
-				 * @param {boolean} paused If the application is now paused
-				 */
-				/**
-				 * Fired when the application resumes from a paused state
-				 * @event resumed
-				 */
-				/**
-				 * Fired when the application becomes paused
-				 * @event paused
-				 */
-				this.trigger(paused ? 'paused' : 'resumed');
-				this.trigger('pause', paused);
+					this._paused = paused;
 
-				// Set the pause button state
-				if (this.pauseButton)
-				{
-					this.pauseButton.removeClass('unpaused paused')
-						.addClass(paused ? 'paused' : 'unpaused');
+					if (this.client)
+					{
+						this.client.send('pause', paused);
+					}
+					/**
+					 * Fired when the pause state is toggled
+					 * @event pause
+					 * @param {boolean} paused If the application is now paused
+					 */
+					/**
+					 * Fired when the application resumes from a paused state
+					 * @event resumed
+					 */
+					/**
+					 * Fired when the application becomes paused
+					 * @event paused
+					 */
+					this.trigger(paused ? 'paused' : 'resumed');
+					this.trigger('pause', paused);
+
+					// Set the pause button state
+					if (this.pauseButton)
+					{
+						this.pauseButton.removeClass('unpaused paused')
+							.addClass(paused ? 'paused' : 'unpaused');
+					}
 				}
 			},
 			get: function()
