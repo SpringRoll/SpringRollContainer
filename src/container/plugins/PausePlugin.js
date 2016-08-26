@@ -53,7 +53,7 @@
 			{
 				this._paused = paused;
 
-				if (this.client)
+				if ((this.client) && (!!this._disablePaused))
 				{
 					this.client.send('pause', paused);
 				}
