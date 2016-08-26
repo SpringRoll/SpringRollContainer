@@ -28,6 +28,14 @@
 
 		/**
 		 * If the current application is paused
+		 * @property {Boolean} _disablePaused
+		 * @private
+		 * @default false
+		 */
+		this._disablePaused = false;
+
+		/**
+		 * If the current application is paused
 		 * @property {Boolean} _paused
 		 * @private
 		 * @default false
@@ -77,6 +85,12 @@
 				return this._paused;
 			}
 		});
+
+		this.on('features', function(features)
+		{
+			if (features.disablePaused) this._disablePaused = true;
+		}
+		.bind(this));
 	};
 
 	/**
