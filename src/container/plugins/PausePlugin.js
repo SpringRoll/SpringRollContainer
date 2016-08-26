@@ -32,7 +32,7 @@
 		 * @private
 		 * @default false
 		 */
-		this._disablePaused = false;
+		this._disablePause = false;
 
 		/**
 		 * If the current application is paused
@@ -51,7 +51,7 @@
 		{
 			set: function(paused)
 			{
-				if (!!this._disablePaused)
+				if (this._disablePause)
 				{
 					this._paused = paused;
 
@@ -91,7 +91,7 @@
 
 		this.on('features', function(features)
 		{
-			if (features.disablePaused) this._disablePaused = true;
+			if (features.disablePause) this._disablePause = true;
 		}
 		.bind(this));
 	};
