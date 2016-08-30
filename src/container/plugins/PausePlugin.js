@@ -90,10 +90,10 @@
 		});
 
 		this.on('features', function(features)
-		{
-			if (features.disablePause) this._disablePause = true;
-		}
-		.bind(this));
+			{
+				if (features.disablePause) this._disablePause = true;
+			}
+			.bind(this));
 	};
 
 	/**
