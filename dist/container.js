@@ -2542,7 +2542,7 @@
 		{
 			set: function(paused)
 			{
-				if (this._disablePause)
+				if (!this._disablePause)
 				{
 					this._paused = paused;
 
