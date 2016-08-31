@@ -2519,7 +2519,7 @@
 
 		/**
 		 * If the current application is paused
-		 * @property {Boolean} _disablePaused
+		 * @property {Boolean} _disablePause
 		 * @private
 		 * @default false
 		 */
