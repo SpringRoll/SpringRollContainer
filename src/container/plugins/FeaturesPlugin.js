@@ -32,6 +32,7 @@
 		 * @param {Boolean} data.sfx If SFX context is supported
 		 * @param {Boolean} data.captions If captions is supported
 		 * @param {Boolean} data.hints If hinting is supported
+		 * @param {Boolean} data.disablePause If pause is disabled for debugging
 		 */
 		this.trigger('features', event.data);
 	};
