@@ -75,7 +75,7 @@
 						this._internalOpen(release.url + options.query, options);
 					}
 					.bind(this))
-				.fail(function()
+				.fail(function(err)
 					{
 						if (this._destroyed) return;
 
@@ -83,7 +83,7 @@
 						 * Fired when the API cannot be called
 						 * @event remoteFailed
 						 */
-						return this.trigger('remoteFailed');
+						return this.trigger('remoteFailed', err);
 					}
 					.bind(this));
 		};
