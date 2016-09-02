@@ -1502,6 +1502,7 @@
 		this.client.on(
 		{
 			loading: onLoading.bind(this),
+			progress: onProgress.bind(this),
 			loadDone: onLoadDone.bind(this), // @deprecated use 'loaded' instead
 			loaded: onLoadDone.bind(this),
 			endGame: onEndGame.bind(this),
@@ -1542,11 +1543,27 @@
 	var onLoading = function()
 	{
 		/**
-		 * Event when a application start loading, first even received
+		 * Event when a application start loading, first event received
 		 * from the Application.
 		 * @event opening
 		 */
 		this.trigger('opening');
+	};
+
+	/**
+	 * The game preload is progressing
+	 * @method onProgress
+	 * @private
+	 * @param  {Event} event Bellhop event
+	 */
+	var onProgress = function(event)
+	{
+		/**
+		 * Event listing how many assets have loaded as the application loads.
+		 * @event progress
+		 * @param {Number} percentage The amount loaded from 0 to 1
+		 */
+		this.trigger('progress', event.data);
 	};
 
 	/**
@@ -2502,6 +2519,14 @@
 
 		/**
 		 * If the current application is paused
+		 * @property {Boolean} _disablePause
+		 * @private
+		 * @default false
+		 */
+		this._disablePause = false;
+
+		/**
+		 * If the current application is paused
 		 * @property {Boolean} _paused
 		 * @private
 		 * @default false
@@ -2517,33 +2542,36 @@
 		{
 			set: function(paused)
 			{
-				this._paused = paused;
-
-				if (this.client)
+				if (!this._disablePause)
 				{
-					this.client.send('pause', paused);
-				}
-				/**
-				 * Fired when the pause state is toggled
-				 * @event pause
-				 * @param {boolean} paused If the application is now paused
-				 */
-				/**
-				 * Fired when the application resumes from a paused state
-				 * @event resumed
-				 */
-				/**
-				 * Fired when the application becomes paused
-				 * @event paused
-				 */
-				this.trigger(paused ? 'paused' : 'resumed');
-				this.trigger('pause', paused);
+					this._paused = paused;
 
-				// Set the pause button state
-				if (this.pauseButton)
-				{
-					this.pauseButton.removeClass('unpaused paused')
-						.addClass(paused ? 'paused' : 'unpaused');
+					if (this.client)
+					{
+						this.client.send('pause', paused);
+					}
+					/**
+					 * Fired when the pause state is toggled
+					 * @event pause
+					 * @param {boolean} paused If the application is now paused
+					 */
+					/**
+					 * Fired when the application resumes from a paused state
+					 * @event resumed
+					 */
+					/**
+					 * Fired when the application becomes paused
+					 * @event paused
+					 */
+					this.trigger(paused ? 'paused' : 'resumed');
+					this.trigger('pause', paused);
+
+					// Set the pause button state
+					if (this.pauseButton)
+					{
+						this.pauseButton.removeClass('unpaused paused')
+							.addClass(paused ? 'paused' : 'unpaused');
+					}
 				}
 			},
 			get: function()
@@ -2551,6 +2579,12 @@
 				return this._paused;
 			}
 		});
+
+		this.on('features', function(features)
+			{
+				if (features.disablePause) this._disablePause = true;
+			}
+			.bind(this));
 	};
 
 	/**
