@@ -15,6 +15,7 @@
 		"google-code-prettify": "*",
 		"bind-polyfill": "*"
 	},
+	"license": "MIT",	
 	"ignore": [
 		".bowerrc",
 		".editorconfig",
