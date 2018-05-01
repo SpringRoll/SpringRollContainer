@@ -51,31 +51,31 @@
 	{
 		/**
 		 * Reference to the all sound mute button
-		 * @property {jquery} soundButton
+		 * @property {HTMLElement} soundButton
 		 */
-		this.soundButton = $(this.options.soundButton)
-			.click(onSoundToggle.bind(this));
+		this.soundButton = document.querySelector(this.options.soundButton);
+		this.soundButton.addEventListener('click', onSoundToggle.bind(this));
 
 		/**
 		 * Reference to the music mute button
-		 * @property {jquery} musicButton
+		 * @property {HTMLElement} musicButton
 		 */
-		this.musicButton = $(this.options.musicButton)
-			.click(onMusicToggle.bind(this));
+		this.musicButton = document.querySelector(this.options.musicButton);
+		this.musicButton.addEventListener('click', onMusicToggle.bind(this));
 
 		/**
 		 * Reference to the sound effects mute button
-		 * @property {jquery} sfxButton
+		 * @property {HTMLElement} sfxButton
 		 */
-		this.sfxButton = $(this.options.sfxButton)
-			.click(onSFXToggle.bind(this));
+		this.sfxButton = document.querySelector(this.options.sfxButton);
+		this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
 
 		/**
 		 * Reference to the voice-over mute button
-		 * @property {jquery} voButton
+		 * @property {HTMLElement} voButton
 		 */
-		this.voButton = $(this.options.voButton)
-			.click(onVOToggle.bind(this));
+		this.voButton = document.querySelector(this.options.voButton);
+		this.voButton.addEventListener('click', onVOToggle.bind(this));
 
 		/**
 		 * Check for when all mutes are muted or unmuted
@@ -165,19 +165,21 @@
 			this.soundMuted = false;
 		}
 
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
-				this.voButton.hide();
-				this.musicButton.hide();
-				this.soundButton.hide();
-				this.sfxButton.hide();
+				this.voButton.style.display = 'none';
+				this.musicButton.style.display = 'none';
+				this.soundButton.style.display = 'none';
+				this.sfxButton.style.display = 'none';
 
-				if (features.vo) this.voButton.show();
-				if (features.music) this.musicButton.show();
-				if (features.sound) this.soundButton.show();
-				if (features.sfxButton) this.sfxButton.show();
-			}
-			.bind(this));
+				if (features.vo) this.voButton.style.display = 'inline-block';
+				if (features.music) this.musicButton.style.display = 'inline-block';
+				if (features.sound) this.soundButton.style.display = 'inline-block';
+				if (features.sfxButton) this.sfxButton.style.display = 'inline-block';
+			}.bind(this)
+		);
 	};
 
 	/**
@@ -231,10 +233,10 @@
 
 	plugin.opened = function()
 	{
-		this.soundButton.removeClass('disabled');
-		this.sfxButton.removeClass('disabled');
-		this.voButton.removeClass('disabled');
-		this.musicButton.removeClass('disabled');
+		this.soundButton.classList.remove('disabled');
+		this.sfxButton.classList.remove('disabled');
+		this.voButton.classList.remove('disabled');
+		this.musicButton.classList.remove('disabled');
 
 		this.soundMuted = !!SavedData.read(SOUND_MUTED);
 		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
@@ -252,15 +254,14 @@
 
 	plugin.teardown = function()
 	{
-		this.voButton.off('click');
-		this.sfxButton.off('click');
-		this.musicButton.off('click');
-		this.soundButton.off('click');
+		this.soundButton.removeEventListener('click', onSoundToggle.bind(this));
+		this.musicButton.removeEventListener('click', onMusicToggle.bind(this));
+		this.sfxButton.removeEventListener('click', onSFXToggle.bind(this));
+		this.voButton.removeEventListener('click', onVOToggle.bind(this));
 		delete this.voButton;
 		delete this.sfxButton;
 		delete this.musicButton;
 		delete this.soundButton;
 		delete this._checkSoundMute;
 	};
-
-}());
+})();

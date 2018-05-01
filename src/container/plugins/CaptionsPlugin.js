@@ -28,12 +28,12 @@
 	 * @final
 	 */
 	var DEFAULT_CAPTIONS_STYLES = {
-		size: "md",
-		background: "black-semi",
-		color: "white",
-		edge: "none",
-		font: "arial",
-		align: "top"
+		size: 'md',
+		background: 'black-semi',
+		color: 'white',
+		edge: 'none',
+		font: 'arial',
+		align: 'top'
 	};
 
 	/**
@@ -61,15 +61,16 @@
 
 		/**
 		 * Reference to the captions button
-		 * @property {jquery} captionsButton
+		 * @property {HTMLElement} captionsButton
 		 */
-		this.captionsButton = $(this.options.captionsButton)
-			.click(function()
-				{
-					this.captionsMuted = !this.captionsMuted;
-				}
-				.bind(this));
-
+		this.captionsButton = document.querySelector(this.options.captionsButton);
+		this.captionsButton.addEventListener(
+			'click',
+			function()
+			{
+				this.captionsMuted = !this.captionsMuted;
+			}.bind(this)
+		);
 		/**
 		 * Set the captions are enabled or not
 		 * @property {boolean} captionsMuted
@@ -103,15 +104,12 @@
 		 */
 		this.setCaptionsStyles = function(styles, value)
 		{
-			if (typeof styles === "object")
+			if (typeof styles === 'object')
 			{
-				Object.merge(
-					this._captionsStyles,
-					styles ||
-					{}
-				);
+				Object.merge(this._captionsStyles, styles ||
+				{});
 			}
-			else if (typeof styles === "string")
+			else if (typeof styles === 'string')
 			{
 				this._captionsStyles[styles] = value;
 			}
@@ -121,29 +119,44 @@
 			// Do some validation on the style settings
 			if (DEBUG)
 			{
-				if (!styles.color || !/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color))
+				if (!styles.color ||
+					!/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color)
+				)
 				{
-					throw "Setting captions color style is invalid value : " + styles.color;
+					throw 'Setting captions color style is invalid value : ' +
+						styles.color;
 				}
-				if (!styles.background || !/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(styles.background))
+				if (!styles.background ||
+					!/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(
+						styles.background
+					)
+				)
 				{
-					throw "Setting captions background style is invalid value : " + styles.background;
+					throw 'Setting captions background style is invalid value : ' +
+						styles.background;
 				}
 				if (!styles.size || !/^(xs|sm|md|lg|xl)$/.test(styles.size))
 				{
-					throw "Setting captions size style is invalid value : " + styles.size;
+					throw 'Setting captions size style is invalid value : ' + styles.size;
 				}
-				if (!styles.edge || !/^(raise|depress|uniform|drop|none)$/.test(styles.edge))
+				if (!styles.edge ||
+					!/^(raise|depress|uniform|drop|none)$/.test(styles.edge)
+				)
 				{
-					throw "Setting captions edge style is invalid value : " + styles.edge;
+					throw 'Setting captions edge style is invalid value : ' + styles.edge;
 				}
-				if (!styles.font || !/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(styles.font))
+				if (!styles.font ||
+					!/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(
+						styles.font
+					)
+				)
 				{
-					throw "Setting captions font style is invalid value : " + styles.font;
+					throw 'Setting captions font style is invalid value : ' + styles.font;
 				}
 				if (!styles.align || !/^(top|bottom)$/.test(styles.align))
 				{
-					throw "Setting captions align style is invalid value : " + styles.align;
+					throw 'Setting captions align style is invalid value : ' +
+						styles.align;
 				}
 			}
 
@@ -180,8 +193,8 @@
 		// Handle the features request
 		this.on('features', function(features)
 		{
-			this.captionsButton.hide();
-			if (features.captions) this.captionsButton.show();
+			this.captionsButton.style.display = 'none';
+			if (features.captions) this.captionsButton.style.display = 'inline-block';
 		});
 
 		//Set the defaults if we have none for the controls
@@ -193,7 +206,7 @@
 
 	plugin.opened = function()
 	{
-		this.captionsButton.removeClass('disabled');
+		this.captionsButton.classList.remove('disabled');
 		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 	};
@@ -213,5 +226,4 @@
 		delete this.clearCaptionsStyles;
 		delete this._captionsMuted;
 	};
-
-}());
+})();

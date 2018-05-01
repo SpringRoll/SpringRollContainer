@@ -7,23 +7,21 @@
 	//Import classes
 	var EventDispatcher = include('springroll.EventDispatcher'),
 		Features = include('springroll.Features'),
-		Bellhop = include('Bellhop'),
-		$ = include('jQuery');
-
+		Bellhop = include('Bellhop');
 	/**
 	 * The application container
 	 * @class Container
 	 * @extends springroll.EventDispatcher
 	 * @constructor
-	 * @param {string} iframeSelector jQuery selector for application iframe container
+	 * @param {string} iframeSelector selector for application iframe container
 	 * @param {object} [options] Optional parameteres
-	 * @param {string} [options.helpButton] jQuery selector for help button
-	 * @param {string} [options.captionsButton] jQuery selector for captions button
-	 * @param {string} [options.soundButton] jQuery selector for captions button
-	 * @param {string} [options.voButton] jQuery selector for vo button
-	 * @param {string} [options.sfxButton] jQuery selector for sounf effects button
-	 * @param {string} [options.musicButton] jQuery selector for music button
-	 * @param {string} [options.pauseButton] jQuery selector for pause button
+	 * @param {string} [options.helpButton] selector for help button
+	 * @param {string} [options.captionsButton] selector for captions button
+	 * @param {string} [options.soundButton] selector for captions button
+	 * @param {string} [options.voButton] selector for vo button
+	 * @param {string} [options.sfxButton] selector for sounf effects button
+	 * @param {string} [options.musicButton] selector for music button
+	 * @param {string} [options.pauseButton] selector for pause button
 	 * @param {string} [options.pauseFocusSelector='.pause-on-focus'] The class to pause
 	 *        the application when focused on. This is useful for form elements which
 	 *        require focus and play better with Application's keepFocus option.
@@ -47,16 +45,16 @@
 		this.name = 'springroll.Container';
 
 		/**
-		 * The current iframe jquery object
-		 * @property {jquery} iframe
+		 * The current iframe object
+		 * @property {HTMLElement} main
 		 */
-		this.main = $(iframeSelector);
+		this.main = document.querySelector(iframeSelector);
 
 		/**
 		 * The DOM object for the iframe
 		 * @property {Element} dom
 		 */
-		this.dom = this.main[0];
+		this.dom = this.main;
 
 		/**
 		 * Communication layer between the container and application
@@ -127,11 +125,13 @@
 	 */
 	p._internalOpen = function(path, options)
 	{
-		options = $.extend(
-		{
-			singlePlay: false,
-			playOptions: null
-		}, options);
+		options = Object.assign(
+			{
+				singlePlay: false,
+				playOptions: null
+			},
+			options
+		);
 
 		this.reset();
 
@@ -160,9 +160,8 @@
 		}
 
 		//Open the application in the iframe
-		this.main
-			.addClass('loading')
-			.prop('src', path);
+		this.main.classList.add('loading');
+		this.main.setAttribute('src', path);
 
 		// Respond with data when we're ready
 		this.client.respond('singlePlay', options.singlePlay);
@@ -190,7 +189,7 @@
 		{};
 
 		// This should be deprecated, support for old function signature
-		if (typeof options === "boolean")
+		if (typeof options === 'boolean')
 		{
 			options = {
 				singlePlay: singlePlay,
@@ -289,7 +288,7 @@
 	{
 		this.loading = false;
 		this.loaded = true;
-		this.main.removeClass('loading');
+		this.main.classList.remove('loading');
 
 		var plugins = Container._plugins;
 		for (var i = 0; i < plugins.length; i++)
@@ -341,8 +340,8 @@
 		this.loading = false;
 
 		// Clear the iframe src location
-		this.main.attr('src', '')
-			.removeClass('loading');
+		this.main.setAttribute('src', '');
+		this.main.classList.remove('loading');
 
 		if (wasLoaded)
 		{
@@ -425,5 +424,4 @@
 	};
 
 	namespace('springroll').Container = Container;
-
-}(document));
+})(document);

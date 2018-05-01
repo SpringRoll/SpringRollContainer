@@ -4,7 +4,6 @@
  */
 (function()
 {
-	var $ = include('jQuery');
 	var Features = include('springroll.Features');
 
 	/**
@@ -32,50 +31,54 @@
 		this.openRemote = function(api, options, playOptions)
 		{
 			// This should be deprecated, support for old function signature
-			if (typeof options === "boolean")
+			if (typeof options === 'boolean')
 			{
 				options = {
 					singlePlay: singlePlay,
 					playOptions: playOptions
 				};
 			}
-			options = $.extend(
-			{
-				query: '',
-				playOptions: null,
-				singlePlay: false
-			}, options);
+			options = Object.assign(
+				{
+					query: '',
+					playOptions: null,
+					singlePlay: false
+				},
+				options
+			);
 
 			this.release = null;
 
-			$.getJSON(api, function(result)
+			fetch(api)
+				.then(
+					function(response)
 					{
 						if (this._destroyed) return;
 
-						if (!result.success)
+						if (!response.ok)
 						{
-							/**
-							 * There was a problem with the API call
-							 * @event remoteError
-							 */
 							return this.trigger('remoteError', result.error);
 						}
-						var release = result.data;
 
-						var err = Features.test(release.capabilities);
+						response.json().then(
+							function(json)
+							{
+								var release = json.data;
+								var err = Features.test(release.capabilities);
 
-						if (err)
-						{
-							return this.trigger('unsupported', err);
-						}
+								if (err)
+								{
+									return this.trigger('unsupported', err);
+								}
 
-						this.release = release;
-
-						// Open the application
-						this._internalOpen(release.url + options.query, options);
-					}
-					.bind(this))
-				.fail(function(err)
+								this.release = release;
+								this._internalOpen(release.url + options.query, options);
+							}.bind(this)
+						);
+					}.bind(this)
+				)
+				.catch(
+					function(err)
 					{
 						if (this._destroyed) return;
 
@@ -84,8 +87,8 @@
 						 * @event remoteFailed
 						 */
 						return this.trigger('remoteFailed', err);
-					}
-					.bind(this));
+					}.bind(this)
+				);
 		};
 	};
 
@@ -94,5 +97,4 @@
 		delete this.openRemote;
 		delete this.release;
 	};
-
-}());
+})();

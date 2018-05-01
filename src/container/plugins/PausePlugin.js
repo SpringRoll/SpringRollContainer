@@ -13,10 +13,12 @@
 	{
 		/**
 		 * Reference to the pause application button
-		 * @property {jquery} pauseButton
+		 * @property {HTMLElement} pauseButton
 		 */
-		this.pauseButton = $(this.options.pauseButton)
-			.click(onPauseToggle.bind(this));
+		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
+
+		this.pauseButton[0].addEventListener('click', onPauseToggle.bind(this));
+		this.pauseButton[1].addEventListener('click', onPauseToggle.bind(this));
 
 		/**
 		 * If the application is currently paused manually
@@ -78,8 +80,13 @@
 					// Set the pause button state
 					if (this.pauseButton)
 					{
-						this.pauseButton.removeClass('unpaused paused')
-							.addClass(paused ? 'paused' : 'unpaused');
+						this.pauseButton[0].classList.remove('unpaused');
+						this.pauseButton[0].classList.remove('paused');
+						this.pauseButton[1].classList.remove('unpaused');
+						this.pauseButton[1].classList.remove('paused');
+
+						this.pauseButton[0].classList.add(paused ? 'paused' : 'unpaused');
+						this.pauseButton[1].classList.add(paused ? 'paused' : 'unpaused');
 					}
 				}
 			},
@@ -89,11 +96,13 @@
 			}
 		});
 
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
 				if (features.disablePause) this._disablePause = true;
-			}
-			.bind(this));
+			}.bind(this)
+		);
 	};
 
 	/**
@@ -109,7 +118,8 @@
 
 	plugin.opened = function()
 	{
-		this.pauseButton.removeClass('disabled');
+		this.pauseButton[0].classList.remove('disabled');
+		this.pauseButton[1].classList.remove('disabled');
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -123,10 +133,10 @@
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.off('click');
+		this.pauseButton[0].removeEventListener('click', onPauseToggle.bind(this));
+		this.pauseButton[1].removeEventListener('click', onPauseToggle.bind(this));
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
 	};
-
-}());
+})();

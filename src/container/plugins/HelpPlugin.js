@@ -13,30 +13,37 @@
 	{
 		/**
 		 * Reference to the help button
-		 * @property {jquery} helpButton
+		 * @property {HTMLElement} helpButton
 		 */
-		this.helpButton = $(this.options.helpButton)
-			.click(function()
+		this.helpButton = document.querySelector(this.options.helpButton);
+		this.helpButton.addEventListener(
+			'click',
+			function()
+			{
+				if (!this.paused && !this.helpButton.classList.contains('disabled'))
 				{
-					if (!this.paused && !this.helpButton.hasClass('disabled'))
-					{
-						this.client.send('playHelp');
-					}
+					this.client.send('playHelp');
 				}
-				.bind(this));
+			}.bind(this)
+		);
+
+		this.helpButton.tooltip = function()
+		{
+			// TODO: Add non jQuery tool tips
+		};
 
 		// Handle pause
 		this.on('pause', function(paused)
 		{
 			// Disable the help button when paused if it's active
-			if (paused && !this.helpButton.hasClass('disabled'))
+			if (paused && !this.helpButton.classList.contains('disabled'))
 			{
-				this.helpButton.data('paused', true);
+				this.helpButton.setAttribute('data-paused', true);
 				this.helpEnabled = false;
 			}
-			else if (this.helpButton.data('paused'))
+			else if (this.helpButton.getAttribute('data-paused'))
 			{
-				this.helpButton.removeData('paused');
+				this.helpButton.setAttribute('data-paused', '');
 				this.helpEnabled = true;
 			}
 		});
@@ -50,8 +57,9 @@
 			set: function(enabled)
 			{
 				this._helpEnabled = enabled;
-				this.helpButton.removeClass('disabled enabled')
-					.addClass(enabled ? 'enabled' : 'disabled');
+				this.helpButton.classList.remove('disabled');
+				this.helpButton.classList.remove('enabled');
+				this.helpButton.classList.add(enabled ? 'enabled' : 'disabled');
 
 				/**
 				 * Fired when the enabled status of the help button changes
@@ -67,21 +75,25 @@
 		});
 
 		// Handle features changed
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
-				this.helpButton.hide();
-				if (features.hints) this.helpButton.show();
-			}
-			.bind(this));
+				this.helpButton.style.display = 'none';
+				if (features.hints) this.helpButton.style.display = 'inline-block';
+			}.bind(this)
+		);
 	};
 
 	plugin.open = function()
 	{
-		this.client.on('helpEnabled', function(event)
+		this.client.on(
+			'helpEnabled',
+			function(event)
 			{
 				this.helpEnabled = !!event.data;
-			}
-			.bind(this));
+			}.bind(this)
+		);
 	};
 
 	plugin.close = function()
@@ -96,5 +108,4 @@
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
-
-}());
+})();
