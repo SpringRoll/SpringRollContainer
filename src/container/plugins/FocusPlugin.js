@@ -14,7 +14,7 @@
 	plugin.setup = function()
 	{
 		// Add the default option for pauseFocusSelector
-		this.options = Object.assign(
+		this.options = Object.merge(
 			{
 				pauseFocusSelector: '.pause-on-focus'
 			},
@@ -136,23 +136,22 @@
 		// we will pause the game until a blur event to that item
 		// has been sent
 		var self = this;
-		document
-			.querySelector(this.options.pauseFocusSelector)
-			.addEventListener('focus', function()
-			{
-				self._isManualPause = self.paused = true;
-				self.addEventListener(
-					'blur',
-					function()
-					{
-						self._isManualPause = self.paused = false;
-						self.focus();
-					},
-					{
-						once: true
-					}
-				);
-			});
+		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+		pauseFocus.addEventListener('focus', function()
+		{
+			self._isManualPause = self.paused = true;
+			self.addEventListener(
+				'blur',
+				function()
+				{
+					self._isManualPause = self.paused = false;
+					self.focus();
+				},
+				{
+					once: true
+				}
+			);
+		});
 	};
 
 	/**

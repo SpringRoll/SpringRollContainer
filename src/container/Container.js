@@ -125,7 +125,7 @@
 	 */
 	p._internalOpen = function(path, options)
 	{
-		options = Object.assign(
+		options = Object.merge(
 			{
 				singlePlay: false,
 				playOptions: null

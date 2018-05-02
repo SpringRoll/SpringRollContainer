@@ -38,7 +38,7 @@
 					playOptions: playOptions
 				};
 			}
-			options = Object.assign(
+			options = Object.merge(
 				{
 					query: '',
 					playOptions: null,
@@ -49,46 +49,31 @@
 
 			this.release = null;
 
-			fetch(api)
-				.then(
-					function(response)
-					{
-						if (this._destroyed) return;
+			var xhttp = new XMLHttpRequest();
 
-						if (!response.ok)
-						{
-							return this.trigger('remoteError', result.error);
-						}
+			xhttp.onResponse = function(release)
+			{
+				var err = Features.test(release.capabilities);
 
-						response.json().then(
-							function(json)
-							{
-								var release = json.data;
-								var err = Features.test(release.capabilities);
+				if (err)
+				{
+					return this.trigger('unsupported', err);
+				}
 
-								if (err)
-								{
-									return this.trigger('unsupported', err);
-								}
+				this.release = release;
+				this._internalOpen(release.url + options.query, options);
+			}.bind(this);
 
-								this.release = release;
-								this._internalOpen(release.url + options.query, options);
-							}.bind(this)
-						);
-					}.bind(this)
-				)
-				.catch(
-					function(err)
-					{
-						if (this._destroyed) return;
+			xhttp.onreadystatechange = function()
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					this.onResponse(JSON.parse(this.response).data);
+				}
+			};
 
-						/**
-						 * Fired when the API cannot be called
-						 * @event remoteFailed
-						 */
-						return this.trigger('remoteFailed', err);
-					}.bind(this)
-				);
+			xhttp.open('GET', api, true);
+			xhttp.send();
 		};
 	};
 

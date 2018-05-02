@@ -1411,7 +1411,7 @@
 	 */
 	p._internalOpen = function(path, options)
 	{
-		options = Object.assign(
+		options = Object.merge(
 			{
 				singlePlay: false,
 				playOptions: null
@@ -2164,7 +2164,7 @@
 	plugin.setup = function()
 	{
 		// Add the default option for pauseFocusSelector
-		this.options = Object.assign(
+		this.options = Object.merge(
 			{
 				pauseFocusSelector: '.pause-on-focus'
 			},
@@ -2286,23 +2286,22 @@
 		// we will pause the game until a blur event to that item
 		// has been sent
 		var self = this;
-		document
-			.querySelector(this.options.pauseFocusSelector)
-			.addEventListener('focus', function()
-			{
-				self._isManualPause = self.paused = true;
-				self.addEventListener(
-					'blur',
-					function()
-					{
-						self._isManualPause = self.paused = false;
-						self.focus();
-					},
-					{
-						once: true
-					}
-				);
-			});
+		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+		pauseFocus.addEventListener('focus', function()
+		{
+			self._isManualPause = self.paused = true;
+			self.addEventListener(
+				'blur',
+				function()
+				{
+					self._isManualPause = self.paused = false;
+					self.focus();
+				},
+				{
+					once: true
+				}
+			);
+		});
 	};
 
 	/**
@@ -2541,8 +2540,33 @@
 		 */
 		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
-		this.pauseButton[0].addEventListener('click', onPauseToggle.bind(this));
-		this.pauseButton[1].addEventListener('click', onPauseToggle.bind(this));
+		this.toggleButtonStyles = function(element, paused)
+		{
+			element.classList.remove('unpaused');
+			element.classList.remove('paused');
+
+			element.classList.add(paused ? 'paused' : 'unpaused');
+		}.bind(this);
+
+		this.isNodeList = function(nodeList)
+		{
+			return (
+				typeof nodeList.length !== 'undefined' &&
+				typeof nodeList.item !== 'undefined'
+			);
+		};
+
+		if (this.isNodeList(this.pauseButton))
+		{
+			for (var i = 0, length = this.pauseButton.length; i < length; i++)
+			{
+				this.pauseButton[i].addEventListener('click', onPauseToggle.bind(this));
+			}
+		}
+		else
+		{
+			this.pauseButton.addEventListener('click', onPauseToggle.bind(this));
+		}
 
 		/**
 		 * If the application is currently paused manually
@@ -2604,13 +2628,19 @@
 					// Set the pause button state
 					if (this.pauseButton)
 					{
-						this.pauseButton[0].classList.remove('unpaused');
-						this.pauseButton[0].classList.remove('paused');
-						this.pauseButton[1].classList.remove('unpaused');
-						this.pauseButton[1].classList.remove('paused');
-
-						this.pauseButton[0].classList.add(paused ? 'paused' : 'unpaused');
-						this.pauseButton[1].classList.add(paused ? 'paused' : 'unpaused');
+						if (this.isNodeList(this.pauseButton))
+						{
+							for (
+								var i = 0, length = this.pauseButton.length; i < length; i++
+							)
+							{
+								this.toggleButtonStyles(this.pauseButton[i], paused);
+							}
+						}
+						else
+						{
+							this.toggleButtonStyles(this.pauseButton);
+						}
 					}
 				}
 			},
@@ -2642,9 +2672,19 @@
 
 	plugin.opened = function()
 	{
-		this.pauseButton[0].classList.remove('disabled');
-		this.pauseButton[1].classList.remove('disabled');
-
+		if (this.isNodeList(this.pauseButton))
+		{
+			for (var i = 0, length = this.pauseButton.length; i < length; i++)
+			{
+				this.pauseButton[i].classList.remove('disabled');
+			}
+			i = undefined;
+			length = undefined;
+		}
+		else
+		{
+			this.pauseButton.classList.remove('disabled');
+		}
 		// Reset the paused state
 		this.paused = this._paused;
 	};
@@ -2657,8 +2697,22 @@
 
 	plugin.teardown = function()
 	{
-		this.pauseButton[0].removeEventListener('click', onPauseToggle.bind(this));
-		this.pauseButton[1].removeEventListener('click', onPauseToggle.bind(this));
+		if (this.isNodeList(this.pauseButton))
+		{
+			for (var i = 0, length = this.pauseButton.length; i < length; i++)
+			{
+				this.pauseButton[i].removeEventListener(
+					'click',
+					onPauseToggle.bind(this)
+				);
+			}
+			i = undefined;
+			length = undefined;
+		}
+		else
+		{
+			this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
+		}
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
@@ -2704,7 +2758,7 @@
 					playOptions: playOptions
 				};
 			}
-			options = Object.assign(
+			options = Object.merge(
 				{
 					query: '',
 					playOptions: null,
@@ -2715,46 +2769,31 @@
 
 			this.release = null;
 
-			fetch(api)
-				.then(
-					function(response)
-					{
-						if (this._destroyed) return;
+			var xhttp = new XMLHttpRequest();
 
-						if (!response.ok)
-						{
-							return this.trigger('remoteError', result.error);
-						}
+			xhttp.onResponse = function(release)
+			{
+				var err = Features.test(release.capabilities);
 
-						response.json().then(
-							function(json)
-							{
-								var release = json.data;
-								var err = Features.test(release.capabilities);
+				if (err)
+				{
+					return this.trigger('unsupported', err);
+				}
 
-								if (err)
-								{
-									return this.trigger('unsupported', err);
-								}
+				this.release = release;
+				this._internalOpen(release.url + options.query, options);
+			}.bind(this);
 
-								this.release = release;
-								this._internalOpen(release.url + options.query, options);
-							}.bind(this)
-						);
-					}.bind(this)
-				)
-				.catch(
-					function(err)
-					{
-						if (this._destroyed) return;
+			xhttp.onreadystatechange = function()
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					this.onResponse(JSON.parse(this.response).data);
+				}
+			};
 
-						/**
-						 * Fired when the API cannot be called
-						 * @event remoteFailed
-						 */
-						return this.trigger('remoteFailed', err);
-					}.bind(this)
-				);
+			xhttp.open('GET', api, true);
+			xhttp.send();
 		};
 	};
 
