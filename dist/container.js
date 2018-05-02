@@ -2538,35 +2538,15 @@
 		 * Reference to the pause application button
 		 * @property {HTMLElement} pauseButton
 		 */
+		console.log('you');
 		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
-		this.toggleButtonStyles = function(element, paused)
-		{
-			element.classList.remove('unpaused');
-			element.classList.remove('paused');
-
-			element.classList.add(paused ? 'paused' : 'unpaused');
-		}.bind(this);
-
-		this.isNodeList = function(nodeList)
-		{
-			return (
-				typeof nodeList.length !== 'undefined' &&
-				typeof nodeList.item !== 'undefined'
-			);
-		};
-
-		if (this.isNodeList(this.pauseButton))
-		{
-			for (var i = 0, length = this.pauseButton.length; i < length; i++)
+		this.pauseButton.forEach(
+			function(element)
 			{
-				this.pauseButton[i].addEventListener('click', onPauseToggle.bind(this));
-			}
-		}
-		else
-		{
-			this.pauseButton.addEventListener('click', onPauseToggle.bind(this));
-		}
+				element.addEventListener('click', onPauseToggle.bind(this));
+			}.bind(this)
+		);
 
 		/**
 		 * If the application is currently paused manually
@@ -2626,22 +2606,15 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					if (this.pauseButton)
-					{
-						if (this.isNodeList(this.pauseButton))
+					this.pauseButton.forEach(
+						function(element)
 						{
-							for (
-								var i = 0, length = this.pauseButton.length; i < length; i++
-							)
-							{
-								this.toggleButtonStyles(this.pauseButton[i], paused);
-							}
-						}
-						else
-						{
-							this.toggleButtonStyles(this.pauseButton);
-						}
-					}
+							element.classList.remove('unpaused');
+							element.classList.remove('paused');
+
+							element.classList.add(paused ? 'paused' : 'unpaused');
+						}.bind(this)
+					);
 				}
 			},
 			get: function()
@@ -2672,19 +2645,13 @@
 
 	plugin.opened = function()
 	{
-		if (this.isNodeList(this.pauseButton))
-		{
-			for (var i = 0, length = this.pauseButton.length; i < length; i++)
+		this.pauseButton.forEach(
+			function(element)
 			{
-				this.pauseButton[i].classList.remove('disabled');
-			}
-			i = undefined;
-			length = undefined;
-		}
-		else
-		{
-			this.pauseButton.classList.remove('disabled');
-		}
+				element.classList.remove('disabled');
+			}.bind(this)
+		);
+
 		// Reset the paused state
 		this.paused = this._paused;
 	};
@@ -2697,22 +2664,12 @@
 
 	plugin.teardown = function()
 	{
-		if (this.isNodeList(this.pauseButton))
-		{
-			for (var i = 0, length = this.pauseButton.length; i < length; i++)
+		this.pauseButton.forEach(
+			function(element)
 			{
-				this.pauseButton[i].removeEventListener(
-					'click',
-					onPauseToggle.bind(this)
-				);
-			}
-			i = undefined;
-			length = undefined;
-		}
-		else
-		{
-			this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
-		}
+				element.removeEventListener('click', onPauseToggle.bind(this));
+			}.bind(this)
+		);
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
