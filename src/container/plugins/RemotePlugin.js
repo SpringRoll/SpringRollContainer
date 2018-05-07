@@ -4,7 +4,6 @@
  */
 (function()
 {
-	var $ = include('jQuery');
 	var Features = include('springroll.Features');
 
 	/**
@@ -32,60 +31,49 @@
 		this.openRemote = function(api, options, playOptions)
 		{
 			// This should be deprecated, support for old function signature
-			if (typeof options === "boolean")
+			if (typeof options === 'boolean')
 			{
 				options = {
 					singlePlay: singlePlay,
 					playOptions: playOptions
 				};
 			}
-			options = $.extend(
-			{
-				query: '',
-				playOptions: null,
-				singlePlay: false
-			}, options);
+			options = Object.merge(
+				{
+					query: '',
+					playOptions: null,
+					singlePlay: false
+				},
+				options
+			);
 
 			this.release = null;
 
-			$.getJSON(api, function(result)
-					{
-						if (this._destroyed) return;
+			var xhttp = new XMLHttpRequest();
 
-						if (!result.success)
-						{
-							/**
-							 * There was a problem with the API call
-							 * @event remoteError
-							 */
-							return this.trigger('remoteError', result.error);
-						}
-						var release = result.data;
+			xhttp.onResponse = function(release)
+			{
+				var err = Features.test(release.capabilities);
 
-						var err = Features.test(release.capabilities);
+				if (err)
+				{
+					return this.trigger('unsupported', err);
+				}
 
-						if (err)
-						{
-							return this.trigger('unsupported', err);
-						}
+				this.release = release;
+				this._internalOpen(release.url + options.query, options);
+			}.bind(this);
 
-						this.release = release;
+			xhttp.onreadystatechange = function()
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					this.onResponse(JSON.parse(this.response).data);
+				}
+			};
 
-						// Open the application
-						this._internalOpen(release.url + options.query, options);
-					}
-					.bind(this))
-				.fail(function(err)
-					{
-						if (this._destroyed) return;
-
-						/**
-						 * Fired when the API cannot be called
-						 * @event remoteFailed
-						 */
-						return this.trigger('remoteFailed', err);
-					}
-					.bind(this));
+			xhttp.open('GET', api, true);
+			xhttp.send();
 		};
 	};
 
@@ -94,5 +82,4 @@
 		delete this.openRemote;
 		delete this.release;
 	};
-
-}());
+})();

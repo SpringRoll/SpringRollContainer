@@ -14,11 +14,12 @@
 	plugin.setup = function()
 	{
 		// Add the default option for pauseFocusSelector
-		this.options = $.extend(
+		this.options = Object.merge(
 			{
 				pauseFocusSelector: '.pause-on-focus'
 			},
-			this.options);
+			this.options
+		);
 
 		/**
 		 * Handle the page visiblity change events, like opening a new tab
@@ -65,7 +66,8 @@
 		// Focus on the window on focusing on anything else
 		// without the .pause-on-focus class
 		this._onDocClick = onDocClick.bind(this);
-		$(document).on('focus click', this._onDocClick);
+		document.addEventListener('focus', this._onDocClick);
+		document.addEventListener('click', this._onDocClick);
 
 		/**
 		 * Focus on the iframe's contentWindow
@@ -125,7 +127,6 @@
 					{
 						this.focus();
 					}
-
 				}.bind(this),
 				100
 			);
@@ -135,14 +136,27 @@
 		// we will pause the game until a blur event to that item
 		// has been sent
 		var self = this;
-		$(this.options.pauseFocusSelector).on('focus', function()
+		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+
+		if (null === pauseFocus)
+		{
+			throw new Error('No element found with the provided for pauseFocus');
+		}
+
+		pauseFocus.addEventListener('focus', function()
 		{
 			self._isManualPause = self.paused = true;
-			$(this).one('blur', function()
-			{
-				self._isManualPause = self.paused = false;
-				self.focus();
-			});
+			self.addEventListener(
+				'blur',
+				function()
+				{
+					self._isManualPause = self.paused = false;
+					self.focus();
+				},
+				{
+					once: true
+				}
+			);
 		});
 	};
 
@@ -156,21 +170,7 @@
 	{
 		if (!this.loaded) return;
 
-		var target;
-
-		// Firefox support
-		if (e.originalEvent.explicitOriginalTarget)
-		{
-			target = $(e.originalEvent.explicitOriginalTarget);
-		}
-		else
-		{
-			target = $(e.target);
-		}
-		if (!target.filter(this.options.pauseFocusSelector).length)
-		{
-			this.focus();
-		}
+		this.focus();
 	};
 
 	/**
@@ -226,7 +226,7 @@
 		this.client.on(
 		{
 			focus: onFocus.bind(this),
-			keepFocus: onKeepFocus.bind(this),
+			keepFocus: onKeepFocus.bind(this)
 		});
 	};
 
@@ -246,8 +246,11 @@
 
 	plugin.teardown = function()
 	{
-		$(this.options.pauseFocusSelector).off('focus');
-		$(document).off('focus click', this._onDocClick);
+		document
+			.querySelector(this.options.pauseFocusSelector)
+			.removeEventListener('focus');
+		document.removeEventListener('focus', this._onDocClick);
+		document.removeEventListener('click', this._onDocClick);
 		delete this._onDocClick;
 		if (this._pageVisibility)
 		{
@@ -262,5 +265,4 @@
 		delete this._keepFocus;
 		delete this._containerBlurred;
 	};
-
-}());
+})();

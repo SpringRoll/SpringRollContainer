@@ -13,10 +13,23 @@
 	{
 		/**
 		 * Reference to the pause application button
-		 * @property {jquery} pauseButton
+		 * @property {HTMLElement} pauseButton
 		 */
-		this.pauseButton = $(this.options.pauseButton)
-			.click(onPauseToggle.bind(this));
+		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
+
+		if (1 > this.pauseButton.length)
+		{
+			throw new Error(
+				'No element/elements found with provided selector(s) for pause button(s)'
+			);
+		}
+
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.addEventListener('click', onPauseToggle.bind(this));
+			}.bind(this)
+		);
 
 		/**
 		 * If the application is currently paused manually
@@ -76,11 +89,15 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					if (this.pauseButton)
-					{
-						this.pauseButton.removeClass('unpaused paused')
-							.addClass(paused ? 'paused' : 'unpaused');
-					}
+					this.pauseButton.forEach(
+						function(element)
+						{
+							element.classList.remove('unpaused');
+							element.classList.remove('paused');
+
+							element.classList.add(paused ? 'paused' : 'unpaused');
+						}.bind(this)
+					);
 				}
 			},
 			get: function()
@@ -89,11 +106,13 @@
 			}
 		});
 
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
 				if (features.disablePause) this._disablePause = true;
-			}
-			.bind(this));
+			}.bind(this)
+		);
 	};
 
 	/**
@@ -109,7 +128,12 @@
 
 	plugin.opened = function()
 	{
-		this.pauseButton.removeClass('disabled');
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.classList.remove('disabled');
+			}.bind(this)
+		);
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -123,10 +147,14 @@
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.off('click');
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.removeEventListener('click', onPauseToggle.bind(this));
+			}.bind(this)
+		);
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
 	};
-
-}());
+})();

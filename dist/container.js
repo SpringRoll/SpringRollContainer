@@ -1293,23 +1293,21 @@
 	//Import classes
 	var EventDispatcher = include('springroll.EventDispatcher'),
 		Features = include('springroll.Features'),
-		Bellhop = include('Bellhop'),
-		$ = include('jQuery');
-
+		Bellhop = include('Bellhop');
 	/**
 	 * The application container
 	 * @class Container
 	 * @extends springroll.EventDispatcher
 	 * @constructor
-	 * @param {string} iframeSelector jQuery selector for application iframe container
+	 * @param {string} iframeSelector selector for application iframe container
 	 * @param {object} [options] Optional parameteres
-	 * @param {string} [options.helpButton] jQuery selector for help button
-	 * @param {string} [options.captionsButton] jQuery selector for captions button
-	 * @param {string} [options.soundButton] jQuery selector for captions button
-	 * @param {string} [options.voButton] jQuery selector for vo button
-	 * @param {string} [options.sfxButton] jQuery selector for sounf effects button
-	 * @param {string} [options.musicButton] jQuery selector for music button
-	 * @param {string} [options.pauseButton] jQuery selector for pause button
+	 * @param {string} [options.helpButton] selector for help button
+	 * @param {string} [options.captionsButton] selector for captions button
+	 * @param {string} [options.soundButton] selector for captions button
+	 * @param {string} [options.voButton] selector for vo button
+	 * @param {string} [options.sfxButton] selector for sounf effects button
+	 * @param {string} [options.musicButton] selector for music button
+	 * @param {string} [options.pauseButton] selector for pause button
 	 * @param {string} [options.pauseFocusSelector='.pause-on-focus'] The class to pause
 	 *        the application when focused on. This is useful for form elements which
 	 *        require focus and play better with Application's keepFocus option.
@@ -1333,16 +1331,21 @@
 		this.name = 'springroll.Container';
 
 		/**
-		 * The current iframe jquery object
-		 * @property {jquery} iframe
+		 * The current iframe object
+		 * @property {HTMLElement} main
 		 */
-		this.main = $(iframeSelector);
+		this.main = document.querySelector(iframeSelector);
+
+		if (null === this.main)
+		{
+			throw new Error('No iframe was found with the provided selector');
+		}
 
 		/**
 		 * The DOM object for the iframe
 		 * @property {Element} dom
 		 */
-		this.dom = this.main[0];
+		this.dom = this.main;
 
 		/**
 		 * Communication layer between the container and application
@@ -1413,11 +1416,13 @@
 	 */
 	p._internalOpen = function(path, options)
 	{
-		options = $.extend(
-		{
-			singlePlay: false,
-			playOptions: null
-		}, options);
+		options = Object.merge(
+			{
+				singlePlay: false,
+				playOptions: null
+			},
+			options
+		);
 
 		this.reset();
 
@@ -1446,9 +1451,8 @@
 		}
 
 		//Open the application in the iframe
-		this.main
-			.addClass('loading')
-			.prop('src', path);
+		this.main.classList.add('loading');
+		this.main.setAttribute('src', path);
 
 		// Respond with data when we're ready
 		this.client.respond('singlePlay', options.singlePlay);
@@ -1476,7 +1480,7 @@
 		{};
 
 		// This should be deprecated, support for old function signature
-		if (typeof options === "boolean")
+		if (typeof options === 'boolean')
 		{
 			options = {
 				singlePlay: singlePlay,
@@ -1575,7 +1579,7 @@
 	{
 		this.loading = false;
 		this.loaded = true;
-		this.main.removeClass('loading');
+		this.main.classList.remove('loading');
 
 		var plugins = Container._plugins;
 		for (var i = 0; i < plugins.length; i++)
@@ -1627,8 +1631,8 @@
 		this.loading = false;
 
 		// Clear the iframe src location
-		this.main.attr('src', '')
-			.removeClass('loading');
+		this.main.setAttribute('src', '');
+		this.main.classList.remove('loading');
 
 		if (wasLoaded)
 		{
@@ -1711,8 +1715,7 @@
 	};
 
 	namespace('springroll').Container = Container;
-
-}(document));
+})(document);
 /**
  * @module Core
  * @namespace springroll
@@ -1831,13 +1834,28 @@
 		 * @method _setMuteProp
 		 * @protected
 		 * @param {string} prop The name of the property to save
-		 * @param {jquery} button Reference to the jquery button
+		 * @param {HTMLElement} button Reference to the button
 		 * @param {boolean} muted  If the button is muted
 		 */
 		this._setMuteProp = function(prop, button, muted)
 		{
-			button.removeClass('unmuted muted')
-				.addClass(muted ? 'muted' : 'unmuted');
+			function removeListeners(button)
+			{
+				button.classList.remove('unmuted');
+				button.classList.remove('muted');
+				button.classList.add(muted ? 'muted' : 'unmuted');
+			}
+			if (Array.isArray(button))
+			{
+				for (var i = 0, length = button.length; i < length; i++)
+				{
+					removeListeners(button[i]);
+				}
+			}
+			else
+			{
+				removeListeners(button);
+			}
 
 			SavedData.write(prop, muted);
 			if (this.client && this.sendMutes)
@@ -1850,12 +1868,12 @@
 		 * Disable a button
 		 * @method disableButton
 		 * @private
-		 * @param {jquery} button The button to disable
+		 * @param {HTMLElement} button The button to disable
 		 */
 		this._disableButton = function(button)
 		{
-			button.removeClass('enabled')
-				.addClass('disabled');
+			button.classList.remove('enabled');
+			button.classList.add('disabled');
 		};
 	};
 
@@ -1865,8 +1883,7 @@
 		delete this._setMuteProp;
 		delete this.sendMutes;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
@@ -1897,12 +1914,12 @@
 	 * @final
 	 */
 	var DEFAULT_CAPTIONS_STYLES = {
-		size: "md",
-		background: "black-semi",
-		color: "white",
-		edge: "none",
-		font: "arial",
-		align: "top"
+		size: 'md',
+		background: 'black-semi',
+		color: 'white',
+		edge: 'none',
+		font: 'arial',
+		align: 'top'
 	};
 
 	/**
@@ -1930,15 +1947,24 @@
 
 		/**
 		 * Reference to the captions button
-		 * @property {jquery} captionsButton
+		 * @property {HTMLElement} captionsButton
 		 */
-		this.captionsButton = $(this.options.captionsButton)
-			.click(function()
-				{
-					this.captionsMuted = !this.captionsMuted;
-				}
-				.bind(this));
+		this.captionsButton = document.querySelector(this.options.captionsButton);
 
+		if (null === this.captionsButton)
+		{
+			throw new Error(
+				'No element found with the provided selector for captions button'
+			);
+		}
+
+		this.captionsButton.addEventListener(
+			'click',
+			function()
+			{
+				this.captionsMuted = !this.captionsMuted;
+			}.bind(this)
+		);
 		/**
 		 * Set the captions are enabled or not
 		 * @property {boolean} captionsMuted
@@ -1972,15 +1998,12 @@
 		 */
 		this.setCaptionsStyles = function(styles, value)
 		{
-			if (typeof styles === "object")
+			if (typeof styles === 'object')
 			{
-				Object.merge(
-					this._captionsStyles,
-					styles ||
-					{}
-				);
+				Object.merge(this._captionsStyles, styles ||
+				{});
 			}
-			else if (typeof styles === "string")
+			else if (typeof styles === 'string')
 			{
 				this._captionsStyles[styles] = value;
 			}
@@ -1990,29 +2013,39 @@
 			// Do some validation on the style settings
 			if (true)
 			{
-				if (!styles.color || !/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color))
+				var colorReg = /^(black|white|red|yellow|pink|blue)(-semi)?$/;
+				var backgroundReg = /^none|((black|white|red|yellow|pink|blue)(-semi)?)$/;
+				var sizeReg = /^(xs|sm|md|lg|xl)$/;
+				var edgeReg = /^(raise|depress|uniform|drop|none)$/;
+				var fontReg = /^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/;
+				var alignReg = /^(top|bottom)$/;
+
+				if (!styles.color || !colorReg.test(styles.color))
 				{
-					throw "Setting captions color style is invalid value : " + styles.color;
+					throw 'Setting captions color style is invalid value : ' +
+						styles.color;
 				}
-				if (!styles.background || !/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(styles.background))
+				if (!styles.background || !backgroundReg.test(styles.background))
 				{
-					throw "Setting captions background style is invalid value : " + styles.background;
+					throw 'Setting captions background style is invalid value : ' +
+						styles.background;
 				}
-				if (!styles.size || !/^(xs|sm|md|lg|xl)$/.test(styles.size))
+				if (!styles.size || !sizeReg.test(styles.size))
 				{
-					throw "Setting captions size style is invalid value : " + styles.size;
+					throw 'Setting captions size style is invalid value : ' + styles.size;
 				}
-				if (!styles.edge || !/^(raise|depress|uniform|drop|none)$/.test(styles.edge))
+				if (!styles.edge || !edgeReg.test(styles.edge))
 				{
-					throw "Setting captions edge style is invalid value : " + styles.edge;
+					throw 'Setting captions edge style is invalid value : ' + styles.edge;
 				}
-				if (!styles.font || !/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(styles.font))
+				if (!styles.font || !fontReg.test(styles.font))
 				{
-					throw "Setting captions font style is invalid value : " + styles.font;
+					throw 'Setting captions font style is invalid value : ' + styles.font;
 				}
-				if (!styles.align || !/^(top|bottom)$/.test(styles.align))
+				if (!styles.align || !alignReg.test(styles.align))
 				{
-					throw "Setting captions align style is invalid value : " + styles.align;
+					throw 'Setting captions align style is invalid value : ' +
+						styles.align;
 				}
 			}
 
@@ -2049,8 +2082,8 @@
 		// Handle the features request
 		this.on('features', function(features)
 		{
-			this.captionsButton.hide();
-			if (features.captions) this.captionsButton.show();
+			this.captionsButton.style.display = 'none';
+			if (features.captions) this.captionsButton.style.display = 'inline-block';
 		});
 
 		//Set the defaults if we have none for the controls
@@ -2062,7 +2095,7 @@
 
 	plugin.opened = function()
 	{
-		this.captionsButton.removeClass('disabled');
+		this.captionsButton.classList.remove('disabled');
 		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 	};
@@ -2082,8 +2115,7 @@
 		delete this.clearCaptionsStyles;
 		delete this._captionsMuted;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
@@ -2118,6 +2150,7 @@
 		 * @param {Boolean} data.sfx If SFX context is supported
 		 * @param {Boolean} data.captions If captions is supported
 		 * @param {Boolean} data.hints If hinting is supported
+		 * @param {Boolean} data.disablePause If pause is disabled for debugging
 		 */
 		this.trigger('features', event.data);
 	};
@@ -2139,11 +2172,12 @@
 	plugin.setup = function()
 	{
 		// Add the default option for pauseFocusSelector
-		this.options = $.extend(
+		this.options = Object.merge(
 			{
 				pauseFocusSelector: '.pause-on-focus'
 			},
-			this.options);
+			this.options
+		);
 
 		/**
 		 * Handle the page visiblity change events, like opening a new tab
@@ -2190,7 +2224,8 @@
 		// Focus on the window on focusing on anything else
 		// without the .pause-on-focus class
 		this._onDocClick = onDocClick.bind(this);
-		$(document).on('focus click', this._onDocClick);
+		document.addEventListener('focus', this._onDocClick);
+		document.addEventListener('click', this._onDocClick);
 
 		/**
 		 * Focus on the iframe's contentWindow
@@ -2250,7 +2285,6 @@
 					{
 						this.focus();
 					}
-
 				}.bind(this),
 				100
 			);
@@ -2260,14 +2294,27 @@
 		// we will pause the game until a blur event to that item
 		// has been sent
 		var self = this;
-		$(this.options.pauseFocusSelector).on('focus', function()
+		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+
+		if (null === pauseFocus)
+		{
+			throw new Error('No element found with the provided for pauseFocus');
+		}
+
+		pauseFocus.addEventListener('focus', function()
 		{
 			self._isManualPause = self.paused = true;
-			$(this).one('blur', function()
-			{
-				self._isManualPause = self.paused = false;
-				self.focus();
-			});
+			self.addEventListener(
+				'blur',
+				function()
+				{
+					self._isManualPause = self.paused = false;
+					self.focus();
+				},
+				{
+					once: true
+				}
+			);
 		});
 	};
 
@@ -2281,21 +2328,7 @@
 	{
 		if (!this.loaded) return;
 
-		var target;
-
-		// Firefox support
-		if (e.originalEvent.explicitOriginalTarget)
-		{
-			target = $(e.originalEvent.explicitOriginalTarget);
-		}
-		else
-		{
-			target = $(e.target);
-		}
-		if (!target.filter(this.options.pauseFocusSelector).length)
-		{
-			this.focus();
-		}
+		this.focus();
 	};
 
 	/**
@@ -2351,7 +2384,7 @@
 		this.client.on(
 		{
 			focus: onFocus.bind(this),
-			keepFocus: onKeepFocus.bind(this),
+			keepFocus: onKeepFocus.bind(this)
 		});
 	};
 
@@ -2371,8 +2404,11 @@
 
 	plugin.teardown = function()
 	{
-		$(this.options.pauseFocusSelector).off('focus');
-		$(document).off('focus click', this._onDocClick);
+		document
+			.querySelector(this.options.pauseFocusSelector)
+			.removeEventListener('focus');
+		document.removeEventListener('focus', this._onDocClick);
+		document.removeEventListener('click', this._onDocClick);
 		delete this._onDocClick;
 		if (this._pageVisibility)
 		{
@@ -2387,8 +2423,7 @@
 		delete this._keepFocus;
 		delete this._containerBlurred;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
@@ -2404,30 +2439,45 @@
 	{
 		/**
 		 * Reference to the help button
-		 * @property {jquery} helpButton
+		 * @property {HTMLElement} helpButton
 		 */
-		this.helpButton = $(this.options.helpButton)
-			.click(function()
+		this.helpButton = document.querySelector(this.options.helpButton);
+
+		if (null === this.helpButton)
+		{
+			throw new Error(
+				'No element found with the provided selector for help button'
+			);
+		}
+
+		this.helpButton.addEventListener(
+			'click',
+			function()
+			{
+				if (!this.paused && !this.helpButton.classList.contains('disabled'))
 				{
-					if (!this.paused && !this.helpButton.hasClass('disabled'))
-					{
-						this.client.send('playHelp');
-					}
+					this.client.send('playHelp');
 				}
-				.bind(this));
+			}.bind(this)
+		);
+
+		this.helpButton.tooltip = function()
+		{
+			// TODO: Add non jQuery tool tips
+		};
 
 		// Handle pause
 		this.on('pause', function(paused)
 		{
 			// Disable the help button when paused if it's active
-			if (paused && !this.helpButton.hasClass('disabled'))
+			if (paused && !this.helpButton.classList.contains('disabled'))
 			{
-				this.helpButton.data('paused', true);
+				this.helpButton.setAttribute('data-paused', true);
 				this.helpEnabled = false;
 			}
-			else if (this.helpButton.data('paused'))
+			else if (this.helpButton.getAttribute('data-paused'))
 			{
-				this.helpButton.removeData('paused');
+				this.helpButton.setAttribute('data-paused', '');
 				this.helpEnabled = true;
 			}
 		});
@@ -2441,8 +2491,9 @@
 			set: function(enabled)
 			{
 				this._helpEnabled = enabled;
-				this.helpButton.removeClass('disabled enabled')
-					.addClass(enabled ? 'enabled' : 'disabled');
+				this.helpButton.classList.remove('disabled');
+				this.helpButton.classList.remove('enabled');
+				this.helpButton.classList.add(enabled ? 'enabled' : 'disabled');
 
 				/**
 				 * Fired when the enabled status of the help button changes
@@ -2458,21 +2509,25 @@
 		});
 
 		// Handle features changed
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
-				this.helpButton.hide();
-				if (features.hints) this.helpButton.show();
-			}
-			.bind(this));
+				this.helpButton.style.display = 'none';
+				if (features.hints) this.helpButton.style.display = 'inline-block';
+			}.bind(this)
+		);
 	};
 
 	plugin.open = function()
 	{
-		this.client.on('helpEnabled', function(event)
+		this.client.on(
+			'helpEnabled',
+			function(event)
 			{
 				this.helpEnabled = !!event.data;
-			}
-			.bind(this));
+			}.bind(this)
+		);
 	};
 
 	plugin.close = function()
@@ -2487,8 +2542,7 @@
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
@@ -2504,10 +2558,23 @@
 	{
 		/**
 		 * Reference to the pause application button
-		 * @property {jquery} pauseButton
+		 * @property {HTMLElement} pauseButton
 		 */
-		this.pauseButton = $(this.options.pauseButton)
-			.click(onPauseToggle.bind(this));
+		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
+
+		if (1 > this.pauseButton.length)
+		{
+			throw new Error(
+				'No element/elements found with provided selector(s) for pause button(s)'
+			);
+		}
+
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.addEventListener('click', onPauseToggle.bind(this));
+			}.bind(this)
+		);
 
 		/**
 		 * If the application is currently paused manually
@@ -2567,11 +2634,15 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					if (this.pauseButton)
-					{
-						this.pauseButton.removeClass('unpaused paused')
-							.addClass(paused ? 'paused' : 'unpaused');
-					}
+					this.pauseButton.forEach(
+						function(element)
+						{
+							element.classList.remove('unpaused');
+							element.classList.remove('paused');
+
+							element.classList.add(paused ? 'paused' : 'unpaused');
+						}.bind(this)
+					);
 				}
 			},
 			get: function()
@@ -2580,11 +2651,13 @@
 			}
 		});
 
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
 				if (features.disablePause) this._disablePause = true;
-			}
-			.bind(this));
+			}.bind(this)
+		);
 	};
 
 	/**
@@ -2600,7 +2673,12 @@
 
 	plugin.opened = function()
 	{
-		this.pauseButton.removeClass('disabled');
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.classList.remove('disabled');
+			}.bind(this)
+		);
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -2614,20 +2692,23 @@
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.off('click');
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.removeEventListener('click', onPauseToggle.bind(this));
+			}.bind(this)
+		);
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
  */
 (function()
 {
-	var $ = include('jQuery');
 	var Features = include('springroll.Features');
 
 	/**
@@ -2655,60 +2736,49 @@
 		this.openRemote = function(api, options, playOptions)
 		{
 			// This should be deprecated, support for old function signature
-			if (typeof options === "boolean")
+			if (typeof options === 'boolean')
 			{
 				options = {
 					singlePlay: singlePlay,
 					playOptions: playOptions
 				};
 			}
-			options = $.extend(
-			{
-				query: '',
-				playOptions: null,
-				singlePlay: false
-			}, options);
+			options = Object.merge(
+				{
+					query: '',
+					playOptions: null,
+					singlePlay: false
+				},
+				options
+			);
 
 			this.release = null;
 
-			$.getJSON(api, function(result)
-					{
-						if (this._destroyed) return;
+			var xhttp = new XMLHttpRequest();
 
-						if (!result.success)
-						{
-							/**
-							 * There was a problem with the API call
-							 * @event remoteError
-							 */
-							return this.trigger('remoteError', result.error);
-						}
-						var release = result.data;
+			xhttp.onResponse = function(release)
+			{
+				var err = Features.test(release.capabilities);
 
-						var err = Features.test(release.capabilities);
+				if (err)
+				{
+					return this.trigger('unsupported', err);
+				}
 
-						if (err)
-						{
-							return this.trigger('unsupported', err);
-						}
+				this.release = release;
+				this._internalOpen(release.url + options.query, options);
+			}.bind(this);
 
-						this.release = release;
+			xhttp.onreadystatechange = function()
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					this.onResponse(JSON.parse(this.response).data);
+				}
+			};
 
-						// Open the application
-						this._internalOpen(release.url + options.query, options);
-					}
-					.bind(this))
-				.fail(function()
-					{
-						if (this._destroyed) return;
-
-						/**
-						 * Fired when the API cannot be called
-						 * @event remoteFailed
-						 */
-						return this.trigger('remoteFailed');
-					}
-					.bind(this));
+			xhttp.open('GET', api, true);
+			xhttp.send();
 		};
 	};
 
@@ -2717,8 +2787,7 @@
 		delete this.openRemote;
 		delete this.release;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
@@ -2772,31 +2841,57 @@
 	{
 		/**
 		 * Reference to the all sound mute button
-		 * @property {jquery} soundButton
+		 * @property {HTMLElement} soundButton
 		 */
-		this.soundButton = $(this.options.soundButton)
-			.click(onSoundToggle.bind(this));
+		this.soundButton = document.querySelector(this.options.soundButton);
+		this.soundButton.addEventListener('click', onSoundToggle.bind(this));
+
+		if (null === this.soundButton)
+		{
+			throw new Error(
+				'No element found with provided selector for sound button'
+			);
+		}
 
 		/**
 		 * Reference to the music mute button
-		 * @property {jquery} musicButton
+		 * @property {HTMLElement} musicButton
 		 */
-		this.musicButton = $(this.options.musicButton)
-			.click(onMusicToggle.bind(this));
+		this.musicButton = document.querySelector(this.options.musicButton);
+		this.musicButton.addEventListener('click', onMusicToggle.bind(this));
+
+		if (null === this.musicButton)
+		{
+			throw new Error(
+				'No element found with provided selector for music button'
+			);
+		}
 
 		/**
 		 * Reference to the sound effects mute button
-		 * @property {jquery} sfxButton
+		 * @property {HTMLElement} sfxButton
 		 */
-		this.sfxButton = $(this.options.sfxButton)
-			.click(onSFXToggle.bind(this));
+		this.sfxButton = document.querySelector(this.options.sfxButton);
+		this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
+
+		if (null === this.sfxButton)
+		{
+			throw new Error('No element found with provided selector for sfx button');
+		}
 
 		/**
 		 * Reference to the voice-over mute button
-		 * @property {jquery} voButton
+		 * @property {HTMLElement} voButton
 		 */
-		this.voButton = $(this.options.voButton)
-			.click(onVOToggle.bind(this));
+		this.voButton = document.querySelector(this.options.voButton);
+		this.voButton.addEventListener('click', onVOToggle.bind(this));
+
+		if (null === this.voButton)
+		{
+			throw new Error(
+				'No element found with provided selector for voice-over button'
+			);
+		}
 
 		/**
 		 * Check for when all mutes are muted or unmuted
@@ -2886,19 +2981,21 @@
 			this.soundMuted = false;
 		}
 
-		this.on('features', function(features)
+		this.on(
+			'features',
+			function(features)
 			{
-				this.voButton.hide();
-				this.musicButton.hide();
-				this.soundButton.hide();
-				this.sfxButton.hide();
+				this.voButton.style.display = 'none';
+				this.musicButton.style.display = 'none';
+				this.soundButton.style.display = 'none';
+				this.sfxButton.style.display = 'none';
 
-				if (features.vo) this.voButton.show();
-				if (features.music) this.musicButton.show();
-				if (features.sound) this.soundButton.show();
-				if (features.sfxButton) this.sfxButton.show();
-			}
-			.bind(this));
+				if (features.vo) this.voButton.style.display = 'inline-block';
+				if (features.music) this.musicButton.style.display = 'inline-block';
+				if (features.sound) this.soundButton.style.display = 'inline-block';
+				if (features.sfxButton) this.sfxButton.style.display = 'inline-block';
+			}.bind(this)
+		);
 	};
 
 	/**
@@ -2952,10 +3049,10 @@
 
 	plugin.opened = function()
 	{
-		this.soundButton.removeClass('disabled');
-		this.sfxButton.removeClass('disabled');
-		this.voButton.removeClass('disabled');
-		this.musicButton.removeClass('disabled');
+		this.soundButton.classList.remove('disabled');
+		this.sfxButton.classList.remove('disabled');
+		this.voButton.classList.remove('disabled');
+		this.musicButton.classList.remove('disabled');
 
 		this.soundMuted = !!SavedData.read(SOUND_MUTED);
 		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
@@ -2973,18 +3070,17 @@
 
 	plugin.teardown = function()
 	{
-		this.voButton.off('click');
-		this.sfxButton.off('click');
-		this.musicButton.off('click');
-		this.soundButton.off('click');
+		this.soundButton.removeEventListener('click', onSoundToggle.bind(this));
+		this.musicButton.removeEventListener('click', onMusicToggle.bind(this));
+		this.sfxButton.removeEventListener('click', onSFXToggle.bind(this));
+		this.voButton.removeEventListener('click', onVOToggle.bind(this));
 		delete this.voButton;
 		delete this.sfxButton;
 		delete this.musicButton;
 		delete this.soundButton;
 		delete this._checkSoundMute;
 	};
-
-}());
+})();
 /**
  * @module Container
  * @namespace springroll
