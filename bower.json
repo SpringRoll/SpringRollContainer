@@ -4,8 +4,7 @@
 	"main": "dist/container.min.js",
 	"dependencies":
 	{
-		"bellhop": "*",
-		"jquery": "*"
+		"bellhop": "*"
 	},
 	"devDependencies":
 	{

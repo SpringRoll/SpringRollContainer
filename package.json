@@ -16,8 +16,7 @@
 	},
 	"dependencies":
 	{
-		"bellhop-iframe": "*",
-		"jquery": "*"
+		"bellhop-iframe": "*"
 	},
 	"devDependencies":
 	{
