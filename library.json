@@ -1,6 +1,6 @@
 {
 	"name": "SpringRoll Container",
-	"version": "0.5.3",
+	"version": "1.0.0",
 	"description": "The iframe controller for interacting with SpringRoll applications",
 	"url": "https://github.com/SpringRoll/SpringRollContainer",
 	"output": "container",
