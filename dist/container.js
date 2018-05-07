@@ -1336,6 +1336,11 @@
 		 */
 		this.main = document.querySelector(iframeSelector);
 
+		if (null === this.main)
+		{
+			throw new Error('No iframe was found with the provided selector');
+		}
+
 		/**
 		 * The DOM object for the iframe
 		 * @property {Element} dom
@@ -1945,6 +1950,14 @@
 		 * @property {HTMLElement} captionsButton
 		 */
 		this.captionsButton = document.querySelector(this.options.captionsButton);
+
+		if (null === this.captionsButton)
+		{
+			throw new Error(
+				'No element found with the provided selector for captions button'
+			);
+		}
+
 		this.captionsButton.addEventListener(
 			'click',
 			function()
@@ -2000,41 +2013,36 @@
 			// Do some validation on the style settings
 			if (true)
 			{
-				if (!styles.color ||
-					!/^(black|white|red|yellow|pink|blue)(-semi)?$/.test(styles.color)
-				)
+				var colorReg = /^(black|white|red|yellow|pink|blue)(-semi)?$/;
+				var backgroundReg = /^none|((black|white|red|yellow|pink|blue)(-semi)?)$/;
+				var sizeReg = /^(xs|sm|md|lg|xl)$/;
+				var edgeReg = /^(raise|depress|uniform|drop|none)$/;
+				var fontReg = /^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/;
+				var alignReg = /^(top|bottom)$/;
+
+				if (!styles.color || !colorReg.test(styles.color))
 				{
 					throw 'Setting captions color style is invalid value : ' +
 						styles.color;
 				}
-				if (!styles.background ||
-					!/^none|((black|white|red|yellow|pink|blue)(-semi)?)$/.test(
-						styles.background
-					)
-				)
+				if (!styles.background || !backgroundReg.test(styles.background))
 				{
 					throw 'Setting captions background style is invalid value : ' +
 						styles.background;
 				}
-				if (!styles.size || !/^(xs|sm|md|lg|xl)$/.test(styles.size))
+				if (!styles.size || !sizeReg.test(styles.size))
 				{
 					throw 'Setting captions size style is invalid value : ' + styles.size;
 				}
-				if (!styles.edge ||
-					!/^(raise|depress|uniform|drop|none)$/.test(styles.edge)
-				)
+				if (!styles.edge || !edgeReg.test(styles.edge))
 				{
 					throw 'Setting captions edge style is invalid value : ' + styles.edge;
 				}
-				if (!styles.font ||
-					!/^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/.test(
-						styles.font
-					)
-				)
+				if (!styles.font || !fontReg.test(styles.font))
 				{
 					throw 'Setting captions font style is invalid value : ' + styles.font;
 				}
-				if (!styles.align || !/^(top|bottom)$/.test(styles.align))
+				if (!styles.align || !alignReg.test(styles.align))
 				{
 					throw 'Setting captions align style is invalid value : ' +
 						styles.align;
@@ -2287,6 +2295,12 @@
 		// has been sent
 		var self = this;
 		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+
+		if (null === pauseFocus)
+		{
+			throw new Error('No element found with the provided for pauseFocus');
+		}
+
 		pauseFocus.addEventListener('focus', function()
 		{
 			self._isManualPause = self.paused = true;
@@ -2428,6 +2442,14 @@
 		 * @property {HTMLElement} helpButton
 		 */
 		this.helpButton = document.querySelector(this.options.helpButton);
+
+		if (null === this.helpButton)
+		{
+			throw new Error(
+				'No element found with the provided selector for help button'
+			);
+		}
+
 		this.helpButton.addEventListener(
 			'click',
 			function()
@@ -2538,8 +2560,14 @@
 		 * Reference to the pause application button
 		 * @property {HTMLElement} pauseButton
 		 */
-		console.log('you');
 		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
+
+		if (1 > this.pauseButton.length)
+		{
+			throw new Error(
+				'No element/elements found with provided selector(s) for pause button(s)'
+			);
+		}
 
 		this.pauseButton.forEach(
 			function(element)
@@ -2818,12 +2846,26 @@
 		this.soundButton = document.querySelector(this.options.soundButton);
 		this.soundButton.addEventListener('click', onSoundToggle.bind(this));
 
+		if (null === this.soundButton)
+		{
+			throw new Error(
+				'No element found with provided selector for sound button'
+			);
+		}
+
 		/**
 		 * Reference to the music mute button
 		 * @property {HTMLElement} musicButton
 		 */
 		this.musicButton = document.querySelector(this.options.musicButton);
 		this.musicButton.addEventListener('click', onMusicToggle.bind(this));
+
+		if (null === this.musicButton)
+		{
+			throw new Error(
+				'No element found with provided selector for music button'
+			);
+		}
 
 		/**
 		 * Reference to the sound effects mute button
@@ -2832,12 +2874,24 @@
 		this.sfxButton = document.querySelector(this.options.sfxButton);
 		this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
 
+		if (null === this.sfxButton)
+		{
+			throw new Error('No element found with provided selector for sfx button');
+		}
+
 		/**
 		 * Reference to the voice-over mute button
 		 * @property {HTMLElement} voButton
 		 */
 		this.voButton = document.querySelector(this.options.voButton);
 		this.voButton.addEventListener('click', onVOToggle.bind(this));
+
+		if (null === this.voButton)
+		{
+			throw new Error(
+				'No element found with provided selector for voice-over button'
+			);
+		}
 
 		/**
 		 * Check for when all mutes are muted or unmuted

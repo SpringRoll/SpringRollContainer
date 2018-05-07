@@ -137,6 +137,12 @@
 		// has been sent
 		var self = this;
 		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+
+		if (null === pauseFocus)
+		{
+			throw new Error('No element found with the provided for pauseFocus');
+		}
+
 		pauseFocus.addEventListener('focus', function()
 		{
 			self._isManualPause = self.paused = true;

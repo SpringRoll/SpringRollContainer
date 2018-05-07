@@ -2,7 +2,8 @@
  * @module Container
  * @namespace springroll
  */
-(function() {
+(function()
+{
 	var SavedData = include('springroll.SavedData');
 
 	/**
@@ -44,7 +45,8 @@
 	 */
 	var CAPTIONS_MUTED = 'captionsMuted';
 
-	plugin.setup = function() {
+	plugin.setup = function()
+	{
 		/**
 		 * The collection of captions styles
 		 * @property {string} _captionsStyles
@@ -53,7 +55,8 @@
 		this._captionsStyles = Object.merge(
 			{},
 			DEFAULT_CAPTIONS_STYLES,
-			SavedData.read(CAPTIONS_STYLES) || {}
+			SavedData.read(CAPTIONS_STYLES) ||
+			{}
 		);
 
 		/**
@@ -61,9 +64,18 @@
 		 * @property {HTMLElement} captionsButton
 		 */
 		this.captionsButton = document.querySelector(this.options.captionsButton);
+
+		if (null === this.captionsButton)
+		{
+			throw new Error(
+				'No element found with the provided selector for captions button'
+			);
+		}
+
 		this.captionsButton.addEventListener(
 			'click',
-			function() {
+			function()
+			{
 				this.captionsMuted = !this.captionsMuted;
 			}.bind(this)
 		);
@@ -72,12 +84,15 @@
 		 * @property {boolean} captionsMuted
 		 * @default true
 		 */
-		Object.defineProperty(this, CAPTIONS_MUTED, {
-			set: function(muted) {
+		Object.defineProperty(this, CAPTIONS_MUTED,
+		{
+			set: function(muted)
+			{
 				this._captionsMuted = muted;
 				this._setMuteProp(CAPTIONS_MUTED, this.captionsButton, muted);
 			},
-			get: function() {
+			get: function()
+			{
 				return this._captionsMuted;
 			}
 		});
@@ -95,17 +110,23 @@
 		 * @param {string} [styles.align='top'] The align style default is top of the window
 		 * @param {string} [value] If setting styles parameter as a string, this is the value of the property.
 		 */
-		this.setCaptionsStyles = function(styles, value) {
-			if (typeof styles === 'object') {
-				Object.merge(this._captionsStyles, styles || {});
-			} else if (typeof styles === 'string') {
+		this.setCaptionsStyles = function(styles, value)
+		{
+			if (typeof styles === 'object')
+			{
+				Object.merge(this._captionsStyles, styles ||
+				{});
+			}
+			else if (typeof styles === 'string')
+			{
 				this._captionsStyles[styles] = value;
 			}
 
 			styles = this._captionsStyles;
 
 			// Do some validation on the style settings
-			if (DEBUG) {
+			if (DEBUG)
+			{
 				var colorReg = /^(black|white|red|yellow|pink|blue)(-semi)?$/;
 				var backgroundReg = /^none|((black|white|red|yellow|pink|blue)(-semi)?)$/;
 				var sizeReg = /^(xs|sm|md|lg|xl)$/;
@@ -113,31 +134,38 @@
 				var fontReg = /^(georgia|palatino|times|arial|arial-black|comic-sans|impact|lucida|tahoma|trebuchet|verdana|courier|console)$/;
 				var alignReg = /^(top|bottom)$/;
 
-				if (!styles.color || !colorReg.test(styles.color)) {
+				if (!styles.color || !colorReg.test(styles.color))
+				{
 					throw 'Setting captions color style is invalid value : ' +
 						styles.color;
 				}
-				if (!styles.background || !backgroundReg.test(styles.background)) {
+				if (!styles.background || !backgroundReg.test(styles.background))
+				{
 					throw 'Setting captions background style is invalid value : ' +
 						styles.background;
 				}
-				if (!styles.size || !sizeReg.test(styles.size)) {
+				if (!styles.size || !sizeReg.test(styles.size))
+				{
 					throw 'Setting captions size style is invalid value : ' + styles.size;
 				}
-				if (!styles.edge || !edgeReg.test(styles.edge)) {
+				if (!styles.edge || !edgeReg.test(styles.edge))
+				{
 					throw 'Setting captions edge style is invalid value : ' + styles.edge;
 				}
-				if (!styles.font || !fontReg.test(styles.font)) {
+				if (!styles.font || !fontReg.test(styles.font))
+				{
 					throw 'Setting captions font style is invalid value : ' + styles.font;
 				}
-				if (!styles.align || !alignReg.test(styles.align)) {
+				if (!styles.align || !alignReg.test(styles.align))
+				{
 					throw 'Setting captions align style is invalid value : ' +
 						styles.align;
 				}
 			}
 
 			SavedData.write(CAPTIONS_STYLES, styles);
-			if (this.client) {
+			if (this.client)
+			{
 				this.client.send(CAPTIONS_STYLES, styles);
 			}
 		};
@@ -148,7 +176,8 @@
 		 * @param {string} [prop] The optional property, values are "size", "edge", "font", "background", "color"
 		 * @return {object} The collection of styles, see setCaptionsStyles for more info.
 		 */
-		this.getCaptionsStyles = function(prop) {
+		this.getCaptionsStyles = function(prop)
+		{
 			var styles = this._captionsStyles;
 			return prop ? styles[prop] : styles;
 		};
@@ -157,34 +186,41 @@
 		 * Reset the captions styles
 		 * @method clearCaptionsStyles
 		 */
-		this.clearCaptionsStyles = function() {
-			this._captionsStyles = Object.merge({}, DEFAULT_CAPTIONS_STYLES);
+		this.clearCaptionsStyles = function()
+		{
+			this._captionsStyles = Object.merge(
+			{}, DEFAULT_CAPTIONS_STYLES);
 			this.setCaptionsStyles();
 		};
 
 		// Handle the features request
-		this.on('features', function(features) {
+		this.on('features', function(features)
+		{
 			this.captionsButton.style.display = 'none';
 			if (features.captions) this.captionsButton.style.display = 'inline-block';
 		});
 
 		//Set the defaults if we have none for the controls
-		if (SavedData.read(CAPTIONS_MUTED) === null) {
+		if (SavedData.read(CAPTIONS_MUTED) === null)
+		{
 			this.captionsMuted = true;
 		}
 	};
 
-	plugin.opened = function() {
+	plugin.opened = function()
+	{
 		this.captionsButton.classList.remove('disabled');
 		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 	};
 
-	plugin.close = function() {
+	plugin.close = function()
+	{
 		this._disableButton(this.captionsButton);
 	};
 
-	plugin.teardown = function() {
+	plugin.teardown = function()
+	{
 		this.captionsButton.off('click');
 		delete this.captionsButton;
 		delete this._captionsStyles;

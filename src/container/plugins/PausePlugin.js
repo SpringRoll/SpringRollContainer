@@ -2,21 +2,31 @@
  * @module Container
  * @namespace springroll
  */
-(function() {
+(function()
+{
 	/**
 	 * @class Container
 	 */
 	var plugin = new springroll.ContainerPlugin(80);
 
-	plugin.setup = function() {
+	plugin.setup = function()
+	{
 		/**
 		 * Reference to the pause application button
 		 * @property {HTMLElement} pauseButton
 		 */
 		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
+		if (1 > this.pauseButton.length)
+		{
+			throw new Error(
+				'No element/elements found with provided selector(s) for pause button(s)'
+			);
+		}
+
 		this.pauseButton.forEach(
-			function(element) {
+			function(element)
+			{
 				element.addEventListener('click', onPauseToggle.bind(this));
 			}.bind(this)
 		);
@@ -50,12 +60,16 @@
 		 * @property {Boolean} paused
 		 * @default false
 		 */
-		Object.defineProperty(this, 'paused', {
-			set: function(paused) {
-				if (!this._disablePause) {
+		Object.defineProperty(this, 'paused',
+		{
+			set: function(paused)
+			{
+				if (!this._disablePause)
+				{
 					this._paused = paused;
 
-					if (this.client) {
+					if (this.client)
+					{
 						this.client.send('pause', paused);
 					}
 					/**
@@ -76,7 +90,8 @@
 
 					// Set the pause button state
 					this.pauseButton.forEach(
-						function(element) {
+						function(element)
+						{
 							element.classList.remove('unpaused');
 							element.classList.remove('paused');
 
@@ -85,14 +100,16 @@
 					);
 				}
 			},
-			get: function() {
+			get: function()
+			{
 				return this._paused;
 			}
 		});
 
 		this.on(
 			'features',
-			function(features) {
+			function(features)
+			{
 				if (features.disablePause) this._disablePause = true;
 			}.bind(this)
 		);
@@ -103,14 +120,17 @@
 	 * @method onPauseToggle
 	 * @private
 	 */
-	var onPauseToggle = function() {
+	var onPauseToggle = function()
+	{
 		this.paused = !this.paused;
 		this._isManualPause = this.paused;
 	};
 
-	plugin.opened = function() {
+	plugin.opened = function()
+	{
 		this.pauseButton.forEach(
-			function(element) {
+			function(element)
+			{
 				element.classList.remove('disabled');
 			}.bind(this)
 		);
@@ -119,14 +139,17 @@
 		this.paused = this._paused;
 	};
 
-	plugin.close = function() {
+	plugin.close = function()
+	{
 		this._disableButton(this.pauseButton);
 		this.paused = false;
 	};
 
-	plugin.teardown = function() {
+	plugin.teardown = function()
+	{
 		this.pauseButton.forEach(
-			function(element) {
+			function(element)
+			{
 				element.removeEventListener('click', onPauseToggle.bind(this));
 			}.bind(this)
 		);

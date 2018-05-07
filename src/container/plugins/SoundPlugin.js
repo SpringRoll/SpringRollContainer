@@ -56,12 +56,26 @@
 		this.soundButton = document.querySelector(this.options.soundButton);
 		this.soundButton.addEventListener('click', onSoundToggle.bind(this));
 
+		if (null === this.soundButton)
+		{
+			throw new Error(
+				'No element found with provided selector for sound button'
+			);
+		}
+
 		/**
 		 * Reference to the music mute button
 		 * @property {HTMLElement} musicButton
 		 */
 		this.musicButton = document.querySelector(this.options.musicButton);
 		this.musicButton.addEventListener('click', onMusicToggle.bind(this));
+
+		if (null === this.musicButton)
+		{
+			throw new Error(
+				'No element found with provided selector for music button'
+			);
+		}
 
 		/**
 		 * Reference to the sound effects mute button
@@ -70,12 +84,24 @@
 		this.sfxButton = document.querySelector(this.options.sfxButton);
 		this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
 
+		if (null === this.sfxButton)
+		{
+			throw new Error('No element found with provided selector for sfx button');
+		}
+
 		/**
 		 * Reference to the voice-over mute button
 		 * @property {HTMLElement} voButton
 		 */
 		this.voButton = document.querySelector(this.options.voButton);
 		this.voButton.addEventListener('click', onVOToggle.bind(this));
+
+		if (null === this.voButton)
+		{
+			throw new Error(
+				'No element found with provided selector for voice-over button'
+			);
+		}
 
 		/**
 		 * Check for when all mutes are muted or unmuted

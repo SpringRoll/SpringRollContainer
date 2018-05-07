@@ -50,6 +50,11 @@
 		 */
 		this.main = document.querySelector(iframeSelector);
 
+		if (null === this.main)
+		{
+			throw new Error('No iframe was found with the provided selector');
+		}
+
 		/**
 		 * The DOM object for the iframe
 		 * @property {Element} dom

@@ -16,6 +16,14 @@
 		 * @property {HTMLElement} helpButton
 		 */
 		this.helpButton = document.querySelector(this.options.helpButton);
+
+		if (null === this.helpButton)
+		{
+			throw new Error(
+				'No element found with the provided selector for help button'
+			);
+		}
+
 		this.helpButton.addEventListener(
 			'click',
 			function()
