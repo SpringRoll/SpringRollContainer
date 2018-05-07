@@ -1,34 +1,31 @@
 {
-	"name": "springroll-container",
-	"version": "0.5.3",
-	"main": "dist/container.min.js",
-	"dependencies":
-	{
-		"bellhop": "*",
-		"jquery": "*"
-	},
-	"devDependencies":
-	{
-		"easeljs": "https://github.com/SpringRoll/EaselJS.git",
-		"qunit": "*",
-		"springroll": "*",
-		"google-code-prettify": "*",
-		"bind-polyfill": "*"
-	},
-	"ignore": [
-		".bowerrc",
-		".editorconfig",
-		".gitattributes",
-		".gitignore",
-		".jsbeautifyrc",
-		".npmignore",
-		".travis.yml",
-		"Gruntfile.js",
-		"library.json",
-		"tasks",
-		"examples",
-		"docs",
-		"src",
-		"test"
-	]
+  "name": "springroll-container",
+  "version": "0.5.3",
+  "main": "dist/container.min.js",
+  "dependencies": {
+    "bellhop": "*"
+  },
+  "devDependencies": {
+    "easeljs": "https://github.com/SpringRoll/EaselJS.git",
+    "qunit": "*",
+    "springroll": "*",
+    "google-code-prettify": "*",
+    "bind-polyfill": "*"
+  },
+  "ignore": [
+    ".bowerrc",
+    ".editorconfig",
+    ".gitattributes",
+    ".gitignore",
+    ".jsbeautifyrc",
+    ".npmignore",
+    ".travis.yml",
+    "Gruntfile.js",
+    "library.json",
+    "tasks",
+    "examples",
+    "docs",
+    "src",
+    "test"
+  ]
 }
