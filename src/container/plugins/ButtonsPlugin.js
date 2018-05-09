@@ -32,6 +32,11 @@
 		{
 			function removeListeners(button)
 			{
+				if (button === null)
+				{
+					return;
+				}
+
 				button.classList.remove('unmuted');
 				button.classList.remove('muted');
 				button.classList.add(muted ? 'muted' : 'unmuted');
@@ -63,6 +68,11 @@
 		 */
 		this._disableButton = function(button)
 		{
+			if (button === null)
+			{
+				return;
+			}
+
 			button.classList.remove('enabled');
 			button.classList.add('disabled');
 		};

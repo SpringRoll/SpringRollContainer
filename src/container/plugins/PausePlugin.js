@@ -15,21 +15,14 @@
 		 * Reference to the pause application button
 		 * @property {HTMLElement} pauseButton
 		 */
-		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
+		this.pauseButton = document.querySelector(this.options.pauseButton);
 
-		if (1 > this.pauseButton.length)
+		if (this.pauseButton === null)
 		{
-			throw new Error(
-				'No element/elements found with provided selector(s) for pause button(s)'
-			);
+			return;
 		}
 
-		this.pauseButton.forEach(
-			function(element)
-			{
-				element.addEventListener('click', onPauseToggle.bind(this));
-			}.bind(this)
-		);
+		this.pauseButton.addEventListener('click', onPauseToggle.bind(this));
 
 		/**
 		 * If the application is currently paused manually
@@ -89,15 +82,12 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					this.pauseButton.forEach(
-						function(element)
-						{
-							element.classList.remove('unpaused');
-							element.classList.remove('paused');
-
-							element.classList.add(paused ? 'paused' : 'unpaused');
-						}.bind(this)
-					);
+					if (this.pauseButton !== null)
+					{
+						this.pauseButton.classList.remove('unpaused');
+						this.pauseButton.classList.remove('paused');
+						this.pauseButton.classList.add(paused ? 'paused' : 'unpaused');
+					}
 				}
 			},
 			get: function()
@@ -128,12 +118,12 @@
 
 	plugin.opened = function()
 	{
-		this.pauseButton.forEach(
-			function(element)
-			{
-				element.classList.remove('disabled');
-			}.bind(this)
-		);
+		if (this.pauseButton === null)
+		{
+			return;
+		}
+
+		this.pauseButton.classList.remove('disabled');
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -147,12 +137,7 @@
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.forEach(
-			function(element)
-			{
-				element.removeEventListener('click', onPauseToggle.bind(this));
-			}.bind(this)
-		);
+		this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;

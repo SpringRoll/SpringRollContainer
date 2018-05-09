@@ -19,9 +19,7 @@
 
 		if (null === this.helpButton)
 		{
-			throw new Error(
-				'No element found with the provided selector for help button'
-			);
+			return;
 		}
 
 		this.helpButton.addEventListener(
@@ -112,6 +110,11 @@
 
 	plugin.teardown = function()
 	{
+		if (null === this.helpButton)
+		{
+			return;
+		}
+
 		this.helpButton.off('click');
 		delete this.helpButton;
 		delete this._helpEnabled;
