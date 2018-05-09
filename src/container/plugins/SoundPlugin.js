@@ -185,15 +185,30 @@
 			'features',
 			function(features)
 			{
-				this.voButton.style.display = 'none';
-				this.musicButton.style.display = 'none';
-				this.soundButton.style.display = 'none';
-				this.sfxButton.style.display = 'none';
+				if (this.voButton !== null)
+				{
+					this.voButton.style.display = 'none';
+				}
 
-				if (features.vo) this.voButton.style.display = 'inline-block';
-				if (features.music) this.musicButton.style.display = 'inline-block';
-				if (features.sound) this.soundButton.style.display = 'inline-block';
-				if (features.sfxButton) this.sfxButton.style.display = 'inline-block';
+				if (this.musicButton !== null)
+				{
+					this.musicButton.style.display = 'none';
+				}
+
+				if (this.soundButton !== null)
+				{
+					this.soundButton.style.display = 'none';
+				}
+
+				if (this.sfxButton !== null)
+				{
+					this.sfxButton.style.display = 'none';
+				}
+
+				if (features.vo && this.voButton) this.voButton.style.display = 'inline-block';
+				if (features.music && this.musicButton) this.musicButton.style.display = 'inline-block';
+				if (features.sound && this.soundButton) this.soundButton.style.display = 'inline-block';
+				if (features.sfxButton && this.sfxButton) this.sfxButton.style.display = 'inline-block';
 			}.bind(this)
 		);
 	};
