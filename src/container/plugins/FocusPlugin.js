@@ -247,7 +247,7 @@
 	plugin.teardown = function()
 	{
 		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
-		if (pauseFocusSelector !== null)
+		if (pauseFocus !== null)
 		{
 			pauseFocus.removeEventListener('focus');
 		}

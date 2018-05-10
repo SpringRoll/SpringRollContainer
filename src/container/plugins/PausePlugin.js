@@ -137,7 +137,10 @@
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
+		if (this.pauseButton !== null)
+		{
+			this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
+		}
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
