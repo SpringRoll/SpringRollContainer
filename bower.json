@@ -9,7 +9,7 @@
 	"devDependencies":
 	{
 		"easeljs": "https://github.com/SpringRoll/EaselJS.git",
-		"qunit": "*",
+		"qunit": "2.6.*",
 		"springroll": "*",
 		"google-code-prettify": "*",
 		"bind-polyfill": "*"
