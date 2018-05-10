@@ -134,7 +134,7 @@
 
 	plugin.close = function()
 	{
-		this._disableButton(this.pauseButton);
+		this.pauseButton.forEach(this._disableButton.bind(this));
 		this.paused = false;
 	};
 
