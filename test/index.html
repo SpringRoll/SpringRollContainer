@@ -24,10 +24,40 @@
 	<script src="../dist/container.js"></script>
 
 	<script>
-	QUnit.test('Container Test', function(assert)
+	function makeButton(id) {
+		var button = document.createElement('button');
+		button.id = id;
+		document.body.appendChild(button);
+		return button;
+	}
+
+	function removeButton(id) {
+		document.getElementById(id).remove();
+	}
+
+	QUnit.test('Container No Buttons', function(assert)
 	{
 		var Container = include('springroll.Container');
 		var container = new Container('#frame');
+		container.destroy();
+		QUnit.assert.ok(true, "Created a container");
+	});
+
+	QUnit.test('Container with buttons', function(assert)
+	{
+		// create elements
+		['help', 'captions', 'sound', 'vo', 'sfx', 'music', 'pause'].forEach(makeButton);
+
+		var Container = include('springroll.Container');
+		var container = new Container('#frame', {
+			helpButton: '#help',
+			captionsButton: '#captions',
+			soundButton: '#sound',
+			voButton: '#vo',
+			sfxButton: '#sfx',
+			musicButton: '#music',
+			pauseButton: '#pause'
+		});
 		container.destroy();
 		QUnit.assert.ok(true, "Created a container");
 	});
