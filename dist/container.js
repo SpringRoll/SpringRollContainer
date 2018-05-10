@@ -1966,13 +1966,13 @@
 			return;
 		}
 
-		this.captionsButton.addEventListener(
-			'click',
-			function()
-			{
-				this.captionsMuted = !this.captionsMuted;
-			}.bind(this)
-		);
+		this.captionsButtonClick = function()
+		{
+			this.captionsMuted = !this.captionsMuted;
+		}.bind(this);
+
+		this.captionsButton.addEventListener('click', this.captionsButtonClick);
+
 		/**
 		 * Set the captions are enabled or not
 		 * @property {boolean} captionsMuted
@@ -2130,7 +2130,7 @@
 			return;
 		}
 
-		this.captionsButton.off('click');
+		this.captionsButton.removeEventListener('click', this.captionsButtonClick);
 		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;
@@ -2428,7 +2428,7 @@
 	plugin.teardown = function()
 	{
 		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
-		if (pauseFocusSelector !== null)
+		if (pauseFocus !== null)
 		{
 			pauseFocus.removeEventListener('focus');
 		}
@@ -2474,16 +2474,16 @@
 			return;
 		}
 
-		this.helpButton.addEventListener(
-			'click',
-			function()
+		// store the listener so that we can use it later
+		this.helpButtonClick = function()
+		{
+			if (!this.paused && !this.helpButton.classList.contains('disabled'))
 			{
-				if (!this.paused && !this.helpButton.classList.contains('disabled'))
-				{
-					this.client.send('playHelp');
-				}
-			}.bind(this)
-		);
+				this.client.send('playHelp');
+			}
+		}.bind(this);
+
+		this.helpButton.addEventListener('click', this.helpButtonClick);
 
 		this.helpButton.tooltip = function()
 		{
@@ -2567,7 +2567,7 @@
 			return;
 		}
 
-		this.helpButton.off('click');
+		this.helpButton.removeEventListener('click', this.helpButtonClick);
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
@@ -2589,14 +2589,14 @@
 		 * Reference to the pause application button
 		 * @property {HTMLElement} pauseButton
 		 */
-		this.pauseButton = document.querySelector(this.options.pauseButton);
+		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
-		if (this.pauseButton === null)
+		this.onPauseToggle = onPauseToggle.bind(this);
+
+		this.pauseButton.forEach(function(element)
 		{
-			return;
-		}
-
-		this.pauseButton.addEventListener('click', onPauseToggle.bind(this));
+			element.addEventListener('click', this.onPauseToggle);
+		}.bind(this));
 
 		/**
 		 * If the application is currently paused manually
@@ -2656,12 +2656,15 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					if (this.pauseButton !== null)
-					{
-						this.pauseButton.classList.remove('unpaused');
-						this.pauseButton.classList.remove('paused');
-						this.pauseButton.classList.add(paused ? 'paused' : 'unpaused');
-					}
+					this.pauseButton.forEach(
+						function(element)
+						{
+							element.classList.remove('unpaused');
+							element.classList.remove('paused');
+
+							element.classList.add(paused ? 'paused' : 'unpaused');
+						}.bind(this)
+					);
 				}
 			},
 			get: function()
@@ -2692,12 +2695,12 @@
 
 	plugin.opened = function()
 	{
-		if (this.pauseButton === null)
-		{
-			return;
-		}
-
-		this.pauseButton.classList.remove('disabled');
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.classList.remove('disabled');
+			}.bind(this)
+		);
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -2705,13 +2708,18 @@
 
 	plugin.close = function()
 	{
-		this._disableButton(this.pauseButton);
+		this.pauseButton.forEach(this._disableButton.bind(this));
 		this.paused = false;
 	};
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.removeEventListener('click', this.onPauseToggle);
+			}.bind(this)
+		);
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
