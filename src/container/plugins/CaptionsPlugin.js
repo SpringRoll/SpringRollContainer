@@ -70,13 +70,13 @@
 			return;
 		}
 
-		this.captionsButton.addEventListener(
-			'click',
-			function()
-			{
-				this.captionsMuted = !this.captionsMuted;
-			}.bind(this)
-		);
+		this.captionsButtonClick = function()
+		{
+			this.captionsMuted = !this.captionsMuted;
+		}.bind(this);
+
+		this.captionsButton.addEventListener('click', this.captionsButtonClick);
+
 		/**
 		 * Set the captions are enabled or not
 		 * @property {boolean} captionsMuted
@@ -234,7 +234,7 @@
 			return;
 		}
 
-		this.captionsButton.off('click');
+		this.captionsButton.removeEventListener('click', this.captionsButtonClick);
 		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;

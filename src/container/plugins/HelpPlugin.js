@@ -22,16 +22,16 @@
 			return;
 		}
 
-		this.helpButton.addEventListener(
-			'click',
-			function()
+		// store the listener so that we can use it later
+		this.helpButtonClick = function()
+		{
+			if (!this.paused && !this.helpButton.classList.contains('disabled'))
 			{
-				if (!this.paused && !this.helpButton.classList.contains('disabled'))
-				{
-					this.client.send('playHelp');
-				}
-			}.bind(this)
-		);
+				this.client.send('playHelp');
+			}
+		}.bind(this);
+
+		this.helpButton.addEventListener('click', this.helpButtonClick);
 
 		this.helpButton.tooltip = function()
 		{
@@ -115,7 +115,7 @@
 			return;
 		}
 
-		this.helpButton.off('click');
+		this.helpButton.removeEventListener('click', this.helpButtonClick);
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
