@@ -15,14 +15,14 @@
 		 * Reference to the pause application button
 		 * @property {HTMLElement} pauseButton
 		 */
-		this.pauseButton = document.querySelector(this.options.pauseButton);
+		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
-		if (this.pauseButton === null)
+		this.onPauseToggle = onPauseToggle.bind(this);
+
+		this.pauseButton.forEach(function(element)
 		{
-			return;
-		}
-
-		this.pauseButton.addEventListener('click', onPauseToggle.bind(this));
+			element.addEventListener('click', this.onPauseToggle);
+		}.bind(this));
 
 		/**
 		 * If the application is currently paused manually
@@ -82,12 +82,15 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					if (this.pauseButton !== null)
-					{
-						this.pauseButton.classList.remove('unpaused');
-						this.pauseButton.classList.remove('paused');
-						this.pauseButton.classList.add(paused ? 'paused' : 'unpaused');
-					}
+					this.pauseButton.forEach(
+						function(element)
+						{
+							element.classList.remove('unpaused');
+							element.classList.remove('paused');
+
+							element.classList.add(paused ? 'paused' : 'unpaused');
+						}.bind(this)
+					);
 				}
 			},
 			get: function()
@@ -118,12 +121,12 @@
 
 	plugin.opened = function()
 	{
-		if (this.pauseButton === null)
-		{
-			return;
-		}
-
-		this.pauseButton.classList.remove('disabled');
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.classList.remove('disabled');
+			}.bind(this)
+		);
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -137,10 +140,12 @@
 
 	plugin.teardown = function()
 	{
-		if (this.pauseButton !== null)
-		{
-			this.pauseButton.removeEventListener('click', onPauseToggle.bind(this));
-		}
+		this.pauseButton.forEach(
+			function(element)
+			{
+				element.removeEventListener('click', this.onPauseToggle);
+			}.bind(this)
+		);
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
