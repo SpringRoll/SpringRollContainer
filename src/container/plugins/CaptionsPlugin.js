@@ -67,18 +67,16 @@
 
 		if (null === this.captionsButton)
 		{
-			throw new Error(
-				'No element found with the provided selector for captions button'
-			);
+			return;
 		}
 
-		this.captionsButton.addEventListener(
-			'click',
-			function()
-			{
-				this.captionsMuted = !this.captionsMuted;
-			}.bind(this)
-		);
+		this.captionsButtonClick = function()
+		{
+			this.captionsMuted = !this.captionsMuted;
+		}.bind(this);
+
+		this.captionsButton.addEventListener('click', this.captionsButtonClick);
+
 		/**
 		 * Set the captions are enabled or not
 		 * @property {boolean} captionsMuted
@@ -209,6 +207,11 @@
 
 	plugin.opened = function()
 	{
+		if (null === this.captionsButton)
+		{
+			return;
+		}
+
 		this.captionsButton.classList.remove('disabled');
 		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
@@ -216,12 +219,22 @@
 
 	plugin.close = function()
 	{
+		if (null === this.captionsButton)
+		{
+			return;
+		}
+
 		this._disableButton(this.captionsButton);
 	};
 
 	plugin.teardown = function()
 	{
-		this.captionsButton.off('click');
+		if (null === this.captionsButton)
+		{
+			return;
+		}
+
+		this.captionsButton.removeEventListener('click', this.captionsButtonClick);
 		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;

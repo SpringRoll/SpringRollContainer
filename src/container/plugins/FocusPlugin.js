@@ -140,7 +140,7 @@
 
 		if (null === pauseFocus)
 		{
-			throw new Error('No element found with the provided for pauseFocus');
+			return;
 		}
 
 		pauseFocus.addEventListener('focus', function()
@@ -246,9 +246,12 @@
 
 	plugin.teardown = function()
 	{
-		document
-			.querySelector(this.options.pauseFocusSelector)
-			.removeEventListener('focus');
+		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+		if (pauseFocus !== null)
+		{
+			pauseFocus.removeEventListener('focus');
+		}
+
 		document.removeEventListener('focus', this._onDocClick);
 		document.removeEventListener('click', this._onDocClick);
 		delete this._onDocClick;

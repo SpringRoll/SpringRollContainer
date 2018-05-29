@@ -32,12 +32,12 @@
 		var container = new Container("#appContainer");
 
 		// Open the application on button click
-		var loadGame = document.querySelector("#loadGame").on('click', function () {
+		var loadGame = document.querySelector("#loadGame").addEventListener('click', function () {
 			container.openPath('app.html');
 		});
 
 		// Open the application on button click
-		var closeGame = document.querySelector("#closeGame").on('click', function () {
+		var closeGame = document.querySelector("#closeGame").addEventListener('click', function () {
 			container.close();
 		});
 

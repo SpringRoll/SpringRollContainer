@@ -17,19 +17,12 @@
 		 */
 		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
-		if (1 > this.pauseButton.length)
-		{
-			throw new Error(
-				'No element/elements found with provided selector(s) for pause button(s)'
-			);
-		}
+		this.onPauseToggle = onPauseToggle.bind(this);
 
-		this.pauseButton.forEach(
-			function(element)
-			{
-				element.addEventListener('click', onPauseToggle.bind(this));
-			}.bind(this)
-		);
+		this.pauseButton.forEach(function(element)
+		{
+			element.addEventListener('click', this.onPauseToggle);
+		}.bind(this));
 
 		/**
 		 * If the application is currently paused manually
@@ -141,7 +134,7 @@
 
 	plugin.close = function()
 	{
-		this._disableButton(this.pauseButton);
+		this.pauseButton.forEach(this._disableButton.bind(this));
 		this.paused = false;
 	};
 
@@ -150,7 +143,7 @@
 		this.pauseButton.forEach(
 			function(element)
 			{
-				element.removeEventListener('click', onPauseToggle.bind(this));
+				element.removeEventListener('click', this.onPauseToggle);
 			}.bind(this)
 		);
 		delete this.pauseButton;

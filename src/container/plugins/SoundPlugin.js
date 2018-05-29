@@ -54,53 +54,43 @@
 		 * @property {HTMLElement} soundButton
 		 */
 		this.soundButton = document.querySelector(this.options.soundButton);
-		this.soundButton.addEventListener('click', onSoundToggle.bind(this));
-
-		if (null === this.soundButton)
-		{
-			throw new Error(
-				'No element found with provided selector for sound button'
-			);
-		}
 
 		/**
 		 * Reference to the music mute button
 		 * @property {HTMLElement} musicButton
 		 */
 		this.musicButton = document.querySelector(this.options.musicButton);
-		this.musicButton.addEventListener('click', onMusicToggle.bind(this));
-
-		if (null === this.musicButton)
-		{
-			throw new Error(
-				'No element found with provided selector for music button'
-			);
-		}
 
 		/**
 		 * Reference to the sound effects mute button
 		 * @property {HTMLElement} sfxButton
 		 */
 		this.sfxButton = document.querySelector(this.options.sfxButton);
-		this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
-
-		if (null === this.sfxButton)
-		{
-			throw new Error('No element found with provided selector for sfx button');
-		}
 
 		/**
 		 * Reference to the voice-over mute button
 		 * @property {HTMLElement} voButton
 		 */
 		this.voButton = document.querySelector(this.options.voButton);
-		this.voButton.addEventListener('click', onVOToggle.bind(this));
 
-		if (null === this.voButton)
+		if (null !== this.soundButton)
 		{
-			throw new Error(
-				'No element found with provided selector for voice-over button'
-			);
+			this.soundButton.addEventListener('click', onSoundToggle.bind(this));
+		}
+
+		if (null !== this.musicButton)
+		{
+			this.musicButton.addEventListener('click', onMusicToggle.bind(this));
+		}
+
+		if (null !== this.sfxButton)
+		{
+			this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
+		}
+
+		if (null !== this.voButton)
+		{
+			this.voButton.addEventListener('click', onVOToggle.bind(this));
 		}
 
 		/**
@@ -195,15 +185,30 @@
 			'features',
 			function(features)
 			{
-				this.voButton.style.display = 'none';
-				this.musicButton.style.display = 'none';
-				this.soundButton.style.display = 'none';
-				this.sfxButton.style.display = 'none';
+				if (this.voButton !== null)
+				{
+					this.voButton.style.display = 'none';
+				}
 
-				if (features.vo) this.voButton.style.display = 'inline-block';
-				if (features.music) this.musicButton.style.display = 'inline-block';
-				if (features.sound) this.soundButton.style.display = 'inline-block';
-				if (features.sfxButton) this.sfxButton.style.display = 'inline-block';
+				if (this.musicButton !== null)
+				{
+					this.musicButton.style.display = 'none';
+				}
+
+				if (this.soundButton !== null)
+				{
+					this.soundButton.style.display = 'none';
+				}
+
+				if (this.sfxButton !== null)
+				{
+					this.sfxButton.style.display = 'none';
+				}
+
+				if (features.vo && this.voButton) this.voButton.style.display = 'inline-block';
+				if (features.music && this.musicButton) this.musicButton.style.display = 'inline-block';
+				if (features.sound && this.soundButton) this.soundButton.style.display = 'inline-block';
+				if (features.sfxButton && this.sfxButton) this.sfxButton.style.display = 'inline-block';
 			}.bind(this)
 		);
 	};
@@ -259,10 +264,25 @@
 
 	plugin.opened = function()
 	{
-		this.soundButton.classList.remove('disabled');
-		this.sfxButton.classList.remove('disabled');
-		this.voButton.classList.remove('disabled');
-		this.musicButton.classList.remove('disabled');
+		if (this.soundButton !== null)
+		{
+			this.soundButton.classList.remove('disabled');
+		}
+
+		if (this.sfxButton !== null)
+		{
+			this.sfxButton.classList.remove('disabled');
+		}
+
+		if (this.voButton !== null)
+		{
+			this.voButton.classList.remove('disabled');
+		}
+
+		if (this.musicButton !== null)
+		{
+			this.musicButton.classList.remove('disabled');
+		}
 
 		this.soundMuted = !!SavedData.read(SOUND_MUTED);
 		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
@@ -280,10 +300,26 @@
 
 	plugin.teardown = function()
 	{
-		this.soundButton.removeEventListener('click', onSoundToggle.bind(this));
-		this.musicButton.removeEventListener('click', onMusicToggle.bind(this));
-		this.sfxButton.removeEventListener('click', onSFXToggle.bind(this));
-		this.voButton.removeEventListener('click', onVOToggle.bind(this));
+		if (this.soundButton !== null)
+		{
+			this.soundButton.removeEventListener('click', onSoundToggle.bind(this));
+		}
+
+		if (this.musicButton !== null)
+		{
+			this.musicButton.removeEventListener('click', onMusicToggle.bind(this));
+		}
+
+		if (this.sfxButton !== null)
+		{
+			this.sfxButton.removeEventListener('click', onSFXToggle.bind(this));
+		}
+
+		if (this.voButton !== null)
+		{
+			this.voButton.removeEventListener('click', onVOToggle.bind(this));
+		}
+
 		delete this.voButton;
 		delete this.sfxButton;
 		delete this.musicButton;

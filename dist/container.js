@@ -1841,6 +1841,11 @@
 		{
 			function removeListeners(button)
 			{
+				if (button === null)
+				{
+					return;
+				}
+
 				button.classList.remove('unmuted');
 				button.classList.remove('muted');
 				button.classList.add(muted ? 'muted' : 'unmuted');
@@ -1872,6 +1877,11 @@
 		 */
 		this._disableButton = function(button)
 		{
+			if (button === null)
+			{
+				return;
+			}
+
 			button.classList.remove('enabled');
 			button.classList.add('disabled');
 		};
@@ -1953,18 +1963,16 @@
 
 		if (null === this.captionsButton)
 		{
-			throw new Error(
-				'No element found with the provided selector for captions button'
-			);
+			return;
 		}
 
-		this.captionsButton.addEventListener(
-			'click',
-			function()
-			{
-				this.captionsMuted = !this.captionsMuted;
-			}.bind(this)
-		);
+		this.captionsButtonClick = function()
+		{
+			this.captionsMuted = !this.captionsMuted;
+		}.bind(this);
+
+		this.captionsButton.addEventListener('click', this.captionsButtonClick);
+
 		/**
 		 * Set the captions are enabled or not
 		 * @property {boolean} captionsMuted
@@ -2095,6 +2103,11 @@
 
 	plugin.opened = function()
 	{
+		if (null === this.captionsButton)
+		{
+			return;
+		}
+
 		this.captionsButton.classList.remove('disabled');
 		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
@@ -2102,12 +2115,22 @@
 
 	plugin.close = function()
 	{
+		if (null === this.captionsButton)
+		{
+			return;
+		}
+
 		this._disableButton(this.captionsButton);
 	};
 
 	plugin.teardown = function()
 	{
-		this.captionsButton.off('click');
+		if (null === this.captionsButton)
+		{
+			return;
+		}
+
+		this.captionsButton.removeEventListener('click', this.captionsButtonClick);
 		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;
@@ -2298,7 +2321,7 @@
 
 		if (null === pauseFocus)
 		{
-			throw new Error('No element found with the provided for pauseFocus');
+			return;
 		}
 
 		pauseFocus.addEventListener('focus', function()
@@ -2404,9 +2427,12 @@
 
 	plugin.teardown = function()
 	{
-		document
-			.querySelector(this.options.pauseFocusSelector)
-			.removeEventListener('focus');
+		var pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+		if (pauseFocus !== null)
+		{
+			pauseFocus.removeEventListener('focus');
+		}
+
 		document.removeEventListener('focus', this._onDocClick);
 		document.removeEventListener('click', this._onDocClick);
 		delete this._onDocClick;
@@ -2445,21 +2471,19 @@
 
 		if (null === this.helpButton)
 		{
-			throw new Error(
-				'No element found with the provided selector for help button'
-			);
+			return;
 		}
 
-		this.helpButton.addEventListener(
-			'click',
-			function()
+		// store the listener so that we can use it later
+		this.helpButtonClick = function()
+		{
+			if (!this.paused && !this.helpButton.classList.contains('disabled'))
 			{
-				if (!this.paused && !this.helpButton.classList.contains('disabled'))
-				{
-					this.client.send('playHelp');
-				}
-			}.bind(this)
-		);
+				this.client.send('playHelp');
+			}
+		}.bind(this);
+
+		this.helpButton.addEventListener('click', this.helpButtonClick);
 
 		this.helpButton.tooltip = function()
 		{
@@ -2538,7 +2562,12 @@
 
 	plugin.teardown = function()
 	{
-		this.helpButton.off('click');
+		if (null === this.helpButton)
+		{
+			return;
+		}
+
+		this.helpButton.removeEventListener('click', this.helpButtonClick);
 		delete this.helpButton;
 		delete this._helpEnabled;
 	};
@@ -2562,19 +2591,12 @@
 		 */
 		this.pauseButton = document.querySelectorAll(this.options.pauseButton);
 
-		if (1 > this.pauseButton.length)
-		{
-			throw new Error(
-				'No element/elements found with provided selector(s) for pause button(s)'
-			);
-		}
+		this.onPauseToggle = onPauseToggle.bind(this);
 
-		this.pauseButton.forEach(
-			function(element)
-			{
-				element.addEventListener('click', onPauseToggle.bind(this));
-			}.bind(this)
-		);
+		this.pauseButton.forEach(function(element)
+		{
+			element.addEventListener('click', this.onPauseToggle);
+		}.bind(this));
 
 		/**
 		 * If the application is currently paused manually
@@ -2686,7 +2708,7 @@
 
 	plugin.close = function()
 	{
-		this._disableButton(this.pauseButton);
+		this.pauseButton.forEach(this._disableButton.bind(this));
 		this.paused = false;
 	};
 
@@ -2695,7 +2717,7 @@
 		this.pauseButton.forEach(
 			function(element)
 			{
-				element.removeEventListener('click', onPauseToggle.bind(this));
+				element.removeEventListener('click', this.onPauseToggle);
 			}.bind(this)
 		);
 		delete this.pauseButton;
@@ -2844,53 +2866,43 @@
 		 * @property {HTMLElement} soundButton
 		 */
 		this.soundButton = document.querySelector(this.options.soundButton);
-		this.soundButton.addEventListener('click', onSoundToggle.bind(this));
-
-		if (null === this.soundButton)
-		{
-			throw new Error(
-				'No element found with provided selector for sound button'
-			);
-		}
 
 		/**
 		 * Reference to the music mute button
 		 * @property {HTMLElement} musicButton
 		 */
 		this.musicButton = document.querySelector(this.options.musicButton);
-		this.musicButton.addEventListener('click', onMusicToggle.bind(this));
-
-		if (null === this.musicButton)
-		{
-			throw new Error(
-				'No element found with provided selector for music button'
-			);
-		}
 
 		/**
 		 * Reference to the sound effects mute button
 		 * @property {HTMLElement} sfxButton
 		 */
 		this.sfxButton = document.querySelector(this.options.sfxButton);
-		this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
-
-		if (null === this.sfxButton)
-		{
-			throw new Error('No element found with provided selector for sfx button');
-		}
 
 		/**
 		 * Reference to the voice-over mute button
 		 * @property {HTMLElement} voButton
 		 */
 		this.voButton = document.querySelector(this.options.voButton);
-		this.voButton.addEventListener('click', onVOToggle.bind(this));
 
-		if (null === this.voButton)
+		if (null !== this.soundButton)
 		{
-			throw new Error(
-				'No element found with provided selector for voice-over button'
-			);
+			this.soundButton.addEventListener('click', onSoundToggle.bind(this));
+		}
+
+		if (null !== this.musicButton)
+		{
+			this.musicButton.addEventListener('click', onMusicToggle.bind(this));
+		}
+
+		if (null !== this.sfxButton)
+		{
+			this.sfxButton.addEventListener('click', onSFXToggle.bind(this));
+		}
+
+		if (null !== this.voButton)
+		{
+			this.voButton.addEventListener('click', onVOToggle.bind(this));
 		}
 
 		/**
@@ -2985,15 +2997,30 @@
 			'features',
 			function(features)
 			{
-				this.voButton.style.display = 'none';
-				this.musicButton.style.display = 'none';
-				this.soundButton.style.display = 'none';
-				this.sfxButton.style.display = 'none';
+				if (this.voButton !== null)
+				{
+					this.voButton.style.display = 'none';
+				}
 
-				if (features.vo) this.voButton.style.display = 'inline-block';
-				if (features.music) this.musicButton.style.display = 'inline-block';
-				if (features.sound) this.soundButton.style.display = 'inline-block';
-				if (features.sfxButton) this.sfxButton.style.display = 'inline-block';
+				if (this.musicButton !== null)
+				{
+					this.musicButton.style.display = 'none';
+				}
+
+				if (this.soundButton !== null)
+				{
+					this.soundButton.style.display = 'none';
+				}
+
+				if (this.sfxButton !== null)
+				{
+					this.sfxButton.style.display = 'none';
+				}
+
+				if (features.vo && this.voButton) this.voButton.style.display = 'inline-block';
+				if (features.music && this.musicButton) this.musicButton.style.display = 'inline-block';
+				if (features.sound && this.soundButton) this.soundButton.style.display = 'inline-block';
+				if (features.sfxButton && this.sfxButton) this.sfxButton.style.display = 'inline-block';
 			}.bind(this)
 		);
 	};
@@ -3049,10 +3076,25 @@
 
 	plugin.opened = function()
 	{
-		this.soundButton.classList.remove('disabled');
-		this.sfxButton.classList.remove('disabled');
-		this.voButton.classList.remove('disabled');
-		this.musicButton.classList.remove('disabled');
+		if (this.soundButton !== null)
+		{
+			this.soundButton.classList.remove('disabled');
+		}
+
+		if (this.sfxButton !== null)
+		{
+			this.sfxButton.classList.remove('disabled');
+		}
+
+		if (this.voButton !== null)
+		{
+			this.voButton.classList.remove('disabled');
+		}
+
+		if (this.musicButton !== null)
+		{
+			this.musicButton.classList.remove('disabled');
+		}
 
 		this.soundMuted = !!SavedData.read(SOUND_MUTED);
 		this.musicMuted = !!SavedData.read(MUSIC_MUTED);
@@ -3070,10 +3112,26 @@
 
 	plugin.teardown = function()
 	{
-		this.soundButton.removeEventListener('click', onSoundToggle.bind(this));
-		this.musicButton.removeEventListener('click', onMusicToggle.bind(this));
-		this.sfxButton.removeEventListener('click', onSFXToggle.bind(this));
-		this.voButton.removeEventListener('click', onVOToggle.bind(this));
+		if (this.soundButton !== null)
+		{
+			this.soundButton.removeEventListener('click', onSoundToggle.bind(this));
+		}
+
+		if (this.musicButton !== null)
+		{
+			this.musicButton.removeEventListener('click', onMusicToggle.bind(this));
+		}
+
+		if (this.sfxButton !== null)
+		{
+			this.sfxButton.removeEventListener('click', onSFXToggle.bind(this));
+		}
+
+		if (this.voButton !== null)
+		{
+			this.voButton.removeEventListener('click', onVOToggle.bind(this));
+		}
+
 		delete this.voButton;
 		delete this.sfxButton;
 		delete this.musicButton;
