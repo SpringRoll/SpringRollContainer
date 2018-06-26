@@ -68,7 +68,7 @@ container.openPath('game.html', {
 ```
 
 In a SpringRoll Application, the Container Client Plugin [mirrors this data directly onto the object](https://github.com/SpringRoll/SpringRoll/blob/master/src/container-client/ContainerClientPlugin.js#L316).
-Once the application finishes it's `init` process, this data will be available directly on the application instance:
+Once the application finishes its `init` process, this data will be available directly on the application instance:
 
 ```javascript
 var app = new springroll.Application({
