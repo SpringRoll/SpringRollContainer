@@ -57,7 +57,7 @@ The Container supports custom interface elements for managing things like toggle
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
 `playOptions`:
 
-```
+```javascript
 var container = new springroll.Container('#game');
 container.openPath('game.html', {
     playOptions: {
