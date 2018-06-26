@@ -53,6 +53,35 @@ The Container supports custom interface elements for managing things like toggle
 | **musicButton** | Toggles only music mute |
 | **pauseButton** | Plays and pause the game |
 
+### Play Options
+The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
+`playOptions`:
+
+```
+var container = new springroll.Container('#game');
+container.openPath('game.html', {
+    playOptions: {
+        difficulty: 7,
+        theme: 'blue'
+    }
+});
+```
+
+In a SpringRoll Application, the Container Client Plugin [mirrors this data directly onto the object](https://github.com/SpringRoll/SpringRoll/blob/master/src/container-client/ContainerClientPlugin.js#L316).
+Once the application finishes it's `init` process, this data will be available directly on the application instance:
+
+```javascript
+var app = new springroll.Application({
+  // various options here
+});
+
+app.on('init', function() {
+  springroll.Debug.log('Play Options are', app.playOptions); // { difficulty: 7, theme: 'blue' }
+});
+```
+
+Any JSON-serializable object can be set as a `playOption`.
+
 ##Documentation
 
 [API Documentation](http://springroll.github.io/SpringRollContainer/) has full documentation for the Container.
