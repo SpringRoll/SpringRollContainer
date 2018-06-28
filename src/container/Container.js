@@ -164,6 +164,24 @@
 			plugins[i].open.call(this);
 		}
 
+		// append a query parameter to pass play options
+		if (options.playOptions !== null)
+		{
+			var playOptionsQueryString = 'playOptions=' + window.encodeURIComponent(JSON.stringify(options.playOptions));
+
+			// if there isn't a query string yet, add the question mark
+			if (path.indexOf('?') === -1)
+			{
+				path += '?' + playOptionsQueryString;
+			}
+
+			// otherwise, there already is a query string, so preserve it by appending a new variable
+			else
+			{
+				path += '&' + playOptionsQueryString;
+			}
+		}
+
 		//Open the application in the iframe
 		this.main.classList.add('loading');
 		this.main.setAttribute('src', path);
