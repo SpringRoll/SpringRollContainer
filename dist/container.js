@@ -2611,13 +2611,9 @@
 
 		this.onPauseToggle = onPauseToggle.bind(this);
 
-		Array.prototype.forEach.call(
-			this.pauseButton, 
-			function(element)
-			{
-				element.addEventListener('click', this.onPauseToggle);
-			}.bind(this)
-		);
+		for(var i = 0; i < this.pauseButton.length; i++){
+			this.pauseButton[i].addEventListener('click', this.onPauseToggle);
+		}
 
 		/**
 		 * If the application is currently paused manually
@@ -2677,16 +2673,12 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					Array.prototype.forEach.call(
-						this.pauseButton,
-						function(element)
-						{
-							element.classList.remove('unpaused');
-							element.classList.remove('paused');
-
-							element.classList.add(paused ? 'paused' : 'unpaused');
-						}.bind(this)
-					);
+					for(var i = 0; i < this.pauseButton.length; i++){
+						var element = this.pauseButton[i];
+						element.classList.remove('unpaused');
+						element.classList.remove('paused');
+						element.classList.add(paused ? 'paused' : 'unpaused');
+					}
 				}
 			},
 			get: function()
@@ -2717,13 +2709,9 @@
 
 	plugin.opened = function()
 	{
-		Array.prototype.forEach.call(
-			this.pauseButton,
-			function(element)
-			{
-				element.classList.remove('disabled');
-			}.bind(this)
-		);
+		for(var i = 0; i < this.pauseButton.length; i++){
+			this.pauseButton[i].classList.remove('disabled');
+		}
 
 		// Reset the paused state
 		this.paused = this._paused;
@@ -2731,19 +2719,17 @@
 
 	plugin.close = function()
 	{
-		Array.prototype.forEach.call(this.pauseButton, this._disableButton.bind(this));
+		for(var i = 0; i < this.pauseButton.length; i++){
+			this._disableButton.bind(this.pauseButton[i]);
+		}
 		this.paused = false;
 	};
 
 	plugin.teardown = function()
 	{
-		Array.prototype.forEach.call(
-			this.pauseButton,
-			function(element)
-			{
-				element.removeEventListener('click', this.onPauseToggle);
-			}.bind(this)
-		);
+		for(var i = 0; i < this.pauseButton.length; i++){
+			this.pauseButton[i].removeEventListener('click', this.onPauseToggle);
+		}
 		delete this.pauseButton;
 		delete this._isManualPause;
 		delete this._paused;
