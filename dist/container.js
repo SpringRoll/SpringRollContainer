@@ -2611,10 +2611,13 @@
 
 		this.onPauseToggle = onPauseToggle.bind(this);
 
-		this.pauseButton.forEach(function(element)
-		{
-			element.addEventListener('click', this.onPauseToggle);
-		}.bind(this));
+		Array.prototype.forEach.call(
+			this.pauseButton, 
+			function(element)
+			{
+				element.addEventListener('click', this.onPauseToggle);
+			}.bind(this)
+		);
 
 		/**
 		 * If the application is currently paused manually
@@ -2674,7 +2677,8 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					this.pauseButton.forEach(
+					Array.prototype.forEach.call(
+						this.pauseButton,
 						function(element)
 						{
 							element.classList.remove('unpaused');
@@ -2713,7 +2717,8 @@
 
 	plugin.opened = function()
 	{
-		this.pauseButton.forEach(
+		Array.prototype.forEach.call(
+			this.pauseButton,
 			function(element)
 			{
 				element.classList.remove('disabled');
@@ -2726,13 +2731,14 @@
 
 	plugin.close = function()
 	{
-		this.pauseButton.forEach(this._disableButton.bind(this));
+		Array.prototype.forEach.call(this.pauseButton, this._disableButton.bind(this));
 		this.paused = false;
 	};
 
 	plugin.teardown = function()
 	{
-		this.pauseButton.forEach(
+		Array.prototype.forEach.call(
+			this.pauseButton,
 			function(element)
 			{
 				element.removeEventListener('click', this.onPauseToggle);
