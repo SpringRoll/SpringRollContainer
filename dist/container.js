@@ -2612,12 +2612,11 @@
 		this.onPauseToggle = onPauseToggle.bind(this);
 
 		Array.prototype.forEach.call(
-			this.pauseButton, 
+			this.pauseButton,
 			function(element)
 			{
 				element.addEventListener('click', this.onPauseToggle);
-			}.bind(this)
-		);
+			}.bind(this));
 
 		/**
 		 * If the application is currently paused manually
