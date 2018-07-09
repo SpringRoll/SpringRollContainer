@@ -20,7 +20,7 @@
 		this.onPauseToggle = onPauseToggle.bind(this);
 
 		for(var i = 0; i < this.pauseButton.length; i++){
-			this.pauseButton[i].addEventListener('click', this.onPauseToggle).bind(this);
+			this.pauseButton[i].addEventListener('click', this.onPauseToggle);
 		}
 
 		/**
