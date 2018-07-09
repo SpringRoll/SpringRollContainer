@@ -22,9 +22,9 @@
 		Array.prototype.forEach.call(
 			this.pauseButton,
 			function(element)
-		{
-			element.addEventListener('click', this.onPauseToggle);
-		}.bind(this));
+			{
+				element.addEventListener('click', this.onPauseToggle);
+			}.bind(this));
 
 		/**
 		 * If the application is currently paused manually
