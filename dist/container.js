@@ -1,4 +1,4 @@
-/*! SpringRoll Container 1.1.0 */
+/*! SpringRoll Container 1.1.1 */
 /**
  * @module Core
  * @namespace window
@@ -1389,9 +1389,9 @@
 	 * @property {String} version
 	 * @static
 	 * @readOnly
-	 * @default "1.1.0"
+	 * @default "1.1.1"
 	 */
-	Container.version = "1.1.0";
+	Container.version = "1.1.1";
 
 	//Reference to the prototype
 	var s = EventDispatcher.prototype;
@@ -2611,7 +2611,8 @@
 
 		this.onPauseToggle = onPauseToggle.bind(this);
 
-		for(var i = 0; i < this.pauseButton.length; i++){
+		for (var i = 0; i < this.pauseButton.length; i++)
+		{
 			this.pauseButton[i].addEventListener('click', this.onPauseToggle);
 		}
 
@@ -2673,7 +2674,8 @@
 					this.trigger('pause', paused);
 
 					// Set the pause button state
-					for(var i = 0; i < this.pauseButton.length; i++){
+					for (var i = 0; i < this.pauseButton.length; i++)
+					{
 						var element = this.pauseButton[i];
 						element.classList.remove('unpaused');
 						element.classList.remove('paused');
@@ -2709,7 +2711,8 @@
 
 	plugin.opened = function()
 	{
-		for(var i = 0; i < this.pauseButton.length; i++){
+		for (var i = 0; i < this.pauseButton.length; i++)
+		{
 			this.pauseButton[i].classList.remove('disabled');
 		}
 
@@ -2719,7 +2722,8 @@
 
 	plugin.close = function()
 	{
-		for(var i = 0; i < this.pauseButton.length; i++){
+		for (var i = 0; i < this.pauseButton.length; i++)
+		{
 			this._disableButton.bind(this.pauseButton[i]);
 		}
 		this.paused = false;
@@ -2727,7 +2731,8 @@
 
 	plugin.teardown = function()
 	{
-		for(var i = 0; i < this.pauseButton.length; i++){
+		for (var i = 0; i < this.pauseButton.length; i++)
+		{
 			this.pauseButton[i].removeEventListener('click', this.onPauseToggle);
 		}
 		delete this.pauseButton;
