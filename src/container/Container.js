@@ -235,15 +235,11 @@
 		this.client.connect(this.dom);
 
 		//Handle bellhop events coming from the application
-		this.client.on(
-		{
-			loading: onLoading.bind(this),
-			progress: onProgress.bind(this),
-			loadDone: onLoadDone.bind(this), // @deprecated use 'loaded' instead
-			loaded: onLoadDone.bind(this),
-			endGame: onEndGame.bind(this),
-			localError: onLocalError.bind(this)
-		});
+		this.client.on('loading', onLoading.bind(this));
+		this.client.on('progress', onProgress.bind(this));
+		this.client.on('loaded', onLoadDone.bind(this));
+		this.client.on('endGame', onEndGame.bind(this));
+		this.client.on('localError', onLocalError.bind(this));
 	};
 
 	/**

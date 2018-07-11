@@ -26,12 +26,9 @@
 
 	plugin.open = function()
 	{
-		this.client.on(
-		{
-			userDataRemove: onUserDataRemove.bind(this),
-			userDataRead: onUserDataRead.bind(this),
-			userDataWrite: onUserDataWrite.bind(this),
-		});
+		this.client.on('userDataRemove', onUserDataRemove.bind(this));
+		this.client.on('userDataRead', onUserDataRead.bind(this));
+		this.client.on('userDataWrite', onUserDataWrite.bind(this));
 	};
 
 	/**

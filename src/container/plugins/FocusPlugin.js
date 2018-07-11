@@ -223,11 +223,8 @@
 
 	plugin.open = function()
 	{
-		this.client.on(
-		{
-			focus: onFocus.bind(this),
-			keepFocus: onKeepFocus.bind(this)
-		});
+		this.client.on('focus', onFocus.bind(this));
+		this.client.on('keepFocus', onKeepFocus.bind(this));
 	};
 
 	plugin.opened = function()
