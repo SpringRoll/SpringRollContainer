@@ -1,4 +1,4 @@
-/*! SpringRoll Container 1.1.1 */
+/*! SpringRoll Container 1.1.2 */
 /**
  * @module Core
  * @namespace window
@@ -1389,9 +1389,9 @@
 	 * @property {String} version
 	 * @static
 	 * @readOnly
-	 * @default "1.1.1"
+	 * @default "1.1.2"
 	 */
-	Container.version = "1.1.1";
+	Container.version = "1.1.2";
 
 	//Reference to the prototype
 	var s = EventDispatcher.prototype;
@@ -1521,15 +1521,11 @@
 		this.client.connect(this.dom);
 
 		//Handle bellhop events coming from the application
-		this.client.on(
-		{
-			loading: onLoading.bind(this),
-			progress: onProgress.bind(this),
-			loadDone: onLoadDone.bind(this), // @deprecated use 'loaded' instead
-			loaded: onLoadDone.bind(this),
-			endGame: onEndGame.bind(this),
-			localError: onLocalError.bind(this)
-		});
+		this.client.on('loading', onLoading.bind(this));
+		this.client.on('progress', onProgress.bind(this));
+		this.client.on('loaded', onLoadDone.bind(this));
+		this.client.on('endGame', onEndGame.bind(this));
+		this.client.on('localError', onLocalError.bind(this));
 	};
 
 	/**
@@ -2422,11 +2418,8 @@
 
 	plugin.open = function()
 	{
-		this.client.on(
-		{
-			focus: onFocus.bind(this),
-			keepFocus: onKeepFocus.bind(this)
-		});
+		this.client.on('focus', onFocus.bind(this));
+		this.client.on('keepFocus', onKeepFocus.bind(this));
 	};
 
 	plugin.opened = function()
@@ -3182,12 +3175,9 @@
 
 	plugin.open = function()
 	{
-		this.client.on(
-		{
-			userDataRemove: onUserDataRemove.bind(this),
-			userDataRead: onUserDataRead.bind(this),
-			userDataWrite: onUserDataWrite.bind(this),
-		});
+		this.client.on('userDataRemove', onUserDataRemove.bind(this));
+		this.client.on('userDataRead', onUserDataRead.bind(this));
+		this.client.on('userDataWrite', onUserDataWrite.bind(this));
 	};
 
 	/**
