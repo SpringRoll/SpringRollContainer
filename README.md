@@ -82,12 +82,12 @@ app.on('init', function() {
 
 Any JSON-serializable object can be set as a `playOption`.
 
-##Documentation
+## Documentation
 
 [API Documentation](http://springroll.github.io/SpringRollContainer/) has full documentation for the Container.
 
-##License
+## License
 
-Copyright (c) 2015 [CloudKid](http://github.com/cloudkidstudio)
+Copyright (c) 2018 [SpringRoll](http://github.com/SpringRoll)
 
 Released under the MIT License.
