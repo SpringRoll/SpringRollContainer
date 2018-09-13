@@ -1,8 +1,20 @@
 import { PageVisibility } from '../PageVisibility';
 import { BasePlugin } from './BasePlugin';
 
+/**
+ *
+ *
+ * @export
+ * @class FocusPlugin
+ * @extends {BasePlugin}
+ */
 export class FocusPlugin extends BasePlugin {
-  constructor(options) {
+  /**
+   *Creates an instance of FocusPlugin.
+   * @param {*} options
+   * @memberof FocusPlugin
+   */
+  constructor({ options } = {}) {
     super(90);
     // Add the default option for pauseFocusSelector
     this.options = Object.assign(
@@ -21,40 +33,50 @@ export class FocusPlugin extends BasePlugin {
     this._keepFocus = false;
     this._containerBlurred = false;
     this._focusTimer = null;
-    this._onDocClick = this.onDocClick.bind(this);
-    document.addEventListener('focus', this._onDocClick);
-    document.addEventListener('click', this._onDocClick);
-
+    document.addEventListener('focus', this.onDocClick.bind(this));
+    document.addEventListener('click', this.onDocClick.bind(this));
     this.pauseFocus = document.querySelector(this.options.pauseFocusSelector);
 
-    if (null === this.pauseFocus) {
-      this.pauseFocus.addEventListener('focus', this.onPauseFocus.bind(this));
+    if (null !== this.pauseFocus) {
+      this.pauseFocus.addEventListener('focus', function() {
+        this._isManualPause = this.paused = true;
+        this.pauseFocus.addEventListener(
+          'blur',
+          () => {
+            this._isManualPause = this.paused = false;
+            this.focus();
+          },
+          {
+            once: true
+          }
+        );
+      });
     }
   }
 
-  addEventListener(...args) {}
-  onPauseFocus() {
-    this._isManualPause = this.paused = true;
-    this.addEventListener(
-      'blur',
-      () => {
-        this._isManualPause = this.paused = false;
-        this.focus();
-      },
-      {
-        once: true
-      }
-    );
-  }
-
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   focus() {
-    this.dom.contentWindow.focus();
+    document.contentWindow.focus();
   }
 
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   blur() {
     this.dom.contentWindow.blur();
   }
 
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   manageFocus() {
     // Unfocus on the iframe
     if (this._keepFocus) {
@@ -76,7 +98,9 @@ export class FocusPlugin extends BasePlugin {
         this._focusTimer = null;
         // A manual pause cannot be overriden by focus events.
         // User must click the resume button.
-        if (this._isManualPause) {return;}
+        if (this._isManualPause) {
+          return;
+        }
 
         this.paused = this._containerBlurred && this._appBlurred;
 
@@ -94,10 +118,11 @@ export class FocusPlugin extends BasePlugin {
    * When the document is clicked
    * @method _onDocClicked
    * @private
-   * @param  {Event} e Click or focus event
    */
-  onDocClick(e) {
-    if (!this.loaded) {return;}
+  onDocClick() {
+    if (!this.loaded) {
+      return;
+    }
 
     this.focus();
   }
@@ -146,15 +171,30 @@ export class FocusPlugin extends BasePlugin {
     this.manageFocus();
   }
 
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   open() {
     this.client.on('focus', onFocus.bind(this));
     this.client.on('keepFocus', onKeepFocus.bind(this));
   }
 
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   opened() {
     this.focus();
   }
 
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   close() {
     // Stop the focus timer if it's running
     if (this._focusTimer) {
@@ -162,6 +202,11 @@ export class FocusPlugin extends BasePlugin {
     }
   }
 
+  /**
+   *
+   *
+   * @memberof FocusPlugin
+   */
   teardown() {
     const pauseFocus = document.querySelector(this.options.pauseFocusSelector);
 

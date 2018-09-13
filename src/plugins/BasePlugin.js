@@ -1,15 +1,50 @@
-import { Container } from '../Container';
+/**
+ *
+ *
+ * @export
+ * @class BasePlugin
+ */
 export class BasePlugin {
+  /**
+   *Creates an instance of BasePlugin.
+   * @param {number} [priority=0]
+   * @memberof BasePlugin
+   */
   constructor(priority = 0) {
     this.priority = priority;
-
-    Container.PLUGINS.push(this);
-    Container.PLUGINS.sort((a, b) => b.priority - a.priority);
   }
-  setup() {}
+  /**
+   *
+   *
+   * @memberof BasePlugin
+   */
   open() {}
+
+  /**
+   *
+   *
+   * @memberof BasePlugin
+   */
   opened() {}
+
+  /**
+   *
+   *
+   * @memberof BasePlugin
+   */
   close() {}
+
+  /**
+   *
+   *
+   * @memberof BasePlugin
+   */
   closed() {}
+
+  /**
+   *
+   *
+   * @memberof BasePlugin
+   */
   teardown() {}
 }

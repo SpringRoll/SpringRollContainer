@@ -1,11 +1,15 @@
-import { BasePlugin } from './BasePlugin';
+import { ButtonPlugin } from './ButtonPlugin';
 
 /**
  * @class Container
  */
-
-export class PausePlugin extends BasePlugin {
-  constructor({ pauseButton, bellhop }) {
+export class PausePlugin extends ButtonPlugin {
+  /**
+   *Creates an instance of PausePlugin.
+   * @param {object} Container
+   * @memberof PausePlugin
+   */
+  constructor({ options: { pauseButton }, client }) {
     super(80);
     /**
      * Reference to the pause application button
@@ -13,7 +17,7 @@ export class PausePlugin extends BasePlugin {
      */
     this.pauseButton = document.querySelectorAll(pauseButton);
 
-    if (!(this.pauseButton instanceof HTMLElement)) {
+    if (1 > this.pauseButton.length) {
       return;
     }
 
@@ -23,7 +27,7 @@ export class PausePlugin extends BasePlugin {
     this._isManualPause = false;
     this._disablePause = false;
     this._paused = false;
-    this.client = bellhop;
+    this.client = client;
 
     /**
      * If the current application is paused
@@ -34,25 +38,48 @@ export class PausePlugin extends BasePlugin {
     this.client.on(
       'features',
       function(features) {
-        if (features.disablePause) this._disablePause = true;
+        if (features.disablePause) {
+          this._disablePause = true;
+        }
       }.bind(this)
     );
   }
 
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
   onPauseToggle() {
-    this.paused = !this.paused;
+    this.pause = !this._paused;
     this._isManualPause = this.paused;
   }
+
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
   opened() {
     this.pauseButton.forEach(element => element.classList.remove('disabled'));
     this.pause = this._paused;
   }
 
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
   close() {
     this.pauseButton.forEach(element => this._disableButton.bind(element));
     this.paused = false;
   }
 
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
   teardown() {
     const onPauseToggle = this.onPauseToggle.bind(this);
     this.pauseButton.forEach(element =>
@@ -60,7 +87,13 @@ export class PausePlugin extends BasePlugin {
     );
   }
 
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
   set pause(paused) {
+    paused = !!paused;
     if (!this._disablePause) {
       this._paused = paused;
       this.client.send('pause', paused);
@@ -75,6 +108,11 @@ export class PausePlugin extends BasePlugin {
       });
     }
   }
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
   get pause() {
     return this._paused;
   }

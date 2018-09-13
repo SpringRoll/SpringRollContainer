@@ -25,7 +25,7 @@ export class Features {
    */
   static get webgl() {
     const canvas = document.createElement('canvas');
-
+    // console.log(canvas.getContext('webgl'));
     return !!(
       canvas &&
       (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
@@ -77,7 +77,7 @@ export class Features {
    * If the browser has touch
    * @property {boolean} touch
    */
-  static touch() {
+  static get touch() {
     return !!(
       'ontouchstart' in window || // iOS & Android
       (navigator.msPointerEnabled && navigator.msMaxTouchPoints > 0) || // IE10
@@ -94,8 +94,8 @@ export class Features {
   static basic() {
     if (!Features.canvas) {
       return 'Browser does not support canvas';
-    } else if (!Features.webAudio && !Features.flash) {
-      return 'Browser does not support WebAudio or Flash audio';
+    } else if (!Features.webAudio) {
+      return 'Browser does not support WebAudio';
     }
     return null;
   }
@@ -108,9 +108,9 @@ export class Features {
    * @param {object} capabilities.features The features
    * @param {object} capabilities.features.webgl WebGL required
    * @param {object} capabilities.features.geolocation Geolocation required
-   * @param {object} capabilities.features.webworkers Web Workers API required
-   * @param {object} capabilities.features.webaudio WebAudio API required
-   * @param {object} capabilities.features.websockets WebSockets required
+   * @param {object} capabilities.features.webWorkers Web Workers API required
+   * @param {object} capabilities.features.webAudio WebAudio API required
+   * @param {object} capabilities.features.webSockets WebSockets required
    * @param {object} capabilities.sizes The sizes
    * @param {Boolean} capabilities.sizes.xsmall Screens < 480
    * @param {Boolean} capabilities.sizes.small Screens < 768
@@ -133,7 +133,7 @@ export class Features {
     const sizes = capabilities.sizes;
 
     for (const name in features) {
-      if (Features[name] !== undefined && features[name] && !Features[name]) {
+      if ('undefined' !== typeof features[name] && !Features[name]) {
         // Failed built-in feature check
         return 'Browser does not support ' + name;
       }

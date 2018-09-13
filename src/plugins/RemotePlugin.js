@@ -1,18 +1,39 @@
-import { BasePlugin } from './BasePlugin';
 import { Features } from '../Features';
+import { BasePlugin } from './BasePlugin';
 
+/**
+ *
+ *
+ * @export
+ * @class RemotePlugin
+ * @extends {BasePlugin}
+ */
 export class RemotePlugin extends BasePlugin {
-  constructor({ bellhop }) {
+  /**
+   *Creates an instance of RemotePlugin.
+   * @param {Object} Container
+   * @memberof RemotePlugin
+   */
+  constructor({ client }) {
     super(30);
     this.options = {
       query: '',
       playOptions: null,
       singlePlay: false
     };
-    this.client = bellhop;
+    this.client = client;
     this.release = null;
   }
 
+  /**
+   * Open application based on an API Call to SpringRoll Connect
+   * @param {string} api
+   * @param {object} options
+   * @param {string} [options.query='']
+   * @param {boolean} [options.singlePlay=false]
+   * @param {null | object} [playOptions=null]
+   * @memberof RemotePlugin
+   */
   openRemote(api, { query = '', singlePlay = false } = {}, playOptions = null) {
     this.options = Object.assign(this.options, {
       query,
@@ -33,11 +54,14 @@ export class RemotePlugin extends BasePlugin {
         }
 
         this.release = release;
-        this._internalOpen(release.url + options.query, options);
+        this.client._internalOpen(release.url + query, this.options);
       });
     });
   }
 
+  /**
+   * @memberof RemotePlugin
+   */
   teardown() {
     this.release = null;
   }

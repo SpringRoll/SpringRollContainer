@@ -1,11 +1,12 @@
 // Private Variables of SavedData
-const WEB_STORAGE_SUPPORT = (() => {
+let WEB_STORAGE_SUPPORT = (() => {
   if ('undefined' === typeof Storage) {
     return false;
   }
   try {
     localStorage.setItem('LS_TEST', 'test');
     localStorage.removeItem('LS_TEST');
+    return true;
   } catch (e) {
     return false;
   }
@@ -27,6 +28,15 @@ export class SavedData {
    */
   static get WEB_STORAGE_SUPPORT() {
     return WEB_STORAGE_SUPPORT;
+  }
+
+  /**
+   * Not recommended. A function to overwrite web storage in the situation you wish to use cookies instead.
+   * @static
+   * @memberof SavedData
+   */
+  static disableWebStorage() {
+    WEB_STORAGE_SUPPORT = false;
   }
 
   /**
@@ -68,29 +78,23 @@ export class SavedData {
    * @param {Boolean} [tempOnly=false] If the value should be saved only in the current browser session.
    */
   static write(name, value, tempOnly = false) {
+    // if Web Storage is supported
     if (this.WEB_STORAGE_SUPPORT) {
-      if (tempOnly) {
-        sessionStorage.setItem(name, JSON.stringify(value));
-      } else {
-        localStorage.setItem(name, JSON.stringify(value));
-      }
-    } else {
-      let expires;
-      if (tempOnly) {
-        if (tempOnly !== this.ERASE_COOKIE) {
-          expires = '';
-        }
-        //remove when browser is closed
-        else {
-          expires = '; expires=Thu, 01 Jan 1970 00:00:00 GMT'; //save cookie in the past for immediate removal
-        }
-      } else {
-        expires = '; expires=' + new Date(2147483646000).toUTCString(); //THE END OF (32bit UNIX) TIME!
-      }
-
-      document.cookie =
-        name + '=' + escape(JSON.stringify(value)) + expires + '; path=/';
+      tempOnly
+        ? sessionStorage.setItem(name, JSON.stringify(value))
+        : localStorage.setItem(name, JSON.stringify(value));
+      return;
     }
+
+    // else use cookies
+    const expires = tempOnly
+      ? tempOnly !== this.ERASE_COOKIE
+        ? ''
+        : '; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      : '; expires=' + new Date(2147483646000).toUTCString(); //THE END OF (32bit UNIX) TIME!
+
+    document.cookie =
+      name + '=' + escape(JSON.stringify(value)) + expires + '; path=/';
   }
 
   /**

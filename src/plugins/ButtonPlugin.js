@@ -1,21 +1,41 @@
 import { BasePlugin } from './BasePlugin';
+import { Bellhop } from 'bellhop-iframe';
 import { SavedData } from '../SavedData';
-/**
- * @module Container
- * @namespace springroll
- */
 
+/**
+ *
+ *
+ * @export
+ * @class ButtonPlugin
+ * @extends {BasePlugin}
+ */
 export class ButtonPlugin extends BasePlugin {
-  constructor(bellhop) {
-    super(100);
+  /**
+   *Creates an instance of ButtonPlugin.
+   * @param {object} container
+   * @param {number} priority
+   * @memberof ButtonPlugin
+   */
+  constructor({ client }, priority = 100) {
+    super(priority);
     this.sendMutes = false;
-    this.client = bellhop;
+    this.client = client;
   }
 
+  /**
+   *
+   *
+   * @memberof ButtonPlugin
+   */
   setup() {
     this.sendMutes = true;
   }
 
+  /**
+   *
+   *
+   * @memberof ButtonPlugin
+   */
   teardown() {
     this.reset();
   }
@@ -33,10 +53,23 @@ export class ButtonPlugin extends BasePlugin {
     }
   }
 
+  /**
+   *
+   *
+   * @memberof ButtonPlugin
+   */
   reset() {
     this.sendMutes = false;
   }
 
+  /**
+   *
+   *
+   * @param {*} prop
+   * @param {*} button
+   * @param {*} muted
+   * @memberof ButtonPlugin
+   */
   _setMuteProp(prop, button, muted) {
     if (Array.isArray(button)) {
       button.forEach(b => this.removeListeners(b));
@@ -51,8 +84,15 @@ export class ButtonPlugin extends BasePlugin {
     }
   }
 
+  /**
+   *
+   *
+   * @param {*} button
+   * @returns
+   * @memberof ButtonPlugin
+   */
   removeListeners(button) {
-    if (button instanceof HTMLElement) {
+    if (!(button instanceof HTMLElement)) {
       return;
     }
 

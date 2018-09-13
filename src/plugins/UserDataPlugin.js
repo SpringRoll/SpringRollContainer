@@ -1,12 +1,27 @@
 import { SavedDataHandler } from '../SavedDataHandler';
 import { BasePlugin } from './BasePlugin';
 
+/**
+ * @export
+ * @class UserDataPlugin
+ * @extends {BasePlugin}
+ */
 export class UserDataPlugin extends BasePlugin {
-  constructor(bellhop) {
+  /**
+   *Creates an instance of UserDataPlugin.
+   * @param {*} bellhop
+   * @memberof UserDataPlugin
+   */
+  constructor({ client }) {
     super(40);
-    this.client = bellhop;
+    this.client = client;
   }
 
+  /**
+   *
+   *
+   * @memberof UserDataPlugin
+   */
   open() {
     this.client.on('userDataRemove', this.onUserDataRemove.bind(this));
     this.client.on('userDataRead', this.onUserDataRead.bind(this));
@@ -18,8 +33,8 @@ export class UserDataPlugin extends BasePlugin {
    * @method onUserDataRemove
    * @private
    */
-  onUserDataRemove(event) {
-    SavedDataHandler.remove(event.data, () => this.client.send(event.type));
+  onUserDataRemove({ data, type }) {
+    SavedDataHandler.remove(data, () => this.client.send(type));
   }
 
   /**
@@ -27,10 +42,8 @@ export class UserDataPlugin extends BasePlugin {
    * @method onUserDataRead
    * @private
    */
-  onUserDataRead(event) {
-    SavedDataHandler.read(event.data, value =>
-      this.client.send(event.type, value)
-    );
+  onUserDataRead({ data, type }) {
+    SavedDataHandler.read(data, value => this.client.send(type, value));
   }
 
   /**
@@ -39,8 +52,7 @@ export class UserDataPlugin extends BasePlugin {
    * @private
    */
   onUserDataWrite({ data }) {
-    SavedDataHandler.write(data.name, data.value, () =>
-      this.client.send(event.type)
-    );
+    const { name, value, type } = data;
+    SavedDataHandler.write(name, value, () => this.client.send(type));
   }
 }

@@ -1,10 +1,22 @@
-import { BasePlugin } from './BasePlugin';
+import { ButtonPlugin } from './ButtonPlugin';
 
-export class HelpPlugin extends BasePlugin {
-  constructor({ helpButton, bellhop }) {
+/**
+ *
+ *
+ * @export
+ * @class HelpPlugin
+ * @extends {ButtonPlugin}
+ */
+export class HelpPlugin extends ButtonPlugin {
+  /**
+   *Creates an instance of HelpPlugin.
+   * @param {object} Container
+   * @memberof HelpPlugin
+   */
+  constructor({ options: { helpButton }, client }) {
     super(50);
     this.helpButton = document.querySelector(helpButton);
-    this.client = bellhop;
+    this.client = client;
     this.paused = false;
     this._helpEnabled = false;
 
@@ -32,18 +44,30 @@ export class HelpPlugin extends BasePlugin {
     this.client.on(
       'features',
       function(features) {
+        this.helpButton.styles.display = features.hints
+          ? 'inline-block'
+          : 'none';
         this.helpButton.style.display = 'none';
-        if (features.hints) this.helpButton.style.display = 'inline-block';
       }.bind(this)
     );
   }
 
+  /**
+   *
+   *
+   * @memberof HelpPlugin
+   */
   helpButtonClick() {
     if (!this.paused && !this.helpButton.classList.contains('disabled')) {
       this.client.send('playHelp');
     }
   }
 
+  /**
+   *
+   *
+   * @memberof HelpPlugin
+   */
   teardown() {
     this.helpButton.removeEventListener(
       'click',
@@ -51,11 +75,21 @@ export class HelpPlugin extends BasePlugin {
     );
   }
 
+  /**
+   *
+   *
+   * @memberof HelpPlugin
+   */
   close() {
     this.client.off('helpEnabled');
     this.helpEnabled = false;
   }
 
+  /**
+   *
+   *
+   * @memberof HelpPlugin
+   */
   open() {
     this.client.on(
       'helpEnabled',
@@ -65,10 +99,20 @@ export class HelpPlugin extends BasePlugin {
     );
   }
 
+  /**
+   *
+   *
+   * @memberof HelpPlugin
+   */
   get helpEnabled() {
     return this._helpEnabled;
   }
 
+  /**
+   *
+   *
+   * @memberof HelpPlugin
+   */
   set helpEnabled(enabled) {
     this._helpEnabled = enabled;
     this.helpButton.classList.remove('disabled');

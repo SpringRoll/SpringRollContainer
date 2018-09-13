@@ -1,6 +1,4 @@
 import { SavedData } from './SavedData';
-// Include class
-
 /**
  * Default user data handler for the {{#crossLink "springroll.Container"}}Container{{/crossLink}} to save data using
  * the {{#crossLink "springroll.SavedData"}}SavedData{{/crossLink}} class.

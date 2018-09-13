@@ -1,23 +1,42 @@
 import { BasePlugin } from './BasePlugin';
-/**
- * @class Container
- */
 
+/**
+ *
+ * @export
+ * @class FeaturesPlugin
+ * @extends {BasePlugin}
+ */
 export class FeaturesPlugin extends BasePlugin {
-  constructor(bellhop) {
+  /**
+   *Creates an instance of FeaturesPlugin.
+   * @param {object} Container
+   * @memberof FeaturesPlugin
+   */
+  constructor({ client }) {
     super(90);
 
-    this.client = bellhop;
+    this.client = client;
   }
+
+  /**
+   * The features supported by the application
+   * @event features
+   */
+  onFeatures() {
+    this.client.trigger('features');
+  }
+
+  /**
+   * @memberof FeaturesPlugin
+   */
   open() {
     this.client.on('features', this.onFeatures.bind(this));
   }
 
+  /**
+   * @memberof FeaturesPlugin
+   */
   close() {
     this.client.off('features', this.onFeatures.bind(this));
-  }
-
-  onFeatures(event) {
-    this.client.trigger('features', event.data);
   }
 }

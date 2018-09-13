@@ -1,22 +1,42 @@
 import { Bellhop } from 'bellhop-iframe';
+import { Features } from './Features';
+import { BasePlugin } from './plugins';
 
-//private variables
-let PLUGINS = [];
+//private/static variables
+const PLUGINS = [];
 
 /**
  * The application container
  * @class Container
+ * @property {Bellhop} client Communication layer between the container and application
+ * @property {Boolean} loaded Check to see if a application is loaded
+ * @property {Boolean} loading Check to see if a application is loading
+ * @property {Element} dom The DOM object for the iframe
+ * @property {HTMLElement} main The current iframe object
+ * @property {Object} release The current release data
+ * @property {object} options Optional parameteres
+ * @property {string} options.captionsButton selector for captions button
+ * @property {string} options.helpButton selector for help button
+ * @property {string} options.musicButton selector for music button
+ * @property {string} options.pauseButton selector for pause button
+ * @property {string} options.pauseFocusSelector The class to pause
+ * @property {string} options.sfxButton selector for sounf effects button
+ * @property {string} options.soundButton selector for captions button
+ * @property {string} options.voButton selector for vo button
+ * @static @property {Array} plugins The collection of Container plugins
+ * @static @property {String} version The current version of the library
+ *
  * @constructor
  * @param {string} iframeSelector selector for application iframe container
- * @param {object} [options] Optional parameteres
- * @param {string} [options.helpButton] selector for help button
- * @param {string} [options.captionsButton] selector for captions button
- * @param {string} [options.soundButton] selector for captions button
- * @param {string} [options.voButton] selector for vo button
- * @param {string} [options.sfxButton] selector for sounf effects button
- * @param {string} [options.musicButton] selector for music button
- * @param {string} [options.pauseButton] selector for pause button
- * @param {string} [options.pauseFocusSelector='.pause-on-focus'] The class to pause
+ * @param {object} options Optional parameteres
+ * @param {string} options.helpButton selector for help button
+ * @param {string} options.captionsButton selector for captions button
+ * @param {string} options.soundButton selector for captions button
+ * @param {string} options.voButton selector for vo button
+ * @param {string} options.sfxButton selector for sounf effects button
+ * @param {string} options.musicButton selector for music button
+ * @param {string} options.pauseButton selector for pause button
+ * @param {string} options.pauseFocusSelector The class to pause
  *        the application when focused on. This is useful for form elements which
  *        require focus and play better with Application's keepFocus option.
  */
@@ -27,27 +47,21 @@ export class Container {
    * @param {*} options
    * @memberof Container
    */
-  constructor(iframeSelector, options) {
-    this.options = options;
+  constructor(iframeSelector, options = {}) {
     this.main = document.querySelector(iframeSelector);
 
     if (null === this.main) {
       throw new Error('No iframe was found with the provided selector');
     }
 
+    this.client = new Bellhop();
     this.dom = this.main;
-
-    this.client = null;
-
-    this.release = null;
-    this.loaded = false;
     this.loaded = false;
     this.loading = false;
-    this.plugins = [];
-    this.client = new Bellhop();
-
-    //TODO Change how plugins are setup?
-    Container.PLUGINS.forEach(plugin => plugin.setup.call(this));
+    this.options = options;
+    this.release = null;
+    //Plugin init
+    this.plugins = PLUGINS.map(plugin => new plugin(this));
   }
 
   /**
@@ -86,7 +100,7 @@ export class Container {
     this.loaded = true;
     this.main.classList.remove('loading');
 
-    Container.PLUGINS.forEach(plugin => plugin.opened.call(this));
+    this.plugins.forEach(plugin => plugin.opened(this));
 
     /**
      * Event when the application gives the load done signal
@@ -122,7 +136,14 @@ export class Container {
 
     // Destroy in the reverse priority order
     if (wasLoaded) {
-      Container.PLUGINS.forEach(plugin => plugin.closed.call(this));
+      this.plugins
+        .slice()
+        .reverse()
+        .forEach(plugin => plugin.closed(this));
+    }
+
+    if (wasLoaded) {
+      this.client.trigger('closed');
     }
 
     // Remove bellhop instance
@@ -135,12 +156,6 @@ export class Container {
     // Clear the iframe src location
     this.main.setAttribute('src', '');
     this.main.classList.remove('loading');
-
-    if (wasLoaded) {
-      //TODO this.off('localError', this._onCloseFailed);
-
-      this.client.trigger('closed');
-    }
   }
 
   /**
@@ -181,14 +196,16 @@ export class Container {
     const options = { singlePlay, playOptions };
     this.reset();
 
-    const err = true; // TODO Features.basic()
+    const err = Features.basic(); // TODO Features.basic()
     if (err) {
       return this.client.trigger('unsupported');
     }
 
     this.loading = true;
 
-    Container.PLUGINS.forEach(plugin => plugin.open.call(this));
+    this.initClient();
+
+    this.plugins.forEach(plugin => plugin.open(this));
 
     let path = userPath;
     if (null !== options.playOptions) {
@@ -220,7 +237,7 @@ export class Container {
    */
   openPath(path, options = {}, playOptions = {}) {
     // This should be deprecated, support for old function signature
-    if (typeof options === 'boolean') {
+    if ('boolean' === typeof options) {
       options = {
         singlePlay: false,
         playOptions: playOptions
@@ -236,7 +253,10 @@ export class Container {
   destroy() {
     this.reset();
     // Destroy in the reverse priority order
-    Container.PLUGINS.forEach(plugin => plugin.teardown.call(this));
+    this.plugins
+      .slice()
+      .reverse()
+      .forEach(plugin => plugin.teardown(this));
 
     this.main = null;
     this.options = null;
@@ -249,9 +269,8 @@ export class Container {
    */
   close() {
     if (this.loading || this.loaded) {
-      Container.PLUGINS.forEach(plugin => plugin.close.call(this));
+      this.plugins.forEach(plugin => plugin.close(this));
       this.client.trigger('close');
-
       // Start the close
       this.client.send('close');
     } else {
@@ -265,29 +284,51 @@ export class Container {
    * @static
    * @memberof Container
    */
-  static get VERSION() {
+  static get version() {
     return 'CONTAINER_VERSION';
   }
 
   /**
-   * The currently installed plugins
+   *
+   *
+   * @static
+   * @param {object|function} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
+   * @memberof Container
+   */
+  static uses(plugin = BasePlugin) {
+    //Merging with the base plugin to guarantee we will have certain functions
+    const isConstructor = () =>
+      !!plugin.prototype &&
+      plugin.prototype.constructor &&
+      /^class/.test(plugin.prototype.constructor);
+
+    if ('function' !== typeof plugin && !isConstructor()) {
+      return;
+    }
+
+    PLUGINS.push(plugin);
+    PLUGINS.sort((a, b) => b.priority - a.priority);
+  }
+
+  /**
+   *
+   *
+   * @readonly
    * @static
    * @memberof Container
    */
-  static get PLUGINS() {
+  static get plugins() {
     return PLUGINS;
   }
 
   /**
    *
-   * Overwrites the current array of plugins
+   *
    * @static
-   * @param {array} plugins
    * @memberof Container
    */
-  static set PLUGINS(plugins) {
-    if (Array.isArray(plugins)) {
-      PLUGINS = plugins;
-    }
+  static clearPlugins() {
+    PLUGINS.length = 0;
+    return PLUGINS;
   }
 }
