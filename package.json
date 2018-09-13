@@ -2,7 +2,7 @@
   "name": "springroll-container",
   "version": "2.0.0",
   "description": "The iframe controller for interacting with SpringRoll applications",
-  "main": "./dist/container.min.js",
+  "main": "./dist/index.js",
   "author": {
     "name": "Matt Karl",
     "email": "matt@cloudkid.com"
