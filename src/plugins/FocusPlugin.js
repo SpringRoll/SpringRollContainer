@@ -11,10 +11,10 @@ import { BasePlugin } from './BasePlugin';
 export class FocusPlugin extends BasePlugin {
   /**
    *Creates an instance of FocusPlugin.
-   * @param {*} options
+   * @param {object} container
    * @memberof FocusPlugin
    */
-  constructor({ options } = {}) {
+  constructor({ options, dom, client }) {
     super(90);
     // Add the default option for pauseFocusSelector
     this.options = Object.assign(
@@ -29,43 +29,49 @@ export class FocusPlugin extends BasePlugin {
       this.onContainerBlur.bind(this)
     );
 
+    this.dom = dom;
+    this.client = client;
     this._appBlurred = false;
     this._keepFocus = false;
     this._containerBlurred = false;
     this._focusTimer = null;
+    this._isManualPause = false;
+    this.paused = false;
+
     document.addEventListener('focus', this.onDocClick.bind(this));
     document.addEventListener('click', this.onDocClick.bind(this));
     this.pauseFocus = document.querySelector(this.options.pauseFocusSelector);
 
     if (null !== this.pauseFocus) {
-      this.pauseFocus.addEventListener('focus', function() {
-        this._isManualPause = this.paused = true;
-        this.pauseFocus.addEventListener(
-          'blur',
-          () => {
-            this._isManualPause = this.paused = false;
-            this.focus();
-          },
-          {
-            once: true
-          }
-        );
-      });
+      this.pauseFocus.addEventListener('focus', this.onPauseFocus.bind(this));
     }
   }
 
   /**
-   *
-   *
    * @memberof FocusPlugin
    */
-  focus() {
-    document.contentWindow.focus();
+  onPauseFocus() {
+    this._isManualPause = this.paused = true;
+    this.pauseFocus.addEventListener(
+      'blur',
+      function() {
+        this._isManualPause = this.paused = false;
+        this.focus();
+      }.bind(this),
+      {
+        once: true
+      }
+    );
   }
 
   /**
-   *
-   *
+   * @memberof FocusPlugin
+   */
+  focus() {
+    this.dom.contentWindow.focus();
+  }
+
+  /**
    * @memberof FocusPlugin
    */
   blur() {
@@ -73,8 +79,6 @@ export class FocusPlugin extends BasePlugin {
   }
 
   /**
-   *
-   *
    * @memberof FocusPlugin
    */
   manageFocus() {
@@ -120,10 +124,6 @@ export class FocusPlugin extends BasePlugin {
    * @private
    */
   onDocClick() {
-    if (!this.loaded) {
-      return;
-    }
-
     this.focus();
   }
 
@@ -162,7 +162,7 @@ export class FocusPlugin extends BasePlugin {
    * @method onContainerBlur
    * @private
    */
-  onContainerBlur(e) {
+  onContainerBlur() {
     //Set both container and application to blurred,
     //because some blur events are only happening on the container.
     //If container is blurred because application area was just focused,
@@ -172,18 +172,14 @@ export class FocusPlugin extends BasePlugin {
   }
 
   /**
-   *
-   *
    * @memberof FocusPlugin
    */
   open() {
-    this.client.on('focus', onFocus.bind(this));
-    this.client.on('keepFocus', onKeepFocus.bind(this));
+    this.client.on('focus', this.onFocus.bind(this));
+    this.client.on('keepFocus', this.onKeepFocus.bind(this));
   }
 
   /**
-   *
-   *
    * @memberof FocusPlugin
    */
   opened() {
@@ -191,8 +187,6 @@ export class FocusPlugin extends BasePlugin {
   }
 
   /**
-   *
-   *
    * @memberof FocusPlugin
    */
   close() {
@@ -203,19 +197,18 @@ export class FocusPlugin extends BasePlugin {
   }
 
   /**
-   *
-   *
    * @memberof FocusPlugin
    */
   teardown() {
-    const pauseFocus = document.querySelector(this.options.pauseFocusSelector);
-
-    if (pauseFocus !== null) {
-      pauseFocus.removeEventListener('focus');
+    if (this.pauseFocus !== null) {
+      this.pauseFocus.removeEventListener(
+        'focus',
+        this.onPauseFocus.bind(this)
+      );
     }
 
-    document.removeEventListener('focus', this._onDocClick);
-    document.removeEventListener('click', this._onDocClick);
+    document.removeEventListener('focus', this.onDocClick.bind(this));
+    document.removeEventListener('click', this.onDocClick.bind(this));
 
     if (this.pageVisibility) {
       this.pageVisibility.destroy();
