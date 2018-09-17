@@ -29,12 +29,12 @@ describe('Container', () => {
 
   it('._internalOpen', () => {
     container._internalOpen('test');
-    expect(container.main.src).to.equal('http://localhost:9876/test');
+    expect(container.main.src).to.contain('http://localhost:9876/test');
   });
 
   it('.openPath', () => {
     container.openPath('test');
-    expect(container.main.src).to.equal('http://localhost:9876/test');
+    expect(container.main.src).to.contain('http://localhost:9876/test');
   });
 
   it('.reset(), .onEndGame(), _onCloseFailed()', () => {
@@ -42,7 +42,7 @@ describe('Container', () => {
     expect(container.client).to.be.null;
     expect(container.loaded).to.be.false;
     expect(container.loading).to.be.false;
-    expect(container.main.src).to.equal('http://localhost:9876/context.html');
+    expect(container.main.src).to.contain('http://localhost:9876/context.html');
   });
 
   it('.destroyClient()', () => {

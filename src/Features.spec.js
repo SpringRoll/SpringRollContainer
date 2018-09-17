@@ -1,9 +1,6 @@
 import { Features } from './Features';
 
 describe('Features', () => {
-  it('.flash()', () => {
-    expect(Features.flash).to.be.false;
-  });
   it('.webgl()', () => {
     expect(Features.webgl).to.be.false;
   });

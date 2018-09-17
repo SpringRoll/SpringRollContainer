@@ -10,17 +10,14 @@ const event = {
 };
 
 /*eslint-disable */
-const onFocus = function($event) {
+const onEvent = function($event) {
   event[$event.type] = true;
 };
 
-const onBlur = function($event) {
-  event[$event.type] = true;
-};
 /*eslint-enable */
 describe('PageVisibility', () => {
-  it('constuctor', () => {
-    pv = new PageVisibility(onFocus, onBlur);
+  it('constructor', () => {
+    pv = new PageVisibility(onEvent, onEvent);
     expect(typeof pv.onBlur).to.equal('function');
     expect(typeof pv.onFocus).to.equal('function');
     expect(pv._enabled).to.be.true;

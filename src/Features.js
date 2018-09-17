@@ -4,22 +4,6 @@
  */
 export class Features {
   /**
-   * If the browser has flash
-   */
-  static get flash() {
-    const flashTestOne =
-      'undefined' !== typeof ActiveXObject &&
-      'undefined' !== typeof new ActiveXObject('ShockwaveFlash.ShockwaveFlash');
-    const flashTestTwo =
-      navigator.mimeTypes &&
-      'undefined' !==
-        typeof navigator.mimeTypes['application/x-shockwave-flash'] &&
-      navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin;
-
-    return flashTestOne || flashTestTwo;
-  }
-
-  /**
    * If the browser has WebGL support
    * @property {boolean} webgl
    */
@@ -176,7 +160,6 @@ export class Features {
    */
   static get info() {
     return `Browser Feature Detection
-				Flash support ${Features.flash ? '\u2713' : '\u00D7'}
 				Canvas support ${Features.canvas ? '\u2713' : '\u00D7'}
 				WebGL support ${Features.webgl ? '\u2713' : '\u00D7'}
 				WebAudio support ${Features.webAudio ? '\u2713' : '\u00D7'}`;

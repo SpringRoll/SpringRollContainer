@@ -237,13 +237,23 @@ export class Container {
    */
   openPath(path, options = {}, playOptions = {}) {
     // This should be deprecated, support for old function signature
-    if ('boolean' === typeof options) {
-      options = {
-        singlePlay: false,
-        playOptions: playOptions
-      };
+    if ('object' !== typeof options) {
+      console.warn(
+        'SpringRoll Container.openPath was passed a invalid options parameter. Using default parameters instead'
+      );
+      options = {};
     }
-    this._internalOpen(path, options);
+
+    this._internalOpen(
+      path,
+      Object.assign(
+        {
+          singlePlay: false,
+          playOptions: playOptions
+        },
+        options
+      )
+    );
   }
 
   /**
