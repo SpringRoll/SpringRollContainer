@@ -1,62 +1,69 @@
 import { FocusPlugin } from './FocusPlugin';
 import { Bellhop } from 'bellhop-iframe';
+import platform from 'platform';
+//Karma firefox work around due to known bug => https://github.com/karma-runner/karma-firefox-launcher/issues/56
+const isFirefox = () => 'Firefox' === platform.name;
 describe('FocusPlugin', () => {
-  before(() => {
-    const div = document.createElement('iframe');
-    div.classList.add('pause-on-focus');
-    document.body.appendChild(div);
-  });
-  let fp;
+  let focusPlugin;
   it('construct', () => {
     const dom = document.createElement('iframe');
+    dom.src = 'data:text/html;base64,R0lG';
+    dom.classList.add('pause-on-focus');
     document.body.appendChild(dom);
-    fp = new FocusPlugin({
+    focusPlugin = new FocusPlugin({
       dom,
       client: new Bellhop()
     });
   });
   it('.focus(), .onDocClick()', () => {
-    fp.focus();
+    focusPlugin.focus();
   });
   it('.blur()', () => {
-    fp.blur();
+    focusPlugin.blur();
   });
   it('.manageFocus()', () => {
-    fp.manageFocus();
+    focusPlugin.manageFocus();
   });
   it('.onKeepFocus()', () => {
-    fp.onKeepFocus({ data: true });
-    expect(fp._keepFocus).to.be.true;
+    focusPlugin.onKeepFocus({ data: true });
+    expect(focusPlugin._keepFocus).to.be.true;
   });
   it('.onContainerFocus()', () => {
-    fp.onContainerBlur();
-    expect(fp._containerBlurred).to.be.true;
+    focusPlugin.onContainerBlur();
+    expect(focusPlugin._containerBlurred).to.be.true;
   });
   it('.onFocus()', () => {
-    fp.onContainerFocus();
-    expect(fp._containerBlurred).to.be.false;
+    focusPlugin.onContainerFocus();
+    expect(focusPlugin._containerBlurred).to.be.false;
   });
-  //TODO: Figure out why onPauseFocus() is not working on Firefox
   it('.onPauseFocus() - focus', () => {
-    fp.paused = false;
-    fp.pauseFocus.focus();
-    expect(fp.paused).to.be.true;
+    if (isFirefox) {
+      return;
+    }
+    window.focus();
+    document.body.focus();
+    focusPlugin.paused = false;
+    focusPlugin.pauseFocus.focus();
+    expect(focusPlugin.paused).to.be.true;
   });
   it('.onPauseFocus() - blur', () => {
-    fp.paused = true;
-    fp.pauseFocus.blur();
-    expect(fp.paused).to.be.false;
+    if (isFirefox) {
+      return;
+    }
+    focusPlugin.paused = true;
+    focusPlugin.pauseFocus.blur();
+    expect(focusPlugin.paused).to.be.false;
   });
   it('.open()', () => {
-    fp.open();
+    focusPlugin.open();
   });
   it('.opened()', () => {
-    fp.opened();
+    focusPlugin.opened();
   });
   it('.close()', () => {
-    fp.close();
+    focusPlugin.close();
   });
   it('.teardown()', () => {
-    fp.teardown();
+    focusPlugin.teardown();
   });
 });

@@ -2,7 +2,7 @@ import { Features } from './Features';
 
 describe('Features', () => {
   it('.webgl()', () => {
-    expect(Features.webgl).to.be.false;
+    expect(Features.webgl).to.be.a('boolean');
   });
 
   it('.canvas()', () => {
@@ -36,7 +36,6 @@ describe('Features', () => {
   it('.test()', () => {
     const testData = {
       features: {
-        webgl: 'webgl',
         geolocation: 'geolocation',
         webWorkers: 'webworkers',
         webAudio: 'webaudio',
@@ -54,8 +53,6 @@ describe('Features', () => {
         mouse: true
       }
     };
-    expect(Features.test(testData)).to.equal('Browser does not support webgl');
-    delete testData.features.webgl;
 
     expect(Features.test(testData)).to.be.null;
   });

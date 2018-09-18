@@ -10,6 +10,7 @@ export class Features {
   static get webgl() {
     const canvas = document.createElement('canvas');
     // console.log(canvas.getContext('webgl'));
+
     return !!(
       canvas &&
       (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
@@ -89,21 +90,21 @@ export class Features {
    * @method test
    * @static
    * @param {object} capabilities The capabilities
-   * @param {object} capabilities.features The features
-   * @param {object} capabilities.features.webgl WebGL required
-   * @param {object} capabilities.features.geolocation Geolocation required
-   * @param {object} capabilities.features.webWorkers Web Workers API required
-   * @param {object} capabilities.features.webAudio WebAudio API required
-   * @param {object} capabilities.features.webSockets WebSockets required
-   * @param {object} capabilities.sizes The sizes
-   * @param {Boolean} capabilities.sizes.xsmall Screens < 480
-   * @param {Boolean} capabilities.sizes.small Screens < 768
-   * @param {Boolean} capabilities.sizes.medium Screens < 992
-   * @param {Boolean} capabilities.sizes.large Screens < 1200
-   * @param {Boolean} capabilities.sizes.xlarge Screens >= 1200
-   * @param {object} capabilities.ui The ui
-   * @param {Boolean} capabilities.ui.touch Touch capable
-   * @param {Boolean} capabilities.ui.mouse Mouse capable
+   * @param {object} [capabilities.features] The features
+   * @param {object} [capabilities.features.webgl] WebGL required
+   * @param {object} [capabilities.features.geolocation] Geolocation required
+   * @param {object} [capabilities.features.webWorkers] Web Workers API required
+   * @param {object} [capabilities.features.webAudio] WebAudio API required
+   * @param {object} [capabilities.features.webSockets] WebSockets required
+   * @param {object} [capabilities.sizes] The sizes
+   * @param {Boolean} [capabilities.sizes.xsmall] Screens < 480
+   * @param {Boolean} [capabilities.sizes.small] Screens < 768
+   * @param {Boolean} [capabilities.sizes.medium] Screens < 992
+   * @param {Boolean} [capabilities.sizes.large] Screens < 1200
+   * @param {Boolean} [capabilities.sizes.xlarge] Screens >= 1200
+   * @param {object} [capabilities.ui] The ui
+   * @param {Boolean} [capabilities.ui.touch] Touch capable
+   * @param {Boolean} [capabilities.ui.mouse] Mouse capable
    * @return {String|null} The error, or else returns null
    */
   static test(capabilities) {
