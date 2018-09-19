@@ -7,8 +7,7 @@ before(() => {
   button.id = 'test';
   document.body.appendChild(button);
   hp = new HelpPlugin({
-    options: { helpButton: '#test' },
-    client: new Bellhop()
+    options: { helpButton: '#test' }
   });
 });
 describe('HelpPlugin', () => {

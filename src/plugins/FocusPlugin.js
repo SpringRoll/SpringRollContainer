@@ -14,7 +14,7 @@ export class FocusPlugin extends BasePlugin {
    * @param {object} container
    * @memberof FocusPlugin
    */
-  constructor({ options, dom, client }) {
+  constructor({ options, dom }) {
     super(90);
     // Add the default option for pauseFocusSelector
     this.options = Object.assign(
@@ -30,7 +30,6 @@ export class FocusPlugin extends BasePlugin {
     );
 
     this.dom = dom;
-    this.client = client;
     this._appBlurred = false;
     this._keepFocus = false;
     this._containerBlurred = false;

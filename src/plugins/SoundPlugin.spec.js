@@ -1,5 +1,4 @@
 import { SoundPlugin } from './SoundPlugin';
-import { Bellhop } from 'bellhop-iframe';
 
 describe('SoundPlugin', () => {
   let sp;
@@ -18,7 +17,7 @@ describe('SoundPlugin', () => {
       options[key] = `#${options[key]}`;
       document.body.appendChild(button);
     });
-    sp = new SoundPlugin({ options, client: new Bellhop() });
+    sp = new SoundPlugin({ options });
   });
 
   it('construct', () => {
@@ -26,7 +25,6 @@ describe('SoundPlugin', () => {
     expect(sp.musicButton).to.be.instanceof(HTMLButtonElement);
     expect(sp.sfxButton).to.be.instanceof(HTMLButtonElement);
     expect(sp.voButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.client).to.be.instanceof(Bellhop);
   });
 
   it('.setMuteProp()', () => {

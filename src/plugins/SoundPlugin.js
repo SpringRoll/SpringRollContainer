@@ -12,17 +12,13 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {object} Container
    * @memberof SoundPlugin
    */
-  constructor({
-    options: { soundButton, musicButton, sfxButton, voButton },
-    client
-  }) {
+  constructor({ options: { soundButton, musicButton, sfxButton, voButton } }) {
     super(60);
     const saved = SavedData.read('soundMuted');
     this._soundMuted = saved ? saved : false;
     this._musicMuted = false;
     this._voMuted = false;
     this._sfxMuted = false;
-    this.client = client;
 
     this.soundButton = document.querySelector(soundButton);
     this.musicButton = document.querySelector(musicButton);

@@ -1,9 +1,9 @@
 import { Bellhop } from 'bellhop-iframe';
 import { Features } from './Features';
-import { BasePlugin } from './plugins';
 
 //private/static variables
 const PLUGINS = [];
+let CLIENT = new Bellhop();
 
 /**
  * The application container
@@ -43,8 +43,16 @@ const PLUGINS = [];
 export class Container {
   /**
    *Creates an instance of Container.
-   * @param {*} iframeSelector
-   * @param {*} options
+   * @param {string} iframeSelector
+   * @param {object} options Optional parameteres
+   * @param {string} [options.helpButton] selector for help button
+   * @param {string} [options.captionsButton] selector for captions button
+   * @param {string} [options.soundButton] selector for captions button
+   * @param {string} [options.voButton] selector for vo button
+   * @param {string} [options.sfxButton] selector for sounf effects button
+   * @param {string} [options.musicButton] selector for music button
+   * @param {string} [options.pauseButton] selector for pause button
+   * @param {string} [options.pauseFocusSelector] The class to pause
    * @memberof Container
    */
   constructor(iframeSelector, options = {}) {
@@ -53,8 +61,9 @@ export class Container {
     if (null === this.main) {
       throw new Error('No iframe was found with the provided selector');
     }
-
-    this.client = new Bellhop();
+    if (!CLIENT) {
+      CLIENT = new Bellhop();
+    }
     this.dom = this.main;
     this.loaded = false;
     this.loading = false;
@@ -69,9 +78,9 @@ export class Container {
    * @memberof Container
    */
   destroyClient() {
-    if (this.client) {
-      this.client.destroy();
-      this.client = null;
+    if (CLIENT) {
+      CLIENT.destroy();
+      CLIENT = null;
     }
   }
 
@@ -80,7 +89,7 @@ export class Container {
    * @memberof Container
    */
   onLoading() {
-    this.client.trigger('opening');
+    CLIENT.trigger('opening');
   }
 
   /**
@@ -88,7 +97,7 @@ export class Container {
    * @memberof Container
    */
   onProgress() {
-    this.client.trigger('progress');
+    CLIENT.trigger('progress');
   }
 
   /**
@@ -106,7 +115,7 @@ export class Container {
      * Event when the application gives the load done signal
      * @event opened
      */
-    this.client.trigger('opened');
+    CLIENT.trigger('opened');
   }
 
   /**
@@ -123,7 +132,7 @@ export class Container {
    * @param  {Event} $event Bellhop event
    */
   onLocalError($event) {
-    this.client.trigger($event.type);
+    CLIENT.trigger($event.type);
   }
 
   /**
@@ -143,7 +152,7 @@ export class Container {
     }
 
     if (wasLoaded) {
-      this.client.trigger('closed');
+      CLIENT.trigger('closed');
     }
 
     // Remove bellhop instance
@@ -165,15 +174,15 @@ export class Container {
    */
   initClient() {
     //Setup communication layer between site and application
-    this.client = new Bellhop();
-    this.client.connect(this.dom);
+    CLIENT = new Bellhop();
+    CLIENT.connect(this.dom);
 
     //Handle bellhop events coming from the application
-    this.client.on('loading', this.onLoading.bind(this));
-    this.client.on('progress', this.onProgress.bind(this));
-    this.client.on('loaded', this.onLoadDone.bind(this));
-    this.client.on('endGame', this.onEndGame.bind(this));
-    this.client.on('localError', this.onLocalError.bind(this));
+    CLIENT.on('loading', this.onLoading.bind(this));
+    CLIENT.on('progress', this.onProgress.bind(this));
+    CLIENT.on('loaded', this.onLoadDone.bind(this));
+    CLIENT.on('endGame', this.onEndGame.bind(this));
+    CLIENT.on('localError', this.onLocalError.bind(this));
   }
 
   /**
@@ -198,7 +207,7 @@ export class Container {
 
     const err = Features.basic(); // TODO Features.basic()
     if (err) {
-      return this.client.trigger('unsupported');
+      return CLIENT.trigger('unsupported');
     }
 
     this.loading = true;
@@ -222,9 +231,9 @@ export class Container {
     this.main.classList.add('loading');
     this.main.setAttribute('src', path);
 
-    this.client.respond('singlePlay', options.singlePlay);
-    this.client.respond('playOptions', options.playOptions);
-    this.client.trigger('open');
+    CLIENT.respond('singlePlay', options.singlePlay);
+    CLIENT.respond('playOptions', options.playOptions);
+    CLIENT.trigger('open');
   }
 
   /**
@@ -280,9 +289,9 @@ export class Container {
   close() {
     if (this.loading || this.loaded) {
       this.plugins.forEach(plugin => plugin.close(this));
-      this.client.trigger('close');
+      CLIENT.trigger('close');
       // Start the close
-      this.client.send('close');
+      CLIENT.send('close');
     } else {
       this.reset();
     }
@@ -305,7 +314,7 @@ export class Container {
    * @param {object|function} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
    * @memberof Container
    */
-  static uses(plugin = BasePlugin) {
+  static uses(plugin) {
     //Merging with the base plugin to guarantee we will have certain functions
     const isConstructor = () =>
       !!plugin.prototype &&
@@ -340,5 +349,26 @@ export class Container {
   static clearPlugins() {
     PLUGINS.length = 0;
     return PLUGINS;
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   * @memberof Container
+   */
+  get client() {
+    return CLIENT;
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   * @static
+   * @memberof Container
+   */
+  static get client() {
+    return CLIENT;
   }
 }

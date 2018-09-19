@@ -12,7 +12,7 @@ describe('ButtonPlugin', () => {
   });
 
   it('construct', () => {
-    bp = new ButtonPlugin({ client: new Bellhop() }, 99);
+    bp = new ButtonPlugin(99);
     expect(bp).to.be.instanceof(ButtonPlugin);
     expect(bp.priority).to.equal(99);
     expect(bp.sendMutes).to.be.false;

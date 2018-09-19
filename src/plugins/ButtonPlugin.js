@@ -1,5 +1,4 @@
 import { BasePlugin } from './BasePlugin';
-import { Bellhop } from 'bellhop-iframe';
 import { SavedData } from '../SavedData';
 
 /**
@@ -12,14 +11,12 @@ import { SavedData } from '../SavedData';
 export class ButtonPlugin extends BasePlugin {
   /**
    *Creates an instance of ButtonPlugin.
-   * @param {object} container
    * @param {number} priority
    * @memberof ButtonPlugin
    */
-  constructor({ client }, priority = 100) {
+  constructor(priority = 100) {
     super(priority);
     this.sendMutes = false;
-    this.client = client;
   }
 
   /**
@@ -79,9 +76,7 @@ export class ButtonPlugin extends BasePlugin {
 
     SavedData.write(prop, muted);
 
-    if (this.client instanceof Bellhop && this.sendMutes) {
-      this.client.send(prop, muted);
-    }
+    this.client.send(prop, muted);
   }
 
   /**

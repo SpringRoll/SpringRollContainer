@@ -14,7 +14,6 @@ const onEvent = function($event) {
   event[$event.type] = true;
 };
 
-/*eslint-enable */
 describe('PageVisibility', () => {
   it('constructor', () => {
     pv = new PageVisibility(onEvent, onEvent);
@@ -23,7 +22,9 @@ describe('PageVisibility', () => {
     expect(pv._enabled).to.be.true;
   });
 
-  it('.enabled()', () => {
+  it('.enabled() - set', () => {
+    pv.enabled = false;
+    pv.enabled = true;
     expect(pv.enabled).to.equal(pv._enabled);
   });
 

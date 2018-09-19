@@ -1,5 +1,4 @@
 import { SavedData } from '../SavedData';
-import { Bellhop } from 'bellhop-iframe';
 import { ButtonPlugin } from './ButtonPlugin';
 
 // Private Variables
@@ -23,22 +22,17 @@ const DEFAULT_CAPTIONS_STYLES = {
 export class CaptionsPlugin extends ButtonPlugin {
   /**
    *Creates an instance of CaptionsPlugin.
-   * @param {*} container
+   * @param {object} container
    * @memberof CaptionsPlugin
    */
-  constructor({ client, options: { captionButton } }) {
-    super({ client }, 70);
+  constructor({ options: { captionsButton } }) {
+    super(70);
     this.captionsStyles = Object.assign(
       {},
       DEFAULT_CAPTIONS_STYLES,
       SavedData.read(CAPTIONS_STYLES) || {}
     );
-    this.captionsButton = document.querySelector(captionButton);
-    if (!(client instanceof Bellhop) || null === this.captionsButton) {
-      return;
-    }
-    this.client = client;
-
+    this.captionsButton = document.querySelector(captionsButton);
     // Handle the features request
     this.client.on('features', function(features) {
       this.captionsButton.style.display = features.captions

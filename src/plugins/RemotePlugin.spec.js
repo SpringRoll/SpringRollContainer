@@ -4,7 +4,7 @@ import { Bellhop } from 'bellhop-iframe';
 describe('RemotePlugin', () => {
   let rp;
   it('construct', () => {
-    rp = new RemotePlugin({ client: new Bellhop() });
+    rp = new RemotePlugin();
     expect(rp.client).to.be.instanceof(Bellhop);
   });
 

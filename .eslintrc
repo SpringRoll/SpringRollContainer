@@ -9,7 +9,7 @@
     "assert": true,
     "expect": true,
     "should": true,
-    "ActiveXObject": true
+    "karmaHTML": true
   },
   "plugins": ["node", "prettier"],
   "extends": ["eslint:recommended"],

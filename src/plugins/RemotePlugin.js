@@ -11,17 +11,15 @@ import { BasePlugin } from './BasePlugin';
 export class RemotePlugin extends BasePlugin {
   /**
    *Creates an instance of RemotePlugin.
-   * @param {Object} Container
    * @memberof RemotePlugin
    */
-  constructor({ client }) {
+  constructor() {
     super(30);
     this.options = {
       query: '',
       playOptions: null,
       singlePlay: false
     };
-    this.client = client;
     this.release = null;
   }
 

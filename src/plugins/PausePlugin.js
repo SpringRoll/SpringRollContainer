@@ -9,7 +9,7 @@ export class PausePlugin extends ButtonPlugin {
    * @param {object} Container
    * @memberof PausePlugin
    */
-  constructor({ options: { pauseButton }, client }) {
+  constructor({ options: { pauseButton } }) {
     super(80);
     /**
      * Reference to the pause application button
@@ -27,7 +27,6 @@ export class PausePlugin extends ButtonPlugin {
     this._isManualPause = false;
     this._disablePause = false;
     this._paused = false;
-    this.client = client;
 
     /**
      * If the current application is paused

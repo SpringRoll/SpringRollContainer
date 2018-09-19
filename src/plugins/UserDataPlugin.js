@@ -9,12 +9,10 @@ import { BasePlugin } from './BasePlugin';
 export class UserDataPlugin extends BasePlugin {
   /**
    *Creates an instance of UserDataPlugin.
-   * @param {*} bellhop
    * @memberof UserDataPlugin
    */
-  constructor({ client }) {
+  constructor() {
     super(40);
-    this.client = client;
   }
 
   /**

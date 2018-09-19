@@ -113,16 +113,6 @@ class Bellhop extends BellhopEventDispatcher {
   }
 }
 class Features {
-  static get flash() {
-    const t =
-        'undefined' != typeof ActiveXObject &&
-        void 0 !== new ActiveXObject('ShockwaveFlash.ShockwaveFlash'),
-      e =
-        navigator.mimeTypes &&
-        void 0 !== navigator.mimeTypes['application/x-shockwave-flash'] &&
-        navigator.mimeTypes['application/x-shockwave-flash'].enabledPlugin;
-    return t || e;
-  }
   static get webgl() {
     const t = document.createElement('canvas');
     return !(
@@ -185,13 +175,190 @@ class Features {
               : null;
   }
   static get info() {
-    return `Browser Feature Detection\n\t\t\t\tFlash support ${
-      Features.flash ? '✓' : '×'
-    }\n\t\t\t\tCanvas support ${
+    return `Browser Feature Detection\n\t\t\t\tCanvas support ${
       Features.canvas ? '✓' : '×'
     }\n\t\t\t\tWebGL support ${
       Features.webgl ? '✓' : '×'
     }\n\t\t\t\tWebAudio support ${Features.webAudio ? '✓' : '×'}`;
+  }
+}
+const PLUGINS = [];
+let CLIENT = new Bellhop();
+class Container {
+  constructor(t, e = {}) {
+    if (((this.main = document.querySelector(t)), null === this.main))
+      throw new Error('No iframe was found with the provided selector');
+    CLIENT || (CLIENT = new Bellhop()),
+      (this.dom = this.main),
+      (this.loaded = !1),
+      (this.loading = !1),
+      (this.options = e),
+      (this.release = null),
+      (this.plugins = PLUGINS.map(t => new t(this)));
+  }
+  destroyClient() {
+    CLIENT && (CLIENT.destroy(), (CLIENT = null));
+  }
+  onLoading() {
+    CLIENT.trigger('opening');
+  }
+  onProgress() {
+    CLIENT.trigger('progress');
+  }
+  onLoadDone() {
+    (this.loading = !1),
+      (this.loaded = !0),
+      this.main.classList.remove('loading'),
+      this.plugins.forEach(t => t.opened(this)),
+      CLIENT.trigger('opened');
+  }
+  onEndGame() {
+    this.reset();
+  }
+  onLocalError(t) {
+    CLIENT.trigger(t.type);
+  }
+  reset() {
+    const t = this.loaded || this.loading;
+    t &&
+      this.plugins
+        .slice()
+        .reverse()
+        .forEach(t => t.closed(this)),
+      t && CLIENT.trigger('closed'),
+      this.destroyClient(),
+      (this.loaded = !1),
+      (this.loading = !1),
+      this.main.setAttribute('src', ''),
+      this.main.classList.remove('loading');
+  }
+  initClient() {
+    (CLIENT = new Bellhop()).connect(this.dom),
+      CLIENT.on('loading', this.onLoading.bind(this)),
+      CLIENT.on('progress', this.onProgress.bind(this)),
+      CLIENT.on('loaded', this.onLoadDone.bind(this)),
+      CLIENT.on('endGame', this.onEndGame.bind(this)),
+      CLIENT.on('localError', this.onLocalError.bind(this));
+  }
+  _onCloseFailed() {
+    this.reset();
+  }
+  _internalOpen(t, { singlePlay: e = !1, playOptions: s = null } = {}) {
+    const i = { singlePlay: e, playOptions: s };
+    if ((this.reset(), Features.basic())) return CLIENT.trigger('unsupported');
+    (this.loading = !0),
+      this.initClient(),
+      this.plugins.forEach(t => t.open(this));
+    let n = t;
+    if (null !== i.playOptions) {
+      const e =
+        'playOptions=' + encodeURIComponent(JSON.stringify(i.playOptions));
+      n = -1 === t.indexOf('?') ? `${t}?${e}` : `${t}&${e}`;
+    }
+    this.main.classList.add('loading'),
+      this.main.setAttribute('src', n),
+      CLIENT.respond('singlePlay', i.singlePlay),
+      CLIENT.respond('playOptions', i.playOptions),
+      CLIENT.trigger('open');
+  }
+  openPath(t, e = {}, s = {}) {
+    'object' != typeof e &&
+      (console.warn(
+        'SpringRoll Container.openPath was passed a invalid options parameter. Using default parameters instead'
+      ),
+      (e = {})),
+      this._internalOpen(
+        t,
+        Object.assign({ singlePlay: !1, playOptions: s }, e)
+      );
+  }
+  destroy() {
+    this.reset(),
+      this.plugins
+        .slice()
+        .reverse()
+        .forEach(t => t.teardown(this)),
+      (this.main = null),
+      (this.options = null),
+      (this.dom = null);
+  }
+  close() {
+    this.loading || this.loaded
+      ? (this.plugins.forEach(t => t.close(this)),
+        CLIENT.trigger('close'),
+        CLIENT.send('close'))
+      : this.reset();
+  }
+  static get version() {
+    return '2.0.0';
+  }
+  static uses(t) {
+    ('function' == typeof t ||
+      (() =>
+        !!t.prototype &&
+        t.prototype.constructor &&
+        /^class/.test(t.prototype.constructor))()) &&
+      (PLUGINS.push(t), PLUGINS.sort((t, e) => e.priority - t.priority));
+  }
+  static get plugins() {
+    return PLUGINS;
+  }
+  static clearPlugins() {
+    return (PLUGINS.length = 0), PLUGINS;
+  }
+  get client() {
+    return CLIENT;
+  }
+  static get client() {
+    return CLIENT;
+  }
+}
+class PageVisibility {
+  constructor(t = function() {}, e = function() {}) {
+    (this.onFocus = t),
+      (this.onBlur = e),
+      (this._enabled = !1),
+      (this.enabled = !0);
+  }
+  destroy() {
+    (this.enabled = !1),
+      (this.onToggle = null),
+      (this.onFocus = null),
+      (this.onBlur = null);
+  }
+  onToggle(t) {
+    document.hidden ? this.onBlur(t) : this.onFocus(t);
+  }
+  get enabled() {
+    return this._enabled;
+  }
+  set enabled(t) {
+    (this._enabled = t),
+      document.removeEventListener(
+        'visibilitychange',
+        this.onToggle.bind(this),
+        !1
+      ),
+      window.removeEventListener('blur', this.onBlur.bind(this)),
+      window.removeEventListener('focus', this.onFocus.bind(this)),
+      window.removeEventListener('pagehide', this.onBlur.bind(this)),
+      window.removeEventListener('pageshow', this.onFocus.bind(this)),
+      window.removeEventListener('visibilitychange', this.onToggle.bind(this)),
+      this._enabled &&
+        (document.addEventListener(
+          'visibilitychange',
+          this.onToggle.bind(this),
+          !1
+        ),
+        window.addEventListener('blur', this.onBlur.bind(this)),
+        window.addEventListener('focus', this.onFocus.bind(this)),
+        window.addEventListener('pagehide', this.onBlur.bind(this)),
+        window.addEventListener('pageshow', this.onFocus.bind(this)),
+        window.addEventListener(
+          'visibilitychange',
+          this.onToggle.bind(this),
+          !1
+        ));
   }
 }
 class BasePlugin {
@@ -203,6 +370,9 @@ class BasePlugin {
   close() {}
   closed() {}
   teardown() {}
+  get client() {
+    return Container.client;
+  }
 }
 let WEB_STORAGE_SUPPORT = (() => {
     if ('undefined' == typeof Storage) return !1;
@@ -264,8 +434,8 @@ class SavedData {
   }
 }
 class ButtonPlugin extends BasePlugin {
-  constructor({ client: t }, e = 100) {
-    super(e), (this.sendMutes = !1), (this.client = t);
+  constructor(t = 100) {
+    super(t), (this.sendMutes = !1);
   }
   setup() {
     this.sendMutes = !0;
@@ -285,9 +455,7 @@ class ButtonPlugin extends BasePlugin {
       ? e.forEach(t => this.removeListeners(t))
       : this.removeListeners(e),
       SavedData.write(t, s),
-      this.client instanceof Bellhop &&
-        this.sendMutes &&
-        this.client.send(t, s);
+      this.client.send(t, s);
   }
   removeListeners(t) {
     t instanceof HTMLElement &&
@@ -307,27 +475,24 @@ const CAPTIONS_STYLES = 'captionsStyles',
     align: 'top'
   };
 class CaptionsPlugin extends ButtonPlugin {
-  constructor({ client: t, options: { captionButton: e } }) {
-    super({ client: t }, 70),
+  constructor({ options: { captionButton: t } }) {
+    super(70),
       (this.captionsStyles = Object.assign(
         {},
         DEFAULT_CAPTIONS_STYLES,
         SavedData.read(CAPTIONS_STYLES) || {}
       )),
-      (this.captionsButton = document.querySelector(e)),
-      t instanceof Bellhop &&
-        null !== this.captionsButton &&
-        ((this.client = t),
-        this.client.on('features', function(t) {
-          this.captionsButton.style.display = t.captions
-            ? 'inline-block'
-            : 'none';
-        }),
-        this.captionsButton.addEventListener(
-          'click',
-          this.captionsButtonClick.bind(this)
-        ),
-        null === SavedData.read(CAPTIONS_MUTED) && (this.captionsMuted = !0));
+      (this.captionsButton = document.querySelector(t)),
+      this.client.on('features', function(t) {
+        this.captionsButton.style.display = t.captions
+          ? 'inline-block'
+          : 'none';
+      }),
+      this.captionsButton.addEventListener(
+        'click',
+        this.captionsButtonClick.bind(this)
+      ),
+      null === SavedData.read(CAPTIONS_MUTED) && (this.captionsMuted = !0);
   }
   captionsButtonClick() {
     this.captionsMuted = !this.captionsMuted;
@@ -364,8 +529,8 @@ class CaptionsPlugin extends ButtonPlugin {
   }
 }
 class FeaturesPlugin extends BasePlugin {
-  constructor({ client: t }) {
-    super(90), (this.client = t);
+  constructor() {
+    super(90);
   }
   onFeatures() {
     this.client.trigger('features');
@@ -377,56 +542,8 @@ class FeaturesPlugin extends BasePlugin {
     this.client.off('features', this.onFeatures.bind(this));
   }
 }
-class PageVisibility {
-  constructor(t = function() {}, e = function() {}) {
-    (this.onFocus = t),
-      (this.onBlur = e),
-      (this._enabled = !1),
-      (this.enabled = !0);
-  }
-  destroy() {
-    (this.enabled = !1),
-      (this.onToggle = null),
-      (this.onFocus = null),
-      (this.onBlur = null);
-  }
-  onToggle(t) {
-    document.hidden ? this.onBlur(t) : this.onFocus(t);
-  }
-  get enabled() {
-    return this._enabled;
-  }
-  set enabled(t) {
-    (this._enabled = t),
-      document.removeEventListener(
-        'visibilitychange',
-        this.onToggle.bind(this),
-        !1
-      ),
-      window.removeEventListener('blur', this.onBlur.bind(this)),
-      window.removeEventListener('focus', this.onFocus.bind(this)),
-      window.removeEventListener('pagehide', this.onBlur.bind(this)),
-      window.removeEventListener('pageshow', this.onFocus.bind(this)),
-      window.removeEventListener('visibilitychange', this.onToggle.bind(this)),
-      this._enabled &&
-        (document.addEventListener(
-          'visibilitychange',
-          this.onToggle.bind(this),
-          !1
-        ),
-        window.addEventListener('blur', this.onBlur.bind(this)),
-        window.addEventListener('focus', this.onFocus.bind(this)),
-        window.addEventListener('pagehide', this.onBlur.bind(this)),
-        window.addEventListener('pageshow', this.onFocus.bind(this)),
-        window.addEventListener(
-          'visibilitychange',
-          this.onToggle.bind(this),
-          !1
-        ));
-  }
-}
 class FocusPlugin extends BasePlugin {
-  constructor({ options: t, dom: e, client: s }) {
+  constructor({ options: t, dom: e }) {
     super(90),
       (this.options = Object.assign(
         { pauseFocusSelector: '.pause-on-focus' },
@@ -437,7 +554,6 @@ class FocusPlugin extends BasePlugin {
         this.onContainerBlur.bind(this)
       )),
       (this.dom = e),
-      (this.client = s),
       (this._appBlurred = !1),
       (this._keepFocus = !1),
       (this._containerBlurred = !1),
@@ -521,10 +637,9 @@ class FocusPlugin extends BasePlugin {
   }
 }
 class HelpPlugin extends ButtonPlugin {
-  constructor({ options: { helpButton: t }, client: e }) {
+  constructor({ options: { helpButton: t } }) {
     super(50),
       (this.helpButton = document.querySelector(t)),
-      (this.client = e),
       (this.paused = !1),
       (this._helpEnabled = !1),
       this.helpButton instanceof HTMLElement &&
@@ -584,19 +699,18 @@ class HelpPlugin extends ButtonPlugin {
   }
 }
 class PausePlugin extends ButtonPlugin {
-  constructor({ options: { pauseButton: t }, client: e }) {
+  constructor({ options: { pauseButton: t } }) {
     if (
       (super(80),
       (this.pauseButton = document.querySelectorAll(t)),
       1 > this.pauseButton.length)
     )
       return;
-    const s = this.onPauseToggle.bind(this);
-    this.pauseButton.forEach(t => t.addEventListener('click', s)),
+    const e = this.onPauseToggle.bind(this);
+    this.pauseButton.forEach(t => t.addEventListener('click', e)),
       (this._isManualPause = !1),
       (this._disablePause = !1),
       (this._paused = !1),
-      (this.client = e),
       this.client.on(
         'features',
         function(t) {
@@ -637,10 +751,9 @@ class PausePlugin extends ButtonPlugin {
   }
 }
 class RemotePlugin extends BasePlugin {
-  constructor({ client: t }) {
+  constructor() {
     super(30),
       (this.options = { query: '', playOptions: null, singlePlay: !1 }),
-      (this.client = t),
       (this.release = null);
   }
   openRemote(t, { query: e = '', singlePlay: s = !1 } = {}, i = null) {
@@ -666,16 +779,14 @@ class RemotePlugin extends BasePlugin {
 }
 class SoundPlugin extends ButtonPlugin {
   constructor({
-    options: { soundButton: t, musicButton: e, sfxButton: s, voButton: i },
-    client: n
+    options: { soundButton: t, musicButton: e, sfxButton: s, voButton: i }
   }) {
     super(60);
-    const o = SavedData.read('soundMuted');
-    (this._soundMuted = o || !1),
+    const n = SavedData.read('soundMuted');
+    (this._soundMuted = n || !1),
       (this._musicMuted = !1),
       (this._voMuted = !1),
       (this._sfxMuted = !1),
-      (this.client = n),
       (this.soundButton = document.querySelector(t)),
       (this.musicButton = document.querySelector(e)),
       (this.sfxButton = document.querySelector(s)),
@@ -803,8 +914,8 @@ class SavedDataHandler {
   }
 }
 class UserDataPlugin extends BasePlugin {
-  constructor({ client: t }) {
-    super(40), (this.client = t);
+  constructor() {
+    super(40);
   }
   open() {
     this.client.on('userDataRemove', this.onUserDataRemove.bind(this)),
@@ -824,131 +935,10 @@ class UserDataPlugin extends BasePlugin {
     SavedDataHandler.write(e, s, () => this.client.send(i));
   }
 }
-const PLUGINS = [];
-class Container {
-  constructor(t, e = {}) {
-    if (((this.main = document.querySelector(t)), null === this.main))
-      throw new Error('No iframe was found with the provided selector');
-    (this.client = new Bellhop()),
-      (this.dom = this.main),
-      (this.loaded = !1),
-      (this.loading = !1),
-      (this.options = e),
-      (this.release = null),
-      (this.plugins = PLUGINS.map(t => new t(this)));
-  }
-  destroyClient() {
-    this.client && (this.client.destroy(), (this.client = null));
-  }
-  onLoading() {
-    this.client.trigger('opening');
-  }
-  onProgress() {
-    this.client.trigger('progress');
-  }
-  onLoadDone() {
-    (this.loading = !1),
-      (this.loaded = !0),
-      this.main.classList.remove('loading'),
-      this.plugins.forEach(t => t.opened(this)),
-      this.client.trigger('opened');
-  }
-  onEndGame() {
-    this.reset();
-  }
-  onLocalError(t) {
-    this.client.trigger(t.type);
-  }
-  reset() {
-    const t = this.loaded || this.loading;
-    t &&
-      this.plugins
-        .slice()
-        .reverse()
-        .forEach(t => t.closed(this)),
-      t && this.client.trigger('closed'),
-      this.destroyClient(),
-      (this.loaded = !1),
-      (this.loading = !1),
-      this.main.setAttribute('src', ''),
-      this.main.classList.remove('loading');
-  }
-  initClient() {
-    (this.client = new Bellhop()),
-      this.client.connect(this.dom),
-      this.client.on('loading', this.onLoading.bind(this)),
-      this.client.on('progress', this.onProgress.bind(this)),
-      this.client.on('loaded', this.onLoadDone.bind(this)),
-      this.client.on('endGame', this.onEndGame.bind(this)),
-      this.client.on('localError', this.onLocalError.bind(this));
-  }
-  _onCloseFailed() {
-    this.reset();
-  }
-  _internalOpen(t, { singlePlay: e = !1, playOptions: s = null } = {}) {
-    const i = { singlePlay: e, playOptions: s };
-    if ((this.reset(), Features.basic()))
-      return this.client.trigger('unsupported');
-    (this.loading = !0),
-      this.initClient(),
-      this.plugins.forEach(t => t.open(this));
-    let n = t;
-    if (null !== i.playOptions) {
-      const e =
-        'playOptions=' + encodeURIComponent(JSON.stringify(i.playOptions));
-      n = -1 === t.indexOf('?') ? `${t}?${e}` : `${t}&${e}`;
-    }
-    this.main.classList.add('loading'),
-      this.main.setAttribute('src', n),
-      this.client.respond('singlePlay', i.singlePlay),
-      this.client.respond('playOptions', i.playOptions),
-      this.client.trigger('open');
-  }
-  openPath(t, e = {}, s = {}) {
-    'boolean' == typeof e && (e = { singlePlay: !1, playOptions: s }),
-      this._internalOpen(t, e);
-  }
-  destroy() {
-    this.reset(),
-      this.plugins
-        .slice()
-        .reverse()
-        .forEach(t => t.teardown(this)),
-      (this.main = null),
-      (this.options = null),
-      (this.dom = null);
-  }
-  close() {
-    this.loading || this.loaded
-      ? (this.plugins.forEach(t => t.close(this)),
-        this.client.trigger('close'),
-        this.client.send('close'))
-      : this.reset();
-  }
-  static get version() {
-    return '2.0.0';
-  }
-  static uses(t = BasePlugin) {
-    ('function' == typeof t ||
-      (() =>
-        !!t.prototype &&
-        t.prototype.constructor &&
-        /^class/.test(t.prototype.constructor))()) &&
-      (PLUGINS.push(t), PLUGINS.sort((t, e) => e.priority - t.priority));
-  }
-  static get plugins() {
-    return PLUGINS;
-  }
-  static clearPlugins() {
-    return (PLUGINS.length = 0), PLUGINS;
-  }
-}
 export {
   Container,
-  PageVisibility,
   Features,
-  SavedData,
-  SavedDataHandler,
+  PageVisibility,
   BasePlugin,
   ButtonPlugin,
   CaptionsPlugin,
@@ -958,5 +948,7 @@ export {
   PausePlugin,
   RemotePlugin,
   SoundPlugin,
-  UserDataPlugin
+  UserDataPlugin,
+  SavedData,
+  SavedDataHandler
 };

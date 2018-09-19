@@ -13,10 +13,9 @@ export class HelpPlugin extends ButtonPlugin {
    * @param {object} Container
    * @memberof HelpPlugin
    */
-  constructor({ options: { helpButton }, client }) {
+  constructor({ options: { helpButton } }) {
     super(50);
     this.helpButton = document.querySelector(helpButton);
-    this.client = client;
     this.paused = false;
     this._helpEnabled = false;
 

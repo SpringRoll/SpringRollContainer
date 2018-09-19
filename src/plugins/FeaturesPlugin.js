@@ -9,13 +9,10 @@ import { BasePlugin } from './BasePlugin';
 export class FeaturesPlugin extends BasePlugin {
   /**
    *Creates an instance of FeaturesPlugin.
-   * @param {object} Container
    * @memberof FeaturesPlugin
    */
-  constructor({ client }) {
+  constructor() {
     super(90);
-
-    this.client = client;
   }
 
   /**

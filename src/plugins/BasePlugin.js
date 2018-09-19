@@ -1,3 +1,4 @@
+import { Container } from '../Container';
 /**
  *
  *
@@ -47,4 +48,14 @@ export class BasePlugin {
    * @memberof BasePlugin
    */
   teardown() {}
+
+  /**
+   *
+   *
+   * @readonly
+   * @memberof BasePlugin
+   */
+  get client() {
+    return Container.client;
+  }
 }
