@@ -211,7 +211,8 @@ export class Container {
 
     const err = Features.basic();
     if (err) {
-      return this.client.trigger('unsupported');
+      console.error('ERROR:', err);
+      this.client.trigger('unsupported');
     }
     this.plugins.forEach(plugin => plugin.open(this));
 

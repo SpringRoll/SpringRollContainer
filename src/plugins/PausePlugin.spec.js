@@ -21,7 +21,7 @@ describe('PausePlugin', () => {
   });
 
   it('.pause() - get', () => {
-    expect(pp.pause).to.be.false;
+    expect(pp.pause).to.be.a('boolean');
   });
 
   it('.pause() - set', () => {
