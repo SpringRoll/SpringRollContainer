@@ -18,11 +18,10 @@ export class HelpPlugin extends ButtonPlugin {
     this.helpButton = document.querySelector(helpButton);
     this.paused = false;
     this._helpEnabled = false;
-
     if (!(this.helpButton instanceof HTMLElement)) {
       return;
     }
-    this.helpButton.addEventListener('click', this.helpButtonClick);
+    this.helpButton.addEventListener('click', this.helpButtonClick.bind(this));
 
     // Handle pause
     this.client.on(
@@ -123,6 +122,6 @@ export class HelpPlugin extends ButtonPlugin {
      * @event helpEnabled
      * @param {boolean} enabled If the help button is enabled
      */
-    this.client.trigger('helpEnabled', enabled);
+    this.client.trigger('helpEnabled');
   }
 }

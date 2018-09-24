@@ -97,7 +97,6 @@ export class PausePlugin extends ButtonPlugin {
       this._paused = paused;
       this.client.send('pause', paused);
       this.client.trigger(paused ? 'paused' : 'resumed');
-      this.client.trigger('pause', paused);
 
       // Set the pause button state
       this.pauseButton.forEach(element => {

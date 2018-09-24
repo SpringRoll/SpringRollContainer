@@ -3,16 +3,16 @@ import { Features } from './Features';
 
 //private/static variables
 const PLUGINS = [];
+// window.SP_CONTAINER_BELLHOP_INSTANCE = new Bellhop();
 let CLIENT = new Bellhop();
-
 /**
  * The application container
  * @class Container
  * @property {Bellhop} client Communication layer between the container and application
  * @property {Boolean} loaded Check to see if a application is loaded
  * @property {Boolean} loading Check to see if a application is loading
- * @property {Element} dom The DOM object for the iframe
- * @property {HTMLElement} main The current iframe object
+ * @property {HTMLIFrameElement} dom The DOM object for the iframe
+ * @property {HTMLIFrameElement} main The current iframe object
  * @property {Object} release The current release data
  * @property {object} options Optional parameteres
  * @property {string} options.captionsButton selector for captions button
@@ -61,8 +61,8 @@ export class Container {
     if (null === this.main) {
       throw new Error('No iframe was found with the provided selector');
     }
-    if (!CLIENT) {
-      CLIENT = new Bellhop();
+    if (!this.client) {
+      this.client = new Bellhop();
     }
     this.dom = this.main;
     this.loaded = false;
@@ -78,9 +78,9 @@ export class Container {
    * @memberof Container
    */
   destroyClient() {
-    if (CLIENT) {
-      CLIENT.destroy();
-      CLIENT = null;
+    if (this.client) {
+      this.client.destroy();
+      this.client = null;
     }
   }
 
@@ -89,7 +89,7 @@ export class Container {
    * @memberof Container
    */
   onLoading() {
-    CLIENT.trigger('opening');
+    this.client.trigger('opening');
   }
 
   /**
@@ -97,7 +97,7 @@ export class Container {
    * @memberof Container
    */
   onProgress() {
-    CLIENT.trigger('progress');
+    this.client.trigger('progress');
   }
 
   /**
@@ -115,7 +115,7 @@ export class Container {
      * Event when the application gives the load done signal
      * @event opened
      */
-    CLIENT.trigger('opened');
+    this.client.trigger('opened');
   }
 
   /**
@@ -132,7 +132,7 @@ export class Container {
    * @param  {Event} $event Bellhop event
    */
   onLocalError($event) {
-    CLIENT.trigger($event.type);
+    this.client.trigger($event.type);
   }
 
   /**
@@ -152,7 +152,7 @@ export class Container {
     }
 
     if (wasLoaded) {
-      CLIENT.trigger('closed');
+      this.client.trigger('closed');
     }
 
     // Remove bellhop instance
@@ -174,15 +174,16 @@ export class Container {
    */
   initClient() {
     //Setup communication layer between site and application
-    CLIENT = new Bellhop();
-    CLIENT.connect(this.dom);
+    this.client = new Bellhop();
+    // @ts-ignore
+    this.client.connect(this.dom);
 
     //Handle bellhop events coming from the application
-    CLIENT.on('loading', this.onLoading.bind(this));
-    CLIENT.on('progress', this.onProgress.bind(this));
-    CLIENT.on('loaded', this.onLoadDone.bind(this));
-    CLIENT.on('endGame', this.onEndGame.bind(this));
-    CLIENT.on('localError', this.onLocalError.bind(this));
+    this.client.on('loading', this.onLoading.bind(this));
+    this.client.on('progress', this.onProgress.bind(this));
+    this.client.on('loaded', this.onLoadDone.bind(this));
+    this.client.on('endGame', this.onEndGame.bind(this));
+    this.client.on('localError', this.onLocalError.bind(this));
   }
 
   /**
@@ -205,15 +206,13 @@ export class Container {
     const options = { singlePlay, playOptions };
     this.reset();
 
-    const err = Features.basic(); // TODO Features.basic()
-    if (err) {
-      return CLIENT.trigger('unsupported');
-    }
-
     this.loading = true;
-
     this.initClient();
 
+    const err = Features.basic();
+    if (err) {
+      return this.client.trigger('unsupported');
+    }
     this.plugins.forEach(plugin => plugin.open(this));
 
     let path = userPath;
@@ -231,17 +230,17 @@ export class Container {
     this.main.classList.add('loading');
     this.main.setAttribute('src', path);
 
-    CLIENT.respond('singlePlay', options.singlePlay);
-    CLIENT.respond('playOptions', options.playOptions);
-    CLIENT.trigger('open');
+    this.client.respond('singlePlay', { singlePlay });
+    this.client.respond('playOptions', { playOptions });
+    this.client.trigger('open');
   }
 
   /**
    *
    *
-   * @param {*} path
-   * @param {*} [options={}]
-   * @param {*} [playOptions={}]
+   * @param {string} path
+   * @param {object} [options={}]
+   * @param {object} [playOptions={}]
    * @memberof Container
    */
   openPath(path, options = {}, playOptions = {}) {
@@ -289,9 +288,9 @@ export class Container {
   close() {
     if (this.loading || this.loaded) {
       this.plugins.forEach(plugin => plugin.close(this));
-      CLIENT.trigger('close');
+      this.client.trigger('close');
       // Start the close
-      CLIENT.send('close');
+      this.client.send('close');
     } else {
       this.reset();
     }
@@ -354,11 +353,45 @@ export class Container {
   /**
    *
    *
-   * @readonly
+   * @param {Bellhop} bellhop
    * @memberof Container
    */
-  get client() {
+  static _setClient(bellhop) {
+    if (bellhop instanceof Bellhop || null === bellhop) {
+      // @ts-ignore
+      // window.SP_CONTAINER_BELLHOP_INSTANCE = bellhop;
+      CLIENT = bellhop;
+    }
+  }
+
+  /**
+   *
+   *
+   * @static
+   * @returns {Bellhop}
+   * @memberof Container
+   */
+  static _getClient() {
+    // @ts-ignore
     return CLIENT;
+  }
+
+  /**
+   *
+   *
+   * @memberof Container
+   */
+  set client(bellhop) {
+    Container._setClient(bellhop);
+  }
+
+  /**
+   *
+   *
+   * @memberof Container
+   */
+  static set client(bellhop) {
+    this._setClient(bellhop);
   }
 
   /**
@@ -369,6 +402,16 @@ export class Container {
    * @memberof Container
    */
   static get client() {
-    return CLIENT;
+    return this._getClient();
+  }
+
+  /**
+   *
+   *
+   * @readonly
+   * @memberof Container
+   */
+  get client() {
+    return Container._getClient();
   }
 }

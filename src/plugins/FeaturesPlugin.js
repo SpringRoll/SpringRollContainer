@@ -20,7 +20,8 @@ export class FeaturesPlugin extends BasePlugin {
    * @event features
    */
   onFeatures() {
-    this.client.trigger('features');
+    //TODO: remove as no longer needed?
+    // this.client.trigger('features');
   }
 
   /**

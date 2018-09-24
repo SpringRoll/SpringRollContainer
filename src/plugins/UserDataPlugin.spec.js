@@ -1,5 +1,4 @@
 import { UserDataPlugin } from './UserDataPlugin';
-
 describe('UserDataPlugin', () => {
   let udp;
 

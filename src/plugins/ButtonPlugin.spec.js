@@ -1,8 +1,11 @@
+import 'nodelist-foreach-polyfill';
 import { ButtonPlugin } from './ButtonPlugin';
-import { Bellhop } from 'bellhop-iframe';
 
-const clearClassList = element =>
-  element.classList.forEach(cssClass => element.classList.remove(cssClass));
+const clearClassList = element => {
+  while (element.classList.length > 0) {
+    element.classList.remove(element.classList.item(0));
+  }
+};
 
 describe('ButtonPlugin', () => {
   let bp;
@@ -16,7 +19,6 @@ describe('ButtonPlugin', () => {
     expect(bp).to.be.instanceof(ButtonPlugin);
     expect(bp.priority).to.equal(99);
     expect(bp.sendMutes).to.be.false;
-    expect(bp.client).to.be.instanceof(Bellhop);
   });
 
   it('.setup()', () => {
@@ -25,7 +27,7 @@ describe('ButtonPlugin', () => {
   });
 
   it('._disableButton()', () => {
-    expect(button.classList[0]).to.be.undefined;
+    expect(button.classList[0]).to.not.be.string;
     bp._disableButton(button);
     expect(button.classList[0]).to.equal('disabled');
   });

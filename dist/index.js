@@ -68,6 +68,8 @@ class Bellhop extends BellhopEventDispatcher {
       (this.connecting = !0),
       t instanceof HTMLIFrameElement && (this.iframe = t),
       (this.isChild = void 0 === t),
+      (this.supported = !0),
+      this.isChild && (this.supported = window != t),
       (this.origin = e),
       window.addEventListener('message', this.receive.bind(this)),
       this.isChild &&
@@ -188,7 +190,7 @@ class Container {
   constructor(t, e = {}) {
     if (((this.main = document.querySelector(t)), null === this.main))
       throw new Error('No iframe was found with the provided selector');
-    CLIENT || (CLIENT = new Bellhop()),
+    this.client || (this.client = new Bellhop()),
       (this.dom = this.main),
       (this.loaded = !1),
       (this.loading = !1),
@@ -197,26 +199,26 @@ class Container {
       (this.plugins = PLUGINS.map(t => new t(this)));
   }
   destroyClient() {
-    CLIENT && (CLIENT.destroy(), (CLIENT = null));
+    this.client && (this.client.destroy(), (this.client = null));
   }
   onLoading() {
-    CLIENT.trigger('opening');
+    this.client.trigger('opening');
   }
   onProgress() {
-    CLIENT.trigger('progress');
+    this.client.trigger('progress');
   }
   onLoadDone() {
     (this.loading = !1),
       (this.loaded = !0),
       this.main.classList.remove('loading'),
       this.plugins.forEach(t => t.opened(this)),
-      CLIENT.trigger('opened');
+      this.client.trigger('opened');
   }
   onEndGame() {
     this.reset();
   }
   onLocalError(t) {
-    CLIENT.trigger(t.type);
+    this.client.trigger(t.type);
   }
   reset() {
     const t = this.loaded || this.loading;
@@ -225,7 +227,7 @@ class Container {
         .slice()
         .reverse()
         .forEach(t => t.closed(this)),
-      t && CLIENT.trigger('closed'),
+      t && this.client.trigger('closed'),
       this.destroyClient(),
       (this.loaded = !1),
       (this.loading = !1),
@@ -233,22 +235,24 @@ class Container {
       this.main.classList.remove('loading');
   }
   initClient() {
-    (CLIENT = new Bellhop()).connect(this.dom),
-      CLIENT.on('loading', this.onLoading.bind(this)),
-      CLIENT.on('progress', this.onProgress.bind(this)),
-      CLIENT.on('loaded', this.onLoadDone.bind(this)),
-      CLIENT.on('endGame', this.onEndGame.bind(this)),
-      CLIENT.on('localError', this.onLocalError.bind(this));
+    (this.client = new Bellhop()),
+      this.client.connect(this.dom),
+      this.client.on('loading', this.onLoading.bind(this)),
+      this.client.on('progress', this.onProgress.bind(this)),
+      this.client.on('loaded', this.onLoadDone.bind(this)),
+      this.client.on('endGame', this.onEndGame.bind(this)),
+      this.client.on('localError', this.onLocalError.bind(this));
   }
   _onCloseFailed() {
     this.reset();
   }
   _internalOpen(t, { singlePlay: e = !1, playOptions: s = null } = {}) {
     const i = { singlePlay: e, playOptions: s };
-    if ((this.reset(), Features.basic())) return CLIENT.trigger('unsupported');
-    (this.loading = !0),
-      this.initClient(),
-      this.plugins.forEach(t => t.open(this));
+    if (
+      (this.reset(), (this.loading = !0), this.initClient(), Features.basic())
+    )
+      return this.client.trigger('unsupported');
+    this.plugins.forEach(t => t.open(this));
     let n = t;
     if (null !== i.playOptions) {
       const e =
@@ -257,9 +261,9 @@ class Container {
     }
     this.main.classList.add('loading'),
       this.main.setAttribute('src', n),
-      CLIENT.respond('singlePlay', i.singlePlay),
-      CLIENT.respond('playOptions', i.playOptions),
-      CLIENT.trigger('open');
+      this.client.respond('singlePlay', { singlePlay: e }),
+      this.client.respond('playOptions', { playOptions: s }),
+      this.client.trigger('open');
   }
   openPath(t, e = {}, s = {}) {
     'object' != typeof e &&
@@ -285,8 +289,8 @@ class Container {
   close() {
     this.loading || this.loaded
       ? (this.plugins.forEach(t => t.close(this)),
-        CLIENT.trigger('close'),
-        CLIENT.send('close'))
+        this.client.trigger('close'),
+        this.client.send('close'))
       : this.reset();
   }
   static get version() {
@@ -306,11 +310,23 @@ class Container {
   static clearPlugins() {
     return (PLUGINS.length = 0), PLUGINS;
   }
-  get client() {
+  static _setClient(t) {
+    (t instanceof Bellhop || null === t) && (CLIENT = t);
+  }
+  static _getClient() {
     return CLIENT;
   }
+  set client(t) {
+    Container._setClient(t);
+  }
+  static set client(t) {
+    this._setClient(t);
+  }
   static get client() {
-    return CLIENT;
+    return this._getClient();
+  }
+  get client() {
+    return Container._getClient();
   }
 }
 class PageVisibility {
@@ -374,6 +390,12 @@ class BasePlugin {
     return Container.client;
   }
 }
+window.NodeList &&
+  !NodeList.prototype.forEach &&
+  (NodeList.prototype.forEach = function(t, e) {
+    e = e || window;
+    for (var s = 0; s < this.length; s++) t.call(e, this[s], s, this);
+  });
 let WEB_STORAGE_SUPPORT = (() => {
     if ('undefined' == typeof Storage) return !1;
     try {
@@ -475,7 +497,7 @@ const CAPTIONS_STYLES = 'captionsStyles',
     align: 'top'
   };
 class CaptionsPlugin extends ButtonPlugin {
-  constructor({ options: { captionButton: t } }) {
+  constructor({ options: { captionsButton: t } }) {
     super(70),
       (this.captionsStyles = Object.assign(
         {},
@@ -490,7 +512,9 @@ class CaptionsPlugin extends ButtonPlugin {
       }),
       this.captionsButton.addEventListener(
         'click',
-        this.captionsButtonClick.bind(this)
+        function() {
+          this.captionsButtonClick();
+        }.bind(this)
       ),
       null === SavedData.read(CAPTIONS_MUTED) && (this.captionsMuted = !0);
   }
@@ -532,9 +556,7 @@ class FeaturesPlugin extends BasePlugin {
   constructor() {
     super(90);
   }
-  onFeatures() {
-    this.client.trigger('features');
-  }
+  onFeatures() {}
   open() {
     this.client.on('features', this.onFeatures.bind(this));
   }
@@ -643,7 +665,10 @@ class HelpPlugin extends ButtonPlugin {
       (this.paused = !1),
       (this._helpEnabled = !1),
       this.helpButton instanceof HTMLElement &&
-        (this.helpButton.addEventListener('click', this.helpButtonClick),
+        (this.helpButton.addEventListener(
+          'click',
+          this.helpButtonClick.bind(this)
+        ),
         this.client.on(
           'pause',
           function(t) {
@@ -695,7 +720,7 @@ class HelpPlugin extends ButtonPlugin {
       this.helpButton.classList.remove('disabled'),
       this.helpButton.classList.remove('enabled'),
       this.helpButton.classList.add(t ? 'enabled' : 'disabled'),
-      this.client.trigger('helpEnabled', t);
+      this.client.trigger('helpEnabled');
   }
 }
 class PausePlugin extends ButtonPlugin {
@@ -739,7 +764,6 @@ class PausePlugin extends ButtonPlugin {
         ((this._paused = t),
         this.client.send('pause', t),
         this.client.trigger(t ? 'paused' : 'resumed'),
-        this.client.trigger('pause', t),
         this.pauseButton.forEach(e => {
           e.classList.remove('unpaused'),
             e.classList.remove('paused'),
@@ -923,16 +947,15 @@ class UserDataPlugin extends BasePlugin {
       this.client.on('userDataWrite', this.onUserDataWrite.bind(this));
   }
   onUserDataRemove({ data: t, type: e }) {
-    SavedDataHandler.remove(t, () => this.client.send(e));
+    SavedDataHandler.remove(t, () => {
+      this.client.send(e);
+    });
   }
   onUserDataRead({ data: t, type: e }) {
     SavedDataHandler.read(t, t => this.client.send(e, t));
   }
-  onUserDataWrite({ data: t }) {
-    const e = t.name,
-      s = t.value,
-      i = t.type;
-    SavedDataHandler.write(e, s, () => this.client.send(i));
+  onUserDataWrite({ data: { name: t, value: e, type: s } }) {
+    SavedDataHandler.write(t, e, () => this.client.send(s));
   }
 }
 export {

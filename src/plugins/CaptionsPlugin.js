@@ -39,10 +39,11 @@ export class CaptionsPlugin extends ButtonPlugin {
         ? 'inline-block'
         : 'none';
     });
-
     this.captionsButton.addEventListener(
       'click',
-      this.captionsButtonClick.bind(this)
+      function() {
+        this.captionsButtonClick();
+      }.bind(this)
     );
 
     //Set the defaults if we have none for the controls

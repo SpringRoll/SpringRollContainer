@@ -9,7 +9,6 @@ export class Features {
    */
   static get webgl() {
     const canvas = document.createElement('canvas');
-    // console.log(canvas.getContext('webgl'));
 
     return !!(
       canvas &&

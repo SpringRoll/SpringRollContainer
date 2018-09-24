@@ -2,3 +2,4 @@ components
 node_modules
 docs
 .grunt
+.env

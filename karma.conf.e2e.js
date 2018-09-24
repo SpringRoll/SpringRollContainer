@@ -32,6 +32,5 @@ module.exports = function(config) {
       '/js/': '/base/e2e/',
       'html/': '/base/e2e'
     }
-    // singleRun: true
   });
 };

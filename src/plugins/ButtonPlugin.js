@@ -1,3 +1,4 @@
+import 'nodelist-foreach-polyfill'; //IE11 fix
 import { BasePlugin } from './BasePlugin';
 import { SavedData } from '../SavedData';
 
@@ -62,9 +63,9 @@ export class ButtonPlugin extends BasePlugin {
   /**
    *
    *
-   * @param {*} prop
-   * @param {*} button
-   * @param {*} muted
+   * @param {string} prop
+   * @param {HTMLElement} button
+   * @param {Boolean} muted
    * @memberof ButtonPlugin
    */
   _setMuteProp(prop, button, muted) {

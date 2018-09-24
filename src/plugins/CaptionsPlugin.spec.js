@@ -1,5 +1,4 @@
 import { CaptionsPlugin } from './CaptionsPlugin';
-import { Bellhop } from 'bellhop-iframe';
 
 const id = 'test';
 let cp;
@@ -9,14 +8,10 @@ before(() => {
   document.body.innerHTML = '';
   button.id = id;
   document.body.appendChild(button);
-  cp = new CaptionsPlugin({
-    client: new Bellhop(),
-    options: { captionButton: `#${id}` }
-  });
+  cp = new CaptionsPlugin({ options: { captionsButton: `#${id}` } });
 });
 describe('CaptionsPlugin', () => {
   it('construct', () => {
-    expect(cp.client).to.be.instanceof(Bellhop);
     expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
   });
   it('On click', () => {

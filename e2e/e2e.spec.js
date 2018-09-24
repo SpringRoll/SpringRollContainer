@@ -9,16 +9,17 @@ import {
   SoundPlugin,
   UserDataPlugin
 } from '../src';
-describe('End to End test', () => {
+
+describe('End to End Test', () => {
   let container;
+  const voButton = document.createElement('button');
+  const helpButton = document.createElement('button');
+  const captionsButton = document.createElement('button');
+  const musicButton = document.createElement('button');
+  const pauseButton = document.createElement('button');
+  const sfxButton = document.createElement('button');
+  const soundButton = document.createElement('button');
   before(() => {
-    const voButton = document.createElement('button');
-    const helpButton = document.createElement('button');
-    const captionsButton = document.createElement('button');
-    const musicButton = document.createElement('button');
-    const pauseButton = document.createElement('button');
-    const sfxButton = document.createElement('button');
-    const soundButton = document.createElement('button');
     voButton.id = 'voButton';
     helpButton.id = 'helpButton';
     captionsButton.id = 'captionsButton';
@@ -54,6 +55,56 @@ describe('End to End test', () => {
       soundButton: '#soundButton'
     });
     container.initClient();
-    container.client.trigger('userDataRead');
   });
+  it('Check all button click events', () => {
+    voButton.click();
+    helpButton.click();
+    captionsButton.click();
+    pauseButton.click();
+    soundButton.click();
+    musicButton.click();
+    sfxButton.click();
+  });
+
+  it('Should open the path to the game', () => {
+    container.openPath('/base/e2e/client.html');
+  });
+
+  // it('check all bellhop events to make sure they are working', () => {});
+  // it('features', done => {
+  //   container.client.on('features', () => {
+  //     done();
+  //   });
+  //   container.client.trigger('features');
+  // });
+  // it('focus', done => {
+  //   container.client.on('focus', () => {
+  //     done();
+  //   });
+  //   container.client.trigger('focus');
+  // });
+  // it('keepFocus', done => {
+  //   container.client.on('keepFocus', () => {
+  //     done();
+  //   });
+  //   container.client.trigger('keepFocus');
+  // });
+  // it('userDataRemoved', done => {
+  //   container.client.on('userDataRemoved', () => {
+  //     done();
+  //   });
+  //   container.client.trigger('userDataRemoved');
+  // });
+  // it('userDataRead', done => {
+  //   container.client.on('userDataRead', () => {
+  //     done();
+  //   });
+  //   container.client.trigger('userDataRead');
+  // });
+  // it('userDataWrite', done => {
+  //   container.client.on('userDataWrite', () => {
+  //     done();
+  //   });
+  //   container.client.trigger('userDataWrite');
+  // });
 });
