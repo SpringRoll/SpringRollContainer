@@ -67,6 +67,10 @@ export class FocusPlugin extends BasePlugin {
    * @memberof FocusPlugin
    */
   focus() {
+    if (!this.dom.contentWindow) {
+      this.dom.focus();
+      return;
+    }
     this.dom.contentWindow.focus();
   }
 
@@ -74,6 +78,10 @@ export class FocusPlugin extends BasePlugin {
    * @memberof FocusPlugin
    */
   blur() {
+    if (!this.dom.contentWindow) {
+      this.dom.blur();
+      return;
+    }
     this.dom.contentWindow.blur();
   }
 

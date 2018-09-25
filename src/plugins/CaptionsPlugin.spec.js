@@ -15,8 +15,10 @@ describe('CaptionsPlugin', () => {
     expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
   });
   it('On click', () => {
+    cp = new CaptionsPlugin({ options: { captionsButton: `#${id}` } });
     const test = cp.captionsMuted;
-    cp.captionsButton.click();
+    const button = document.getElementById('test');
+    button.click();
     expect(cp.captionsMuted).to.not.equal(test);
   });
   it('.setCaptionsStyles()', () => {

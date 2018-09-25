@@ -16,10 +16,14 @@ describe('FocusPlugin', () => {
     });
   });
   it('.focus(), .onDocClick()', () => {
-    focusPlugin.focus();
+    setTimeout(() => {
+      focusPlugin.focus();
+    }, 1900);
   });
   it('.blur()', () => {
-    focusPlugin.blur();
+    setTimeout(() => {
+      focusPlugin.blur();
+    }, 1900);
   });
   it('.manageFocus()', () => {
     focusPlugin.manageFocus();

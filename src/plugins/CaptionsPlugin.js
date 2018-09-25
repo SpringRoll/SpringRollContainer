@@ -41,9 +41,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     });
     this.captionsButton.addEventListener(
       'click',
-      function() {
-        this.captionsButtonClick();
-      }.bind(this)
+      this.captionsButtonClick.bind(this)
     );
 
     //Set the defaults if we have none for the controls
@@ -58,6 +56,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @memberof CaptionsPlugin
    */
   captionsButtonClick() {
+    console.log('was called from class');
     this.captionsMuted = !this.captionsMuted;
   }
 
@@ -129,7 +128,10 @@ export class CaptionsPlugin extends ButtonPlugin {
       return;
     }
 
-    this.captionsButton.removeEventListener('click', this.captionsButtonClick);
+    this.captionsButton.removeEventListener(
+      'click',
+      this.captionsButtonClick.bind(this)
+    );
   }
 
   /**
