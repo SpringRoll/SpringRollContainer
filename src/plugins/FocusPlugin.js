@@ -24,11 +24,6 @@ export class FocusPlugin extends BasePlugin {
       options
     );
 
-    this.pageVisibility = new PageVisibility(
-      this.onContainerFocus.bind(this),
-      this.onContainerBlur.bind(this)
-    );
-
     this.dom = dom;
     this._appBlurred = false;
     this._keepFocus = false;
@@ -36,6 +31,13 @@ export class FocusPlugin extends BasePlugin {
     this._focusTimer = null;
     this._isManualPause = false;
     this.paused = false;
+    this.manageFocus = this.manageFocus.bind(this);
+    this.onKeepFocus = this.onKeepFocus.bind(this);
+
+    this.pageVisibility = new PageVisibility(
+      this.onContainerFocus.bind(this),
+      this.onContainerBlur.bind(this)
+    );
 
     document.addEventListener('focus', this.onDocClick.bind(this));
     document.addEventListener('click', this.onDocClick.bind(this));
@@ -68,7 +70,6 @@ export class FocusPlugin extends BasePlugin {
    */
   focus() {
     if (!this.dom.contentWindow) {
-      this.dom.focus();
       return;
     }
     this.dom.contentWindow.focus();
@@ -79,7 +80,6 @@ export class FocusPlugin extends BasePlugin {
    */
   blur() {
     if (!this.dom.contentWindow) {
-      this.dom.blur();
       return;
     }
     this.dom.contentWindow.blur();

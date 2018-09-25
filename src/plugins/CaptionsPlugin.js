@@ -56,7 +56,6 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @memberof CaptionsPlugin
    */
   captionsButtonClick() {
-    console.log('was called from class');
     this.captionsMuted = !this.captionsMuted;
   }
 

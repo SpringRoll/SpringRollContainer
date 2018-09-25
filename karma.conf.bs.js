@@ -2,12 +2,20 @@ require('dotenv').config();
 module.exports = function(config) {
   config.set({
     customLaunchers: {
-      bs_chrome_mac: {
+      bs_chrome_69: {
         base: 'BrowserStack',
-        browser: 'chrome',
         browser_version: '69.0',
-        os: 'OS X',
-        os_version: 'Yosemite'
+        os: 'Windows',
+        os_version: '7',
+        browser: 'chrome'
+      },
+      bs_iPad_mini_2_safari: {
+        base: 'BrowserStack',
+        device: 'iPad Mini 2',
+        real_mobile: false,
+        os_version: '8.3',
+        os: 'ios',
+        browser: 'ipad'
       },
       bs_ie_windows_7: {
         base: 'BrowserStack',
@@ -53,7 +61,7 @@ module.exports = function(config) {
     port: 9876, // karma web server port
     colors: true,
     logLevel: config.LOG_INFO,
-    browsers: ['bs_ie_windows_7'],
+    browsers: ['bs_iPad_mini_2_safari', 'bs_ie_windows_7', 'bs_chrome_69'],
     autoWatch: true,
     concurrency: Infinity,
     singleRun: true

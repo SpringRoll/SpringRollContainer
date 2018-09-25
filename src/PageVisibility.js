@@ -17,8 +17,18 @@ export class PageVisibility {
    * @memberof PageVisibility
    */
   constructor(onFocus = function() {}, onBlur = function() {}) {
-    this.onFocus = onFocus;
-    this.onBlur = onBlur;
+    this._onFocus = onFocus;
+    this._onBlur = onBlur;
+    this.onFocus = function() {
+      if (this.enabled) {
+        this._onFocus();
+      }
+    }.bind(this);
+    this.onBlur = function() {
+      if (this.enabled) {
+        this._onBlur();
+      }
+    }.bind(this);
     this._enabled = false;
     this.enabled = true;
   }
@@ -40,7 +50,9 @@ export class PageVisibility {
    * @memberof PageVisibility
    */
   onToggle($event) {
-    document.hidden ? this.onBlur($event) : this.onFocus($event);
+    if (this.enabled) {
+      document.hidden ? this.onBlur($event) : this.onFocus($event);
+    }
   }
 
   /**
@@ -62,14 +74,11 @@ export class PageVisibility {
       this.onToggle.bind(this),
       false
     );
-    // @ts-ignore
-    window.removeEventListener('blur', this.onBlur.bind(this));
-    // @ts-ignore
-    window.removeEventListener('focus', this.onFocus.bind(this));
-    // @ts-ignore
-    window.removeEventListener('pagehide', this.onBlur.bind(this));
-    // @ts-ignore
-    window.removeEventListener('pageshow', this.onFocus.bind(this));
+
+    window.removeEventListener('blur', this.onBlur);
+    window.removeEventListener('focus', this.onFocus);
+    window.removeEventListener('pagehide', this.onBlur);
+    window.removeEventListener('pageshow', this.onFocus);
     window.removeEventListener('visibilitychange', this.onToggle.bind(this));
 
     if (this._enabled) {
@@ -78,14 +87,10 @@ export class PageVisibility {
         this.onToggle.bind(this),
         false
       );
-      // @ts-ignore
-      window.addEventListener('blur', this.onBlur.bind(this));
-      // @ts-ignore
-      window.addEventListener('focus', this.onFocus.bind(this));
-      // @ts-ignore
-      window.addEventListener('pagehide', this.onBlur.bind(this));
-      // @ts-ignore
-      window.addEventListener('pageshow', this.onFocus.bind(this));
+      window.addEventListener('blur', this.onBlur);
+      window.addEventListener('focus', this.onFocus);
+      window.addEventListener('pagehide', this.onBlur);
+      window.addEventListener('pageshow', this.onFocus);
       window.addEventListener(
         'visibilitychange',
         this.onToggle.bind(this),

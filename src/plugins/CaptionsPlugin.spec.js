@@ -1,24 +1,20 @@
 import { CaptionsPlugin } from './CaptionsPlugin';
 
-const id = 'test';
-let cp;
-
-before(() => {
-  const button = document.createElement('button');
-  document.body.innerHTML = '';
-  button.id = id;
-  document.body.appendChild(button);
-  cp = new CaptionsPlugin({ options: { captionsButton: `#${id}` } });
-});
 describe('CaptionsPlugin', () => {
+  const id = 'test';
+  let cp;
+
+  beforeEach(() => {
+    const button = document.createElement('button');
+    button.id = id;
+    document.body.appendChild(button);
+    cp = new CaptionsPlugin({ options: { captionsButton: `#${id}` } });
+  });
   it('construct', () => {
     expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
   });
   it('On click', () => {
-    cp = new CaptionsPlugin({ options: { captionsButton: `#${id}` } });
-    const test = cp.captionsMuted;
-    const button = document.getElementById('test');
-    button.click();
+    cp.captionsButton.click();
     expect(cp.captionsMuted).to.not.equal(test);
   });
   it('.setCaptionsStyles()', () => {
@@ -26,7 +22,6 @@ describe('CaptionsPlugin', () => {
     expect(cp.captionsStyles.font).to.equal('comic-sans');
   });
   it('.clearCaptionStyles()', () => {
-    expect(cp.captionsStyles.font).to.equal('comic-sans');
     cp.clearCaptionsStyles();
     expect(cp.captionsStyles.font).to.equal('arial');
   });
