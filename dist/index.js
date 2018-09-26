@@ -1,3 +1,9 @@
+window.NodeList &&
+  !NodeList.prototype.forEach &&
+  (NodeList.prototype.forEach = function(t, e) {
+    e = e || window;
+    for (var s = 0; s < this.length; s++) t.call(e, this[s], s, this);
+  });
 class BellhopEventDispatcher {
   constructor() {
     this._listeners = {};
@@ -275,6 +281,17 @@ class Container {
         Object.assign({ singlePlay: !1, playOptions: s }, e)
       );
   }
+  openRemote(t, { query: e = '', singlePlay: s = !1 } = {}, i = null) {
+    (this.release = null),
+      fetch(t).then(t => {
+        200 === t.status &&
+          t.json().then(t => {
+            if (Features.test(t)) return this.client.trigger('unsupported');
+            (this.release = t),
+              this._internalOpen(t.url + e, { singlePlay: s, playOptions: i });
+          });
+      });
+  }
   destroy() {
     this.reset(),
       this.plugins
@@ -283,7 +300,8 @@ class Container {
         .forEach(t => t.teardown(this)),
       (this.main = null),
       (this.options = null),
-      (this.dom = null);
+      (this.dom = null),
+      (this.release = null);
   }
   close() {
     this.loading || this.loaded
@@ -395,12 +413,6 @@ class BasePlugin {
     return Container.client;
   }
 }
-window.NodeList &&
-  !NodeList.prototype.forEach &&
-  (NodeList.prototype.forEach = function(t, e) {
-    e = e || window;
-    for (var s = 0; s < this.length; s++) t.call(e, this[s], s, this);
-  });
 let WEB_STORAGE_SUPPORT = (() => {
     if ('undefined' == typeof Storage) return !1;
     try {
@@ -779,33 +791,6 @@ class PausePlugin extends ButtonPlugin {
     return this._paused;
   }
 }
-class RemotePlugin extends BasePlugin {
-  constructor() {
-    super(30),
-      (this.options = { query: '', playOptions: null, singlePlay: !1 }),
-      (this.release = null);
-  }
-  openRemote(t, { query: e = '', singlePlay: s = !1 } = {}, i = null) {
-    (this.options = Object.assign(this.options, {
-      query: e,
-      singlePlay: s,
-      playOptions: i
-    })),
-      (this.release = null),
-      fetch(t).then(t => {
-        200 === t.status &&
-          t.json().then(t => {
-            const s = Features.test(t);
-            if (s) return this.client.trigger('unsupported', s);
-            (this.release = t),
-              this.client._internalOpen(t.url + e, this.options);
-          });
-      });
-  }
-  teardown() {
-    this.release = null;
-  }
-}
 class SoundPlugin extends ButtonPlugin {
   constructor({
     options: { soundButton: t, musicButton: e, sfxButton: s, voButton: i }
@@ -974,7 +959,6 @@ export {
   FocusPlugin,
   HelpPlugin,
   PausePlugin,
-  RemotePlugin,
   SoundPlugin,
   UserDataPlugin,
   SavedData,

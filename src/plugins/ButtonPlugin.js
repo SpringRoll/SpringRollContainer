@@ -1,4 +1,3 @@
-import 'nodelist-foreach-polyfill'; //IE11 fix
 import { BasePlugin } from './BasePlugin';
 import { SavedData } from '../SavedData';
 

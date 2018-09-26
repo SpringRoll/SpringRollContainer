@@ -30,14 +30,7 @@ module.exports = function(config) {
       accessKey: process.env.BROWSER_STACK_ACCESS_KEY,
       video: false
     },
-    frameworks: ['mocha', 'chai', 'polyfill'],
-    polyfill: [
-      'Promise',
-      'fetch',
-      'Array.prototype.forEach',
-      'Object.assign',
-      'AudioContext'
-    ],
+    frameworks: ['mocha', 'chai'],
     files: [{ pattern: 'src/**/*.spec.js', watched: false }],
     preprocessors: {
       'src/**/*.js': ['babel'],

@@ -5,6 +5,5 @@ export * from './FeaturesPlugin';
 export * from './FocusPlugin';
 export * from './HelpPlugin';
 export * from './PausePlugin';
-export * from './RemotePlugin';
 export * from './SoundPlugin';
 export * from './UserDataPlugin';

@@ -1,5 +1,4 @@
-import { Container } from './Container';
-import { BasePlugin } from './plugins';
+import { Container, BasePlugin } from './index';
 
 let iframe, container;
 before(() => {
@@ -47,6 +46,10 @@ describe('Container', () => {
   it('.destroyClient()', () => {
     container.destroyClient();
     expect(container.client).to.be.null;
+  });
+
+  it('.openRemote()', () => {
+    container.openRemote('http://127.0.0.1');
   });
 
   it('.destroy()', () => {

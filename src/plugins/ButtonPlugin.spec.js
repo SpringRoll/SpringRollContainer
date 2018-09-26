@@ -1,5 +1,4 @@
-import 'nodelist-foreach-polyfill';
-import { ButtonPlugin } from './ButtonPlugin';
+import { ButtonPlugin } from '../index';
 
 const clearClassList = element => {
   while (element.classList.length > 0) {

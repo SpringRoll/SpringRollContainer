@@ -41,7 +41,6 @@ describe('End to End Test', () => {
     Container.uses(FeaturesPlugin);
     Container.uses(FocusPlugin);
     Container.uses(PausePlugin);
-    Container.uses(RemotePlugin);
     Container.uses(SoundPlugin);
     Container.uses(UserDataPlugin);
     Container.uses(HelpPlugin);

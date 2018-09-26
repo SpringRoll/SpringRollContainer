@@ -1,4 +1,11 @@
-import { PageVisibility } from './PageVisibility';
+import { PageVisibility } from './index';
+
+//IE 11 work around for testing
+const initEvent = eventName => {
+  const event = document.createEvent('Event');
+  event.initEvent(eventName, false, true);
+  return event;
+};
 
 describe('PageVisibility', () => {
   let pv;
@@ -27,32 +34,32 @@ describe('PageVisibility', () => {
 
   it('on document.visibilitychange', () => {
     expect(wasCalled).to.be.false;
-    document.dispatchEvent(new Event('visibilitychange'));
+    document.dispatchEvent(initEvent('visibilitychange'));
     expect(wasCalled).to.be.true;
   });
   it('on window.blur', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(new Event('blur'));
+    window.dispatchEvent(initEvent('blur'));
     expect(wasCalled).to.be.true;
   });
   it('on window.focus', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(new Event('focus'));
+    window.dispatchEvent(initEvent('focus'));
     expect(wasCalled).to.be.true;
   });
   it('on window.pageHide', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(new Event('pagehide'));
+    window.dispatchEvent(initEvent('pagehide'));
     expect(wasCalled).to.be.true;
   });
   it('on window.pageshow', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(new Event('pageshow'));
+    window.dispatchEvent(initEvent('pageshow'));
     expect(wasCalled).to.be.true;
   });
   it('on window.visibilitychange', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(new Event('visibilitychange'));
+    window.dispatchEvent(initEvent('visibilitychange'));
     expect(wasCalled).to.be.true;
   });
 

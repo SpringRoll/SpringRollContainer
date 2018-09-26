@@ -266,6 +266,34 @@ export class Container {
   }
 
   /**
+   * Open application based on an API Call to SpringRoll Connect
+   * @param {string} api
+   * @param {object} options
+   * @param {string} [options.query='']
+   * @param {boolean} [options.singlePlay=false]
+   * @param {null | object} [playOptions=null]
+   * @memberof RemotePlugin
+   */
+  openRemote(api, { query = '', singlePlay = false } = {}, playOptions = null) {
+    this.release = null;
+
+    fetch(api).then(response => {
+      if (200 !== response.status) {
+        return;
+      }
+      response.json().then(release => {
+        const error = Features.test(release);
+        if (error) {
+          return this.client.trigger('unsupported');
+        }
+
+        this.release = release;
+        this._internalOpen(release.url + query, { singlePlay, playOptions });
+      });
+    });
+  }
+
+  /**
    * Destroy and don't use after this
    * @memberof Container
    */
@@ -280,6 +308,7 @@ export class Container {
     this.main = null;
     this.options = null;
     this.dom = null;
+    this.release = null;
   }
 
   /**
