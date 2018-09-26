@@ -70,41 +70,41 @@ describe('End to End Test', () => {
     container.openPath('/base/e2e/client.html');
   });
 
-  // it('check all bellhop events to make sure they are working', () => {});
-  // it('features', done => {
-  //   container.client.on('features', () => {
-  //     done();
-  //   });
-  //   container.client.trigger('features');
-  // });
-  // it('focus', done => {
-  //   container.client.on('focus', () => {
-  //     done();
-  //   });
-  //   container.client.trigger('focus');
-  // });
-  // it('keepFocus', done => {
-  //   container.client.on('keepFocus', () => {
-  //     done();
-  //   });
-  //   container.client.trigger('keepFocus');
-  // });
-  // it('userDataRemoved', done => {
-  //   container.client.on('userDataRemoved', () => {
-  //     done();
-  //   });
-  //   container.client.trigger('userDataRemoved');
-  // });
-  // it('userDataRead', done => {
-  //   container.client.on('userDataRead', () => {
-  //     done();
-  //   });
-  //   container.client.trigger('userDataRead');
-  // });
-  // it('userDataWrite', done => {
-  //   container.client.on('userDataWrite', () => {
-  //     done();
-  //   });
-  //   container.client.trigger('userDataWrite');
-  // });
+  it('check all bellhop events to make sure they are working', () => {});
+  it('features', done => {
+    container.client.on('features', () => {
+      done();
+    });
+    container.client.trigger('features');
+  });
+  it('focus', done => {
+    container.client.on('focus', () => {
+      done();
+    });
+    container.client.trigger('focus');
+  });
+  it('keepFocus', done => {
+    container.client.on('keepFocus', () => {
+      done();
+    });
+    container.client.trigger('keepFocus');
+  });
+  it('userDataRemoved', done => {
+    container.client.on('userDataRemoved', () => {
+      done();
+    });
+    container.client.trigger('userDataRemoved');
+  });
+  it('userDataRead', done => {
+    container.client.on('userDataRead', () => {
+      done();
+    });
+    container.client.trigger('userDataRead');
+  });
+  it('userDataWrite', done => {
+    container.client.on('userDataWrite', () => {
+      done();
+    });
+    container.client.trigger('userDataWrite');
+  });
 });

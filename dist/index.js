@@ -248,19 +248,18 @@ class Container {
   }
   _internalOpen(t, { singlePlay: e = !1, playOptions: s = null } = {}) {
     const i = { singlePlay: e, playOptions: s };
-    if (
-      (this.reset(), (this.loading = !0), this.initClient(), Features.basic())
-    )
-      return this.client.trigger('unsupported');
-    this.plugins.forEach(t => t.open(this));
-    let n = t;
+    this.reset(), (this.loading = !0), this.initClient();
+    const n = Features.basic();
+    n && (console.error('ERROR:', n), this.client.trigger('unsupported')),
+      this.plugins.forEach(t => t.open(this));
+    let o = t;
     if (null !== i.playOptions) {
       const e =
         'playOptions=' + encodeURIComponent(JSON.stringify(i.playOptions));
-      n = -1 === t.indexOf('?') ? `${t}?${e}` : `${t}&${e}`;
+      o = -1 === t.indexOf('?') ? `${t}?${e}` : `${t}&${e}`;
     }
     this.main.classList.add('loading'),
-      this.main.setAttribute('src', n),
+      this.main.setAttribute('src', o),
       this.client.respond('singlePlay', { singlePlay: e }),
       this.client.respond('playOptions', { playOptions: s }),
       this.client.trigger('open');
@@ -331,8 +330,14 @@ class Container {
 }
 class PageVisibility {
   constructor(t = function() {}, e = function() {}) {
-    (this.onFocus = t),
-      (this.onBlur = e),
+    (this._onFocus = t),
+      (this._onBlur = e),
+      (this.onFocus = function() {
+        this.enabled && this._onFocus();
+      }.bind(this)),
+      (this.onBlur = function() {
+        this.enabled && this._onBlur();
+      }.bind(this)),
       (this._enabled = !1),
       (this.enabled = !0);
   }
@@ -343,7 +348,7 @@ class PageVisibility {
       (this.onBlur = null);
   }
   onToggle(t) {
-    document.hidden ? this.onBlur(t) : this.onFocus(t);
+    this.enabled && (document.hidden ? this.onBlur(t) : this.onFocus(t));
   }
   get enabled() {
     return this._enabled;
@@ -355,10 +360,10 @@ class PageVisibility {
         this.onToggle.bind(this),
         !1
       ),
-      window.removeEventListener('blur', this.onBlur.bind(this)),
-      window.removeEventListener('focus', this.onFocus.bind(this)),
-      window.removeEventListener('pagehide', this.onBlur.bind(this)),
-      window.removeEventListener('pageshow', this.onFocus.bind(this)),
+      window.removeEventListener('blur', this.onBlur),
+      window.removeEventListener('focus', this.onFocus),
+      window.removeEventListener('pagehide', this.onBlur),
+      window.removeEventListener('pageshow', this.onFocus),
       window.removeEventListener('visibilitychange', this.onToggle.bind(this)),
       this._enabled &&
         (document.addEventListener(
@@ -366,10 +371,10 @@ class PageVisibility {
           this.onToggle.bind(this),
           !1
         ),
-        window.addEventListener('blur', this.onBlur.bind(this)),
-        window.addEventListener('focus', this.onFocus.bind(this)),
-        window.addEventListener('pagehide', this.onBlur.bind(this)),
-        window.addEventListener('pageshow', this.onFocus.bind(this)),
+        window.addEventListener('blur', this.onBlur),
+        window.addEventListener('focus', this.onFocus),
+        window.addEventListener('pagehide', this.onBlur),
+        window.addEventListener('pageshow', this.onFocus),
         window.addEventListener(
           'visibilitychange',
           this.onToggle.bind(this),
@@ -512,9 +517,7 @@ class CaptionsPlugin extends ButtonPlugin {
       }),
       this.captionsButton.addEventListener(
         'click',
-        function() {
-          this.captionsButtonClick();
-        }.bind(this)
+        this.captionsButtonClick.bind(this)
       ),
       null === SavedData.read(CAPTIONS_MUTED) && (this.captionsMuted = !0);
   }
@@ -545,7 +548,7 @@ class CaptionsPlugin extends ButtonPlugin {
     null !== this.captionsButton &&
       this.captionsButton.removeEventListener(
         'click',
-        this.captionsButtonClick
+        this.captionsButtonClick.bind(this)
       );
   }
   close() {
@@ -571,10 +574,6 @@ class FocusPlugin extends BasePlugin {
         { pauseFocusSelector: '.pause-on-focus' },
         t
       )),
-      (this.pageVisibility = new PageVisibility(
-        this.onContainerFocus.bind(this),
-        this.onContainerBlur.bind(this)
-      )),
       (this.dom = e),
       (this._appBlurred = !1),
       (this._keepFocus = !1),
@@ -582,6 +581,12 @@ class FocusPlugin extends BasePlugin {
       (this._focusTimer = null),
       (this._isManualPause = !1),
       (this.paused = !1),
+      (this.manageFocus = this.manageFocus.bind(this)),
+      (this.onKeepFocus = this.onKeepFocus.bind(this)),
+      (this.pageVisibility = new PageVisibility(
+        this.onContainerFocus.bind(this),
+        this.onContainerBlur.bind(this)
+      )),
       document.addEventListener('focus', this.onDocClick.bind(this)),
       document.addEventListener('click', this.onDocClick.bind(this)),
       (this.pauseFocus = document.querySelector(
@@ -601,10 +606,10 @@ class FocusPlugin extends BasePlugin {
       );
   }
   focus() {
-    this.dom.contentWindow.focus();
+    this.dom.contentWindow && this.dom.contentWindow.focus();
   }
   blur() {
-    this.dom.contentWindow.blur();
+    this.dom.contentWindow && this.dom.contentWindow.blur();
   }
   manageFocus() {
     this._keepFocus && this.blur(),

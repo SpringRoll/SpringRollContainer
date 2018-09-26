@@ -30,7 +30,7 @@ module.exports = function(config) {
     browsers: ['ChromeHeadless', 'FirefoxHeadless'],
     proxies: {
       '/js/': '/base/e2e/',
-      'html/': '/base/e2e'
+      'html/': '/base/e2e/'
     }
   });
 };
