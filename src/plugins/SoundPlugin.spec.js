@@ -88,17 +88,11 @@ describe('SoundPlugin', () => {
     sp.soundSlider.value = 1;
     sp.soundSlider.dispatchEvent(initEvent('change'));
 
-    expect(sp.sfxVolume).to.equal(1);
-    expect(sp.voVolume).to.equal(1);
-    expect(sp.musicVolume).to.equal(1);
     expect(sp.soundVolume).to.equal(1);
 
     sp.soundSlider.value = 0;
     sp.soundSlider.dispatchEvent(initEvent('change'));
 
-    expect(sp.sfxVolume).to.equal(0);
-    expect(sp.voVolume).to.equal(0);
-    expect(sp.musicVolume).to.equal(0);
     expect(sp.soundVolume).to.equal(0);
   });
 
