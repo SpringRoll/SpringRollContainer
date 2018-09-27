@@ -1,4 +1,5 @@
 import { Container } from '../Container';
+import { SavedData } from '../SavedData';
 /**
  *
  *
@@ -48,6 +49,19 @@ export class BasePlugin {
    * @memberof BasePlugin
    */
   teardown() {}
+
+  /**
+   *
+   *
+   * @param {string} prop
+   * @param {*} value
+   * @memberof ButtonPlugin
+   */
+  sendProperty(prop, value) {
+    SavedData.write(prop, value);
+
+    this.client.send(prop, value);
+  }
 
   /**
    *

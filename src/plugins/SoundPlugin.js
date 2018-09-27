@@ -126,6 +126,7 @@ export class SoundPlugin extends ButtonPlugin {
     this.soundVolume = this.volumeRange(Number(this.soundSlider.value));
     this.soundMuted = !this.soundVolume;
     this._checkSoundMute();
+    this.sendProperty('soundVolume', this.soundVolume);
   }
 
   /**
@@ -137,6 +138,7 @@ export class SoundPlugin extends ButtonPlugin {
     this.musicVolume = this.volumeRange(Number(this.musicSlider.value));
     this.musicMuted = !this.musicVolume;
     this._checkSoundMute();
+    this.sendProperty('musicVolume', this.musicVolume);
   }
 
   /**
@@ -148,6 +150,7 @@ export class SoundPlugin extends ButtonPlugin {
     this.voVolume = this.volumeRange(Number(this.voSlider.value));
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
+    this.sendProperty('voVolume', this.voVolume);
   }
 
   /**
@@ -159,6 +162,7 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxVolume = this.volumeRange(Number(this.sfxSlider.value));
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
+    this.sendProperty('sfxVolume', this.sfxVolume);
   }
 
   /**

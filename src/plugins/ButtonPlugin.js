@@ -1,5 +1,4 @@
 import { BasePlugin } from './BasePlugin';
-import { SavedData } from '../SavedData';
 
 /**
  *
@@ -74,9 +73,7 @@ export class ButtonPlugin extends BasePlugin {
       this.removeListeners(button);
     }
 
-    SavedData.write(prop, muted);
-
-    this.client.send(prop, muted);
+    this.sendProperty(prop, muted);
   }
 
   /**
