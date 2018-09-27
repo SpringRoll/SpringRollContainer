@@ -123,10 +123,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSoundVolumeChange() {
-    this.sfxVolume = this.voVolume = this.musicVolume = this.soundVolume = Number(
-      this.soundSlider.value
-    );
-
+    this.soundVolume = this.volumeRange(Number(this.soundSlider.value));
     this.soundMuted = !this.soundVolume;
     this._checkSoundMute();
   }
@@ -137,7 +134,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onMusicVolumeChange() {
-    this.musicVolume = Number(this.musicSlider.value);
+    this.musicVolume = this.volumeRange(Number(this.musicSlider.value));
     this.musicMuted = !this.musicVolume;
     this._checkSoundMute();
   }
@@ -148,7 +145,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onVoVolumeChange() {
-    this.voVolume = Number(this.voSlider.value);
+    this.voVolume = this.volumeRange(Number(this.voSlider.value));
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
   }
@@ -159,7 +156,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSfxVolumeChange() {
-    this.sfxVolume = Number(this.sfxSlider.value);
+    this.sfxVolume = this.volumeRange(Number(this.sfxSlider.value));
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
   }
@@ -303,6 +300,25 @@ export class SoundPlugin extends ButtonPlugin {
     slider.max = '1';
     slider.step = '0.1';
     return slider;
+  }
+
+  /**
+   * Controls the volume range
+   * @param {number} i
+   * @param {number} [min=0]
+   * @param {number} [max=1]
+   * @returns
+   * @memberof SoundPlugin
+   */
+  volumeRange(i, min = 0, max = 1) {
+    switch (true) {
+    case i < min:
+      return min;
+    case i > max:
+      return max;
+    default:
+      return i;
+    }
   }
 
   /**
