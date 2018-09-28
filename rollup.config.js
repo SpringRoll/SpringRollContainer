@@ -2,59 +2,54 @@ import { eslint } from 'rollup-plugin-eslint';
 import { terser } from 'rollup-plugin-terser';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
-import prettier from 'rollup-plugin-prettier';
 import resolve from 'rollup-plugin-node-resolve';
-
-const prettierConfig = require('./.prettierrc');
-export default args => {
-  const config = [
+import json from 'rollup-plugin-json';
+const base = {
+  plugins: [
+    json(),
+    eslint(),
+    resolve({
+      module: true,
+      jsnext: true,
+      main: true,
+      browser: true,
+      preferBuiltins: false
+    }),
+    commonjs({
+      namedExports: {
+        'bellhop-iframe': ['Bellhop']
+      }
+    }),
+    babel(),
+    terser()
+  ]
+};
+const e2e = Object.assign({}, base, {
+  input: 'e2e/client-source.js',
+  output: [
     {
-      input: 'src/index.js',
-      output: [
-        {
-          file: 'dist/index.js',
-          format: 'es'
-        }
-      ],
-      plugins: [
-        eslint(),
-        prettier(prettierConfig),
-        resolve({
-          module: true,
-          jsnext: true,
-          main: true,
-          browser: true,
-          preferBuiltins: false
-        }),
-        commonjs({
-          namedExports: {
-            'bellhop-iframe': ['Bellhop']
-          }
-        }),
-        babel(),
-        terser()
-      ]
+      file: 'e2e/client.js',
+      format: 'es'
     }
-  ];
+  ]
+});
+
+const es = Object.assign({}, base, {
+  input: 'src/index.js',
+  output: [
+    {
+      file: 'dist/index.js',
+      format: 'es'
+    }
+  ]
+});
+
+export default args => {
+  const config = [];
+  config.push(es);
   if (args.e2e) {
-    config.push({
-      input: 'e2e/client-source.js',
-      output: [
-        {
-          file: 'e2e/client.js',
-          format: 'es'
-        }
-      ],
-      plugins: [
-        resolve({
-          module: true,
-          jsnext: true,
-          main: true,
-          browser: true,
-          preferBuiltins: false
-        })
-      ]
-    });
+    config.push(e2e);
   }
+
   return config;
 };

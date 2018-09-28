@@ -38,8 +38,8 @@
     "rollup-plugin-babel": "^4.0.3",
     "rollup-plugin-commonjs": "^9.1.8",
     "rollup-plugin-eslint": "^5.0.0",
+    "rollup-plugin-json": "^3.1.0",
     "rollup-plugin-node-resolve": "^3.4.0",
-    "rollup-plugin-prettier": "^0.4.0",
     "rollup-plugin-terser": "^3.0.0"
   },
   "dependencies": {
@@ -57,9 +57,10 @@
   "scripts": {
     "build": "rollup -c",
     "build:map": "rollup -c -m",
+    "build:e2e": "rollup -c --e2e",
     "dev": "rollup -c -w",
     "test": "karma start karma.conf.js",
-    "test:e2e": "rollup -c --e2e && karma start karma.conf.e2e.js",
+    "test:e2e": "npm run build:e2e && karma start karma.conf.e2e.js",
     "test:bs": "karma start karma.conf.bs.js"
   },
   "readmeFilename": "README.md",

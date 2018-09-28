@@ -293,7 +293,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   sliderSetup(slider, elementName) {
-    if ('range' !== slider.type) {
+    if (!slider || 'range' !== slider.type) {
       console.warn(
         `SpringRoll Container: Sound plugin was passed a invalid input of ${elementName}. Input must be of type range`
       );

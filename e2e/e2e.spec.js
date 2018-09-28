@@ -5,7 +5,6 @@ import {
   FocusPlugin,
   HelpPlugin,
   PausePlugin,
-  RemotePlugin,
   SoundPlugin,
   UserDataPlugin
 } from '../src';
