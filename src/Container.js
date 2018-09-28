@@ -1,9 +1,10 @@
 import { Bellhop } from 'bellhop-iframe';
 import { Features } from './Features';
+// @ts-ignore
+import { version } from '../package.json';
 
 //private/static variables
-const PLUGINS = [];
-// window.SP_CONTAINER_BELLHOP_INSTANCE = new Bellhop();
+let PLUGINS = [];
 let CLIENT = new Bellhop();
 /**
  * The application container
@@ -333,7 +334,7 @@ export class Container {
    * @memberof Container
    */
   static get version() {
-    return 'CONTAINER_VERSION';
+    return version;
   }
 
   /**
@@ -376,7 +377,7 @@ export class Container {
    * @memberof Container
    */
   static clearPlugins() {
-    PLUGINS.length = 0;
+    PLUGINS = [];
     return PLUGINS;
   }
 

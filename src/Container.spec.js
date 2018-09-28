@@ -60,7 +60,7 @@ describe('Container', () => {
   });
 
   it('Container.version() - get', () => {
-    expect(Container.version).to.equal('CONTAINER_VERSION');
+    expect(Container.version).to.be.a('string');
   });
 
   it('Container.uses()', () => {

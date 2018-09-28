@@ -1,10 +1,8 @@
 //Polyfills for IE11
-import 'promise-polyfill/src/polyfill';
-import 'nodelist-foreach-polyfill';
 import 'whatwg-fetch';
-import 'array-foreach';
-import 'es6-object-assign/auto';
-import 'custom-event-polyfill';
+import 'core-js/web/dom-collections';
+import 'core-js/modules/es6.object.assign';
+import 'core-js/modules/es.promise';
 
 export * from './Container';
 export * from './Features';

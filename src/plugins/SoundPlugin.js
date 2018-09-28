@@ -315,12 +315,11 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   volumeRange(i, min = 0, max = 1) {
-    switch (true) {
-    case i < min:
+    if (i < min) {
       return min;
-    case i > max:
+    } else if (i > max) {
       return max;
-    default:
+    } else {
       return i;
     }
   }

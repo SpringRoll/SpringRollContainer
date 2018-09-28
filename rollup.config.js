@@ -3,11 +3,8 @@ import { terser } from 'rollup-plugin-terser';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import prettier from 'rollup-plugin-prettier';
-import replace from 'rollup-plugin-replace';
 import resolve from 'rollup-plugin-node-resolve';
 
-// @ts-ignore
-import { version } from './package.json';
 const prettierConfig = require('./.prettierrc');
 export default args => {
   const config = [
@@ -20,9 +17,6 @@ export default args => {
         }
       ],
       plugins: [
-        replace({
-          CONTAINER_VERSION: version
-        }),
         eslint(),
         prettier(prettierConfig),
         resolve({
