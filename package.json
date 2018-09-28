@@ -55,8 +55,7 @@
     "runtime"
   ],
   "scripts": {
-    "build": "rollup -c",
-    "build:map": "rollup -c -m",
+    "build": "rollup -c -m",
     "build:e2e": "rollup -c --e2e",
     "dev": "rollup -c -w",
     "test": "karma start karma.conf.js",

@@ -20,7 +20,7 @@ const base = {
         'bellhop-iframe': ['Bellhop']
       }
     }),
-    babel(),
+    babel({ sourceMap: true }),
     terser()
   ]
 };
@@ -44,9 +44,21 @@ const es = Object.assign({}, base, {
   ]
 });
 
+const umd = Object.assign({}, base, {
+  input: 'src/index.js',
+  output: [
+    {
+      file: 'dist/SpringRoll-Container-umd.js',
+      format: 'umd',
+      name: 'SRC',
+      extend: true,
+      sourceMap: true
+    }
+  ]
+});
+
 export default args => {
-  const config = [];
-  config.push(es);
+  const config = [es, umd];
   if (args.e2e) {
     config.push(e2e);
   }
