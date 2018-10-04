@@ -9,22 +9,28 @@ import { ButtonPlugin } from './ButtonPlugin';
 export class SoundPlugin extends ButtonPlugin {
   /**
    *Creates an instance of SoundPlugin.
-   * @param {object} Container
+   * @param {object} params
+   * @param {string} [params.soundButton]
+   * @param {string} [params.musicButton]
+   * @param {string} [params.sfxButton]
+   * @param {string} [params.voButton]
+   * @param {string} [params.soundSlider]
+   * @param {string} [params.musicSlider]
+   * @param {string} [params.sfxSlider]
+   * @param {string} [params.voSlider]
    * @memberof SoundPlugin
    */
   constructor({
-    options: {
-      soundButton,
-      musicButton,
-      sfxButton,
-      voButton,
-      soundSlider,
-      musicSlider,
-      sfxSlider,
-      voSlider
-    }
+    soundButton,
+    musicButton,
+    sfxButton,
+    voButton,
+    soundSlider,
+    musicSlider,
+    sfxSlider,
+    voSlider
   }) {
-    super(60);
+    super({ name: 'Sound-Button-Plugin' });
     const saved = SavedData.read('soundMuted');
     this._soundMuted = saved ? saved : false;
     this._musicMuted = false;
@@ -36,22 +42,10 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxVolume = 0;
     this.voVolume = 0;
 
-    this.soundSlider = this.sliderSetup(
-      document.querySelector(soundSlider),
-      soundSlider
-    );
-    this.musicSlider = this.sliderSetup(
-      document.querySelector(musicSlider),
-      musicSlider
-    );
-    this.sfxSlider = this.sliderSetup(
-      document.querySelector(sfxSlider),
-      sfxSlider
-    );
-    this.voSlider = this.sliderSetup(
-      document.querySelector(voSlider),
-      voSlider
-    );
+    this.soundSlider = this.sliderSetup(document.querySelector(soundSlider));
+    this.musicSlider = this.sliderSetup(document.querySelector(musicSlider));
+    this.sfxSlider = this.sliderSetup(document.querySelector(sfxSlider));
+    this.voSlider = this.sliderSetup(document.querySelector(voSlider));
 
     this.soundButton = document.querySelector(soundButton);
     this.musicButton = document.querySelector(musicButton);
@@ -289,14 +283,10 @@ export class SoundPlugin extends ButtonPlugin {
    *
    *
    * @param {HTMLInputElement} slider
-   * @param {string} elementName
    * @memberof SoundPlugin
    */
-  sliderSetup(slider, elementName) {
+  sliderSetup(slider) {
     if (!slider || 'range' !== slider.type) {
-      console.warn(
-        `SpringRoll Container: Sound plugin was passed a invalid input of ${elementName}. Input must be of type range`
-      );
       return null;
     }
 

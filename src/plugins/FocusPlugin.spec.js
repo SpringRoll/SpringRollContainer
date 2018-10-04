@@ -1,21 +1,18 @@
 import { FocusPlugin } from './FocusPlugin';
-import { Bellhop } from 'bellhop-iframe';
 import platform from 'platform';
 //Karma firefox work around due to known bug => https://github.com/karma-runner/karma-firefox-launcher/issues/56
 const isFirefox = () => 'Firefox' === platform.name;
 
 describe('FocusPlugin', () => {
   let focusPlugin;
+  const dom = document.createElement('iframe');
   beforeEach(() => {
-    const dom = document.createElement('iframe');
     dom.src = 'data:text/html;base64,R0lG';
     dom.classList.add('pause-on-focus');
     document.body.appendChild(dom);
 
-    focusPlugin = new FocusPlugin({
-      dom,
-      client: new Bellhop()
-    });
+    focusPlugin = new FocusPlugin();
+    focusPlugin.setup({ dom });
   });
 
   it('.focus(), .onDocClick()', () => {

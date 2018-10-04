@@ -1,7 +1,6 @@
 import {
   CaptionsPlugin,
   Container,
-  FeaturesPlugin,
   FocusPlugin,
   HelpPlugin,
   PausePlugin,
@@ -36,22 +35,20 @@ describe('End to End Test', () => {
   });
 
   it('setup the container and all it\'s plugins', () => {
-    Container.uses(CaptionsPlugin);
-    Container.uses(FeaturesPlugin);
-    Container.uses(FocusPlugin);
-    Container.uses(PausePlugin);
-    Container.uses(SoundPlugin);
-    Container.uses(UserDataPlugin);
-    Container.uses(HelpPlugin);
-    container = new Container('.karma-html', {
-      voButton: '#voButton',
-      helpButton: '#helpButton',
-      captionsButton: '#captionsButton',
-      musicButton: '#musicButton',
-      pauseButton: '#pauseButton',
-      sfxButton: '#sfxButton',
-      soundButton: '#soundButton'
-    });
+    Container.uses(new CaptionsPlugin('#captionsButton'));
+    Container.uses(new FocusPlugin());
+    Container.uses(new PausePlugin('#pauseButton'));
+    Container.uses(
+      new SoundPlugin({
+        voButton: '#voButton',
+        musicButton: '#musicButton',
+        sfxButton: '#sfxButton',
+        soundButton: '#soundButton'
+      })
+    );
+    Container.uses(new UserDataPlugin());
+    Container.uses(new HelpPlugin('#helpButton'));
+    container = new Container('.karma-html', {});
     container.initClient();
   });
   it('Check all button click events', () => {

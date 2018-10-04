@@ -10,11 +10,15 @@ import { BasePlugin } from './BasePlugin';
 export class ButtonPlugin extends BasePlugin {
   /**
    *Creates an instance of ButtonPlugin.
-   * @param {number} priority
+   * @param {object} params
+   * @param {string} params.name
+   * @param {Array<String>} [params.required] The list of required plugins (by name) that this plugin depends on
+   * @param {Array<String>} [params.optional] The list of optional plugins (by name) that this plugin depends on
+   *
    * @memberof ButtonPlugin
    */
-  constructor(priority = 100) {
-    super(priority);
+  constructor(params) {
+    super(params);
     this.sendMutes = false;
   }
 
@@ -38,12 +42,12 @@ export class ButtonPlugin extends BasePlugin {
 
   /**
    *
-   *
-   * @param {HTMLButtonElement} button
+   * Applies the disabled class to the provided element
+   * @param {HTMLButtonElement | Element} button
    * @memberof ButtonPlugin
    */
   _disableButton(button) {
-    if (button instanceof HTMLElement) {
+    if (button instanceof HTMLButtonElement) {
       button.classList.remove('enabled');
       button.classList.add('disabled');
     }

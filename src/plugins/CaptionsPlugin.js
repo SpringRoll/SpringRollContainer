@@ -22,11 +22,11 @@ const DEFAULT_CAPTIONS_STYLES = {
 export class CaptionsPlugin extends ButtonPlugin {
   /**
    *Creates an instance of CaptionsPlugin.
-   * @param {object} container
+   * @param {string} captionsButton
    * @memberof CaptionsPlugin
    */
-  constructor({ options: { captionsButton } }) {
-    super(70);
+  constructor(captionsButton) {
+    super({ name: 'Caption-Button-Plugin' });
     this.captionsStyles = Object.assign(
       {},
       DEFAULT_CAPTIONS_STYLES,

@@ -6,9 +6,7 @@ before(() => {
   document.body.innerHTML = '';
   button.id = 'test';
   document.body.appendChild(button);
-  hp = new HelpPlugin({
-    options: { helpButton: '#test' }
-  });
+  hp = new HelpPlugin('#test');
 });
 describe('HelpPlugin', () => {
   it('construct', () => {

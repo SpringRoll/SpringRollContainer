@@ -66,40 +66,22 @@ describe('Container', () => {
   it('Container.uses()', () => {
     /*eslint-disable */
     class fooBar {
-      constructor() {
-        this.priority = 42;
-      }
+      constructor() {}
 
-      setup() {
-        return this.priority;
-      }
+      setup() {}
     }
 
     class barFoo extends BasePlugin {
-      constructor(priority = 99) {
-        super(priority);
-      }
-
-      setup() {
-        return this.priority;
+      constructor() {
+        super({ name: 'bar-foo' });
       }
     }
 
     /*eslint-enable */
 
     expect(Container.plugins.length).to.equal(0);
-    Container.uses(fooBar);
-    Container.uses(barFoo);
-
-    const test = {
-      99: true,
-      42: true
-    };
-
-    Container.plugins.forEach(plugin => {
-      const priority = new plugin().priority;
-      expect(test[priority]).to.be.true;
-      test[plugin.priority] = false;
-    });
+    Container.uses(new fooBar());
+    Container.uses(new barFoo());
+    expect(Container.plugins.length).to.equal(1);
   });
 });

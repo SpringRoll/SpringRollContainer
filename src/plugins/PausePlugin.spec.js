@@ -7,10 +7,7 @@ before(() => {
   document.body.innerHTML = '';
   button.id = 'test';
   document.body.appendChild(button);
-  pp = new PausePlugin({
-    options: { pauseButton: '#test' },
-    client: new Bellhop()
-  });
+  pp = new PausePlugin('#test');
 });
 describe('PausePlugin', () => {
   it('construct', () => {

@@ -35,7 +35,7 @@ describe('SoundPlugin', () => {
         document.body.appendChild(slider);
       }
     });
-    sp = new SoundPlugin({ options });
+    sp = new SoundPlugin(options);
   });
 
   it('construct', () => {

@@ -5,23 +5,25 @@ import { Bellhop } from 'bellhop-iframe';
 let container;
 before(() => {
   Container.clearPlugins();
-  Container.uses(Plugin);
+  Container.uses(new Plugin());
   Container.client = new Bellhop();
 });
 
 /*eslint-disable */
 class Plugin extends BasePlugin {
   constructor() {
-    super();
+    super({ name: 'test-plugin' });
     this.called = {
-      constructor: false,
       open: false,
       opened: false,
       close: false,
       closed: false,
-      teardown: false
+      teardown: false,
+      setup: true
     };
-    this.called.constructor = true;
+  }
+  setup() {
+    this.called.setup = true;
   }
   open() {
     this.called.open = true;
@@ -45,9 +47,10 @@ class Plugin extends BasePlugin {
 }
 
 describe('Container Plugin Integration', () => {
-  it('Should call the instuctor', () => {
+  it('Should call setup() on construction', () => {
     container = new Container('#test');
-    expect(container.plugins[0].called.constructor).to.be.true;
+    // @ts-ignore
+    expect(container.plugins[0].called.setup).to.be.true;
   });
 
   it('Should call open() on open', () => {

@@ -2,6 +2,7 @@ import { Bellhop } from 'bellhop-iframe';
 import { Features } from './Features';
 // @ts-ignore
 import { version } from '../package.json';
+import { BasePlugin } from './plugins/BasePlugin';
 
 //private/static variables
 let PLUGINS = [];
@@ -24,7 +25,8 @@ let CLIENT = new Bellhop();
  * @property {string} options.sfxButton selector for sounf effects button
  * @property {string} options.soundButton selector for captions button
  * @property {string} options.voButton selector for vo button
- * @static @property {Array} plugins The collection of Container plugins
+ * @property {HTMLIFrameElement} dom
+ * @static @property {Array<BasePlugin>} plugins The collection of Container plugins
  * @static @property {String} version The current version of the library
  *
  * @constructor
@@ -58,6 +60,7 @@ export class Container {
    */
   constructor(iframeSelector, options = {}) {
     this.main = document.querySelector(iframeSelector);
+    Container.sortPlugins();
 
     if (null === this.main) {
       throw new Error('No iframe was found with the provided selector');
@@ -71,7 +74,8 @@ export class Container {
     this.options = options;
     this.release = null;
     //Plugin init
-    this.plugins = PLUGINS.map(plugin => new plugin(this));
+    this.plugins = Container.plugins;
+    this.plugins.forEach(plugin => plugin.setup(this));
   }
 
   /**
@@ -341,22 +345,20 @@ export class Container {
    *
    *
    * @static
-   * @param {object|function} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
+   * @param {BasePlugin} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
    * @memberof Container
    */
   static uses(plugin) {
     //Merging with the base plugin to guarantee we will have certain functions
-    const isConstructor = () =>
-      !!plugin.prototype &&
-      plugin.prototype.constructor &&
-      /^class/.test(plugin.prototype.constructor);
-
-    if ('function' !== typeof plugin && !isConstructor()) {
+    if (!(plugin instanceof BasePlugin)) {
+      console.warn(
+        'SpringRollContainer: Was passed a plugin that is not based on the BasePlugin',
+        JSON.stringify(plugin)
+      );
       return;
     }
 
     PLUGINS.push(plugin);
-    PLUGINS.sort((a, b) => b.priority - a.priority);
   }
 
   /**
@@ -365,6 +367,7 @@ export class Container {
    * @readonly
    * @static
    * @memberof Container
+   * @returns {Array<BasePlugin>}
    */
   static get plugins() {
     return PLUGINS;
@@ -444,5 +447,87 @@ export class Container {
    */
   get client() {
     return Container._getClient();
+  }
+
+  /**
+   * Helper method for sorting plugins in place. Looks at dependency order and performs a topological sort to enforce
+   * proper load error
+   */
+  static sortPlugins() {
+    if (PLUGINS.length === 0) {
+      return; // nothing to do
+    }
+
+    const pluginNames = PLUGINS.map(plugin => plugin.name);
+    const pluginLookup = {};
+    PLUGINS.forEach(plugin => {
+      // for any optional plugins that are missing remove them from the list and warn along the way
+      const optionalAvailablePlugins = plugin.optional.filter(
+        name => (pluginNames.indexOf(name) === -1 ? false : true)
+      );
+
+      pluginLookup[plugin.name] = {
+        plugin: plugin,
+        name: plugin.name,
+        dependencies: []
+          .concat(plugin.required)
+          .concat(optionalAvailablePlugins)
+      };
+    });
+    const visited = [];
+    const toVisit = new Set();
+
+    // first, add items that do not have any dependencies
+    Object.keys(pluginLookup)
+      .map(key => pluginLookup[key])
+      .filter(lookup => lookup.dependencies.length === 0)
+      .forEach(lookup => toVisit.add(lookup.name));
+
+    // if there are no items to visit, throw an error
+    if (toVisit.size === 0) {
+      throw new Error('Every registered plugin has a dependency!');
+    }
+
+    while (toVisit.size > 0) {
+      // pick an item and remove it from the list
+      const item = toVisit.values().next().value;
+      toVisit.delete(item);
+
+      // add it to the visited list
+      visited.push(item);
+
+      // for every plugin
+      Object.keys(pluginLookup).forEach(pluginName => {
+        const index = pluginLookup[pluginName].dependencies.indexOf(item);
+
+        // remove it as a dependency
+        if (index > -1) {
+          pluginLookup[pluginName].dependencies.splice(index, 1);
+        }
+
+        // if there are no more dependencies left, we can visit this item now
+        if (
+          pluginLookup[pluginName].dependencies.length === 0 &&
+          visited.indexOf(pluginName) === -1
+        ) {
+          toVisit.add(pluginName);
+        }
+      });
+    }
+
+    // if there are any dependencies left, that means that there's a cycle
+    const uncaughtKeys = Object.keys(pluginLookup).filter(
+      pluginName => pluginLookup[pluginName].dependencies.length > 0
+    );
+
+    if (uncaughtKeys.length > 0) {
+      throw new Error('Dependency graph has a cycle');
+    }
+
+    // now, rebuild the array
+    PLUGINS = [];
+    visited.forEach(name => {
+      PLUGINS.push(pluginLookup[name].plugin);
+    });
   }
 }

@@ -6,11 +6,11 @@ import { ButtonPlugin } from './ButtonPlugin';
 export class PausePlugin extends ButtonPlugin {
   /**
    *Creates an instance of PausePlugin.
-   * @param {object} Container
+   * @param {string} pauseButton
    * @memberof PausePlugin
    */
-  constructor({ options: { pauseButton } }) {
-    super(80);
+  constructor(pauseButton) {
+    super({ name: 'Pause-Button-plugin' });
     /**
      * Reference to the pause application button
      * @property {HTMLElement} pauseButton

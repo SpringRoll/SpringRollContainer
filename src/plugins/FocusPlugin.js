@@ -1,30 +1,26 @@
 import { PageVisibility } from '../PageVisibility';
 import { BasePlugin } from './BasePlugin';
-
+import { Container } from '..';
 /**
  *
  *
  * @export
  * @class FocusPlugin
  * @extends {BasePlugin}
+ * @property {HTMLIFrameElement} dom
  */
 export class FocusPlugin extends BasePlugin {
   /**
    *Creates an instance of FocusPlugin.
-   * @param {object} container
+   * @param {string} [selector='.pause-on-focus']
    * @memberof FocusPlugin
    */
-  constructor({ options, dom }) {
-    super(90);
+  constructor(selector = '.pause-on-focus') {
+    super({ name: 'Focus-Plugin' });
     // Add the default option for pauseFocusSelector
-    this.options = Object.assign(
-      {
-        pauseFocusSelector: '.pause-on-focus'
-      },
-      options
-    );
+    this.selector = selector;
 
-    this.dom = dom;
+    this.dom = null;
     this._appBlurred = false;
     this._keepFocus = false;
     this._containerBlurred = false;
@@ -41,11 +37,19 @@ export class FocusPlugin extends BasePlugin {
 
     document.addEventListener('focus', this.onDocClick.bind(this));
     document.addEventListener('click', this.onDocClick.bind(this));
-    this.pauseFocus = document.querySelector(this.options.pauseFocusSelector);
+    this.pauseFocus = document.querySelector(this.selector);
 
     if (null !== this.pauseFocus) {
       this.pauseFocus.addEventListener('focus', this.onPauseFocus.bind(this));
     }
+  }
+
+  /**
+   * @param {Container} container
+   * @memberof FocusPlugin
+   */
+  setup({ dom }) {
+    this.dom = dom;
   }
 
   /**
@@ -69,9 +73,11 @@ export class FocusPlugin extends BasePlugin {
    * @memberof FocusPlugin
    */
   focus() {
+    // @ts-ignore
     if (!this.dom.contentWindow) {
       return;
     }
+    // @ts-ignore
     this.dom.contentWindow.focus();
   }
 
@@ -79,9 +85,11 @@ export class FocusPlugin extends BasePlugin {
    * @memberof FocusPlugin
    */
   blur() {
+    // @ts-ignore
     if (!this.dom.contentWindow) {
       return;
     }
+    // @ts-ignore
     this.dom.contentWindow.blur();
   }
 

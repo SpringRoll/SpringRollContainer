@@ -1,7 +1,6 @@
 export * from './BasePlugin';
 export * from './ButtonPlugin';
 export * from './CaptionsPlugin';
-export * from './FeaturesPlugin';
 export * from './FocusPlugin';
 export * from './HelpPlugin';
 export * from './PausePlugin';

@@ -8,7 +8,7 @@ describe('CaptionsPlugin', () => {
     const button = document.createElement('button');
     button.id = id;
     document.body.appendChild(button);
-    cp = new CaptionsPlugin({ options: { captionsButton: `#${id}` } });
+    cp = new CaptionsPlugin(`#${id}`);
   });
   it('construct', () => {
     expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);

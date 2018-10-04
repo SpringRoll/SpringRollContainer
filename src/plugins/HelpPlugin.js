@@ -10,11 +10,11 @@ import { ButtonPlugin } from './ButtonPlugin';
 export class HelpPlugin extends ButtonPlugin {
   /**
    *Creates an instance of HelpPlugin.
-   * @param {object} Container
+   * @param {string} helpButton
    * @memberof HelpPlugin
    */
-  constructor({ options: { helpButton } }) {
-    super(50);
+  constructor(helpButton) {
+    super({name: 'Help-Button-Plugin'});
     this.helpButton = document.querySelector(helpButton);
     this.paused = false;
     this._helpEnabled = false;

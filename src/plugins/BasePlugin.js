@@ -9,46 +9,65 @@ import { SavedData } from '../SavedData';
 export class BasePlugin {
   /**
    *Creates an instance of BasePlugin.
-   * @param {number} [priority=0]
+   * @param {object} params
+   * @param {string} params.name
+   * @param {Array<String>} [params.required] The list of required plugins (by name) that this plugin depends on
+   * @param {Array<String>} [params.optional] The list of optional plugins (by name) that this plugin depends on
    * @memberof BasePlugin
    */
-  constructor(priority = 0) {
-    this.priority = priority;
+  constructor({ name, required, optional }) {
+    this.name = name;
+    this.required = Array.isArray(required) ? required : [];
+    this.optional = Array.isArray(optional) ? optional : [];
   }
-  /**
-   *
-   *
-   * @memberof BasePlugin
-   */
-  open() {}
 
   /**
    *
    *
    * @memberof BasePlugin
    */
-  opened() {}
+  preload() {}
 
   /**
    *
-   *
+   * @param {Container} container
    * @memberof BasePlugin
    */
-  close() {}
+  setup(container) {}
+  /**
+   *
+   * @param {Container} container
+   * @memberof BasePlugin
+   */
+  open(container) {}
 
   /**
    *
-   *
+   * @param {Container} container
    * @memberof BasePlugin
    */
-  closed() {}
+  opened(container) {}
 
   /**
    *
-   *
+   * @param {Container} container
    * @memberof BasePlugin
    */
-  teardown() {}
+  close(container) {}
+
+  /**
+   *
+   * @param {Container} container
+   * @memberof BasePlugin
+   */
+  closed(container) {}
+
+  /**
+   *
+   * @param {Container} container
+   * @memberof BasePlugin
+   */
+  teardown(container) {}
 
   /**
    *
