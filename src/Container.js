@@ -76,6 +76,7 @@ export class Container {
     //Plugin init
     this.plugins = Container.plugins;
     this.plugins.forEach(plugin => plugin.setup(this));
+    this.preload();
   }
 
   /**
@@ -329,6 +330,24 @@ export class Container {
     } else {
       this.reset();
     }
+  }
+
+  /**
+   *
+   *
+   * @memberof Container
+   */
+  preload() {
+    let preloader = Promise.resolve();
+    for (const plugin of this.plugins) {
+      preloader = preloader.then(() => plugin.preload(this));
+    }
+
+    preloader
+      .then(() => this.client.send('plugins loaded'))
+      .catch(e =>
+        console.error('SpringRoll Container Plugin Preloader error: ', e)
+      );
   }
 
   /**

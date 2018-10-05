@@ -23,10 +23,13 @@ export class BasePlugin {
 
   /**
    *
-   *
+   * @param {Container} container
    * @memberof BasePlugin
+   * @returns {Promise}
    */
-  preload() {}
+  preload(container) {
+    return Promise.resolve();
+  }
 
   /**
    *
