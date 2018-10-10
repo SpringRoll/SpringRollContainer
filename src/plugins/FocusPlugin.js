@@ -1,5 +1,6 @@
 import { PageVisibility } from '../PageVisibility';
 import { BasePlugin } from './BasePlugin';
+// eslint-disable-next-line
 import { Container } from '..';
 /**
  *
