@@ -29,7 +29,7 @@ export class SoundPlugin extends ButtonPlugin {
     musicSlider,
     sfxSlider,
     voSlider
-  }) {
+  } = {}) {
     super({ name: 'Sound-Button-Plugin' });
     const saved = SavedData.read('soundMuted');
     this._soundMuted = saved ? saved : false;
