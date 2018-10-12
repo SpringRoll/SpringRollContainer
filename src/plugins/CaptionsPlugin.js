@@ -33,16 +33,24 @@ export class CaptionsPlugin extends ButtonPlugin {
       SavedData.read(CAPTIONS_STYLES) || {}
     );
     this.captionsButton = document.querySelector(captionsButton);
+
+    if (!this.captionsButton) {
+      console.warn(
+        'SpringRollContainer: CaptionPlugin was not provided a button element'
+      );
+      return;
+    }
+
+    this.captionsButton.addEventListener(
+      'click',
+      this.captionsButtonClick.bind(this)
+    );
     // Handle the features request
     this.client.on('features', function(features) {
       this.captionsButton.style.display = features.captions
         ? 'inline-block'
         : 'none';
     });
-    this.captionsButton.addEventListener(
-      'click',
-      this.captionsButtonClick.bind(this)
-    );
 
     //Set the defaults if we have none for the controls
     if (null === SavedData.read(CAPTIONS_MUTED)) {
