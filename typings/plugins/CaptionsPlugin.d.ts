@@ -9,7 +9,7 @@ type CaptionStyles = {
   align: string
 };
 
-export class CaptionPlugin extends ButtonPlugin {
+export class CaptionsPlugin extends ButtonPlugin {
   constructor(captionsButton:string);
   captionsStyle: CaptionStyles;
   captionsButton: HTMLButtonElement;
