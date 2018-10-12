@@ -1,46 +1,71 @@
 {
-	"name": "springroll-container",
-	"version": "1.1.2",
-	"description": "The iframe controller for interacting with SpringRoll applications",
-	"main": "./dist/container.min.js",
-	"author":
-	{
-		"name": "Matt Karl",
-		"email": "matt@cloudkid.com"
-	},
-	"license": "MIT",
-	"repository":
-	{
-		"type": "git",
-		"url": "https://github.com/SpringRoll/SpringRollContainer"
-	},
-	"dependencies":
-	{
-		"bellhop-iframe": "~2.0.0"
-	},
-	"devDependencies":
-	{
-		"grunt": "~0.4.5",
-		"grunt-file-creator": "^0.1.3",
-		"library-grunt": "~0.6.0",
-		"grunt-jsbeautifier": "~0.2.10",
-		"grunt-contrib-copy": "^0.8.2"
-	},
-	"keywords": [
-		"deployment",
-		"game",
-		"springroll",
-		"iframe",
-		"runtime"
-	],
-	"scripts":
-	{
-		"test": "grunt default test --verbose"
-	},
-	"readmeFilename": "README.md",
-	"bugs":
-	{
-		"url": "https://github.com/SpringRoll/SpringRollContainer/issues"
-	},
-	"homepage": "https://github.com/SpringRoll/SpringRollContainer"
+  "name": "springroll-container",
+  "version": "2.0.0",
+  "description": "The iframe controller for interacting with SpringRoll applications",
+  "main": "./dist/index.js",
+  "license": "MIT",
+  "typings": "typings/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SpringRoll/SpringRollContainer"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/plugin-external-helpers": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.2",
+    "chai": "^4.1.2",
+    "dotenv": "^6.0.0",
+    "eslint": "^5.6.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "karma": "^3.0.0",
+    "karma-babel-preprocessor": "^8.0.0-beta.0",
+    "karma-browserstack-launcher": "^1.3.0",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-cli": "^1.0.1",
+    "karma-es6-shim": "^1.0.0",
+    "karma-firefox-launcher": "^1.1.0",
+    "karma-html": "^1.0.5",
+    "karma-mocha": "^1.3.0",
+    "karma-requirejs": "^1.1.0",
+    "karma-webpack": "^4.0.0-rc.2",
+    "mocha": "^5.2.0",
+    "platform": "^1.3.5",
+    "requirejs": "^2.3.6",
+    "rollup": "^0.66.0",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.1.8",
+    "rollup-plugin-eslint": "^5.0.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-terser": "^3.0.0"
+  },
+  "dependencies": {
+    "bellhop-iframe": "^2.2.0",
+    "core-js": "^3.0.0-beta.3",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "keywords": [
+    "deployment",
+    "game",
+    "springroll",
+    "iframe",
+    "runtime"
+  ],
+  "scripts": {
+    "build": "rollup -c -m",
+    "build:e2e": "rollup -c --e2e",
+    "dev": "rollup -c -w",
+    "test": "karma start karma.conf.js",
+    "test:e2e": "npm run build:e2e && karma start karma.conf.e2e.js",
+    "test:bs": "karma start karma.conf.bs.js"
+  },
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/SpringRoll/SpringRollContainer/issues"
+  },
+  "homepage": "https://github.com/SpringRoll/SpringRollContainer"
 }

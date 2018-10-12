@@ -2,3 +2,5 @@ components
 node_modules
 docs
 .grunt
+.env
+e2e/client.js
