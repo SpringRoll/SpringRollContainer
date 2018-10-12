@@ -14,7 +14,7 @@ describe('ButtonPlugin', () => {
   });
 
   it('construct', () => {
-    bp = new ButtonPlugin({ name: 'Test-Button' });
+    bp = new ButtonPlugin('Test-Button');
     expect(bp).to.be.instanceof(ButtonPlugin);
     expect(bp.sendMutes).to.be.false;
   });

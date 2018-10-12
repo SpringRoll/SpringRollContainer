@@ -1,13 +1,11 @@
 import { Container, BasePlugin } from './index';
 
-let iframe, container;
-before(() => {
-  document.body.innerHTML = '';
-  iframe = document.createElement('iframe');
-  iframe.id = 'test';
-  document.body.appendChild(iframe);
-  container = new Container('#test');
-});
+document.body.innerHTML = '';
+const iframe = document.createElement('iframe');
+iframe.id = 'test';
+document.body.appendChild(iframe);
+const container = new Container('#test');
+
 describe('Container', () => {
   it('Should Construct', () => {
     expect(container).to.be.instanceof(Container);
@@ -37,15 +35,9 @@ describe('Container', () => {
 
   it('.reset(), .onEndGame(), _onCloseFailed()', () => {
     container.reset();
-    expect(container.client).to.be.null;
     expect(container.loaded).to.be.false;
     expect(container.loading).to.be.false;
     expect(container.main.src).to.contain('http://localhost:9876/');
-  });
-
-  it('.destroyClient()', () => {
-    container.destroyClient();
-    expect(container.client).to.be.null;
   });
 
   it('.openRemote()', () => {
@@ -65,22 +57,14 @@ describe('Container', () => {
 
   it('Container.uses()', () => {
     /*eslint-disable */
-    class fooBar {
-      constructor() {}
-
-      setup() {}
-    }
-
     class barFoo extends BasePlugin {
       constructor() {
-        super({ name: 'bar-foo' });
+        super('bar-foo');
       }
     }
-
     /*eslint-enable */
 
     expect(Container.plugins.length).to.equal(0);
-    Container.uses(new fooBar());
     Container.uses(new barFoo());
     expect(Container.plugins.length).to.equal(1);
   });

@@ -1,18 +1,16 @@
 import { BasePlugin } from './BasePlugin';
 import { Container } from '../Container';
-import { Bellhop } from 'bellhop-iframe';
 /*eslint-enable */
 let container;
 before(() => {
   Container.clearPlugins();
   Container.uses(new Plugin());
-  Container.client = new Bellhop();
 });
 
 /*eslint-disable */
 class Plugin extends BasePlugin {
   constructor() {
-    super({ name: 'test-plugin' });
+    super('test-plugin');
     this.called = {
       open: false,
       opened: false,

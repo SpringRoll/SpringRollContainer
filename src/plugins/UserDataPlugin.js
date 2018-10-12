@@ -12,7 +12,7 @@ export class UserDataPlugin extends BasePlugin {
    * @memberof UserDataPlugin
    */
   constructor() {
-    super({ name: 'UserData-Plugin' });
+    super('UserData-Plugin');
   }
 
   /**

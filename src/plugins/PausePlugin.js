@@ -10,7 +10,7 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   constructor(pauseButton) {
-    super({ name: 'Pause-Button-plugin' });
+    super('Pause-Button-plugin');
     /**
      * Reference to the pause application button
      * @property {HTMLElement} pauseButton

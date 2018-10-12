@@ -10,15 +10,14 @@ import { BasePlugin } from './BasePlugin';
 export class ButtonPlugin extends BasePlugin {
   /**
    *Creates an instance of ButtonPlugin.
-   * @param {object} params
-   * @param {string} params.name
-   * @param {Array<String>} [params.required] The list of required plugins (by name) that this plugin depends on
-   * @param {Array<String>} [params.optional] The list of optional plugins (by name) that this plugin depends on
+   * @param {string} name
+   * @param {Array<String>} [required] The list of required plugins (by name) that this plugin depends on
+   * @param {Array<String>} [optional] The list of optional plugins (by name) that this plugin depends on
    *
    * @memberof ButtonPlugin
    */
-  constructor(params) {
-    super(params);
+  constructor(name, required = [], optional = []) {
+    super(name, required, optional);
     this.sendMutes = false;
   }
 

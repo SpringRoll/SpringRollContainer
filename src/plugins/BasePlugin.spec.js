@@ -8,7 +8,7 @@ document.body.appendChild(iframe);
 let container;
 describe('BasePlugin', () => {
   it('constructor()', () => {
-    Container.uses(new BasePlugin({ name: 'test-plugin' }));
+    Container.uses(new BasePlugin('test-plugin'));
     container = new Container('#test');
     expect(container.plugins.length).to.equal(1);
     expect(container.plugins[0] instanceof BasePlugin).to.be.true;

@@ -10,13 +10,12 @@ import { SavedData } from '../SavedData';
 export class BasePlugin {
   /**
    *Creates an instance of BasePlugin.
-   * @param {object} params
-   * @param {string} params.name
-   * @param {Array<String>} [params.required] The list of required plugins (by name) that this plugin depends on
-   * @param {Array<String>} [params.optional] The list of optional plugins (by name) that this plugin depends on
+   * @param {string} name
+   * @param {Array<String>} [required] The list of required plugins (by name) that this plugin depends on
+   * @param {Array<String>} [optional] The list of optional plugins (by name) that this plugin depends on
    * @memberof BasePlugin
    */
-  constructor({ name, required, optional }) {
+  constructor(name, required = [], optional = []) {
     this.name = name;
     this.required = Array.isArray(required) ? required : [];
     this.optional = Array.isArray(optional) ? optional : [];
@@ -24,7 +23,7 @@ export class BasePlugin {
 
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    * @returns {Promise}
    */
@@ -34,41 +33,41 @@ export class BasePlugin {
 
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    */
   setup(container) {}
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    */
   open(container) {}
 
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    */
   opened(container) {}
 
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    */
   close(container) {}
 
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    */
   closed(container) {}
 
   /**
    *
-   * @param {Container} container
+   * @param {Container} [container]
    * @memberof BasePlugin
    */
   teardown(container) {}

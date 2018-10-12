@@ -1,7 +1,7 @@
 import { CaptionsPlugin } from './CaptionsPlugin';
 
 describe('CaptionsPlugin', () => {
-  const id = 'test';
+  const id = 'button_test';
   let cp;
 
   beforeEach(() => {

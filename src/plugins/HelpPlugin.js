@@ -14,7 +14,7 @@ export class HelpPlugin extends ButtonPlugin {
    * @memberof HelpPlugin
    */
   constructor(helpButton) {
-    super({name: 'Help-Button-Plugin'});
+    super('Help-Button-Plugin');
     this.helpButton = document.querySelector(helpButton);
     this.paused = false;
     this._helpEnabled = false;

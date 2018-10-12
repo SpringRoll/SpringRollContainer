@@ -12,8 +12,8 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {object} params
    * @param {string} [params.soundButton]
    * @param {string} [params.musicButton]
-   * @param {string} [params.sfxButton]
    * @param {string} [params.voButton]
+   * @param {string} [params.sfxButton]
    * @param {string} [params.soundSlider]
    * @param {string} [params.musicSlider]
    * @param {string} [params.sfxSlider]
@@ -30,7 +30,7 @@ export class SoundPlugin extends ButtonPlugin {
     sfxSlider,
     voSlider
   } = {}) {
-    super({ name: 'Sound-Button-Plugin' });
+    super('Sound-Button-Plugin');
     const saved = SavedData.read('soundMuted');
     this._soundMuted = saved ? saved : false;
     this._musicMuted = false;

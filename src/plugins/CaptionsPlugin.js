@@ -26,7 +26,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @memberof CaptionsPlugin
    */
   constructor(captionsButton) {
-    super({ name: 'Caption-Button-Plugin' });
+    super('Caption-Button-Plugin');
     this.captionsStyles = Object.assign(
       {},
       DEFAULT_CAPTIONS_STYLES,

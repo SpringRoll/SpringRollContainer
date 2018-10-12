@@ -6,7 +6,7 @@ import { BasePlugin } from './plugins/BasePlugin';
 
 //private/static variables
 let PLUGINS = [];
-let CLIENT = new Bellhop();
+const CLIENT = new Bellhop();
 /**
  * The application container
  * @class Container
@@ -16,78 +16,34 @@ let CLIENT = new Bellhop();
  * @property {HTMLIFrameElement} dom The DOM object for the iframe
  * @property {HTMLIFrameElement} main The current iframe object
  * @property {Object} release The current release data
- * @property {object} options Optional parameteres
- * @property {string} options.captionsButton selector for captions button
- * @property {string} options.helpButton selector for help button
- * @property {string} options.musicButton selector for music button
- * @property {string} options.pauseButton selector for pause button
- * @property {string} options.pauseFocusSelector The class to pause
- * @property {string} options.sfxButton selector for sounf effects button
- * @property {string} options.soundButton selector for captions button
- * @property {string} options.voButton selector for vo button
  * @property {HTMLIFrameElement} dom
  * @static @property {Array<BasePlugin>} plugins The collection of Container plugins
  * @static @property {String} version The current version of the library
  *
  * @constructor
  * @param {string} iframeSelector selector for application iframe container
- * @param {object} options Optional parameteres
- * @param {string} options.helpButton selector for help button
- * @param {string} options.captionsButton selector for captions button
- * @param {string} options.soundButton selector for captions button
- * @param {string} options.voButton selector for vo button
- * @param {string} options.sfxButton selector for sounf effects button
- * @param {string} options.musicButton selector for music button
- * @param {string} options.pauseButton selector for pause button
- * @param {string} options.pauseFocusSelector The class to pause
- *        the application when focused on. This is useful for form elements which
- *        require focus and play better with Application's keepFocus option.
  */
 export class Container {
   /**
    *Creates an instance of Container.
    * @param {string} iframeSelector
-   * @param {object} options Optional parameteres
-   * @param {string} [options.helpButton] selector for help button
-   * @param {string} [options.captionsButton] selector for captions button
-   * @param {string} [options.soundButton] selector for captions button
-   * @param {string} [options.voButton] selector for vo button
-   * @param {string} [options.sfxButton] selector for sounf effects button
-   * @param {string} [options.musicButton] selector for music button
-   * @param {string} [options.pauseButton] selector for pause button
-   * @param {string} [options.pauseFocusSelector] The class to pause
    * @memberof Container
    */
-  constructor(iframeSelector, options = {}) {
+  constructor(iframeSelector) {
     this.main = document.querySelector(iframeSelector);
     Container.sortPlugins();
 
     if (null === this.main) {
       throw new Error('No iframe was found with the provided selector');
     }
-    if (!this.client) {
-      this.client = new Bellhop();
-    }
     this.dom = this.main;
     this.loaded = false;
     this.loading = false;
-    this.options = options;
     this.release = null;
     //Plugin init
     this.plugins = Container.plugins;
     this.plugins.forEach(plugin => plugin.setup(this));
     this.preload();
-  }
-
-  /**
-   * Removes the Bellhop communication layer altogether.
-   * @memberof Container
-   */
-  destroyClient() {
-    if (this.client) {
-      this.client.destroy();
-      this.client = null;
-    }
   }
 
   /**
@@ -161,9 +117,6 @@ export class Container {
       this.client.trigger('closed');
     }
 
-    // Remove bellhop instance
-    this.destroyClient();
-
     // Reset state
     this.loaded = false;
     this.loading = false;
@@ -179,8 +132,6 @@ export class Container {
    * @memberof Container
    */
   initClient() {
-    //Setup communication layer between site and application
-    this.client = new Bellhop();
     // @ts-ignore
     this.client.connect(this.dom);
 
@@ -333,16 +284,13 @@ export class Container {
   }
 
   /**
-   *
-   *
+   * Runs all plugin require preload functions
+   * @async
    * @memberof Container
    */
   preload() {
-    let preloader = Promise.resolve();
-    for (const plugin of this.plugins) {
-      preloader = preloader.then(() => plugin.preload(this));
-    }
-
+    const preloader = Promise.resolve();
+    this.plugins.forEach(plugin => preloader.then(() => plugin.preload()));
     preloader
       .then(() => this.client.send('plugins loaded'))
       .catch(e =>
@@ -361,8 +309,7 @@ export class Container {
   }
 
   /**
-   *
-   *
+   * On Container instantiation all plugins based through this function will be supplied to the Container
    * @static
    * @param {BasePlugin} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
    * @memberof Container
@@ -381,8 +328,6 @@ export class Container {
   }
 
   /**
-   *
-   *
    * @readonly
    * @static
    * @memberof Container
@@ -393,8 +338,7 @@ export class Container {
   }
 
   /**
-   *
-   *
+   * Clears all plugin instances from Container
    * @static
    * @memberof Container
    */
@@ -404,68 +348,22 @@ export class Container {
   }
 
   /**
-   *
-   *
-   * @param {Bellhop} bellhop
-   * @memberof Container
-   */
-  static _setClient(bellhop) {
-    if (bellhop instanceof Bellhop || null === bellhop) {
-      // @ts-ignore
-      // window.SP_CONTAINER_BELLHOP_INSTANCE = bellhop;
-      CLIENT = bellhop;
-    }
-  }
-
-  /**
-   *
-   *
+   * @readonly
    * @static
    * @returns {Bellhop}
    * @memberof Container
    */
-  static _getClient() {
-    // @ts-ignore
+  static get client() {
     return CLIENT;
   }
 
   /**
-   *
-   *
-   * @memberof Container
-   */
-  set client(bellhop) {
-    Container._setClient(bellhop);
-  }
-
-  /**
-   *
-   *
-   * @memberof Container
-   */
-  static set client(bellhop) {
-    this._setClient(bellhop);
-  }
-
-  /**
-   *
-   *
    * @readonly
-   * @static
-   * @memberof Container
-   */
-  static get client() {
-    return this._getClient();
-  }
-
-  /**
-   *
-   *
-   * @readonly
+   * @returns {Bellhop}
    * @memberof Container
    */
   get client() {
-    return Container._getClient();
+    return Container.client;
   }
 
   /**

@@ -45,8 +45,8 @@ export class PageVisibility {
   }
 
   /**
-
    * The visibility toggle listener function
+   * @param {Event} $event;
    * @memberof PageVisibility
    */
   onToggle($event) {
@@ -57,6 +57,7 @@ export class PageVisibility {
 
   /**
    * If this object is enabled.
+   * @returns {boolean}
    * @memberof PageVisibility
    */
   get enabled() {

@@ -17,7 +17,7 @@ export class FocusPlugin extends BasePlugin {
    * @memberof FocusPlugin
    */
   constructor(selector = '.pause-on-focus') {
-    super({ name: 'Focus-Plugin' });
+    super('Focus-Plugin');
     // Add the default option for pauseFocusSelector
     this.selector = selector;
 

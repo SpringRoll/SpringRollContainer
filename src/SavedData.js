@@ -24,6 +24,7 @@ export class SavedData {
    * A constant to determine if we can use localStorage and
    * @readonly
    * @static
+   * @returns {Boolean}
    * @memberof SavedData
    */
   static get WEB_STORAGE_SUPPORT() {
@@ -42,6 +43,7 @@ export class SavedData {
   /**
    * A constant for cookie fallback for `SavedData.clear()`
    * @static
+   * @returns {boolean};
    * @memberof SavedData
    */
   static get ERASE_COOKIE() {
@@ -50,6 +52,7 @@ export class SavedData {
 
   /**
    * Sets the cookie fallback for `SavedData.clear()`
+   * @param {boolean} flag
    */
   static set ERASE_COOKIE(flag) {
     ERASE_COOKIE = flag;
