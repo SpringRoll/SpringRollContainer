@@ -42,7 +42,7 @@ export class HelpPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        this.helpButton.styles.display = features.hints
+        this.helpButton.style.display = features.hints
           ? 'inline-block'
           : 'none';
         this.helpButton.style.display = 'none';

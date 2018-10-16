@@ -70,11 +70,6 @@ export class PageVisibility {
    */
   set enabled(enable) {
     this._enabled = enable;
-    document.removeEventListener(
-      'visibilitychange',
-      this.onToggle.bind(this),
-      false
-    );
 
     window.removeEventListener('blur', this.onBlur);
     window.removeEventListener('focus', this.onFocus);
@@ -83,20 +78,11 @@ export class PageVisibility {
     window.removeEventListener('visibilitychange', this.onToggle.bind(this));
 
     if (this._enabled) {
-      document.addEventListener(
-        'visibilitychange',
-        this.onToggle.bind(this),
-        false
-      );
       window.addEventListener('blur', this.onBlur);
       window.addEventListener('focus', this.onFocus);
       window.addEventListener('pagehide', this.onBlur);
       window.addEventListener('pageshow', this.onFocus);
-      window.addEventListener(
-        'visibilitychange',
-        this.onToggle.bind(this),
-        false
-      );
+      window.addEventListener('visibilitychange', this.onToggle.bind(this));
     }
   }
 }

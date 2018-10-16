@@ -1,4 +1,4 @@
-import { SoundPlugin } from '../index';
+import { Container, SoundPlugin } from '../index';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -39,10 +39,15 @@ describe('SoundPlugin', () => {
   });
 
   it('construct', () => {
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
     expect(sp.soundButton).to.be.instanceof(HTMLButtonElement);
     expect(sp.musicButton).to.be.instanceof(HTMLButtonElement);
     expect(sp.sfxButton).to.be.instanceof(HTMLButtonElement);
     expect(sp.voButton).to.be.instanceof(HTMLButtonElement);
+    new Container('#sound-plugin-iframe').client.trigger('features');
+    console.log(sp.voButton);
   });
 
   it('.setMuteProp()', () => {

@@ -1,4 +1,5 @@
 import { BasePlugin } from "./BasePlugin";
+import {Container} from "../Container";
 
 export class ButtonPlugin extends BasePlugin {
   constructor(name:string, required:Array<string>, optional: Array<string>);
@@ -6,6 +7,6 @@ export class ButtonPlugin extends BasePlugin {
   private _setMuteProp(prop: string, button:HTMLButtonElement | NodeListOf<HTMLButtonElement>, muted:boolean);
   removeListeners(button: HTMLButtonElement)
   reset(): void;
-  setup():void;
-  teardown():void;
+  setup:function;
+  teardown:function;
 }

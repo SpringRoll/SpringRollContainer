@@ -20,24 +20,24 @@ export class ButtonPlugin extends BasePlugin {
     super(name, required, optional);
     this.sendMutes = false;
   }
-
+  /* eslint-disable */
   /**
-   *
-   *
    * @memberof ButtonPlugin
-   */
-  setup() {
+   * @param {SpringRollContainer.Container} [container]   */
+
+  setup(container) {
     this.sendMutes = true;
   }
 
   /**
-   *
-   *
    * @memberof ButtonPlugin
+   * @param {SpringRollContainer.Container} [container]
    */
-  teardown() {
+  teardown(container) {
     this.reset();
   }
+
+  /* eslint-enable */
 
   /**
    *

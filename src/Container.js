@@ -2,7 +2,6 @@ import { Bellhop } from 'bellhop-iframe';
 import { Features } from './Features';
 // @ts-ignore
 import { version } from '../package.json';
-import { BasePlugin } from './plugins/BasePlugin';
 
 //private/static variables
 let PLUGINS = [];
@@ -234,12 +233,18 @@ export class Container {
   openRemote(api, { query = '', singlePlay = false } = {}, playOptions = null) {
     this.release = null;
 
-    fetch(api).then(response => {
+    fetch(api, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
       if (200 !== response.status) {
         return;
       }
-      response.json().then(release => {
-        const error = Features.test(release);
+      response.json().then(json => {
+        const release = json.data;
+        console.log(json);
+        const error = Features.test(release.capabilities);
         if (error) {
           return this.client.trigger('unsupported');
         }
@@ -311,19 +316,10 @@ export class Container {
   /**
    * On Container instantiation all plugins based through this function will be supplied to the Container
    * @static
-   * @param {BasePlugin} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
+   * @param {SpringRollContainer.BasePlugin} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
    * @memberof Container
    */
   static uses(plugin) {
-    //Merging with the base plugin to guarantee we will have certain functions
-    if (!(plugin instanceof BasePlugin)) {
-      console.warn(
-        'SpringRollContainer: Was passed a plugin that is not based on the BasePlugin',
-        JSON.stringify(plugin)
-      );
-      return;
-    }
-
     PLUGINS.push(plugin);
   }
 
@@ -331,7 +327,7 @@ export class Container {
    * @readonly
    * @static
    * @memberof Container
-   * @returns {Array<BasePlugin>}
+   * @returns {Array<SpringRollContainer.BasePlugin>}
    */
   static get plugins() {
     return PLUGINS;

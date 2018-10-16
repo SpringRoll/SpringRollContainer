@@ -24,7 +24,7 @@ export class Container {
   onLocalError($event: Error): void;
   onProgress(): void;
   openPath(path: string, options?:object, playOptions?: object): void;
-  openRemote(api:string, options?: RemoteOptions, playOptions: object):void;
+  openRemote(api:string, options?: RemoteOptions, playOptions?: object | null):void;
   preload(): void;
   reset():void;
   private _internalOpen(userPath:string, options?: OpenOptions): void;

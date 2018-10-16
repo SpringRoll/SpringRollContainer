@@ -99,14 +99,22 @@ export class SoundPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        this.voButton.style.display =
-          features.vo && this.voButton ? 'inline-block' : 'none';
-        this.musicButton.style.display =
-          features.music && this.musicButton ? 'inline-block' : 'none';
-        this.soundButton.style.display =
-          features.sound && this.soundButton ? 'inline-block' : 'none';
-        this.sfxButton.style.display =
-          features.sfxButton && this.sfxButton ? 'inline-block' : 'none';
+        if (this.voButton instanceof HTMLElement) {
+          this.voButton.style.display =
+            features.data.vo && this.voButton ? 'inline-block' : 'none';
+        }
+        if (this.musicButton instanceof HTMLElement) {
+          this.musicButton.style.display =
+            features.data.music && this.musicButton ? 'inline-block' : 'none';
+        }
+        if (this.soundButton instanceof HTMLElement) {
+          this.soundButton.style.display =
+            features.data.sound && this.soundButton ? 'inline-block' : 'none';
+        }
+        if (this.sfxButton instanceof HTMLElement) {
+          this.sfxButton.style.display =
+            features.data.sfxButton && this.sfxButton ? 'inline-block' : 'none';
+        }
       }.bind(this)
     );
   }

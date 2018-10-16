@@ -29,7 +29,7 @@ export class Features {
    * If the browser has WebAudio API support
    * @property {boolean} webaudio
    */
-  static get webAudio() {
+  static get webaudio() {
     return 'webkitAudioContext' in window || 'AudioContext' in window;
   }
 
@@ -37,7 +37,7 @@ export class Features {
    * If the browser has Web Sockets API
    * @property {boolean} websockets
    */
-  static get webSockets() {
+  static get websockets() {
     return 'WebSocket' in window || 'MozWebSocket' in window;
   }
 
@@ -51,9 +51,9 @@ export class Features {
 
   /**
    * If the browser has Web Workers API
-   * @property {boolean} webWorkers
+   * @property {boolean} webworkers
    */
-  static get webWorkers() {
+  static get webworkers() {
     return 'function' === typeof Worker;
   }
 
@@ -78,7 +78,7 @@ export class Features {
   static basic() {
     if (!Features.canvas) {
       return 'Browser does not support canvas';
-    } else if (!Features.webAudio) {
+    } else if (!Features.webaudio) {
       return 'Browser does not support WebAudio';
     }
     return null;
@@ -92,9 +92,9 @@ export class Features {
    * @param {object} [capabilities.features] The features
    * @param {object} [capabilities.features.webgl] WebGL required
    * @param {object} [capabilities.features.geolocation] Geolocation required
-   * @param {object} [capabilities.features.webWorkers] Web Workers API required
-   * @param {object} [capabilities.features.webAudio] WebAudio API required
-   * @param {object} [capabilities.features.webSockets] WebSockets required
+   * @param {object} [capabilities.features.webworkers] Web Workers API required
+   * @param {object} [capabilities.features.webaudio] WebAudio API required
+   * @param {object} [capabilities.features.websockets] WebSockets required
    * @param {object} [capabilities.sizes] The sizes
    * @param {Boolean} [capabilities.sizes.xsmall] Screens < 480
    * @param {Boolean} [capabilities.sizes.small] Screens < 768
@@ -112,6 +112,7 @@ export class Features {
     if (err) {
       return err;
     }
+
     const features = capabilities.features;
     const ui = capabilities.ui;
     const sizes = capabilities.sizes;

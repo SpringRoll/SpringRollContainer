@@ -2,9 +2,9 @@ type testOptions = {
   features?: {
     webgl?: boolean;
     geolocation?: boolean;
-    webWorkers?: boolean;
-    webAudio?: boolean;
-    webSockets?: boolean;
+    webworkers?: boolean;
+    webaudio?: boolean;
+    websockets?: boolean;
   },
   sizes?: {
     xsmall: boolean;
@@ -24,9 +24,9 @@ export class Features {
   static get geolocation(): boolean;
   static get info(): string;
   static get touch(): boolean;
-  static get webAudio(): boolean;
+  static get webaudio(): boolean;
   static get webgl():boolean;
-  static get webSockets(): boolean;
-  static get webWorkers(): boolean;
+  static get websockets(): boolean;
+  static get webworkers(): boolean;
   static test(capabilities: testOptions): string | null;
 }

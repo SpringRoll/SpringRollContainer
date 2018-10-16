@@ -23,7 +23,7 @@ export class BasePlugin {
 
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    * @returns {Promise}
    */
@@ -33,41 +33,41 @@ export class BasePlugin {
 
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    */
   setup(container) {}
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    */
   open(container) {}
 
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    */
   opened(container) {}
 
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    */
   close(container) {}
 
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    */
   closed(container) {}
 
   /**
    *
-   * @param {Container} [container]
+   * @param {SpringRollContainer.Container} [container]
    * @memberof BasePlugin
    */
   teardown(container) {}

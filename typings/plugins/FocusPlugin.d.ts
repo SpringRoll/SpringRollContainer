@@ -1,7 +1,7 @@
 import { BasePlugin, Container, PageVisibility } from "..";
 
 export class FocusPlugin extends BasePlugin {
-  constructor(selector: string);
+  constructor(selector?: string);
 
   private _appBlurred: boolean;
   private _keepFocus: boolean;
