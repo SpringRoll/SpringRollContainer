@@ -107,20 +107,45 @@ export class SoundPlugin extends ButtonPlugin {
           return;
         }
         if (this.voButton instanceof HTMLElement) {
-          this.voButton.style.display =
-            features.data.vo && this.voButton ? 'inline-block' : 'none';
+          this.voButton.style.display = features.data.vo
+            ? 'inline-block'
+            : 'none';
         }
         if (this.musicButton instanceof HTMLElement) {
-          this.musicButton.style.display =
-            features.data.music && this.musicButton ? 'inline-block' : 'none';
+          this.musicButton.style.display = features.data.music
+            ? 'inline-block'
+            : 'none';
         }
         if (this.soundButton instanceof HTMLElement) {
-          this.soundButton.style.display =
-            features.data.sound && this.soundButton ? 'inline-block' : 'none';
+          this.soundButton.style.display = features.data.sound
+            ? 'inline-block'
+            : 'none';
         }
         if (this.sfxButton instanceof HTMLElement) {
-          this.sfxButton.style.display =
-            features.data.sfx && this.sfxButton ? 'inline-block' : 'none';
+          this.sfxButton.style.display = features.data.sfx
+            ? 'inline-block'
+            : 'none';
+        }
+
+        if (this.soundSlider) {
+          this.soundSlider.style.display = features.data.soundVolume
+            ? 'inline-block'
+            : 'none';
+        }
+        if (this.voSlider) {
+          this.voSlider.style.display = features.data.voVolume
+            ? 'inline-block'
+            : 'none';
+        }
+        if (this.musicSlider) {
+          this.musicSlider.style.display = features.data.musicVolume
+            ? 'inline-block'
+            : 'none';
+        }
+        if (this.sfxSlider) {
+          this.sfxSlider.style.display = features.data.sfxVolume
+            ? 'inline-block'
+            : 'none';
         }
       }.bind(this)
     );
