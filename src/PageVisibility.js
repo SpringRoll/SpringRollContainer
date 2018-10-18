@@ -31,6 +31,8 @@ export class PageVisibility {
     }.bind(this);
     this._enabled = false;
     this.enabled = true;
+
+    this.onToggle = this.onToggle.bind(this);
   }
 
   /**
@@ -71,18 +73,20 @@ export class PageVisibility {
   set enabled(enable) {
     this._enabled = enable;
 
+    document.removeEventListener('visibilitychange', this.onToggle, false);
     window.removeEventListener('blur', this.onBlur);
     window.removeEventListener('focus', this.onFocus);
     window.removeEventListener('pagehide', this.onBlur);
     window.removeEventListener('pageshow', this.onFocus);
-    window.removeEventListener('visibilitychange', this.onToggle.bind(this));
+    window.removeEventListener('visibilitychange', this.onToggle, false);
 
     if (this._enabled) {
+      document.addEventListener('visibilitychange', this.onToggle, false);
       window.addEventListener('blur', this.onBlur);
       window.addEventListener('focus', this.onFocus);
       window.addEventListener('pagehide', this.onBlur);
       window.addEventListener('pageshow', this.onFocus);
-      window.addEventListener('visibilitychange', this.onToggle.bind(this));
+      window.addEventListener('visibilitychange', this.onToggle, false);
     }
   }
 }

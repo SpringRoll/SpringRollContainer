@@ -33,6 +33,7 @@ export class CaptionsPlugin extends ButtonPlugin {
       SavedData.read(CAPTIONS_STYLES) || {}
     );
     this.captionsButton = document.querySelector(captionsButton);
+    this._captionsMuted = false;
 
     if (!this.captionsButton) {
       console.warn(
@@ -52,13 +53,15 @@ export class CaptionsPlugin extends ButtonPlugin {
         this.captionsButton.style.display = features.data.captions
           ? 'inline-block'
           : 'none';
+
+        if (null === SavedData.read(CAPTIONS_MUTED)) {
+          // this.captionsMuted = true;
+          return;
+        }
+
+        this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
       }.bind(this)
     );
-
-    //Set the defaults if we have none for the controls
-    if (null === SavedData.read(CAPTIONS_MUTED)) {
-      this.captionsMuted = true;
-    }
   }
 
   /**
@@ -153,5 +156,26 @@ export class CaptionsPlugin extends ButtonPlugin {
     }
 
     super._disableButton(this.captionsButton);
+  }
+
+  /**
+   * @readonly
+   * @memberof CaptionsPlugin
+   */
+  get captionsMuted() {
+    return this._captionsMuted;
+  }
+
+  /**
+   * @param {boolean} muted
+   * @memberof CaptionsPlugin
+   */
+  set captionsMuted(muted) {
+    this._captionsMuted = muted;
+    this._setMuteProp(
+      'captionsMuted',
+      this.captionsButton,
+      this._captionsMuted
+    );
   }
 }

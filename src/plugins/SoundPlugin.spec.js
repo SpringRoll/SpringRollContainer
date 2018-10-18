@@ -47,13 +47,12 @@ describe('SoundPlugin', () => {
     expect(sp.sfxButton).to.be.instanceof(HTMLButtonElement);
     expect(sp.voButton).to.be.instanceof(HTMLButtonElement);
     new Container('#sound-plugin-iframe').client.trigger('features');
-    console.log(sp.voButton);
   });
 
   it('.setMuteProp()', () => {
-    sp.setMuteProp('_soundMuted', true, sp.soundButton);
+    sp.setMuteProp('soundMuted', true, sp.soundButton);
     expect(sp._soundMuted).to.be.true;
-    sp.setMuteProp('_soundMuted', false, sp.soundButton);
+    sp.setMuteProp('soundMuted', false, sp.soundButton);
     expect(sp._soundMuted).to.be.false;
   });
 

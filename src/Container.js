@@ -50,15 +50,7 @@ export class Container {
    * @memberof Container
    */
   onLoading() {
-    this.client.trigger('opening');
-  }
-
-  /**
-   * The game preload is progressing
-   * @memberof Container
-   */
-  onProgress() {
-    this.client.trigger('progress');
+    CLIENT.trigger('opening');
   }
 
   /**
@@ -72,11 +64,7 @@ export class Container {
 
     this.plugins.forEach(plugin => plugin.opened(this));
 
-    /**
-     * Event when the application gives the load done signal
-     * @event opened
-     */
-    this.client.trigger('opened');
+    CLIENT.trigger('opened');
   }
 
   /**
@@ -93,7 +81,7 @@ export class Container {
    * @param  {Event} $event Bellhop event
    */
   onLocalError($event) {
-    this.client.trigger($event.type);
+    console.error('SpringRoll Container error: ', $event, new Error().stack);
   }
 
   /**
@@ -113,7 +101,7 @@ export class Container {
     }
 
     if (wasLoaded) {
-      this.client.trigger('closed');
+      CLIENT.trigger('closed');
     }
 
     // Reset state
@@ -131,15 +119,14 @@ export class Container {
    * @memberof Container
    */
   initClient() {
-    // @ts-ignore
-    this.client.connect(this.dom);
-
     //Handle bellhop events coming from the application
-    this.client.on('loading', this.onLoading.bind(this));
-    this.client.on('progress', this.onProgress.bind(this));
-    this.client.on('loaded', this.onLoadDone.bind(this));
-    this.client.on('endGame', this.onEndGame.bind(this));
-    this.client.on('localError', this.onLocalError.bind(this));
+    CLIENT.on('loading', this.onLoading.bind(this));
+    CLIENT.on('loaded', this.onLoadDone.bind(this));
+    CLIENT.on('loadDone', this.onLoadDone.bind(this));
+    CLIENT.on('endGame', this.onEndGame.bind(this));
+    CLIENT.on('localError', this.onLocalError.bind(this));
+    // @ts-ignore
+    CLIENT.connect(this.dom);
   }
 
   /**
@@ -168,7 +155,7 @@ export class Container {
     const err = Features.basic();
     if (err) {
       console.error('ERROR:', err);
-      this.client.trigger('unsupported');
+      CLIENT.trigger('unsupported');
     }
     this.plugins.forEach(plugin => plugin.open(this));
 
@@ -187,9 +174,9 @@ export class Container {
     this.main.classList.add('loading');
     this.main.setAttribute('src', path);
 
-    this.client.respond('singlePlay', { singlePlay });
-    this.client.respond('playOptions', { playOptions });
-    this.client.trigger('open');
+    CLIENT.respond('singlePlay', { singlePlay });
+    CLIENT.respond('playOptions', { playOptions });
+    CLIENT.trigger('open');
   }
 
   /**
@@ -243,10 +230,9 @@ export class Container {
       }
       response.json().then(json => {
         const release = json.data;
-        console.log(json);
         const error = Features.test(release.capabilities);
         if (error) {
-          return this.client.trigger('unsupported');
+          return CLIENT.trigger('unsupported');
         }
 
         this.release = release;
@@ -280,9 +266,9 @@ export class Container {
   close() {
     if (this.loading || this.loaded) {
       this.plugins.forEach(plugin => plugin.close(this));
-      this.client.trigger('close');
+      CLIENT.trigger('close');
       // Start the close
-      this.client.send('close');
+      CLIENT.send('close');
     } else {
       this.reset();
     }
@@ -297,7 +283,7 @@ export class Container {
     const preloader = Promise.resolve();
     this.plugins.forEach(plugin => preloader.then(() => plugin.preload()));
     preloader
-      .then(() => this.client.send('plugins loaded'))
+      .then(() => CLIENT.send('plugins loaded'))
       .catch(e =>
         console.error('SpringRoll Container Plugin Preloader error: ', e)
       );
@@ -359,7 +345,7 @@ export class Container {
    * @memberof Container
    */
   get client() {
-    return Container.client;
+    return CLIENT;
   }
 
   /**

@@ -30,15 +30,15 @@ describe('ButtonPlugin', () => {
     expect(button.classList[0]).to.equal('disabled');
   });
 
-  it('.removeListeners', () => {
-    bp.removeListeners(button);
-    expect(button.classList.contains('muted')).to.be.true;
+  it('.changeMutedState', () => {
+    bp.changeMutedState(button);
+    expect(button.classList.contains('muted')).to.be.false;
   });
 
   it('._setMuteProp', () => {
     const tasks = [
-      () => bp._setMuteProp('ButtonPlugin', button),
-      () => bp._setMuteProp('ButtonPlugin', [button])
+      () => bp._setMuteProp('ButtonPlugin', button, true),
+      () => bp._setMuteProp('ButtonPlugin', [button], true)
     ];
 
     tasks.forEach(task => {

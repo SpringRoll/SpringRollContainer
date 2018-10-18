@@ -24,6 +24,7 @@ export class PausePlugin extends ButtonPlugin {
 
   set pause(paused: boolean): void;
   get pause(): boolean;
+  get hasDom(): boolean;
 
   pauseButton: NodeListOf<HTMLButtonElement>;
 

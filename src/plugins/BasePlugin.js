@@ -81,7 +81,6 @@ export class BasePlugin {
    */
   sendProperty(prop, value) {
     SavedData.write(prop, value);
-
     this.client.send(prop, value);
   }
 

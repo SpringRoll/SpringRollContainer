@@ -13,4 +13,5 @@ export class HelpPlugin extends ButtonPlugin {
   helpButtonClick(): void;
   open(): void;
   teardown(): void;
+  onPause($event:object):void;
 }

@@ -65,15 +65,15 @@ export class ButtonPlugin extends BasePlugin {
    *
    *
    * @param {string} prop
-   * @param {HTMLElement} button
+   * @param {Element} button
    * @param {Boolean} muted
    * @memberof ButtonPlugin
    */
   _setMuteProp(prop, button, muted) {
     if (Array.isArray(button)) {
-      button.forEach(b => this.removeListeners(b));
+      button.forEach(b => this.changeMutedState(b, muted));
     } else {
-      this.removeListeners(button);
+      this.changeMutedState(button, muted);
     }
 
     this.sendProperty(prop, muted);
@@ -82,17 +82,18 @@ export class ButtonPlugin extends BasePlugin {
   /**
    *
    *
-   * @param {*} button
+   * @param {Element} button
+   * @param {Boolean} muted
    * @returns
    * @memberof ButtonPlugin
    */
-  removeListeners(button) {
+  changeMutedState(button, muted = false) {
     if (!(button instanceof HTMLElement)) {
       return;
     }
 
     button.classList.remove('unmuted');
     button.classList.remove('muted');
-    button.classList.add(this.sendMutes ? 'muted' : 'unmuted');
+    button.classList.add(muted ? 'muted' : 'unmuted');
   }
 }

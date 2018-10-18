@@ -99,6 +99,13 @@ export class SoundPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
+        if (
+          !features.data ||
+          'object' !== typeof features.data ||
+          null === features.data
+        ) {
+          return;
+        }
         if (this.voButton instanceof HTMLElement) {
           this.voButton.style.display =
             features.data.vo && this.voButton ? 'inline-block' : 'none';
@@ -113,7 +120,7 @@ export class SoundPlugin extends ButtonPlugin {
         }
         if (this.sfxButton instanceof HTMLElement) {
           this.sfxButton.style.display =
-            features.data.sfxButton && this.sfxButton ? 'inline-block' : 'none';
+            features.data.sfx && this.sfxButton ? 'inline-block' : 'none';
         }
       }.bind(this)
     );
@@ -212,13 +219,13 @@ export class SoundPlugin extends ButtonPlugin {
   /**
    *
    *
-   * @param {*} key
+   * @param {string} key
    * @param {*} value
-   * @param {*} element
+   * @param {Element} element
    * @memberof SoundPlugin
    */
   setMuteProp(key, value, element) {
-    this[key] = value;
+    this['_' + key] = value;
     this._setMuteProp(key, element, value);
   }
 
@@ -326,7 +333,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   set soundMuted(muted) {
-    this.setMuteProp('_soundMuted', muted, this.soundButton);
+    this.setMuteProp('soundMuted', muted, this.soundButton);
   }
 
   /**
@@ -340,7 +347,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   set voMuted(muted) {
-    this.setMuteProp('_voMuted', muted, this.voButton);
+    this.setMuteProp('voMuted', muted, this.voButton);
   }
 
   /**
@@ -356,7 +363,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   set musicMuted(muted) {
-    this.setMuteProp('_musicMuted', muted, this.musicButton);
+    this.setMuteProp('musicMuted', muted, this.musicButton);
   }
 
   /**
@@ -370,7 +377,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   set sfxMuted(muted) {
-    this.setMuteProp('_sfxMuted', muted, this.sfxButton);
+    this.setMuteProp('sfxMuted', muted, this.sfxButton);
   }
 
   /**

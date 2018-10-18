@@ -34,7 +34,6 @@ export class PausePlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        console.log('hello !+!@?!@', features);
         if (features.disablePause) {
           this.pauseDisabled = true;
         }
@@ -51,63 +50,12 @@ export class PausePlugin extends ButtonPlugin {
       this.pauseButton.forEach(e => e.addEventListener('click', onPauseToggle));
     }
 
-    this.pauseFocus = document.querySelector(selector);
-    if (null !== this.pauseFocus) {
-      console.log('hello');
-      this.pauseFocus.addEventListener('focus', this.onPauseFocus);
-    }
-  }
-
-  /**
-   *
-   *
-   * @memberof PausePlugin
-   */
-  onPauseToggle() {
-    this.pause = !this._paused;
-    this._isManualPause = this.paused;
-  }
-
-  /**
-   * @memberof PausePlugin
-   */
-  opened() {
-    this.pauseButton.forEach(element => element.classList.remove('disabled'));
-    this.pause = this._paused;
-    this.focus();
-  }
-
-  /**
-   * @memberof PausePlugin
-   */
-  close() {
-    this.pauseButton.forEach(element => this._disableButton.bind(element));
-    this.paused = false;
-    // Stop the focus timer if it's running
-    if (this._focusTimer) {
-      clearTimeout(this._focusTimer);
-    }
-  }
-
-  /**
-   * @memberof PausePlugin
-   */
-  teardown() {
-    super.reset();
-    const onPauseToggle = this.onPauseToggle.bind(this);
-    this.pauseButton.forEach(element =>
-      element.removeEventListener('click', onPauseToggle)
-    );
+    this.pauseFocus = document.querySelectorAll(selector);
 
     if (null !== this.pauseFocus) {
-      this.pauseFocus.removeEventListener('focus', this.onPauseFocus);
-    }
-
-    document.removeEventListener('focus', this.focus);
-    document.removeEventListener('click', this.focus);
-
-    if (this.pageVisibility) {
-      this.pageVisibility.destroy();
+      this.pauseFocus.forEach(e =>
+        e.addEventListener('focus', this.onPauseFocus)
+      );
     }
   }
 
@@ -121,9 +69,12 @@ export class PausePlugin extends ButtonPlugin {
     if (this.pauseDisabled) {
       return;
     }
+
     this._paused = paused;
     this.client.send('pause', paused);
-    this.client.trigger(paused ? 'paused' : 'resumed');
+    this.client.trigger(paused ? 'paused' : 'resumed', {
+      paused: this._paused
+    });
 
     // Set the pause button state
     this.pauseButton.forEach(element => {
@@ -142,37 +93,21 @@ export class PausePlugin extends ButtonPlugin {
   }
 
   /**
-   * @param {SpringRollContainer.Container} container
-   * @memberof FocusPlugin
-   */
-  setup({ dom }) {
-    super.setup();
-    this.dom = dom;
-  }
-
-  /**
-   * @memberof FocusPlugin
-   */
-  open() {
-    this.client.on('focus', this.onFocus.bind(this));
-    this.client.on('keepFocus', this.onKeepFocus.bind(this));
-  }
-
-  /**
    * @memberof FocusPlugin
    */
   onPauseFocus() {
     this._isManualPause = this.paused = true;
-    this.pauseFocus.addEventListener(
-      'blur',
-      function() {
-        console.log('hello!?', this);
-        this._isManualPause = this.paused = false;
-        this.focus();
-      }.bind(this),
-      {
-        once: true
-      }
+    this.pauseFocus.forEach(e =>
+      e.addEventListener(
+        'blur',
+        function() {
+          this._isManualPause = this.paused = false;
+          this.focus();
+        }.bind(this),
+        {
+          once: true
+        }
+      )
     );
   }
 
@@ -180,18 +115,21 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof FocusPlugin
    */
   focus() {
-    if (this.dom.contentWindow) {
-      this.dom.contentWindow.focus();
+    if (!this.hasDom) {
+      return;
     }
+
+    this.dom.contentWindow.focus();
   }
 
   /**
    * @memberof FocusPlugin
    */
   blur() {
-    if (this.dom.contentWindow) {
-      this.dom.contentWindow.blur();
+    if (!this.hasDom) {
+      return;
     }
+    this.dom.contentWindow.blur();
   }
 
   /**
@@ -239,8 +177,8 @@ export class PausePlugin extends ButtonPlugin {
    * @method onKeepFocus
    * @private
    */
-  onKeepFocus(event) {
-    this._keepFocus = !!event.data;
+  onKeepFocus($event) {
+    this._keepFocus = !!$event.data;
     this.manageFocus();
   }
 
@@ -249,8 +187,8 @@ export class PausePlugin extends ButtonPlugin {
    * @method onFocus
    * @private
    */
-  onFocus(e) {
-    this._appBlurred = !e.data;
+  onFocus($event) {
+    this._appBlurred = !$event.data;
     this.manageFocus();
   }
 
@@ -276,5 +214,87 @@ export class PausePlugin extends ButtonPlugin {
     //the application's focus event will override the blur imminently.
     this._containerBlurred = this._appBlurred = true;
     this.manageFocus();
+  }
+
+  /**
+   *
+   *
+   * @memberof PausePlugin
+   */
+  onPauseToggle() {
+    this.pause = !this._paused;
+    this._isManualPause = this.paused;
+  }
+
+  /**
+   * @param {SpringRollContainer.Container} container
+   * @memberof FocusPlugin
+   */
+  setup({ dom }) {
+    super.setup();
+    this.dom = dom;
+  }
+
+  /**
+   * @memberof FocusPlugin
+   */
+  open() {
+    this.client.on('focus', this.onFocus.bind(this));
+    this.client.on('keepFocus', this.onKeepFocus.bind(this));
+  }
+
+  /**
+   * @memberof PausePlugin
+   */
+  opened() {
+    this.pauseButton.forEach(element => element.classList.remove('disabled'));
+    this.pause = this._paused;
+    this.focus();
+  }
+
+  /**
+   * @memberof PausePlugin
+   */
+  close() {
+    this.pauseButton.forEach(element => this._disableButton.bind(element));
+    this.paused = false;
+    // Stop the focus timer if it's running
+    if (this._focusTimer) {
+      clearTimeout(this._focusTimer);
+    }
+  }
+
+  /**
+   * @memberof PausePlugin
+   */
+  teardown() {
+    super.reset();
+    const onPauseToggle = this.onPauseToggle.bind(this);
+    this.pauseButton.forEach(element =>
+      element.removeEventListener('click', onPauseToggle)
+    );
+
+    if (null !== this.pauseFocus) {
+      this.pauseFocus.forEach(e =>
+        e.removeEventListener('focus', this.onPauseFocus)
+      );
+    }
+
+    document.removeEventListener('focus', this.focus);
+    document.removeEventListener('click', this.focus);
+
+    if (this.pageVisibility) {
+      this.pageVisibility.destroy();
+    }
+  }
+
+  /**
+   * Function to check if we have a dom with a contentWindow
+   * @readonly
+   * @returns {boolean}
+   * @memberof PausePlugin
+   */
+  get hasDom() {
+    return Boolean(null !== this.dom && this.dom.contentWindow);
   }
 }

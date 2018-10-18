@@ -10,11 +10,11 @@ describe('Features', () => {
   });
 
   it('.webAudio()', () => {
-    expect(Features.webAudio).to.be.a('boolean');
+    expect(Features.webaudio).to.be.a('boolean');
   });
 
   it('.webSockets()', () => {
-    expect(Features.webSockets).to.be.a('boolean');
+    expect(Features.websockets).to.be.a('boolean');
   });
 
   it('.geolocation()', () => {
@@ -22,7 +22,7 @@ describe('Features', () => {
   });
 
   it('.webWorkers()', () => {
-    expect(Features.webWorkers).to.be.a('boolean');
+    expect(Features.webworkers).to.be.a('boolean');
   });
 
   it('.touch()', () => {

@@ -127,6 +127,14 @@ export class SavedData {
     }
     const value = localStorage.getItem(name) || sessionStorage.getItem(name);
 
-    return JSON.parse(value) || null;
+    if ('string' === typeof value) {
+      try {
+        return JSON.parse(value);
+      } catch (err) {
+        return value;
+      }
+    } else {
+      return value;
+    }
   }
 }

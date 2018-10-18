@@ -18,36 +18,43 @@ export class HelpPlugin extends ButtonPlugin {
     this.helpButton = document.querySelector(helpButton);
     this.paused = false;
     this._helpEnabled = false;
+    this.onPause = this.onPause.bind(this);
     if (!(this.helpButton instanceof HTMLElement)) {
       return;
     }
     this.helpButton.addEventListener('click', this.helpButtonClick.bind(this));
 
     // Handle pause
-    this.client.on(
-      'pause',
-      function(paused) {
-        // Disable the help button when paused if it's active
-        if (paused && !this.helpButton.classList.contains('disabled')) {
-          this.helpButton.setAttribute('data-paused', true);
-          this.helpEnabled = false;
-        } else if (this.helpButton.getAttribute('data-paused')) {
-          this.helpButton.setAttribute('data-paused', '');
-          this.helpEnabled = true;
-        }
-      }.bind(this)
-    );
+    this.client.on('paused', this.onPause);
+    this.client.on('resumed', this.onPause);
 
     // Handle features changed
     this.client.on(
       'features',
       function(features) {
-        this.helpButton.style.display = features.hints
+        this.helpEnabled = features.data.hints;
+        this.helpButton.style.display = this.helpEnabled
           ? 'inline-block'
           : 'none';
-        this.helpButton.style.display = 'none';
       }.bind(this)
     );
+  }
+
+  /**
+   *  Called when the game is either paused or resumed
+   * @param {object} $event
+   * @memberof HelpPlugin
+   */
+  onPause($event) {
+    this.paused = $event.data.paused;
+    // Disable the help button when paused if it's active
+    if (this.paused && !this.helpButton.classList.contains('disabled')) {
+      this.helpButton.setAttribute('data-paused', 'true');
+      this.helpEnabled = false;
+    } else if (this.helpButton.getAttribute('data-paused')) {
+      this.helpButton.setAttribute('data-paused', '');
+      this.helpEnabled = true;
+    }
   }
 
   /**
@@ -92,7 +99,7 @@ export class HelpPlugin extends ButtonPlugin {
     this.client.on(
       'helpEnabled',
       function(event) {
-        this.helpEnabled = !!event.data;
+        this._helpEnabled = !!event.data;
       }.bind(this)
     );
   }
