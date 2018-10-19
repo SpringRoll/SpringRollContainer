@@ -1,8 +1,10 @@
 import { Bellhop } from "bellhop-iframe";
 import { BasePlugin } from "../src/plugins/BasePlugin";
 
-type OpenOptions = {singlePlay?: boolean, playOption?: object | null};
-type RemoteOptions = {query?: string, singlePlay?: boolean};
+type OpenOptions = {singlePlay?: boolean, playOption?: object | null, [key:string]: any};
+interface RemoteOptions extends OpenOptions {
+  query?:string;
+}
 
 export class Container {
   client: Bellhop;
@@ -22,7 +24,7 @@ export class Container {
   onLoadDone(): void;
   onLoading(): void;
   onLocalError($event: Error): void;
-  openPath(path: string, options?:object, playOptions?: object): void;
+  openPath(path: string, options?:OpenOptions): void;
   openRemote(api:string, options?: RemoteOptions, playOptions?: object | null):void;
   preload(): void;
   reset():void;

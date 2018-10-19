@@ -44,7 +44,7 @@
     "rollup-plugin-terser": "^3.0.0"
   },
   "dependencies": {
-    "bellhop-iframe": "^2.2.0",
+    "bellhop-iframe": "https://github.com/SpringRoll/Bellhop.git#master",
     "core-js": "^3.0.0-beta.3",
     "whatwg-fetch": "^3.0.0"
   },

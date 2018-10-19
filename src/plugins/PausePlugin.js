@@ -41,7 +41,6 @@ export class PausePlugin extends ButtonPlugin {
     );
 
     document.addEventListener('focus', this.focus);
-    document.addEventListener('click', this.focus);
 
     this.pauseButton = document.querySelectorAll(pauseButton);
     if (0 < this.pauseButton.length) {
@@ -93,21 +92,20 @@ export class PausePlugin extends ButtonPlugin {
   }
 
   /**
+   * @param {Event} $event
    * @memberof FocusPlugin
    */
-  onPauseFocus() {
-    this._isManualPause = this.paused = true;
-    this.pauseFocus.forEach(e =>
-      e.addEventListener(
-        'blur',
-        function() {
-          this._isManualPause = this.paused = false;
-          this.focus();
-        }.bind(this),
-        {
-          once: true
-        }
-      )
+  onPauseFocus($event) {
+    this._isManualPause = this.paused = this.pause = true;
+    $event.srcElement.addEventListener(
+      'blur',
+      function() {
+        this._isManualPause = this.paused = this.pause = false;
+        this.focus();
+      }.bind(this),
+      {
+        once: true
+      }
     );
   }
 

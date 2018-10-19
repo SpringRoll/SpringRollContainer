@@ -184,10 +184,9 @@ export class Container {
    *
    * @param {string} path
    * @param {object} [options={}]
-   * @param {object} [playOptions={}]
    * @memberof Container
    */
-  openPath(path, options = {}, playOptions = {}) {
+  openPath(path, options = {}) {
     // This should be deprecated, support for old function signature
     if ('object' !== typeof options) {
       console.warn(
@@ -201,7 +200,7 @@ export class Container {
       Object.assign(
         {
           singlePlay: false,
-          playOptions: playOptions
+          playOptions: {}
         },
         options
       )
@@ -214,10 +213,10 @@ export class Container {
    * @param {object} options
    * @param {string} [options.query='']
    * @param {boolean} [options.singlePlay=false]
-   * @param {null | object} [playOptions=null]
+   * @param {null | object} [options.playOptions=null]
    * @memberof RemotePlugin
    */
-  openRemote(api, { query = '', singlePlay = false } = {}, playOptions = null) {
+  openRemote(api, { query = '', singlePlay = false, playOptions = null } = {}) {
     this.release = null;
 
     fetch(api, {

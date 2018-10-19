@@ -49,8 +49,8 @@ export class CaptionsPlugin extends ButtonPlugin {
     // Handle the features request
     this.client.on(
       'features',
-      function(features) {
-        this.captionsButton.style.display = features.data.captions
+      function($event) {
+        this.captionsButton.style.display = $event.data.captions
           ? 'inline-block'
           : 'none';
 
@@ -60,6 +60,13 @@ export class CaptionsPlugin extends ButtonPlugin {
         }
 
         this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+      }.bind(this)
+    );
+
+    this.client.on(
+      'caption-set-style',
+      function($event) {
+        this.setCaptionsStyles($event.data || {});
       }.bind(this)
     );
   }
