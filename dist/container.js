@@ -1975,17 +1975,15 @@
 		 */
 		this.captionsButton = document.querySelector(this.options.captionsButton);
 
-		if (null === this.captionsButton)
+		if (null !== this.captionsButton)
 		{
-			return;
+			this.captionsButtonClick = function()
+			{
+				this.captionsMuted = !this.captionsMuted;
+			}.bind(this);
+
+			this.captionsButton.addEventListener('click', this.captionsButtonClick);
 		}
-
-		this.captionsButtonClick = function()
-		{
-			this.captionsMuted = !this.captionsMuted;
-		}.bind(this);
-
-		this.captionsButton.addEventListener('click', this.captionsButtonClick);
 
 		/**
 		 * Set the captions are enabled or not
@@ -2104,8 +2102,11 @@
 		// Handle the features request
 		this.on('features', function(features)
 		{
-			this.captionsButton.style.display = 'none';
-			if (features.captions) this.captionsButton.style.display = 'inline-block';
+			if (null !== this.captionsButton)
+			{
+				this.captionsButton.style.display = 'none';
+				if (features.captions) this.captionsButton.style.display = 'inline-block';
+			}
 		});
 
 		//Set the defaults if we have none for the controls
@@ -2117,35 +2118,31 @@
 
 	plugin.opened = function()
 	{
-		if (null === this.captionsButton)
+		if (null !== this.captionsButton)
 		{
-			return;
+			this.captionsButton.classList.remove('disabled');
 		}
 
-		this.captionsButton.classList.remove('disabled');
 		this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 		this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 	};
 
 	plugin.close = function()
 	{
-		if (null === this.captionsButton)
+		if (null !== this.captionsButton)
 		{
-			return;
+			this._disableButton(this.captionsButton);
 		}
-
-		this._disableButton(this.captionsButton);
 	};
 
 	plugin.teardown = function()
 	{
-		if (null === this.captionsButton)
+		if (null !== this.captionsButton)
 		{
-			return;
+			this.captionsButton.removeEventListener('click', this.captionsButtonClick);
+			delete this.captionsButton;
 		}
 
-		this.captionsButton.removeEventListener('click', this.captionsButtonClick);
-		delete this.captionsButton;
 		delete this._captionsStyles;
 		delete this.getCaptionsStyles;
 		delete this.setCaptionsStyles;
