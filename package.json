@@ -16,7 +16,7 @@
 	},
 	"dependencies":
 	{
-		"bellhop-iframe": "~2.0.0"
+		"bellhop-iframe": "^2.3.0"
 	},
 	"devDependencies":
 	{
