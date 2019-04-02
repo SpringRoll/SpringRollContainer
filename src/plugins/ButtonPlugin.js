@@ -20,12 +20,12 @@ export class ButtonPlugin extends BasePlugin {
     super(name, required, optional);
     this.sendMutes = false;
   }
-  /* eslint-disable */
+
   /**
    * @memberof ButtonPlugin
-   * @param {SpringRollContainer.Container} [container]   */
-
-  setup(container) {
+   * @param {SpringRollContainer.Container} [container]
+   */
+  setup(container) { // eslint-disable-line no-unused-vars
     this.sendMutes = true;
   }
 
@@ -33,11 +33,9 @@ export class ButtonPlugin extends BasePlugin {
    * @memberof ButtonPlugin
    * @param {SpringRollContainer.Container} [container]
    */
-  teardown(container) {
+  teardown(container) { // eslint-disable-line no-unused-vars
     this.reset();
   }
-
-  /* eslint-enable */
 
   /**
    *
