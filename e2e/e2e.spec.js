@@ -1,7 +1,6 @@
 import {
   CaptionsPlugin,
   Container,
-  FocusPlugin,
   HelpPlugin,
   PausePlugin,
   SoundPlugin,
@@ -36,7 +35,6 @@ describe('End to End Test', () => {
 
   it('setup the container and all it\'s plugins', () => {
     Container.uses(new CaptionsPlugin('#captionsButton'));
-    Container.uses(new FocusPlugin());
     Container.uses(new PausePlugin('#pauseButton'));
     Container.uses(
       new SoundPlugin({
@@ -48,7 +46,7 @@ describe('End to End Test', () => {
     );
     Container.uses(new UserDataPlugin());
     Container.uses(new HelpPlugin('#helpButton'));
-    container = new Container('.karma-html', {});
+    container = new Container('.karma-html');
     container.initClient();
   });
   it('Check all button click events', () => {
