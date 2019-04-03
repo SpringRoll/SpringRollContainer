@@ -19,10 +19,6 @@ export class HelpPlugin extends ButtonPlugin {
     this.paused = false;
     this._helpEnabled = false;
     this.onPause = this.onPause.bind(this);
-    if (!(this.helpButton instanceof HTMLElement)) {
-      return;
-    }
-    this.helpButton.addEventListener('click', this.helpButtonClick.bind(this));
 
     // Handle pause
     this.client.on('paused', this.onPause);
@@ -37,6 +33,11 @@ export class HelpPlugin extends ButtonPlugin {
           : 'none';
       }.bind(this)
     );
+
+    if (!(this.helpButton instanceof HTMLElement)) {
+      return;
+    }
+    this.helpButton.addEventListener('click', this.helpButtonClick.bind(this));
   }
 
   /**

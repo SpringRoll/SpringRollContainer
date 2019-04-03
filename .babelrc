@@ -5,7 +5,10 @@
       {
         "useBuiltIns": "entry",
         "targets": {
-          "esmodules": true
+          "esmodules": true,
+          "android": 4,
+          "ios": 8,
+          "ie": 11
         }
       }
     ]

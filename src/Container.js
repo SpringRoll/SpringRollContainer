@@ -174,8 +174,8 @@ export class Container {
     this.main.classList.add('loading');
     this.main.setAttribute('src', path);
 
-    CLIENT.respond('singlePlay', { singlePlay });
-    CLIENT.respond('playOptions', { playOptions });
+    CLIENT.respond('singlePlay', singlePlay);
+    CLIENT.respond('playOptions', playOptions);
     CLIENT.trigger('open');
   }
 
@@ -360,8 +360,8 @@ export class Container {
     const pluginLookup = {};
     PLUGINS.forEach(plugin => {
       // for any optional plugins that are missing remove them from the list and warn along the way
-      const optionalAvailablePlugins = plugin.optional.filter(
-        name => (pluginNames.indexOf(name) === -1 ? false : true)
+      const optionalAvailablePlugins = plugin.optional.filter(name =>
+        pluginNames.indexOf(name) === -1 ? false : true
       );
 
       pluginLookup[plugin.name] = {
