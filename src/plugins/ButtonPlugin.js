@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import { BasePlugin } from './BasePlugin';
+import { Container } from '../Container';
 
 /**
  *
@@ -11,29 +13,29 @@ export class ButtonPlugin extends BasePlugin {
   /**
    *Creates an instance of ButtonPlugin.
    * @param {string} name
-   * @param {Array<String>} [required] The list of required plugins (by name) that this plugin depends on
-   * @param {Array<String>} [optional] The list of optional plugins (by name) that this plugin depends on
    *
    * @memberof ButtonPlugin
    */
-  constructor(name, required = [], optional = []) {
-    super(name, required, optional);
+  constructor(name) {
+    super(name);
     this.sendMutes = false;
   }
 
   /**
    * @memberof ButtonPlugin
-   * @param {SpringRollContainer.Container} [container]
+   * @param {Container} [container]
    */
-  setup(container) { // eslint-disable-line no-unused-vars
+  setup(container) {
+    // eslint-disable-line no-unused-vars
     this.sendMutes = true;
   }
 
   /**
    * @memberof ButtonPlugin
-   * @param {SpringRollContainer.Container} [container]
+   * @param {Container} [container]
    */
-  teardown(container) { // eslint-disable-line no-unused-vars
+  teardown(container) {
+    // eslint-disable-line no-unused-vars
     this.reset();
   }
 

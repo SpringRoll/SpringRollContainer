@@ -7,20 +7,11 @@ before(() => {
   button.id = 'test';
   document.body.appendChild(button);
   hp = new HelpPlugin('#test');
+  hp.preload({ client: new Bellhop() });
 });
 describe('HelpPlugin', () => {
   it('construct', () => {
     expect(hp.helpButton).to.be.instanceof(HTMLButtonElement);
     expect(hp.client).to.be.instanceof(Bellhop);
-  });
-
-  it('.open()', () => {
-    hp.open();
-  });
-  it('.close()', () => {
-    hp.close();
-  });
-  it('.tearDown()', () => {
-    hp.teardown();
   });
 });

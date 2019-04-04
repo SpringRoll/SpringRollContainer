@@ -19,27 +19,8 @@ export class HelpPlugin extends ButtonPlugin {
     this.paused = false;
     this._helpEnabled = false;
     this.onPause = this.onPause.bind(this);
-
-    // Handle pause
-    this.client.on('paused', this.onPause);
-
-    // Handle features changed
-    this.client.on(
-      'features',
-      function(features) {
-        this.helpEnabled = features.data.hints;
-        this.helpButton.style.display = this.helpEnabled
-          ? 'inline-block'
-          : 'none';
-      }.bind(this)
-    );
-
-    if (!(this.helpButton instanceof HTMLElement)) {
-      return;
-    }
     this.helpButton.addEventListener('click', this.helpButtonClick.bind(this));
   }
-
   /**
    *  Called when the game is either paused or resumed
    * @param {object} $event
@@ -73,29 +54,25 @@ export class HelpPlugin extends ButtonPlugin {
    *
    * @memberof HelpPlugin
    */
-  teardown() {
-    this.helpButton.removeEventListener(
-      'click',
-      this.helpButtonClick.bind(this)
+  init() {
+    console.log('here => ', this.client);
+    // Handle pause
+    this.client.on('paused', this.onPause);
+
+    // Handle features changed
+    this.client.on(
+      'features',
+      function(features) {
+        this.helpEnabled = features.data.hints;
+        this.helpButton.style.display = this.helpEnabled
+          ? 'inline-block'
+          : 'none';
+      }.bind(this)
     );
-  }
 
-  /**
-   *
-   *
-   * @memberof HelpPlugin
-   */
-  close() {
-    this.client.off('helpEnabled');
-    this.helpEnabled = false;
-  }
-
-  /**
-   *
-   *
-   * @memberof HelpPlugin
-   */
-  open() {
+    if (!(this.helpButton instanceof HTMLElement)) {
+      return;
+    }
     this.client.on(
       'helpEnabled',
       function(event) {

@@ -1,4 +1,4 @@
-import { PageVisibility } from './index';
+import { PageVisibility } from './PageVisibility';
 
 //IE 11 work around for testing
 const initEvent = eventName => {
@@ -13,8 +13,6 @@ describe('PageVisibility', () => {
   /*eslint-disable */
   const onEvent = function($event) {
     wasCalled = true;
-
-    // event[$event.type] = true;
   };
   beforeEach(() => {
     wasCalled = false;

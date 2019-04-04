@@ -1,4 +1,5 @@
 import { CaptionsPlugin } from './CaptionsPlugin';
+import { Bellhop } from 'bellhop-iframe';
 
 describe('CaptionsPlugin', () => {
   const id = 'button_test';
@@ -9,6 +10,7 @@ describe('CaptionsPlugin', () => {
     button.id = id;
     document.body.appendChild(button);
     cp = new CaptionsPlugin(`#${id}`);
+    cp.preload({ client: new Bellhop() });
   });
   it('construct', () => {
     expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
@@ -28,17 +30,5 @@ describe('CaptionsPlugin', () => {
   it('.getCaptionsStyles()', () => {
     expect(cp.getCaptionsStyles('font')).to.equal('arial');
     expect(cp.getCaptionsStyles()).to.be.instanceof(Object);
-  });
-  it('.opened()', () => {
-    expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
-    cp.opened();
-  });
-  it('.teardown()', () => {
-    expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
-    cp.teardown();
-  });
-  it('.close()', () => {
-    expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
-    cp.close();
   });
 });

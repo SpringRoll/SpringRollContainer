@@ -1,96 +1,56 @@
-/* eslint-disable */
-import { Container } from '../Container';
+/* eslint-disable no-unused-vars */
 import { SavedData } from '../SavedData';
+import { Container } from '../Container';
+
 /**
  *
  *
  * @export
  * @class BasePlugin
+ * @property {Bellhop} client
  */
 export class BasePlugin {
   /**
    *Creates an instance of BasePlugin.
    * @param {string} name
-   * @param {Array<String>} [required] The list of required plugins (by name) that this plugin depends on
-   * @param {Array<String>} [optional] The list of optional plugins (by name) that this plugin depends on
    * @memberof BasePlugin
    */
-  constructor(name, required = [], optional = []) {
+  constructor(name) {
     this.name = name;
-    this.required = Array.isArray(required) ? required : [];
-    this.optional = Array.isArray(optional) ? optional : [];
   }
 
   /**
    *
-   * @param {SpringRollContainer.Container} [container]
+   * @param {{client: Bellhop}} [container]
    * @memberof BasePlugin
    * @returns {Promise}
    */
-  preload(container) {
-    return Promise.resolve();
+  async preload({ client }) {
+    this.client = client;
   }
 
   /**
    *
-   * @param {SpringRollContainer.Container} [container]
+   * @param {Container} [_]
    * @memberof BasePlugin
    */
-  setup(container) {}
+  start(_) {}
   /**
    *
-   * @param {SpringRollContainer.Container} [container]
+   * @param {Container} [_]
    * @memberof BasePlugin
    */
-  open(container) {}
-
-  /**
-   *
-   * @param {SpringRollContainer.Container} [container]
-   * @memberof BasePlugin
-   */
-  opened(container) {}
-
-  /**
-   *
-   * @param {SpringRollContainer.Container} [container]
-   * @memberof BasePlugin
-   */
-  close(container) {}
-
-  /**
-   *
-   * @param {SpringRollContainer.Container} [container]
-   * @memberof BasePlugin
-   */
-  closed(container) {}
-
-  /**
-   *
-   * @param {SpringRollContainer.Container} [container]
-   * @memberof BasePlugin
-   */
-  teardown(container) {}
+  init(_) {}
 
   /**
    *
    *
    * @param {string} prop
-   * @param {*} value
-   * @memberof ButtonPlugin
+   * @param {any} value
+   * @memberof BasePlugin
    */
   sendProperty(prop, value) {
     SavedData.write(prop, value);
     this.client.send(prop, value);
-  }
-
-  /**
-   *
-   *
-   * @readonly
-   * @memberof BasePlugin
-   */
-  get client() {
-    return Container.client;
   }
 }

@@ -35,6 +35,23 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.captionsButton = document.querySelector(captionsButton);
     this._captionsMuted = false;
 
+    if (!this.captionsButton) {
+      console.warn(
+        'SpringRollContainer: CaptionPlugin was not provided a button element'
+      );
+      return;
+    }
+
+    this.captionsButton.addEventListener(
+      'click',
+      this.captionsButtonClick.bind(this)
+    );
+  }
+
+  /**
+   * @memberof CaptionsPlugin
+   */
+  init() {
     // Handle the features request
     this.client.on(
       'features',
@@ -59,17 +76,13 @@ export class CaptionsPlugin extends ButtonPlugin {
       }.bind(this)
     );
 
-    if (!this.captionsButton) {
-      console.warn(
-        'SpringRollContainer: CaptionPlugin was not provided a button element'
-      );
+    if (null === this.captionsButton) {
       return;
     }
 
-    this.captionsButton.addEventListener(
-      'click',
-      this.captionsButtonClick.bind(this)
-    );
+    this.captionsButton.classList.remove('disabled');
+    this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+    this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
   }
 
   /**
@@ -125,45 +138,6 @@ export class CaptionsPlugin extends ButtonPlugin {
     if (this.client) {
       this.client.send(CAPTIONS_STYLES, this.captionsStyles);
     }
-  }
-
-  // Plugin interface functions
-  /**
-   * @memberof CaptionsPlugin
-   */
-  opened() {
-    if (null === this.captionsButton) {
-      return;
-    }
-
-    this.captionsButton.classList.remove('disabled');
-    this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
-    this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
-  }
-
-  /**
-   * @memberof CaptionsPlugin
-   */
-  teardown() {
-    if (null === this.captionsButton) {
-      return;
-    }
-
-    this.captionsButton.removeEventListener(
-      'click',
-      this.captionsButtonClick.bind(this)
-    );
-  }
-
-  /**
-   * @memberof CaptionsPlugin
-   */
-  close() {
-    if (null === this.captionsButton) {
-      return;
-    }
-
-    super._disableButton(this.captionsButton);
   }
 
   /**

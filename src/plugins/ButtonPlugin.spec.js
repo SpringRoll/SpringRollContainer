@@ -1,4 +1,5 @@
 import { ButtonPlugin } from '../index';
+import { Bellhop } from 'bellhop-iframe';
 
 const clearClassList = element => {
   while (element.classList.length > 0) {
@@ -15,6 +16,7 @@ describe('ButtonPlugin', () => {
 
   it('construct', () => {
     bp = new ButtonPlugin('Test-Button');
+    bp.client = new Bellhop();
     expect(bp).to.be.instanceof(ButtonPlugin);
     expect(bp.sendMutes).to.be.false;
   });

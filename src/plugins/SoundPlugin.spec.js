@@ -1,4 +1,5 @@
 import { Container, SoundPlugin } from '../index';
+import { Bellhop } from 'bellhop-iframe';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -36,6 +37,7 @@ describe('SoundPlugin', () => {
       }
     });
     sp = new SoundPlugin(options);
+    sp.preload({ client: new Bellhop() });
   });
 
   it('construct', () => {
@@ -154,17 +156,5 @@ describe('SoundPlugin', () => {
   it('_checkSoundMute()', () => {
     sp._checkSoundMute();
     expect(sp.soundMuted).to.be.a('boolean');
-  });
-
-  it('.opened()', () => {
-    sp.opened();
-  });
-
-  it('.close()', () => {
-    sp.close();
-  });
-
-  it('.teardown()', () => {
-    sp.teardown();
   });
 });

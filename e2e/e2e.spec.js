@@ -31,12 +31,13 @@ describe('End to End Test', () => {
     document.body.appendChild(pauseButton);
     document.body.appendChild(sfxButton);
     document.body.appendChild(soundButton);
+    container = new Container('.karma-html');
   });
 
   it('setup the container and all it\'s plugins', () => {
-    Container.uses(new CaptionsPlugin('#captionsButton'));
-    Container.uses(new PausePlugin('#pauseButton'));
-    Container.uses(
+    container.uses(new CaptionsPlugin('#captionsButton'));
+    container.uses(new PausePlugin('#pauseButton'));
+    container.uses(
       new SoundPlugin({
         voButton: '#voButton',
         musicButton: '#musicButton',
@@ -44,10 +45,10 @@ describe('End to End Test', () => {
         soundButton: '#soundButton'
       })
     );
-    Container.uses(new UserDataPlugin());
-    Container.uses(new HelpPlugin('#helpButton'));
-    container = new Container('.karma-html');
+    container.uses(new UserDataPlugin());
+    container.uses(new HelpPlugin('#helpButton'));
     container.initClient();
+    container.setupPlugins();
   });
   it('Check all button click events', () => {
     voButton.click();

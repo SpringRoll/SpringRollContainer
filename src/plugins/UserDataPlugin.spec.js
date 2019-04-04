@@ -1,13 +1,11 @@
 import { UserDataPlugin } from './UserDataPlugin';
+import { Bellhop } from 'bellhop-iframe';
 describe('UserDataPlugin', () => {
   let udp;
 
   it('construct', () => {
     udp = new UserDataPlugin();
-  });
-
-  it('.open()', () => {
-    udp.open();
+    udp.preload({ client: new Bellhop() });
   });
 
   it('.onUserDataRemove()', () => {

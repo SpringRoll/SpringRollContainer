@@ -1,5 +1,6 @@
 import { PausePlugin } from './PausePlugin';
 import { Bellhop } from 'bellhop-iframe';
+import '@babel/polyfill';
 
 let pp;
 before(() => {
@@ -8,6 +9,7 @@ before(() => {
   button.id = 'test';
   document.body.appendChild(button);
   pp = new PausePlugin('#test');
+  pp.preload({ client: new Bellhop() });
 });
 describe('PausePlugin', () => {
   it('construct', () => {
@@ -33,22 +35,7 @@ describe('PausePlugin', () => {
   });
 
   it('.opened()', () => {
-    pp.opened();
+    pp.init({ dom: document.createElement('iframe') });
     expect(pp.pause).to.be.false;
-  });
-
-  it('.close()', () => {
-    pp.close();
-    expect(pp.pause).to.be.false;
-  });
-
-  it('.open()', () => {
-    pp.open();
-  });
-  it('.close()', () => {
-    pp.close();
-  });
-  it('.tearDown()', () => {
-    pp.teardown();
   });
 });

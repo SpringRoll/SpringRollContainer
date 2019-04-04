@@ -32,7 +32,7 @@ export class SoundPlugin extends ButtonPlugin {
     voSlider
   } = {}) {
     super('Sound-Button-Plugin');
-    const saved = SavedData.read('soundMuted');
+    const saved = SavedData.read(SoundPlugin.soundMutedKey);
     this._soundMuted = saved ? saved : false;
     this._musicMuted = false;
     this._voMuted = false;
@@ -43,10 +43,16 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxVolume = 0;
     this.voVolume = 0;
 
-    this.soundSlider = this.sliderSetup(soundSlider);
-    this.musicSlider = this.sliderSetup(musicSlider);
-    this.sfxSlider = this.sliderSetup(sfxSlider);
-    this.voSlider = this.sliderSetup(voSlider);
+    this.soundSlider = this.sliderSetup(
+      soundSlider,
+      SoundPlugin.soundVolumeKey
+    );
+    this.musicSlider = this.sliderSetup(
+      musicSlider,
+      SoundPlugin.musicVolumeKey
+    );
+    this.sfxSlider = this.sliderSetup(sfxSlider, SoundPlugin.sfxVolumeKey);
+    this.voSlider = this.sliderSetup(voSlider, SoundPlugin.voVolumeKey);
 
     this.soundButton =
       soundButton instanceof HTMLElement
@@ -83,7 +89,163 @@ export class SoundPlugin extends ButtonPlugin {
     }
 
     this.enableSliderEvents();
+  }
 
+  /**
+   * @memberof SoundPlugin
+   */
+  onSoundVolumeChange() {
+    this.soundVolume = this.volumeRange(Number(this.soundSlider.value));
+    this.soundMuted = !this.soundVolume;
+    this._checkSoundMute();
+    this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  enableSliderEvents() {
+    if (this.soundSlider) {
+      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
+      this.soundSlider.addEventListener('change', onSoundVolumeChange);
+      this.soundSlider.addEventListener('input', onSoundVolumeChange);
+    }
+
+    if (this.musicSlider) {
+      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
+      this.musicSlider.addEventListener('change', onMusicVolumeChange);
+      this.soundSlider.addEventListener('input', onMusicVolumeChange);
+    }
+
+    if (this.sfxSlider) {
+      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
+      this.sfxSlider.addEventListener('change', onSfxVolumeChange);
+      this.soundSlider.addEventListener('input', onSfxVolumeChange);
+    }
+
+    if (this.voSlider) {
+      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
+      this.voSlider.addEventListener('change', onVoVolumeChange);
+      this.soundSlider.addEventListener('input', onVoVolumeChange);
+    }
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  disableSliderEvents() {
+    if (this.soundSlider) {
+      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
+      this.soundSlider.removeEventListener('change', onSoundVolumeChange);
+      this.soundSlider.removeEventListener('input', onSoundVolumeChange);
+    }
+
+    if (this.musicSlider) {
+      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
+      this.musicSlider.removeEventListener('change', onMusicVolumeChange);
+      this.soundSlider.removeEventListener('input', onMusicVolumeChange);
+    }
+
+    if (this.sfxSlider) {
+      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
+      this.sfxSlider.removeEventListener('change', onSfxVolumeChange);
+      this.soundSlider.removeEventListener('input', onSfxVolumeChange);
+    }
+
+    if (this.voSlider) {
+      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
+      this.voSlider.removeEventListener('change', onVoVolumeChange);
+      this.soundSlider.removeEventListener('input', onVoVolumeChange);
+    }
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onMusicVolumeChange() {
+    this.musicVolume = this.volumeRange(Number(this.musicSlider.value));
+    this.musicMuted = !this.musicVolume;
+    this._checkSoundMute();
+    this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onVoVolumeChange() {
+    this.voVolume = this.volumeRange(Number(this.voSlider.value));
+    this.voMuted = !this.voVolume;
+    this._checkSoundMute();
+    this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onSfxVolumeChange() {
+    this.sfxVolume = this.volumeRange(Number(this.sfxSlider.value));
+    this.sfxMuted = !this.sfxVolume;
+    this._checkSoundMute();
+    this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onSoundToggle() {
+    const muted = !this.soundMuted;
+    this.soundMuted = muted;
+    this.musicMuted = muted;
+    this.voMuted = muted;
+    this.sfxMuted = muted;
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onMusicToggle() {
+    this.musicMuted = !this.musicMuted;
+    this._checkSoundMute();
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onVOToggle() {
+    this.voMuted = !this.voMuted;
+    this._checkSoundMute();
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  onSFXToggle() {
+    this.sfxMuted = !this.sfxMuted;
+    this._checkSoundMute();
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  _checkSoundMute() {
+    this.soundMuted = this.sfxMuted && this.voMuted && this.musicMuted;
+  }
+
+  /**
+   * @param {string} key
+   * @param {*} value
+   * @param {Element} element
+   * @memberof SoundPlugin
+   */
+  setMuteProp(key, value, element) {
+    this['_' + key] = value;
+    this._setMuteProp(key, element, value);
+  }
+
+  /**
+   * @memberof SoundPlugin
+   */
+  init() {
     this.client.on(
       'features',
       function(features) {
@@ -140,176 +302,9 @@ export class SoundPlugin extends ButtonPlugin {
   }
 
   /**
-   *
-   *
    * @memberof SoundPlugin
    */
-  onSoundVolumeChange() {
-    this.soundVolume = this.volumeRange(Number(this.soundSlider.value));
-    this.soundMuted = !this.soundVolume;
-    this._checkSoundMute();
-    this.sendProperty('soundVolume', this.soundVolume);
-  }
-
-  /**
-   *
-   *
-   * @memberof SoundPlugin
-   */
-  enableSliderEvents() {
-    if (this.soundSlider) {
-      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
-      this.soundSlider.addEventListener('change', onSoundVolumeChange);
-      this.soundSlider.addEventListener('input', onSoundVolumeChange);
-    }
-
-    if (this.musicSlider) {
-      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
-      this.musicSlider.addEventListener('change', onMusicVolumeChange);
-      this.soundSlider.addEventListener('input', onMusicVolumeChange);
-    }
-
-    if (this.sfxSlider) {
-      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
-      this.sfxSlider.addEventListener('change', onSfxVolumeChange);
-      this.soundSlider.addEventListener('input', onSfxVolumeChange);
-    }
-
-    if (this.voSlider) {
-      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
-      this.voSlider.addEventListener('change', onVoVolumeChange);
-      this.soundSlider.addEventListener('input', onVoVolumeChange);
-    }
-  }
-
-  /**
-   *
-   *
-   * @memberof SoundPlugin
-   */
-  disableSliderEvents() {
-    if (this.soundSlider) {
-      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
-      this.soundSlider.removeEventListener('change', onSoundVolumeChange);
-      this.soundSlider.removeEventListener('input', onSoundVolumeChange);
-    }
-
-    if (this.musicSlider) {
-      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
-      this.musicSlider.removeEventListener('change', onMusicVolumeChange);
-      this.soundSlider.removeEventListener('input', onMusicVolumeChange);
-    }
-
-    if (this.sfxSlider) {
-      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
-      this.sfxSlider.removeEventListener('change', onSfxVolumeChange);
-      this.soundSlider.removeEventListener('input', onSfxVolumeChange);
-    }
-
-    if (this.voSlider) {
-      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
-      this.voSlider.removeEventListener('change', onVoVolumeChange);
-      this.soundSlider.removeEventListener('input', onVoVolumeChange);
-    }
-  }
-
-  /**
-   *
-   *
-   * @memberof SoundPlugin
-   */
-  onMusicVolumeChange() {
-    this.musicVolume = this.volumeRange(Number(this.musicSlider.value));
-    this.musicMuted = !this.musicVolume;
-    this._checkSoundMute();
-    this.sendProperty('musicVolume', this.musicVolume);
-  }
-
-  /**
-   *
-   *
-   * @memberof SoundPlugin
-   */
-  onVoVolumeChange() {
-    this.voVolume = this.volumeRange(Number(this.voSlider.value));
-    this.voMuted = !this.voVolume;
-    this._checkSoundMute();
-    this.sendProperty('voVolume', this.voVolume);
-  }
-
-  /**
-   *
-   *
-   * @memberof SoundPlugin
-   */
-  onSfxVolumeChange() {
-    this.sfxVolume = this.volumeRange(Number(this.sfxSlider.value));
-    this.sfxMuted = !this.sfxVolume;
-    this._checkSoundMute();
-    this.sendProperty('sfxVolume', this.sfxVolume);
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  onSoundToggle() {
-    const muted = !this.soundMuted;
-    this.soundMuted = muted;
-    this.musicMuted = muted;
-    this.voMuted = muted;
-    this.sfxMuted = muted;
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  onMusicToggle() {
-    this.musicMuted = !this.musicMuted;
-    this._checkSoundMute();
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  onVOToggle() {
-    this.voMuted = !this.voMuted;
-    this._checkSoundMute();
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  onSFXToggle() {
-    this.sfxMuted = !this.sfxMuted;
-    this._checkSoundMute();
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  _checkSoundMute() {
-    this.soundMuted = this.sfxMuted && this.voMuted && this.musicMuted;
-  }
-
-  /**
-   *
-   *
-   * @param {string} key
-   * @param {*} value
-   * @param {Element} element
-   * @memberof SoundPlugin
-   */
-  setMuteProp(key, value, element) {
-    this['_' + key] = value;
-    this._setMuteProp(key, element, value);
-  }
-
-  /**
-   *
-   *
-   * @memberof SoundPlugin
-   */
-  opened() {
+  start() {
     if (this.soundButton !== null) {
       this.soundButton.classList.remove('disabled');
     }
@@ -326,54 +321,13 @@ export class SoundPlugin extends ButtonPlugin {
       this.musicButton.classList.remove('disabled');
     }
 
-    this.soundMuted = !!SavedData.read('soundMuted');
-    this.musicMuted = !!SavedData.read('musicMuted');
-    this.sfxMuted = !!SavedData.read('sfxMuted');
-    this.voMuted = !!SavedData.read('voMuted');
+    this.soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
+    this.musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
+    this.sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
+    this.voMuted = !!SavedData.read(SoundPlugin.voMutedKey);
   }
 
   /**
-   * @memberof SoundPlugin
-   */
-  close() {
-    this._disableButton(this.soundButton);
-    this._disableButton(this.voButton);
-    this._disableButton(this.sfxButton);
-    this._disableButton(this.musicButton);
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  teardown() {
-    if (this.soundButton !== null) {
-      this.soundButton.removeEventListener(
-        'click',
-        this.onSoundToggle.bind(this)
-      );
-    }
-
-    if (this.musicButton !== null) {
-      this.musicButton.removeEventListener(
-        'click',
-        this.onMusicToggle.bind(this)
-      );
-    }
-
-    if (this.sfxButton !== null) {
-      this.sfxButton.removeEventListener('click', this.onSFXToggle.bind(this));
-    }
-
-    if (this.voButton !== null) {
-      this.voButton.removeEventListener('click', this.onVOToggle.bind(this));
-    }
-
-    this.disableSliderEvents();
-  }
-
-  /**
-   *
-   *
    * @param {string | HTMLInputElement | HTMLElement} slider
    * @param {string} soundChannel The audio channel this slider will be controlling
    * @returns {Element | HTMLElement}
@@ -436,8 +390,6 @@ export class SoundPlugin extends ButtonPlugin {
   }
 
   /**
-   *
-   *
    * @memberof SoundPlugin
    */
   get voMuted() {
@@ -470,5 +422,77 @@ export class SoundPlugin extends ButtonPlugin {
    */
   get sfxMuted() {
     return this._sfxMuted;
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get soundMutedKey() {
+    return 'soundMuted';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get voMutedKey() {
+    return 'voMuted';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get musicMutedKey() {
+    return 'musicMuted';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get sfxMutedKey() {
+    return 'sfxMuted';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get soundVolumeKey() {
+    return 'soundVolume';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get sfxVolumeKey() {
+    return 'sfxVolume';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get voVolumeKey() {
+    return 'voVolume';
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SoundPlugin
+   */
+  static get musicVolumeKey() {
+    return 'musicVolume';
   }
 }

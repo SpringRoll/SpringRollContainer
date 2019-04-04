@@ -55,7 +55,7 @@ describe('Container', () => {
     expect(Container.version).to.be.a('string');
   });
 
-  it('Container.uses()', () => {
+  it('container.uses()', () => {
     /*eslint-disable */
     class barFoo extends BasePlugin {
       constructor() {
@@ -64,8 +64,9 @@ describe('Container', () => {
     }
     /*eslint-enable */
 
-    expect(Container.plugins.length).to.equal(0);
-    Container.uses(new barFoo());
-    expect(Container.plugins.length).to.equal(1);
+    const length = container.plugins.length;
+    container.uses(new barFoo());
+
+    expect(container.plugins.length).to.not.equal(length);
   });
 });

@@ -31,15 +31,6 @@ export class PausePlugin extends ButtonPlugin {
       this.onContainerBlur.bind(this)
     );
 
-    this.client.on(
-      'features',
-      function(features) {
-        if (features.disablePause) {
-          this.pauseDisabled = true;
-        }
-      }.bind(this)
-    );
-
     document.addEventListener('focus', this.focus);
 
     this.pauseButton = document.querySelectorAll(pauseButton);
@@ -225,65 +216,24 @@ export class PausePlugin extends ButtonPlugin {
   }
 
   /**
-   * @param {SpringRollContainer.Container} container
+   * @param {Container} container
    * @memberof FocusPlugin
    */
-  setup({ dom }) {
-    super.setup();
+  init({ dom }) {
     this.dom = dom;
-  }
-
-  /**
-   * @memberof FocusPlugin
-   */
-  open() {
+    this.client.on(
+      'features',
+      function(features) {
+        if (features.disablePause) {
+          this.pauseDisabled = true;
+        }
+      }.bind(this)
+    );
     this.client.on('focus', this.onFocus.bind(this));
     this.client.on('keepFocus', this.onKeepFocus.bind(this));
-  }
-
-  /**
-   * @memberof PausePlugin
-   */
-  opened() {
     this.pauseButton.forEach(element => element.classList.remove('disabled'));
     this.pause = this._paused;
     this.focus();
-  }
-
-  /**
-   * @memberof PausePlugin
-   */
-  close() {
-    this.pauseButton.forEach(element => this._disableButton.bind(element));
-    this.paused = false;
-    // Stop the focus timer if it's running
-    if (this._focusTimer) {
-      clearTimeout(this._focusTimer);
-    }
-  }
-
-  /**
-   * @memberof PausePlugin
-   */
-  teardown() {
-    super.reset();
-    const onPauseToggle = this.onPauseToggle.bind(this);
-    this.pauseButton.forEach(element =>
-      element.removeEventListener('click', onPauseToggle)
-    );
-
-    if (null !== this.pauseFocus) {
-      this.pauseFocus.forEach(e =>
-        e.removeEventListener('focus', this.onPauseFocus)
-      );
-    }
-
-    document.removeEventListener('focus', this.focus);
-    document.removeEventListener('click', this.focus);
-
-    if (this.pageVisibility) {
-      this.pageVisibility.destroy();
-    }
   }
 
   /**

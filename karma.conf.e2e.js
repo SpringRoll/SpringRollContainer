@@ -1,3 +1,4 @@
+const [umd] = require('./rollup.config');
 module.exports = function(config) {
   config.set({
     frameworks: ['mocha', 'chai'],
@@ -21,9 +22,9 @@ module.exports = function(config) {
       }
     ],
     preprocessors: {
-      'e2e/**/*.spec.js': ['webpack']
+      'e2e/**/*.spec.js': ['rollup']
     },
-    webpackMiddleware: { stats: 'errors-only' },
+    rollupPreprocessor: umd,
     port: 9876, // karma web server port
     colors: true,
     logLevel: config.LOG_INFO,

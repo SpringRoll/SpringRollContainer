@@ -1,11 +1,8 @@
-import { Bellhop } from 'bellhop-iframe';
 import { Features } from './Features';
+import PluginManager from './PluginManager';
 // @ts-ignore
 import { version } from '../package.json';
 
-//private/static variables
-let PLUGINS = [];
-const CLIENT = new Bellhop();
 /**
  * The application container
  * @class Container
@@ -16,33 +13,30 @@ const CLIENT = new Bellhop();
  * @property {HTMLIFrameElement} main The current iframe object
  * @property {Object} release The current release data
  * @property {HTMLIFrameElement} dom
- * @static @property {Array<BasePlugin>} plugins The collection of Container plugins
  * @static @property {String} version The current version of the library
  *
  * @constructor
  * @param {string} iframeSelector selector for application iframe container
  */
-export class Container {
+export class Container extends PluginManager {
   /**
    *Creates an instance of Container.
    * @param {string} iframeSelector
    * @memberof Container
    */
   constructor(iframeSelector) {
+    super();
     this.main = document.querySelector(iframeSelector);
-    Container.sortPlugins();
 
     if (null === this.main) {
       throw new Error('No iframe was found with the provided selector');
     }
+    this.plugins = [];
     this.dom = this.main;
     this.loaded = false;
     this.loading = false;
     this.release = null;
-    //Plugin init
-    this.plugins = Container.plugins;
-    this.plugins.forEach(plugin => plugin.setup(this));
-    this.preload();
+    this.setupPlugins();
   }
 
   /**
@@ -50,7 +44,7 @@ export class Container {
    * @memberof Container
    */
   onLoading() {
-    CLIENT.trigger('opening');
+    this.client.trigger('opening');
   }
 
   /**
@@ -62,9 +56,7 @@ export class Container {
     this.loaded = true;
     this.main.classList.remove('loading');
 
-    this.plugins.forEach(plugin => plugin.opened(this));
-
-    CLIENT.trigger('opened');
+    this.client.trigger('opened');
   }
 
   /**
@@ -92,16 +84,8 @@ export class Container {
   reset() {
     const wasLoaded = this.loaded || this.loading;
 
-    // Destroy in the reverse priority order
     if (wasLoaded) {
-      this.plugins
-        .slice()
-        .reverse()
-        .forEach(plugin => plugin.closed(this));
-    }
-
-    if (wasLoaded) {
-      CLIENT.trigger('closed');
+      this.client.trigger('closed');
     }
 
     // Reset state
@@ -120,13 +104,13 @@ export class Container {
    */
   initClient() {
     //Handle bellhop events coming from the application
-    CLIENT.on('loading', this.onLoading.bind(this));
-    CLIENT.on('loaded', this.onLoadDone.bind(this));
-    CLIENT.on('loadDone', this.onLoadDone.bind(this));
-    CLIENT.on('endGame', this.onEndGame.bind(this));
-    CLIENT.on('localError', this.onLocalError.bind(this));
+    this.client.on('loading', this.onLoading.bind(this));
+    this.client.on('loaded', this.onLoadDone.bind(this));
+    this.client.on('loadDone', this.onLoadDone.bind(this));
+    this.client.on('endGame', this.onEndGame.bind(this));
+    this.client.on('localError', this.onLocalError.bind(this));
     // @ts-ignore
-    CLIENT.connect(this.dom);
+    this.client.connect(this.dom);
   }
 
   /**
@@ -155,9 +139,8 @@ export class Container {
     const err = Features.basic();
     if (err) {
       console.error('ERROR:', err);
-      CLIENT.trigger('unsupported');
+      this.client.trigger('unsupported');
     }
-    this.plugins.forEach(plugin => plugin.open(this));
 
     let path = userPath;
     if (null !== options.playOptions) {
@@ -174,9 +157,9 @@ export class Container {
     this.main.classList.add('loading');
     this.main.setAttribute('src', path);
 
-    CLIENT.respond('singlePlay', singlePlay);
-    CLIENT.respond('playOptions', playOptions);
-    CLIENT.trigger('open');
+    this.client.respond('singlePlay', singlePlay);
+    this.client.respond('playOptions', playOptions);
+    this.client.trigger('open');
   }
 
   /**
@@ -214,7 +197,7 @@ export class Container {
    * @param {string} [options.query='']
    * @param {boolean} [options.singlePlay=false]
    * @param {null | object} [options.playOptions=null]
-   * @memberof RemotePlugin
+   * @memberof Container
    */
   openRemote(api, { query = '', singlePlay = false, playOptions = null } = {}) {
     this.release = null;
@@ -231,7 +214,7 @@ export class Container {
         const release = json.data;
         const error = Features.test(release.capabilities);
         if (error) {
-          return CLIENT.trigger('unsupported');
+          return this.client.trigger('unsupported');
         }
 
         this.release = release;
@@ -246,11 +229,6 @@ export class Container {
    */
   destroy() {
     this.reset();
-    // Destroy in the reverse priority order
-    this.plugins
-      .slice()
-      .reverse()
-      .forEach(plugin => plugin.teardown(this));
 
     this.main = null;
     this.options = null;
@@ -264,28 +242,12 @@ export class Container {
    */
   close() {
     if (this.loading || this.loaded) {
-      this.plugins.forEach(plugin => plugin.close(this));
-      CLIENT.trigger('close');
+      this.client.trigger('close');
       // Start the close
-      CLIENT.send('close');
+      this.client.send('close');
     } else {
       this.reset();
     }
-  }
-
-  /**
-   * Runs all plugin require preload functions
-   * @async
-   * @memberof Container
-   */
-  preload() {
-    const preloader = Promise.resolve();
-    this.plugins.forEach(plugin => preloader.then(() => plugin.preload()));
-    preloader
-      .then(() => CLIENT.send('plugins loaded'))
-      .catch(e =>
-        console.error('SpringRoll Container Plugin Preloader error: ', e)
-      );
   }
 
   /**
@@ -296,136 +258,5 @@ export class Container {
    */
   static get version() {
     return version;
-  }
-
-  /**
-   * On Container instantiation all plugins based through this function will be supplied to the Container
-   * @static
-   * @param {SpringRollContainer.BasePlugin} plugin your plugin. This will be merged with a base plugin to make sure your plugin has certain functions
-   * @memberof Container
-   */
-  static uses(plugin) {
-    PLUGINS.push(plugin);
-  }
-
-  /**
-   * @readonly
-   * @static
-   * @memberof Container
-   * @returns {Array<SpringRollContainer.BasePlugin>}
-   */
-  static get plugins() {
-    return PLUGINS;
-  }
-
-  /**
-   * Clears all plugin instances from Container
-   * @static
-   * @memberof Container
-   */
-  static clearPlugins() {
-    PLUGINS = [];
-    return PLUGINS;
-  }
-
-  /**
-   * @readonly
-   * @static
-   * @returns {Bellhop}
-   * @memberof Container
-   */
-  static get client() {
-    return CLIENT;
-  }
-
-  /**
-   * @readonly
-   * @returns {Bellhop}
-   * @memberof Container
-   */
-  get client() {
-    return CLIENT;
-  }
-
-  /**
-   * Helper method for sorting plugins in place. Looks at dependency order and performs a topological sort to enforce
-   * proper load error
-   */
-  static sortPlugins() {
-    if (PLUGINS.length === 0) {
-      return; // nothing to do
-    }
-
-    const pluginNames = PLUGINS.map(plugin => plugin.name);
-    const pluginLookup = {};
-    PLUGINS.forEach(plugin => {
-      // for any optional plugins that are missing remove them from the list and warn along the way
-      const optionalAvailablePlugins = plugin.optional.filter(name =>
-        pluginNames.indexOf(name) === -1 ? false : true
-      );
-
-      pluginLookup[plugin.name] = {
-        plugin: plugin,
-        name: plugin.name,
-        dependencies: []
-          .concat(plugin.required)
-          .concat(optionalAvailablePlugins)
-      };
-    });
-    const visited = [];
-    const toVisit = new Set();
-
-    // first, add items that do not have any dependencies
-    Object.keys(pluginLookup)
-      .map(key => pluginLookup[key])
-      .filter(lookup => lookup.dependencies.length === 0)
-      .forEach(lookup => toVisit.add(lookup.name));
-
-    // if there are no items to visit, throw an error
-    if (toVisit.size === 0) {
-      throw new Error('Every registered plugin has a dependency!');
-    }
-
-    while (toVisit.size > 0) {
-      // pick an item and remove it from the list
-      const item = toVisit.values().next().value;
-      toVisit.delete(item);
-
-      // add it to the visited list
-      visited.push(item);
-
-      // for every plugin
-      Object.keys(pluginLookup).forEach(pluginName => {
-        const index = pluginLookup[pluginName].dependencies.indexOf(item);
-
-        // remove it as a dependency
-        if (index > -1) {
-          pluginLookup[pluginName].dependencies.splice(index, 1);
-        }
-
-        // if there are no more dependencies left, we can visit this item now
-        if (
-          pluginLookup[pluginName].dependencies.length === 0 &&
-          visited.indexOf(pluginName) === -1
-        ) {
-          toVisit.add(pluginName);
-        }
-      });
-    }
-
-    // if there are any dependencies left, that means that there's a cycle
-    const uncaughtKeys = Object.keys(pluginLookup).filter(
-      pluginName => pluginLookup[pluginName].dependencies.length > 0
-    );
-
-    if (uncaughtKeys.length > 0) {
-      throw new Error('Dependency graph has a cycle');
-    }
-
-    // now, rebuild the array
-    PLUGINS = [];
-    visited.forEach(name => {
-      PLUGINS.push(pluginLookup[name].plugin);
-    });
   }
 }
