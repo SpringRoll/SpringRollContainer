@@ -61,7 +61,6 @@ export class CaptionsPlugin extends ButtonPlugin {
           : 'none';
 
         if (null === SavedData.read(CAPTIONS_MUTED)) {
-          // this.captionsMuted = true;
           return;
         }
 
@@ -76,13 +75,12 @@ export class CaptionsPlugin extends ButtonPlugin {
       }.bind(this)
     );
 
-    if (null === this.captionsButton) {
-      return;
-    }
-
-    this.captionsButton.classList.remove('disabled');
     this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
     this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
+
+    if (null !== this.captionsButton) {
+      this.captionsButton.classList.remove('disabled');
+    }
   }
 
   /**

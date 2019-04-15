@@ -114,19 +114,19 @@ export class SoundPlugin extends ButtonPlugin {
     if (this.musicSlider) {
       const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
       this.musicSlider.addEventListener('change', onMusicVolumeChange);
-      this.soundSlider.addEventListener('input', onMusicVolumeChange);
+      this.musicSlider.addEventListener('input', onMusicVolumeChange);
     }
 
     if (this.sfxSlider) {
       const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
       this.sfxSlider.addEventListener('change', onSfxVolumeChange);
-      this.soundSlider.addEventListener('input', onSfxVolumeChange);
+      this.sfxSlider.addEventListener('input', onSfxVolumeChange);
     }
 
     if (this.voSlider) {
       const onVoVolumeChange = this.onVoVolumeChange.bind(this);
       this.voSlider.addEventListener('change', onVoVolumeChange);
-      this.soundSlider.addEventListener('input', onVoVolumeChange);
+      this.voSlider.addEventListener('input', onVoVolumeChange);
     }
   }
 
@@ -143,19 +143,19 @@ export class SoundPlugin extends ButtonPlugin {
     if (this.musicSlider) {
       const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
       this.musicSlider.removeEventListener('change', onMusicVolumeChange);
-      this.soundSlider.removeEventListener('input', onMusicVolumeChange);
+      this.musicSlider.removeEventListener('input', onMusicVolumeChange);
     }
 
     if (this.sfxSlider) {
       const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
       this.sfxSlider.removeEventListener('change', onSfxVolumeChange);
-      this.soundSlider.removeEventListener('input', onSfxVolumeChange);
+      this.sfxSlider.removeEventListener('input', onSfxVolumeChange);
     }
 
     if (this.voSlider) {
       const onVoVolumeChange = this.onVoVolumeChange.bind(this);
       this.voSlider.removeEventListener('change', onVoVolumeChange);
-      this.soundSlider.removeEventListener('input', onVoVolumeChange);
+      this.voSlider.removeEventListener('input', onVoVolumeChange);
     }
   }
 
@@ -257,45 +257,33 @@ export class SoundPlugin extends ButtonPlugin {
           return;
         }
         if (this.voButton instanceof HTMLElement) {
-          this.voButton.style.display = features.data.vo
-            ? 'inline-block'
-            : 'none';
+          this.voButton.style.display = features.data.vo ? '' : 'none';
         }
         if (this.musicButton instanceof HTMLElement) {
-          this.musicButton.style.display = features.data.music
-            ? 'inline-block'
-            : 'none';
+          this.musicButton.style.display = features.data.music ? '' : 'none';
         }
         if (this.soundButton instanceof HTMLElement) {
-          this.soundButton.style.display = features.data.sound
-            ? 'inline-block'
-            : 'none';
+          this.soundButton.style.display = features.data.sound ? '' : 'none';
         }
         if (this.sfxButton instanceof HTMLElement) {
-          this.sfxButton.style.display = features.data.sfx
-            ? 'inline-block'
-            : 'none';
+          this.sfxButton.style.display = features.data.sfx ? '' : 'none';
         }
 
         if (this.soundSlider) {
           this.soundSlider.style.display = features.data.soundVolume
-            ? 'inline-block'
+            ? ''
             : 'none';
         }
         if (this.voSlider) {
-          this.voSlider.style.display = features.data.voVolume
-            ? 'inline-block'
-            : 'none';
+          this.voSlider.style.display = features.data.voVolume ? '' : 'none';
         }
         if (this.musicSlider) {
           this.musicSlider.style.display = features.data.musicVolume
-            ? 'inline-block'
+            ? ''
             : 'none';
         }
         if (this.sfxSlider) {
-          this.sfxSlider.style.display = features.data.sfxVolume
-            ? 'inline-block'
-            : 'none';
+          this.sfxSlider.style.display = features.data.sfxVolume ? '' : 'none';
         }
       }.bind(this)
     );

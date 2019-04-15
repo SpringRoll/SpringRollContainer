@@ -21,7 +21,7 @@ export class BasePlugin {
 
   /**
    *
-   * @param {{client: Bellhop}} [container]
+   * @param {Container} [container]
    * @memberof BasePlugin
    * @returns {Promise}
    */

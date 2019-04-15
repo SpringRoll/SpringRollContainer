@@ -25,8 +25,14 @@ export class SavedData {
    */
   static write(name, value, tempOnly = false) {
     return tempOnly
-      ? sessionStorage.setItem(name, JSON.stringify(value))
-      : localStorage.setItem(name, JSON.stringify(value));
+      ? sessionStorage.setItem(
+        name,
+        JSON.stringify('function' === typeof value ? value() : value)
+      )
+      : localStorage.setItem(
+        name,
+        JSON.stringify('function' === typeof value ? value() : value)
+      );
   }
 
   /**
