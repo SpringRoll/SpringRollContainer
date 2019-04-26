@@ -1,16 +1,12 @@
 const { eslint } = require('rollup-plugin-eslint');
 const { terser } = require('rollup-plugin-terser');
 
-// import resolve from 'rollup-plugin-node-resolve';
-// import commonjs from 'rollup-plugin-commonjs';
 const base = {
   plugins: [
     // @ts-ignore
     require('rollup-plugin-node-resolve')(),
-
     // @ts-ignore
     require('rollup-plugin-commonjs')(),
-
     require('rollup-plugin-json')(),
     eslint(),
     require('rollup-plugin-babel')({ sourceMap: true }),
