@@ -16,12 +16,6 @@ export class PausePlugin extends ButtonPlugin {
   pauseDisabled: boolean;
   pauseFocus: HTMLElement;
 
-  open:function;
-  opened:function;
-  setup:function;
-  teardown:function;
-  close:function;
-
   set pause(paused: boolean): void;
   get pause(): boolean;
   get hasDom(): boolean;
@@ -38,5 +32,4 @@ export class PausePlugin extends ButtonPlugin {
   onKeepFocus($event: {data:any}):void;
   onPauseFocus():void;
   onPauseToggle(): void;
-  teardown(): void;
 }

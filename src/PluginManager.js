@@ -1,5 +1,6 @@
 import { Bellhop } from 'bellhop-iframe';
-// import { BasePlugin } from './plugins';
+// eslint-disable-next-line no-unused-vars
+import { BasePlugin } from './plugins';
 
 /**
  *
@@ -76,7 +77,7 @@ export default class PluginManager {
   /**
    * Finds a plugin by name.
    * @param {string} name The name of the plugin.
-   * @returns {Plugin}
+   * @returns {BasePlugin}
    */
   getPlugin(name) {
     return this.plugins.find(function(plugin) {

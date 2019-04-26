@@ -32,9 +32,4 @@ describe('PausePlugin', () => {
     pp.onPauseToggle();
     expect(pp.pause).to.be.false;
   });
-
-  it('.opened()', () => {
-    pp.init({ dom: document.createElement('iframe') });
-    expect(pp.pause).to.be.false;
-  });
 });

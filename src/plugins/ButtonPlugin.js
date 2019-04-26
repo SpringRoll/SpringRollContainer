@@ -31,15 +31,6 @@ export class ButtonPlugin extends BasePlugin {
   }
 
   /**
-   * @memberof ButtonPlugin
-   * @param {Container} [container]
-   */
-  teardown(container) {
-    // eslint-disable-line no-unused-vars
-    this.reset();
-  }
-
-  /**
    *
    * Applies the disabled class to the provided element
    * @param {HTMLButtonElement | Element} button

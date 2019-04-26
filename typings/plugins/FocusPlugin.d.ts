@@ -18,7 +18,6 @@ export class FocusPlugin extends BasePlugin {
   selelector:string;
 
   blur():void;
-  close(): void;
   focus():void;
   manageFocus():void;
   onContainerBlur():void;
@@ -27,8 +26,5 @@ export class FocusPlugin extends BasePlugin {
   onFocus($event: {data:any}):void;
   onKeepFocus($event: {data:any}):void;
   onPauseFocus():void;
-  open(): void;
-  opened(): void;
   setup(container: Container | {dom: HTMLIFrameElement}): void;
-  teardown(): void;
 }

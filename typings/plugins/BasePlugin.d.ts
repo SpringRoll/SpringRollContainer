@@ -1,32 +1,19 @@
 import { Bellhop } from "bellhop-iframe";
+import {Container} from '../Container';
 
 export interface IBasePlugin {
   name:string;
-  required:Array<string>;
-  optional:Array<string>;
-  preload:function;
-  setup:function;
-  open:function;
-  opened:function;
-  close:function;
-  closed:function;
-  teardown: function;
-  sendProperty:function;
-  client(): Bellhop;
+  client: Bellhop;
+  async preload(container: Container):Promse<void>;
+  start(container: Container):void;
+  init(container: Container):void;
+  sendProperty(prop: string, value:any):void;
 }
 
 export class BasePlugin implements IBasePlugin() {
-  constructor(name:string, required?:Array<string>, optional?: Array<string>);
-  name:string;
-  required:Array<string>;
-  optional:Array<string>;
-  preload:function;
-  setup:function;
-  open:function;
-  opened:function;
-  close:function;
-  closed:function;
-  teardown: function;
-  sendProperty:function;
-  get client(): Bellhop;
+  constructor(name:string);
+  async preload(container: Container):Promse<void>;
+  start(container: Container):void;
+  init(container: Container):void;
+  sendProperty(prop: string, value:any):void;
 }
