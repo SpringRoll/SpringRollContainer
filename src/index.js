@@ -1,5 +1,4 @@
 //Polyfills for IE11
-import '@babel/polyfill';
 import 'whatwg-fetch';
 import 'core-js/web/dom-collections';
 
