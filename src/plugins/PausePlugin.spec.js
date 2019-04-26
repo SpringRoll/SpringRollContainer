@@ -1,6 +1,5 @@
 import { PausePlugin } from './PausePlugin';
 import { Bellhop } from 'bellhop-iframe';
-import '@babel/polyfill';
 
 let pp;
 before(() => {

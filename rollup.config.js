@@ -3,25 +3,13 @@ const { terser } = require('rollup-plugin-terser');
 
 const base = {
   plugins: [
+    // @ts-ignore
+    require('rollup-plugin-node-resolve')(),
+    // @ts-ignore
+    require('rollup-plugin-commonjs')(),
     require('rollup-plugin-json')(),
     eslint(),
-    // @ts-ignore
     require('rollup-plugin-babel')({ sourceMap: true }),
-    // @ts-ignore
-    require('rollup-plugin-node-resolve')({
-      module: true,
-      jsnext: true,
-      main: true,
-      browser: true,
-      preferBuiltins: false
-    }),
-
-    // @ts-ignore
-    require('rollup-plugin-commonjs')({
-      namedExports: {
-        'bellhop-iframe': ['Bellhop']
-      }
-    }),
     terser()
   ]
 };
@@ -49,7 +37,10 @@ const umd = Object.assign({}, base, {
     format: 'umd',
     name: 'SRC',
     extend: true,
-    sourceMap: true
+    sourceMap: true,
+    globals: {
+      'bellhop-iframe': 'Bellhop'
+    }
   }
 });
 
