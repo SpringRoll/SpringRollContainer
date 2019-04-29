@@ -8,5 +8,4 @@ export class ButtonPlugin extends BasePlugin {
   changeMutedState(button: HTMLButtonElement, muted?: boolean);
   reset(): void;
   setup:function;
-  teardown:function;
 }

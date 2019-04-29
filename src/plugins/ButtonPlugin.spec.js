@@ -50,10 +50,4 @@ describe('ButtonPlugin', () => {
       expect(button.classList[0]).to.equal('muted');
     });
   });
-
-  it('.reset(), .teardown()', () => {
-    expect(bp.sendMutes).to.be.true;
-    bp.teardown();
-    expect(bp.sendMutes).to.be.false;
-  });
 });

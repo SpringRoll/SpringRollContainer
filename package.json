@@ -61,7 +61,8 @@
     "dev": "rollup -c -w",
     "test": "karma start karma.conf.js",
     "test:e2e": "npm run build:e2e && karma start karma.conf.e2e.js",
-    "test:bs": "karma start karma.conf.bs.js"
+    "test:bs": "karma start karma.conf.bs.js",
+    "travis-test": "./node_modules/.bin/karma start --single-run --browsers ChromeHeadless"
   },
   "readmeFilename": "README.md",
   "bugs": {
