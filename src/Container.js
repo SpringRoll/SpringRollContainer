@@ -7,13 +7,11 @@ import { version } from '../package.json';
  * The application container
  * @class Container
  * @property {Bellhop} client Communication layer between the container and application
- * @property {Boolean} loaded Check to see if a application is loaded
- * @property {Boolean} loading Check to see if a application is loading
- * @property {HTMLIFrameElement} dom The DOM object for the iframe
- * @property {HTMLIFrameElement} main The current iframe object
- * @property {Object} release The current release data
- * @property {HTMLIFrameElement} dom
- * @static @property {String} version The current version of the library
+ * @property {boolean} loaded Check to see if a application is loaded
+ * @property {boolean} loading Check to see if a application is loading
+ * @property {object} release The current release data
+ * @property {HTMLIFrameElement} iFrame The DOM object for the iframe
+ * @static @property {string} version The current version of the library
  *
  * @constructor
  * @param {string} iframeSelector selector for application iframe container
@@ -26,17 +24,15 @@ export class Container extends PluginManager {
    */
   constructor(iframeSelector) {
     super();
-    this.main = document.querySelector(iframeSelector);
+    this.iFrame = document.querySelector(iframeSelector);
 
-    if (null === this.main) {
+    if (null === this.iFrame) {
       throw new Error('No iframe was found with the provided selector');
     }
     this.plugins = [];
-    this.dom = this.main;
     this.loaded = false;
     this.loading = false;
     this.release = null;
-    this.setupPlugins();
   }
 
   /**
@@ -54,7 +50,7 @@ export class Container extends PluginManager {
   onLoadDone() {
     this.loading = false;
     this.loaded = true;
-    this.main.classList.remove('loading');
+    this.iFrame.classList.remove('loading');
 
     this.client.trigger('opened');
   }
@@ -93,8 +89,8 @@ export class Container extends PluginManager {
     this.loading = false;
 
     // Clear the iframe src location
-    this.main.setAttribute('src', '');
-    this.main.classList.remove('loading');
+    this.iFrame.setAttribute('src', '');
+    this.iFrame.classList.remove('loading');
   }
 
   /**
@@ -110,7 +106,7 @@ export class Container extends PluginManager {
     this.client.on('endGame', this.onEndGame.bind(this));
     this.client.on('localError', this.onLocalError.bind(this));
     // @ts-ignore
-    this.client.connect(this.dom);
+    this.client.connect(this.iFrame);
   }
 
   /**
@@ -124,9 +120,9 @@ export class Container extends PluginManager {
   /**
    * Open a application or path
    * @param {string} userPath The full path to the application to load
-   * @param {Object} [userOptions] The open options
-   * @param {Boolean} [userOptions.singlePlay=false] If we should play in single play mode
-   * @param {Object | null} [userOptions.playOptions=null] The optional play options
+   * @param {object} [userOptions] The open options
+   * @param {boolean} [userOptions.singlePlay=false] If we should play in single play mode
+   * @param {object | null} [userOptions.playOptions=null] The optional play options
    * @memberof Container
    */
   _internalOpen(userPath, { singlePlay = false, playOptions = null } = {}) {
@@ -154,10 +150,10 @@ export class Container extends PluginManager {
           : `${userPath}&${playOptionsQueryString}`;
     }
 
-    this.main.classList.add('loading');
-    this.main.setAttribute('src', path);
+    this.iFrame.classList.add('loading');
+    this.iFrame.setAttribute('src', path);
 
-    this.client.respond('singlePlay', singlePlay);
+    this.client.respond('singlePlay', { singlePlay });
     this.client.respond('playOptions', playOptions);
     this.client.trigger('open');
   }
@@ -230,9 +226,8 @@ export class Container extends PluginManager {
   destroy() {
     this.reset();
 
-    this.main = null;
+    this.iFrame = null;
     this.options = null;
-    this.dom = null;
     this.release = null;
   }
 

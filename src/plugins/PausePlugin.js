@@ -18,7 +18,7 @@ export class PausePlugin extends ButtonPlugin {
     this._isManualPause = false;
     this._keepFocus = false;
     this._paused = false;
-    this.dom = null;
+    this.iFrame = null;
     this.focus = this.focus.bind(this);
     this.manageFocus = this.manageFocus.bind(this);
     this.onKeepFocus = this.onKeepFocus.bind(this);
@@ -108,7 +108,7 @@ export class PausePlugin extends ButtonPlugin {
       return;
     }
 
-    this.dom.contentWindow.focus();
+    this.iFrame.contentWindow.focus();
   }
 
   /**
@@ -118,7 +118,7 @@ export class PausePlugin extends ButtonPlugin {
     if (!this.hasDom) {
       return;
     }
-    this.dom.contentWindow.blur();
+    this.iFrame.contentWindow.blur();
   }
 
   /**
@@ -219,8 +219,8 @@ export class PausePlugin extends ButtonPlugin {
    * @param {Container} container
    * @memberof FocusPlugin
    */
-  init({ dom }) {
-    this.dom = dom;
+  init({ iFrame }) {
+    this.iFrame = iFrame;
     this.client.on(
       'features',
       function(features) {
@@ -243,6 +243,6 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   get hasDom() {
-    return Boolean(null !== this.dom && this.dom.contentWindow);
+    return Boolean(null !== this.iFrame && this.iFrame.contentWindow);
   }
 }
