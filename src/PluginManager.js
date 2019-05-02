@@ -15,6 +15,18 @@ export default class PluginManager {
    */
   constructor() {
     this.client = new Bellhop();
+    // @ts-ignore
+    this.client.hidden = this.client.receive.bind(this.client);
+    // @ts-ignore
+    this.client.hiddenSend = this.client.send.bind(this.client);
+    this.client.receive = function(event) {
+      console.log(event.data);
+      this.hidden(event);
+    }.bind(this.client);
+    this.client.send = function(event, data) {
+      console.log('SENDING =>', event, data);
+      this.hiddenSend(event, data);
+    }.bind(this.client);
     this.plugins = [];
   }
 

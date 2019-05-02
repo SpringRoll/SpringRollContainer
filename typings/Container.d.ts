@@ -8,7 +8,7 @@ interface RemoteOptions extends OpenOptions {
 
 export class PluginManager {
   client: Bellhop;
-  plugins: Array<BasePlugin>;
+  plugins: Array<IPlugin>;
   setupPlugins(): void;
   uses(plugin: IPlugin): void;
   getPlugin(name:string): IPlugin | undefined;
