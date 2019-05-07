@@ -347,15 +347,15 @@ export class SoundPlugin extends ButtonPlugin {
       slider = document.querySelector(slider);
     }
 
-    if (!slider || 'range' !== slider['type']) {
+    if (!slider || 'range' !== slider.type) {
       return null;
     }
     const value = SavedData.read(soundChannel);
-    slider['value'] =
+    slider.value =
       null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider['min'] = '0';
-    slider['max'] = '1';
-    slider['step'] = '0.1';
+    slider.min = '0';
+    slider.max = '1';
+    slider.step = '0.1';
     return slider;
   }
 

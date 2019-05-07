@@ -15,7 +15,7 @@ describe('Container', () => {
     container.onLoadDone();
     expect(container.loading).to.be.false;
     expect(container.loaded).to.be.true;
-    expect(container.iFrame.classList.contains('loading')).to.be.false;
+    expect(container.iframe.classList.contains('loading')).to.be.false;
   });
 
   it('.initClient()', () => {
@@ -25,19 +25,19 @@ describe('Container', () => {
 
   it('._internalOpen', () => {
     container._internalOpen('test');
-    expect(container.iFrame['src']).to.contain('http://localhost:9876/');
+    expect(container.iframe.src).to.contain('http://localhost:9876/');
   });
 
   it('.openPath', () => {
     container.openPath('test');
-    expect(container.iFrame['src']).to.contain('http://localhost:9876/');
+    expect(container.iframe.src).to.contain('http://localhost:9876/');
   });
 
   it('.reset(), .onEndGame(), _onCloseFailed()', () => {
     container.reset();
     expect(container.loaded).to.be.false;
     expect(container.loading).to.be.false;
-    expect(container.iFrame['src']).to.contain('http://localhost:9876/');
+    expect(container.iframe.src).to.contain('http://localhost:9876/');
   });
 
   it('.openRemote()', () => {
@@ -46,7 +46,7 @@ describe('Container', () => {
 
   it('.destroy()', () => {
     container.destroy();
-    expect(container.iFrame).to.be.null;
+    expect(container.iframe).to.be.null;
     expect(container.options).to.be.null;
   });
 

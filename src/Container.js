@@ -10,11 +10,8 @@ import { version } from '../package.json';
  * @property {boolean} loaded Check to see if a application is loaded
  * @property {boolean} loading Check to see if a application is loading
  * @property {object} release The current release data
- * @property {HTMLIFrameElement} iFrame The DOM object for the iframe
+ * @property {HTMLIFrameElement} iframe The DOM object for the iframe
  * @static @property {string} version The current version of the library
- *
- * @constructor
- * @param {string} iframeSelector selector for application iframe container
  */
 export class Container extends PluginManager {
   /**
@@ -24,9 +21,10 @@ export class Container extends PluginManager {
    */
   constructor(iframeSelector) {
     super();
-    this.iFrame = document.querySelector(iframeSelector);
 
-    if (null === this.iFrame) {
+    this.iframe = document.querySelector(iframeSelector);
+
+    if (null === this.iframe) {
       throw new Error('No iframe was found with the provided selector');
     }
     this.plugins = [];
@@ -50,7 +48,7 @@ export class Container extends PluginManager {
   onLoadDone() {
     this.loading = false;
     this.loaded = true;
-    this.iFrame.classList.remove('loading');
+    this.iframe.classList.remove('loading');
 
     this.client.trigger('opened');
   }
@@ -89,8 +87,8 @@ export class Container extends PluginManager {
     this.loading = false;
 
     // Clear the iframe src location
-    this.iFrame.setAttribute('src', '');
-    this.iFrame.classList.remove('loading');
+    this.iframe.setAttribute('src', '');
+    this.iframe.classList.remove('loading');
   }
 
   /**
@@ -106,7 +104,7 @@ export class Container extends PluginManager {
     this.client.on('endGame', this.onEndGame.bind(this));
     this.client.on('localError', this.onLocalError.bind(this));
     // @ts-ignore
-    this.client.connect(this.iFrame);
+    this.client.connect(this.iframe);
   }
 
   /**
@@ -150,8 +148,8 @@ export class Container extends PluginManager {
           : `${userPath}&${playOptionsQueryString}`;
     }
 
-    this.iFrame.classList.add('loading');
-    this.iFrame.setAttribute('src', path);
+    this.iframe.classList.add('loading');
+    this.iframe.setAttribute('src', path);
 
     this.client.respond('singlePlay', { singlePlay });
     this.client.respond('playOptions', playOptions);
@@ -226,7 +224,7 @@ export class Container extends PluginManager {
   destroy() {
     this.reset();
 
-    this.iFrame = null;
+    this.iframe = null;
     this.options = null;
     this.release = null;
   }
