@@ -8,7 +8,7 @@ export class PausePlugin extends ButtonPlugin {
   _isManualPause: boolean;
   _keepFocus: boolean;
   _paused: boolean;
-  dom: null | HTMLIFrameElement;
+  iframe: null | HTMLIFrameElement;
   manageFocus:function;
   onKeepFocus:function;
   pageVisibility: PageVisibility;
