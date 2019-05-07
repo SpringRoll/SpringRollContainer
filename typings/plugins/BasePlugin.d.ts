@@ -1,7 +1,7 @@
 import { Bellhop } from "bellhop-iframe";
 import {Container} from '../Container';
 
-export interface IBasePlugin {
+export interface IPlugin {
   name:string;
   client: Bellhop;
   async preload(container: Container):Promse<void>;
@@ -10,10 +10,12 @@ export interface IBasePlugin {
   sendProperty(prop: string, value:any):void;
 }
 
-export class BasePlugin implements IBasePlugin() {
+export class BasePlugin implements IPlugin() {
   constructor(name:string);
   async preload(container: Container):Promse<void>;
-  start(container: Container):void;
+  client: Bellhop
   init(container: Container):void;
+  name: string;
   sendProperty(prop: string, value:any):void;
+  start(container: Container):void;
 }

@@ -20,6 +20,6 @@ export class CaptionsPlugin extends ButtonPlugin {
 
   captionButtonClick():void;
   clearCaptionStyles():void;
-  getCaptionStyles(prop?:string): object | string;
-  setCaptionStyles(styles: CaptionStyles | string, value: string);
+  getCaptionsStyles(prop?:string): object | string;
+  setCaptionsStyles(styles: CaptionStyles | string, value: string);
 }

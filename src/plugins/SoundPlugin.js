@@ -33,6 +33,7 @@ export class SoundPlugin extends ButtonPlugin {
   } = {}) {
     super('Sound-Button-Plugin');
     const saved = SavedData.read(SoundPlugin.soundMutedKey);
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this._soundMuted = saved ? saved : false;
     this._musicMuted = false;
     this._voMuted = false;
@@ -95,7 +96,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSoundVolumeChange() {
-    this.soundVolume = this.volumeRange(Number(this.soundSlider.value));
+    this.soundVolume = this.volumeRange(Number(this.soundSlider['value']));
     this.soundMuted = !this.soundVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
@@ -163,7 +164,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onMusicVolumeChange() {
-    this.musicVolume = this.volumeRange(Number(this.musicSlider.value));
+    this.musicVolume = this.volumeRange(Number(this.musicSlider['value']));
     this.musicMuted = !this.musicVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
@@ -173,7 +174,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onVoVolumeChange() {
-    this.voVolume = this.volumeRange(Number(this.voSlider.value));
+    this.voVolume = this.volumeRange(Number(this.voSlider['value']));
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
@@ -183,7 +184,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSfxVolumeChange() {
-    this.sfxVolume = this.volumeRange(Number(this.sfxSlider.value));
+    this.sfxVolume = this.volumeRange(Number(this.sfxSlider['value']));
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
@@ -313,6 +314,26 @@ export class SoundPlugin extends ButtonPlugin {
     this.musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
     this.sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
     this.voMuted = !!SavedData.read(SoundPlugin.voMutedKey);
+
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
+  }
+
+  /**
+   *
+   * Saves the current state of all volume properties, and then sends them to the game
+   * @memberof SoundPlugin
+   */
+  sendAllProperties() {
+    this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
+    this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
+    this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
+    this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
+
+    this.sendProperty(SoundPlugin.voMutedKey, this.voMuted);
+    this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
+    this.sendProperty(SoundPlugin.musicMutedKey, this.musicMuted);
+    this.sendProperty(SoundPlugin.sfxMutedKey, this.sfxMuted);
   }
 
   /**
@@ -330,11 +351,11 @@ export class SoundPlugin extends ButtonPlugin {
       return null;
     }
     const value = SavedData.read(soundChannel);
-    slider['value'] =
+    slider.value =
       null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider['min'] = '0';
-    slider['max'] = '1';
-    slider['step'] = '0.1';
+    slider.min = '0';
+    slider.max = '1';
+    slider.step = '0.1';
     return slider;
   }
 
