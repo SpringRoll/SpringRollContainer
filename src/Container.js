@@ -204,24 +204,23 @@ export class Container extends PluginManager {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(response =>
-      200 !== response.status
-        ? Promise.reject(response)
-        : response.json().then(json => {
-          const release = json.data;
-          const error = Features.test(release.capabilities);
-          if (error) {
-            this.client.trigger('unsupported', { error });
-            return Promise.reject(response);
-          }
-
-          this.release = release;
-          this._internalOpen(release.url + query, {
-            singlePlay,
-            playOptions
-          });
-        })
-    );
+    })
+      .then(response =>
+        200 !== response.status ? Promise.reject(response) : response.json()
+      )
+      .then(json => {
+        const release = json.data;
+        const error = Features.test(release.capabilities);
+        if (error) {
+          this.client.trigger('unsupported', { error });
+          return Promise.reject(json);
+        }
+        this.release = release;
+        this._internalOpen(release.url + query, {
+          singlePlay,
+          playOptions
+        });
+      });
   }
 
   /**
