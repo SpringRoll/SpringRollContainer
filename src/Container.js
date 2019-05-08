@@ -212,7 +212,6 @@ export class Container extends PluginManager {
           const error = Features.test(release.capabilities);
           if (error) {
             this.client.trigger('unsupported', { error });
-            console.error('RELEASE FEATURE ERROR', error);
             return Promise.reject(response);
           }
 
