@@ -29,7 +29,7 @@ export class Container extends PluginManager {
   onLoading(): void;
   onLocalError($event: Error): void;
   openPath(path: string, options?:OpenOptions): void;
-  openRemote(api:string, options?: RemoteOptions, playOptions?: object | null):void;
+  openRemote(api:string, options?: RemoteOptions, playOptions?: object | null): Promise<void>;
   reset():void;
   private _internalOpen(userPath:string, options?: OpenOptions): void;
   private _onCloseFailed(): void;
