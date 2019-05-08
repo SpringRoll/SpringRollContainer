@@ -123,11 +123,11 @@ export class ControlsPlugin extends ButtonPlugin {
       return null;
     }
     const value = SavedData.read(control);
-    slider['value'] =
+    slider.value =
       null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider['min'] = '0.1';
-    slider['max'] = '1';
-    slider['step'] = '0.1';
+    slider.min = '0.1';
+    slider.max = '1';
+    slider.step = '0.1';
     return slider;
   }
 

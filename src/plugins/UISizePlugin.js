@@ -135,9 +135,9 @@ export class UISizePlugin extends ButtonPlugin {
     const value = SavedData.read(uiElement);
     slider['value'] =
       null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider['min'] = '0.01';
-    slider['max'] = '1';
-    slider['step'] = '0.01';
+    slider.min = '0.01';
+    slider.max = '1';
+    slider.step = '0.01';
     return slider;
   }
 

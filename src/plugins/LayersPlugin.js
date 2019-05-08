@@ -23,12 +23,13 @@ export class LayersPlugin extends ButtonPlugin {
 
     this.layersToggleState = {}; //object that tracks all layers and their values
 
-    this.layersCheckBoxes.elements.forEach(box => {
-      this.layersToggleState[box.value] = false;
-      box.addEventListener('click', () => {
-        this.onLayerToggle(box);
+    const boxes = Object.values(this.layersCheckBoxes.elements); // used in the for loop
+    for (let i = 0; i < boxes.length; i++) {
+      this.layersToggleState[boxes[i].value] = false;
+      boxes[i].addEventListener('click', () => {
+        this.onLayerToggle(boxes[i]);
       });
-    });
+    }
   }
 
   /**
