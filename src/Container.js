@@ -191,30 +191,38 @@ export class Container extends PluginManager {
    * @param {string} [options.query='']
    * @param {boolean} [options.singlePlay=false]
    * @param {null | object} [options.playOptions=null]
+   * @returns {Promise<void>}
    * @memberof Container
    */
-  openRemote(api, { query = '', singlePlay = false, playOptions = null } = {}) {
+  async openRemote(
+    api,
+    { query = '', singlePlay = false, playOptions = null } = {}
+  ) {
     this.release = null;
 
-    fetch(api, {
+    return fetch(api, {
       headers: {
         'Content-Type': 'application/json'
       }
-    }).then(response => {
-      if (200 !== response.status) {
-        return;
-      }
-      response.json().then(json => {
-        const release = json.data;
-        const error = Features.test(release.capabilities);
-        if (error) {
-          return this.client.trigger('unsupported');
-        }
+    }).then(response =>
+      200 !== response.status
+        ? Promise.reject(response)
+        : response.json().then(json => {
+          const release = json.data;
+          const error = Features.test(release.capabilities);
+          if (error) {
+            this.client.trigger('unsupported', { error });
+            console.error('RELEASE FEATURE ERROR', error);
+            return Promise.reject(response);
+          }
 
-        this.release = release;
-        this._internalOpen(release.url + query, { singlePlay, playOptions });
-      });
-    });
+          this.release = release;
+          this._internalOpen(release.url + query, {
+            singlePlay,
+            playOptions
+          });
+        })
+    );
   }
 
   /**
