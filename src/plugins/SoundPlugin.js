@@ -1,10 +1,8 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider } from './Slider';
+import { Slider } from '../classes/Slider';
+import { Button } from '../classes/Button';
 
-const SOUND_SLIDER_MIN = 0;
-const SOUND_SLIDER_MAX = 1;
-const SOUND_SLIDER_STEP = 0.1;
 /**
  * @export
  * @class SoundPlugin
@@ -48,68 +46,79 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxVolume = 0;
     this.voVolume = 0;
 
-    this.soundSlider = new Slider(
-      soundSlider,
-      SoundPlugin.soundVolumeKey,
-      SOUND_SLIDER_MIN,
-      SOUND_SLIDER_MAX,
-      SOUND_SLIDER_STEP
-    );
-    this.musicSlider = new Slider(
-      musicSlider,
-      SoundPlugin.musicVolumeKey,
-      SOUND_SLIDER_MIN,
-      SOUND_SLIDER_MAX,
-      SOUND_SLIDER_STEP
-    );
-    this.sfxSlider = new Slider(
-      sfxSlider,
-      SoundPlugin.sfxVolumeKey,
-      SOUND_SLIDER_MIN,
-      SOUND_SLIDER_MAX,
-      SOUND_SLIDER_STEP
-    );
-    this.voSlider = new Slider(
-      voSlider,
-      SoundPlugin.voVolumeKey,
-      SOUND_SLIDER_MIN,
-      SOUND_SLIDER_MAX,
-      SOUND_SLIDER_STEP
-    );
+    this.soundSlider = new Slider({
+      slider: soundSlider,
+      control: SoundPlugin.soundVolumeKey,
+      value: this.soundVolume
+    });
+    this.musicSlider = new Slider({
+      slider: musicSlider,
+      control: SoundPlugin.musicVolumeKey,
+      value: this.musicVolume
+    });
+    this.sfxSlider = new Slider({
+      slider: sfxSlider,
+      control: SoundPlugin.sfxVolumeKey,
+      value: this.sfxVolume
+    });
+    this.voSlider = new Slider({
+      slider: voSlider,
+      control: SoundPlugin.voVolumeKey,
+      value: this.voVolume
+    });
 
-    this.soundButton =
-      soundButton instanceof HTMLElement
-        ? soundButton
-        : document.querySelector(soundButton);
-    this.musicButton =
-      musicButton instanceof HTMLElement
-        ? musicButton
-        : document.querySelector(musicButton);
-    this.sfxButton =
-      sfxButton instanceof HTMLElement
-        ? sfxButton
-        : document.querySelector(sfxButton);
+    this.soundButton = new Button({
+      button: soundButton,
+      onClick: this.onSoundToggle.bind(this),
+      channel: 'sound'
+    });
+    this.musicButton = new Button({
+      button: musicButton,
+      onClick: this.onMusicToggle.bind(this),
+      channel: 'music'
+    });
+    this.sfxButton = new Button({
+      button: sfxButton,
+      onClick: this.onSFXToggle.bind(this),
+      channel: 'sfx'
+    });
+    this.voButton = new Button({
+      button: voButton,
+      onClick: this.onVOToggle.bind(this),
+      channel: 'vo'
+    });
+    //   soundButton instanceof HTMLElement
+    //     ? soundButton
+    //     : document.querySelector(soundButton);
+    // this.musicButton =
+    //   musicButton instanceof HTMLElement
+    //     ? musicButton
+    //     : document.querySelector(musicButton);
+    // this.sfxButton =
+    //   sfxButton instanceof HTMLElement
+    //     ? sfxButton
+    //     : document.querySelector(sfxButton);
 
-    this.voButton =
-      voButton instanceof HTMLElement
-        ? voButton
-        : document.querySelector(voButton);
+    // this.voButton =
+    //   voButton instanceof HTMLElement
+    //     ? voButton
+    //     : document.querySelector(voButton);
 
-    if (this.soundButton) {
-      this.soundButton.addEventListener('click', this.onSoundToggle.bind(this));
-    }
+    // if (this.soundButton) {
+    //   this.soundButton.addEventListener('click', this.onSoundToggle.bind(this));
+    // }
 
-    if (this.musicButton) {
-      this.musicButton.addEventListener('click', this.onMusicToggle.bind(this));
-    }
+    // if (this.musicButton) {
+    //   this.musicButton.addEventListener('click', this.onMusicToggle.bind(this));
+    // }
 
-    if (this.sfxButton) {
-      this.sfxButton.addEventListener('click', this.onSFXToggle.bind(this));
-    }
+    // if (this.sfxButton) {
+    //   this.sfxButton.addEventListener('click', this.onSFXToggle.bind(this));
+    // }
 
-    if (this.voButton) {
-      this.voButton.addEventListener('click', this.onVOToggle.bind(this));
-    }
+    // if (this.voButton) {
+    //   this.voButton.addEventListener('click', this.onVOToggle.bind(this));
+    // }
 
     this.soundSlider.enableSliderEvents(this.onSoundVolumeChange.bind(this));
     this.musicSlider.enableSliderEvents(this.onMusicVolumeChange.bind(this));
@@ -225,42 +234,31 @@ export class SoundPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        if (
-          !features.data ||
-          'object' !== typeof features.data ||
-          null === features.data
-        ) {
+        if (!features.data) {
           return;
         }
-        if (this.voButton instanceof HTMLElement) {
-          this.voButton.style.display = features.data.vo ? '' : 'none';
-        }
-        if (this.musicButton instanceof HTMLElement) {
-          this.musicButton.style.display = features.data.music ? '' : 'none';
-        }
-        if (this.soundButton instanceof HTMLElement) {
-          this.soundButton.style.display = features.data.sound ? '' : 'none';
-        }
-        if (this.sfxButton instanceof HTMLElement) {
-          this.sfxButton.style.display = features.data.sfx ? '' : 'none';
-        }
+        // if (this.voButton instanceof HTMLElement) {
+        //   this.voButton.style.display = features.data.vo ? '' : 'none';
+        // }
+        // if (this.musicButton instanceof HTMLElement) {
+        //   this.musicButton.style.display = features.data.music ? '' : 'none';
+        // }
+        // if (this.soundButton instanceof HTMLElement) {
+        //   this.soundButton.style.display = features.data.sound ? '' : 'none';
+        // }
+        // if (this.sfxButton instanceof HTMLElement) {
+        //   this.sfxButton.style.display = features.data.sfx ? '' : 'none';
+        // }
 
-        if (this.soundSlider) {
-          this.soundSlider.style.display = features.data.soundVolume
-            ? ''
-            : 'none';
-        }
-        if (this.voSlider) {
-          this.voSlider.style.display = features.data.voVolume ? '' : 'none';
-        }
-        if (this.musicSlider) {
-          this.musicSlider.style.display = features.data.musicVolume
-            ? ''
-            : 'none';
-        }
-        if (this.sfxSlider) {
-          this.sfxSlider.style.display = features.data.sfxVolume ? '' : 'none';
-        }
+        this.soundButton.displayButton(features.data);
+        this.musicButton.displayButton(features.data);
+        this.sfxButton.displayButton(features.data);
+        this.voButton.displayButton(features.data);
+
+        this.soundSlider.displaySlider(features.data);
+        this.sfxSlider.displaySlider(features.data);
+        this.voSlider.displaySlider(features.data);
+        this.musicSlider.displaySlider(features.data);
       }.bind(this)
     );
   }
@@ -269,21 +267,26 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   start() {
-    if (this.soundButton !== null) {
-      this.soundButton.classList.remove('disabled');
-    }
+    // if (this.soundButton !== null) {
+    //   this.soundButton.classList.remove('disabled');
+    // }
 
-    if (this.sfxButton !== null) {
-      this.sfxButton.classList.remove('disabled');
-    }
+    // if (this.sfxButton !== null) {
+    //   this.sfxButton.classList.remove('disabled');
+    // }
 
-    if (this.voButton !== null) {
-      this.voButton.classList.remove('disabled');
-    }
+    // if (this.voButton !== null) {
+    //   this.voButton.classList.remove('disabled');
+    // }
 
-    if (this.musicButton !== null) {
-      this.musicButton.classList.remove('disabled');
-    }
+    // if (this.musicButton !== null) {
+    //   this.musicButton.classList.remove('disabled');
+    // }
+
+    this.soundButton.enableButton();
+    this.soundButton.enableButton();
+    this.soundButton.enableButton();
+    this.soundButton.enableButton();
 
     this.soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
     this.musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);

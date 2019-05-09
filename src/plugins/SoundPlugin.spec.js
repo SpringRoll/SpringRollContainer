@@ -44,10 +44,10 @@ describe('SoundPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'sound-plugin-iframe';
     document.body.appendChild(iframe);
-    expect(sp.soundButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.musicButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.sfxButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.voButton).to.be.instanceof(HTMLButtonElement);
+    expect(sp.soundButton.button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.musicButton.button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.sfxButton.button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.voButton.button).to.be.instanceof(HTMLButtonElement);
     new Container('#sound-plugin-iframe').client.trigger('features');
   });
 
@@ -91,49 +91,49 @@ describe('SoundPlugin', () => {
   });
 
   it('.onSoundVolumeChange()', () => {
-    sp.soundSlider.slider.value = 1;
-    sp.soundSlider.slider.dispatchEvent(initEvent('change'));
+    sp.soundSlider.value = 1;
+    sp.soundSlider.dispatch(initEvent('change'));
 
     expect(sp.soundVolume).to.equal(1);
 
-    sp.soundSlider.slider.value = 0;
-    sp.soundSlider.slider.dispatchEvent(initEvent('change'));
+    sp.soundSlider.value = 0;
+    sp.soundSlider.dispatch(initEvent('change'));
 
     expect(sp.soundVolume).to.equal(0);
   });
 
   it('.onMusicVolumeChange()', () => {
-    sp.musicSlider.slider.value = 1;
-    sp.musicSlider.slider.dispatchEvent(initEvent('change'));
+    sp.musicSlider.value = 1;
+    sp.musicSlider.dispatch(initEvent('change'));
 
     expect(sp.musicMuted).to.be.false;
 
-    sp.musicSlider.slider.value = 0;
-    sp.musicSlider.slider.dispatchEvent(initEvent('change'));
+    sp.musicSlider.value = 0;
+    sp.musicSlider.dispatch(initEvent('change'));
 
     expect(sp.musicMuted).to.be.true;
   });
 
   it('.onVoVolumeChange()', () => {
-    sp.voSlider.slider.value = 1;
-    sp.voSlider.slider.dispatchEvent(initEvent('change'));
+    sp.voSlider.value = 1;
+    sp.voSlider.dispatch(initEvent('change'));
 
     expect(sp.voMuted).to.be.false;
 
-    sp.voSlider.slider.value = 0;
-    sp.voSlider.slider.dispatchEvent(initEvent('change'));
+    sp.voSlider.value = 0;
+    sp.voSlider.dispatch(initEvent('change'));
 
     expect(sp.voMuted).to.be.true;
   });
 
   it('.onSfxVolumeChange()', () => {
-    sp.sfxSlider.slider.value = 1;
-    sp.sfxSlider.slider.dispatchEvent(initEvent('change'));
+    sp.sfxSlider.value = 1;
+    sp.sfxSlider.dispatch(initEvent('change'));
 
     expect(sp.sfxMuted).to.be.false;
 
-    sp.sfxSlider.slider.value = 0;
-    sp.sfxSlider.slider.dispatchEvent(initEvent('change'));
+    sp.sfxSlider.value = 0;
+    sp.sfxSlider.dispatch(initEvent('change'));
 
     expect(sp.sfxMuted).to.be.true;
   });

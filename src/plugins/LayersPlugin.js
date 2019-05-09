@@ -24,7 +24,7 @@ export class LayersPlugin extends ButtonPlugin {
     this.layersToggleState = {}; //object that tracks all layers and their values
 
     const boxes = Object.values(this.layersCheckBoxes.elements); // used in the for loop
-    for (let i = 0; i < boxes.length; i++) {
+    for (let i = 0, l = boxes.length; i < l; i++) {
       this.layersToggleState[boxes[i].value] = false;
       boxes[i].addEventListener('click', () => {
         this.onLayerToggle(boxes[i]);
@@ -52,18 +52,12 @@ export class LayersPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        if (
-          !features.data ||
-          'object' !== typeof features.data ||
-          null === features.data
-        ) {
+        if (!features.data || !(this.layersCheckBoxes instanceof HTMLElement)) {
           return;
         }
-        if (this.layersCheckBoxes instanceof HTMLElement) {
-          this.layersCheckBoxes.style.display = features.data.layersCheckBoxes
-            ? ''
-            : 'none';
-        }
+        this.layersCheckBoxes.style.display = features.data.layersCheckBoxes
+          ? ''
+          : 'none';
       }.bind(this)
     );
   }

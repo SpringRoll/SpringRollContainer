@@ -9,33 +9,28 @@ const initEvent = eventName => {
 
 describe('LayersPlugin', () => {
   let lp;
-  const options = {
-    layersCheckBoxes: 'lcb'
-  };
 
   before(() => {
     document.body.innerHTML = '';
-    Object.keys(options).forEach(key => {
-      const form = document.createElement('form');
-      form.id = options[key];
-      const cb1 = document.createElement('input');
-      cb1.type = 'checkbox';
-      cb1.name = 'layer';
-      cb1.value = 'layer1';
-      cb1.id = 'layer1';
-      const cb2 = document.createElement('input');
-      cb2.type = 'checkbox';
-      cb2.name = 'layer';
-      cb2.value = 'layer2';
-      cb2.id = 'layer2';
 
-      form.appendChild(cb1);
-      form.appendChild(cb2);
+    const form = document.createElement('form');
+    form.id = 'lcb';
+    const cb1 = document.createElement('input');
+    cb1.type = 'checkbox';
+    cb1.name = 'layer';
+    cb1.value = 'layer1';
+    cb1.id = 'layer1';
+    const cb2 = document.createElement('input');
+    cb2.type = 'checkbox';
+    cb2.name = 'layer';
+    cb2.value = 'layer2';
+    cb2.id = 'layer2';
 
-      options[key] = `#${options[key]}`;
-      document.body.appendChild(form);
-    });
-    lp = new LayersPlugin(options);
+    form.appendChild(cb1);
+    form.appendChild(cb2);
+
+    document.body.appendChild(form);
+    lp = new LayersPlugin({ layersCheckBoxes: '#lcb' });
     lp.preload({ client: new Bellhop() });
   });
 

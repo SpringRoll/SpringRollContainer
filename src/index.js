@@ -8,3 +8,4 @@ export * from './PageVisibility';
 export * from './plugins';
 export * from './SavedData';
 export * from './SavedDataHandler';
+export * from './classes';

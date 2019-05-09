@@ -7,15 +7,21 @@ import { SavedData } from '../SavedData';
 export class Slider {
   /**
    *Creates an instance of Slider
-   * @param {HTMLInputElement | string} slider
-   *
+   * @param {object} params
+   * @param {string | HTMLInputElement} params.slider
+   * @param {string} params.control
+   * @param {number} [min=0]
+   * @param {number} [max=1]
+   * @param {number} [step=0.1]
+   * @param {number} [value=1]
    * @memberof SliderPlugin
    */
-  constructor(slider, control, min, max, step, value) {
+  constructor({ slider, control, min = 0, max = 1, step = 0.1, value = 1 }) {
     this.min = min;
     this.max = max;
     this.step = step;
-    this.value = value;
+    this.sliderValue = value;
+    this.control = control;
     this.slider = this.setUpSlider(slider, control);
   }
 
@@ -34,8 +40,8 @@ export class Slider {
       return null;
     }
     const value = SavedData.read(control);
-    slider.value =
-      null !== value && value.toString().trim().length > 0 ? value : 1;
+
+    slider.value = value && value.toString().trim().length > 0 ? value : 1;
     slider.min = this.min;
     slider.max = this.max;
     slider.step = this.step;
@@ -64,11 +70,13 @@ export class Slider {
    * @param {Function} callBack event to fire on change or input
    */
   enableSliderEvents(callBack) {
-    if (this.slider) {
-      const event = callBack;
-      this.slider.addEventListener('change', event);
-      this.slider.addEventListener('input', event);
+    if (!this.slider) {
+      return;
     }
+
+    const event = callBack;
+    this.slider.addEventListener('change', event);
+    this.slider.addEventListener('input', event);
   }
 
   /**
@@ -77,10 +85,46 @@ export class Slider {
    * @param {Function} callBack event to fire on change or input
    */
   disableSliderEvents(callBack) {
-    if (this.slider) {
-      const event = callBack;
-      this.slider.removeEventListener('change', event);
-      this.slider.removeEventListener('input', event);
+    if (!this.slider) {
+      return;
     }
+    const event = callBack;
+    this.slider.removeEventListener('change', event);
+    this.slider.removeEventListener('input', event);
+  }
+  /**
+   * enables display of the Slider if it is present in the features list
+   * @memberof Slider
+   * @param {object} data Object containing which features are enabled
+   */
+  displaySlider(data) {
+    if (!this.slider) {
+      return;
+    }
+    this.slider.style.display = data[this.control] ? '' : 'none';
+  }
+
+  /**
+   * @param {Event} event the event to be fired on the slider
+   * @memberof Slider
+   */
+  dispatch(event) {
+    this.slider.dispatchEvent(event);
+  }
+
+  /**
+   * @readonly
+   * @returns {string}
+   * @memberof Slider
+   */
+  get value() {
+    return this.slider.value;
+  }
+
+  /**
+   * @memberof Slider
+   */
+  set value(value) {
+    this.slider.value = value;
   }
 }

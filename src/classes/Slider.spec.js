@@ -17,7 +17,10 @@ describe('Slider', () => {
     slider.id = 'slider';
     document.body.appendChild(slider);
 
-    s = new Slider(document.querySelector('#slider'), 'slider', 0, 1, 0.1);
+    s = new Slider({
+      slider: document.querySelector('#slider'),
+      control: 'slider'
+    });
   });
 
   it('construct', () => {

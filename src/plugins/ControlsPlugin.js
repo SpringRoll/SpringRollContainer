@@ -1,8 +1,8 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider } from './Slider';
+import { Slider } from '../classes/Slider';
 
 const SENSITIVITY_SLIDER_MIN = 0.1;
-const SENSITIVITY_SLIDER_MAX = 1;
+
 const SENSITIVITY_SLIDER_STEP = 0.1;
 
 /**
@@ -17,19 +17,18 @@ export class ControlsPlugin extends ButtonPlugin {
    * @param {string | HTMLElement} [params.sensitivitySlider]
    * @memberof ControlsPlugin
    */
-  constructor({ sensitivitySlider } = {}) {
+  constructor({ sensitivitySlider, sensitivity = 0.5 } = {}) {
     super('Control-Button-Plugin');
 
-    this.controlSensitivity = 0.5;
+    this.controlSensitivity = sensitivity;
 
-    this.sensitivitySlider = new Slider(
-      sensitivitySlider,
-      ControlsPlugin.controlSensitivityKey,
-      SENSITIVITY_SLIDER_MIN,
-      SENSITIVITY_SLIDER_MAX,
-      SENSITIVITY_SLIDER_STEP,
-      this.controlSensitivity
-    );
+    this.sensitivitySlider = new Slider({
+      slider: sensitivitySlider,
+      control: ControlsPlugin.controlSensitivityKey,
+      min: SENSITIVITY_SLIDER_MIN,
+      step: SENSITIVITY_SLIDER_STEP,
+      value: this.controlSensitivity
+    });
 
     this.sensitivitySlider.enableSliderEvents(
       this.onControlSensitivityChange.bind(this)
@@ -56,20 +55,10 @@ export class ControlsPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        if (
-          !features.data ||
-          'object' !== typeof features.data ||
-          null === features.data
-        ) {
+        if (!features.data) {
           return;
         }
-
-        if (this.sensitivitySlider) {
-          this.sensitivitySlider.style.display = features.data
-            .controlSensitivity
-            ? ''
-            : 'none';
-        }
+        this.sensitivitySlider.displaySlider(features.data);
       }.bind(this)
     );
   }

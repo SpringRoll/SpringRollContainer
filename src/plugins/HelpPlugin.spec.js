@@ -11,7 +11,7 @@ before(() => {
 });
 describe('HelpPlugin', () => {
   it('construct', () => {
-    expect(hp.helpButton).to.be.instanceof(HTMLButtonElement);
+    expect(hp.helpButton.button).to.be.instanceof(HTMLButtonElement);
     expect(hp.client).to.be.instanceof(Bellhop);
   });
 });

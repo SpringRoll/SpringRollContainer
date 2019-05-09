@@ -1,13 +1,11 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider } from './Slider';
+import { Slider } from '../classes/Slider';
 
 const POINTER_SLIDER_MIN = 0.01;
-const POINTER_SLIDER_MAX = 1;
 const POINTER_SLIDER_STEP = 0.01;
 
-const BUTTON_SLIDER_MIN = 0.01;
-const BUTTON_SLIDER_MAX = 1;
-const BUTTON_SLIDER_STEP = 0.01;
+const BUTTON_SLIDER_MIN = 0.1;
+
 /**
  * @export
  * @class UISizePlugin
@@ -22,29 +20,31 @@ export class UISizePlugin extends ButtonPlugin {
    * @param {string | HTMLElement} [params.buttonSlider]
    * @memberof UISizePlugin
    */
-  constructor({ pointerSlider, buttonSlider } = {}) {
+  constructor({
+    pointerSlider,
+    buttonSlider,
+    pointerSize = 0.05,
+    buttonSize = 0.5
+  } = {}) {
     super('UISize-Button-Plugin');
 
-    this.pointerSize = 0.05;
-    this.buttonSize = 0.5;
+    this.pointerSize = pointerSize;
+    this.buttonSize = buttonSize;
 
-    this.pointerSlider = new Slider(
-      pointerSlider,
-      UISizePlugin.pointerSizeKey,
-      POINTER_SLIDER_MIN,
-      POINTER_SLIDER_MAX,
-      POINTER_SLIDER_STEP,
-      this.pointerSize
-    );
+    this.pointerSlider = new Slider({
+      slider: pointerSlider,
+      control: UISizePlugin.pointerSizeKey,
+      min: POINTER_SLIDER_MIN,
+      step: POINTER_SLIDER_STEP,
+      value: this.pointerSize
+    });
 
-    this.buttonSlider = new Slider(
-      buttonSlider,
-      UISizePlugin.buttonSizeKey,
-      BUTTON_SLIDER_MIN,
-      BUTTON_SLIDER_MAX,
-      BUTTON_SLIDER_STEP,
-      this.buttonSize
-    );
+    this.buttonSlider = new Slider({
+      slider: buttonSlider,
+      control: UISizePlugin.buttonSizeKey,
+      min: BUTTON_SLIDER_MIN,
+      value: this.buttonSize
+    });
 
     this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));
     this.buttonSlider.enableSliderEvents(this.onButtonSizeChange.bind(this));
@@ -77,24 +77,12 @@ export class UISizePlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        if (
-          !features.data ||
-          'object' !== typeof features.data ||
-          null === features.data
-        ) {
+        if (!features.data) {
           return;
         }
 
-        if (this.pointerSlider) {
-          this.pointerSlider.style.display = features.data.pointerSize
-            ? ''
-            : 'none';
-        }
-        if (this.buttonSlider) {
-          this.buttonSlider.style.display = features.data.buttonSize
-            ? ''
-            : 'none';
-        }
+        this.pointerSlider.displaySlider(features.data);
+        this.buttonSlider.displaySlider(features.data);
       }.bind(this)
     );
   }

@@ -1,10 +1,15 @@
-
-import { SavedData } from '../SavedData';
-
+type SliderOptions = {
+  slider: HTMLInputElement | string,
+  control: string,
+  min?: number,
+  max?: number,
+  step?: number,
+  value?: number
+};
 
 export class Slider {
   constructor(
-    slider: HTMLInputElement | string, control: string, min: number, max: number, step: number, value: number
+    SliderOptions: SliderOptions
   )
 
     min: number;
@@ -18,5 +23,10 @@ export class Slider {
   sliderRange(i: number, min?: number, max?: number): number;
   enableSliderEvents(callBack: Function): void;
   disableSliderEvents(callBack: Function): void;
+  displaySlider(data: object): void;
 
+  dispatch(event: Event): void;
+
+  get value(): string;
+  set value(value: number): void;
 }

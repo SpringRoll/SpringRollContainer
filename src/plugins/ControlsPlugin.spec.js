@@ -9,20 +9,14 @@ const initEvent = eventName => {
 
 describe('ControlsPlugin', () => {
   let cp;
-  const options = {
-    sensitivitySlider: 'ss'
-  };
 
   before(() => {
     document.body.innerHTML = '';
-    Object.keys(options).forEach(key => {
-      const slider = document.createElement('input');
-      slider.type = 'range';
-      slider.id = options[key];
-      options[key] = `#${options[key]}`;
-      document.body.appendChild(slider);
-    });
-    cp = new ControlsPlugin(options);
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.id = 'ss';
+    document.body.appendChild(slider);
+    cp = new ControlsPlugin({ sensitivitySlider: '#ss' });
     cp.preload({ client: new Bellhop() });
   });
 
@@ -34,18 +28,18 @@ describe('ControlsPlugin', () => {
   });
 
   it('.onControlSensitivityChange()', () => {
-    cp.sensitivitySlider.slider.value = 1;
+    cp.sensitivitySlider.value = 1;
 
-    cp.sensitivitySlider.slider.dispatchEvent(initEvent('change'));
+    cp.sensitivitySlider.dispatch(initEvent('change'));
 
-    expect(cp.sensitivitySlider.slider.value).to.equal('1');
+    expect(cp.sensitivitySlider.value).to.equal('1');
     expect(cp.controlSensitivity).to.equal(1);
 
-    cp.sensitivitySlider.slider.value = 0.1;
+    cp.sensitivitySlider.value = 0.1;
 
-    cp.sensitivitySlider.slider.dispatchEvent(initEvent('change'));
+    cp.sensitivitySlider.dispatch(initEvent('change'));
 
-    expect(cp.sensitivitySlider.slider.value).to.equal('0.1');
+    expect(cp.sensitivitySlider.value).to.equal('0.1');
     expect(cp.controlSensitivity).to.equal(0.1);
   });
 });

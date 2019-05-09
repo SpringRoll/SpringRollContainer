@@ -35,30 +35,30 @@ describe('UISizePlugin', () => {
   });
 
   it('.onPointerSizeChange()', () => {
-    up.pointerSlider.slider.value = 1;
-    up.pointerSlider.slider.dispatchEvent(initEvent('change'));
+    up.pointerSlider.value = 1;
+    up.pointerSlider.dispatch(initEvent('change'));
 
-    expect(up.pointerSlider.slider.value).to.equal('1');
+    expect(up.pointerSlider.value).to.equal('1');
     expect(up.pointerSize).to.equal(1);
 
-    up.pointerSlider.slider.value = 0.01;
-    up.pointerSlider.slider.dispatchEvent(initEvent('change'));
+    up.pointerSlider.value = 0.01;
+    up.pointerSlider.dispatch(initEvent('change'));
 
-    expect(up.pointerSlider.slider.value).to.equal('0.01');
+    expect(up.pointerSlider.value).to.equal('0.01');
     expect(up.pointerSize).to.equal(0.01);
   });
 
   it('.onButtonSizeChange()', () => {
-    up.buttonSlider.slider.value = 1;
-    up.buttonSlider.slider.dispatchEvent(initEvent('change'));
+    up.buttonSlider.value = 1;
+    up.buttonSlider.dispatch(initEvent('change'));
 
-    expect(up.buttonSlider.slider.value).to.equal('1');
+    expect(up.buttonSlider.value).to.equal('1');
     expect(up.buttonSize).to.equal(1);
 
-    up.buttonSlider.slider.value = 0.1;
-    up.buttonSlider.slider.dispatchEvent(initEvent('change'));
+    up.buttonSlider.value = 0.1;
+    up.buttonSlider.dispatch(initEvent('change'));
 
-    expect(up.buttonSlider.slider.value).to.equal('0.1');
+    expect(up.buttonSlider.value).to.equal('0.1');
     expect(up.buttonSize).to.equal(0.1);
   });
 });
