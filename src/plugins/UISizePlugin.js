@@ -1,6 +1,13 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { SavedData } from '../SavedData';
+import { Slider } from './Slider';
 
+const POINTER_SLIDER_MIN = 0.01;
+const POINTER_SLIDER_MAX = 1;
+const POINTER_SLIDER_STEP = 0.01;
+
+const BUTTON_SLIDER_MIN = 0.01;
+const BUTTON_SLIDER_MAX = 1;
+const BUTTON_SLIDER_STEP = 0.01;
 /**
  * @export
  * @class UISizePlugin
@@ -21,24 +28,35 @@ export class UISizePlugin extends ButtonPlugin {
     this.pointerSize = 0.05;
     this.buttonSize = 0.5;
 
-    this.pointerSlider = this.sliderSetup(
+    this.pointerSlider = new Slider(
       pointerSlider,
-      UISizePlugin.pointerSizeKey
+      UISizePlugin.pointerSizeKey,
+      POINTER_SLIDER_MIN,
+      POINTER_SLIDER_MAX,
+      POINTER_SLIDER_STEP,
+      this.pointerSize
     );
 
-    this.buttonSlider = this.sliderSetup(
+    this.buttonSlider = new Slider(
       buttonSlider,
-      UISizePlugin.buttonSizeKey
+      UISizePlugin.buttonSizeKey,
+      BUTTON_SLIDER_MIN,
+      BUTTON_SLIDER_MAX,
+      BUTTON_SLIDER_STEP,
+      this.buttonSize
     );
 
-    this.enableSliderEvents();
+    this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));
+    this.buttonSlider.enableSliderEvents(this.onButtonSizeChange.bind(this));
   }
 
   /**
    * @memberof UISizePlugin
    */
   onPointerSizeChange() {
-    this.pointerSize = this.sizeRange(Number(this.pointerSlider.value));
+    this.pointerSize = this.pointerSlider.sliderRange(
+      Number(this.pointerSlider.slider.value)
+    );
     this.sendProperty(UISizePlugin.pointerSizeKey, this.pointerSize);
   }
 
@@ -46,42 +64,10 @@ export class UISizePlugin extends ButtonPlugin {
    * @memberof UISizePlugin
    */
   onButtonSizeChange() {
-    this.buttonSize = this.sizeRange(Number(this.buttonSlider.value));
+    this.buttonSize = this.buttonSlider.sliderRange(
+      Number(this.buttonSlider.slider.value)
+    );
     this.sendProperty(UISizePlugin.buttonSizeKey, this.buttonSize);
-  }
-
-  /**
-   * @memberof UISizePlugin
-   */
-  enableSliderEvents() {
-    if (this.pointerSlider) {
-      const onPointerSizeChange = this.onPointerSizeChange.bind(this);
-      this.pointerSlider.addEventListener('change', onPointerSizeChange);
-      this.pointerSlider.addEventListener('input', onPointerSizeChange);
-    }
-
-    if (this.buttonSlider) {
-      const onButtonSizeChange = this.onButtonSizeChange.bind(this);
-      this.buttonSlider.addEventListener('change', onButtonSizeChange);
-      this.buttonSlider.addEventListener('input', onButtonSizeChange);
-    }
-  }
-
-  /**
-   * @memberof UISizePlugin
-   */
-  disableSliderEvents() {
-    if (this.pointerSlider) {
-      const onPointerSizeChange = this.onPointerSizeChange.bind(this);
-      this.pointerSlider.removeEventListener('change', onPointerSizeChange);
-      this.pointerlider.removeEventListener('input', onPointerSizeChange);
-    }
-
-    if (this.buttonSlider) {
-      const onButtonSizeChange = this.onButtonSizeChange.bind(this);
-      this.buttonSlider.removeEventListener('change', onButtonSizeChange);
-      this.buttonSlider.removeEventListener('input', onButtonSizeChange);
-    }
   }
 
   /**
@@ -111,52 +97,6 @@ export class UISizePlugin extends ButtonPlugin {
         }
       }.bind(this)
     );
-  }
-
-  /**
-   * @memberof UISizePlugin
-   */
-  start() {}
-
-  /**
-   * @param {string | HTMLInputElement | HTMLElement} slider
-   * @param {string} uiElement The UI element (pointer, buttons, etc) this slider will be controlling
-   * @returns {Element | HTMLElement}
-   * @memberof UISizePlugin
-   */
-  sliderSetup(slider, uiElement) {
-    if ('string' === typeof slider) {
-      slider = document.querySelector(slider);
-    }
-
-    if (!slider || 'range' !== slider.type) {
-      return null;
-    }
-    const value = SavedData.read(uiElement);
-    slider['value'] =
-      null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider.min = '0.01';
-    slider.max = '1';
-    slider.step = '0.01';
-    return slider;
-  }
-
-  /**
-   * Controls the volume range
-   * @param {number} i
-   * @param {number} [min=0.01]
-   * @param {number} [max=1]
-   * @returns
-   * @memberof UISizePlugin
-   */
-  sizeRange(i, min = 0.01, max = 1) {
-    if (i < min) {
-      return min;
-    } else if (i > max) {
-      return max;
-    } else {
-      return i;
-    }
   }
 
   /**

@@ -17,18 +17,11 @@ describe('UISizePlugin', () => {
   before(() => {
     document.body.innerHTML = '';
     Object.keys(options).forEach(key => {
-      if (/Button/.test(key)) {
-        const button = document.createElement('button');
-        button.id = options[key];
-        options[key] = `#${options[key]}`;
-        document.body.appendChild(button);
-      } else {
-        const slider = document.createElement('input');
-        slider.type = 'range';
-        slider.id = options[key];
-        options[key] = `#${options[key]}`;
-        document.body.appendChild(slider);
-      }
+      const slider = document.createElement('input');
+      slider.type = 'range';
+      slider.id = options[key];
+      options[key] = `#${options[key]}`;
+      document.body.appendChild(slider);
     });
     up = new UISizePlugin(options);
     up.preload({ client: new Bellhop() });
@@ -42,26 +35,30 @@ describe('UISizePlugin', () => {
   });
 
   it('.onPointerSizeChange()', () => {
-    up.pointerSlider.value = 1;
-    up.pointerSlider.dispatchEvent(initEvent('change'));
+    up.pointerSlider.slider.value = 1;
+    up.pointerSlider.slider.dispatchEvent(initEvent('change'));
 
-    expect(up.pointerSlider.value).to.equal('1');
+    expect(up.pointerSlider.slider.value).to.equal('1');
+    expect(up.pointerSize).to.equal(1);
 
-    up.pointerSlider.value = 0.01;
-    up.pointerSlider.dispatchEvent(initEvent('change'));
+    up.pointerSlider.slider.value = 0.01;
+    up.pointerSlider.slider.dispatchEvent(initEvent('change'));
 
-    expect(up.pointerSlider.value).to.equal('0.01');
+    expect(up.pointerSlider.slider.value).to.equal('0.01');
+    expect(up.pointerSize).to.equal(0.01);
   });
 
   it('.onButtonSizeChange()', () => {
-    up.buttonSlider.value = 1;
-    up.buttonSlider.dispatchEvent(initEvent('change'));
+    up.buttonSlider.slider.value = 1;
+    up.buttonSlider.slider.dispatchEvent(initEvent('change'));
 
-    expect(up.buttonSlider.value).to.equal('1');
+    expect(up.buttonSlider.slider.value).to.equal('1');
+    expect(up.buttonSize).to.equal(1);
 
-    up.buttonSlider.value = 0.01;
-    up.buttonSlider.dispatchEvent(initEvent('change'));
+    up.buttonSlider.slider.value = 0.1;
+    up.buttonSlider.slider.dispatchEvent(initEvent('change'));
 
-    expect(up.buttonSlider.value).to.equal('0.01');
+    expect(up.buttonSlider.slider.value).to.equal('0.1');
+    expect(up.buttonSize).to.equal(0.1);
   });
 });

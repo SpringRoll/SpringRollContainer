@@ -10,3 +10,4 @@ import './UserDataPlugin.spec';
 import './UISizePlugin.spec';
 import './ControlsPlugin.spec';
 import './LayersPlugin.spec';
+import './Slider.spec';

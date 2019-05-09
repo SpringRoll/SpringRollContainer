@@ -1,4 +1,5 @@
 import { ButtonPlugin } from '..';
+import { Slider } from '..';
 
 type SoundPluginOptions = {
   soundButton?:string,
@@ -29,10 +30,10 @@ export class SoundPlugin extends ButtonPlugin {
   sfxButton: HTMLButtonElement | null;
   voButton: HTMLButtonElement | null;
 
-  soundSlider: HTMLInputElement | null;
-  musicSlider: HTMLInputElement | null;
-  sfxSlider: HTMLInputElement | null;
-  voSlider: HTMLInputElement | null;
+  soundSlider: Slider | null;
+  musicSlider: Slider | null;
+  sfxSlider: Slider | null;
+  voSlider: Slider | null;
 
   onSoundVolumeChange(): void;
   onMusicVolumeChange(): void;
@@ -43,12 +44,6 @@ export class SoundPlugin extends ButtonPlugin {
   onVOToggle(): void;
   onSFXToggle(): void;
   setMuteProp(): void;
-  sliderSetup(slider: HTMLInputElement | string, soundChannel: string): HTMLInputElement | null;
-
-  volumeRange(i: number, min?: number, max?: number): number;
-  enableSliderEvents():void;
-  disableSliderEvents():void;
-
 
   set soundMuted(muted: boolean): void;
   get soundMuted(): boolean;

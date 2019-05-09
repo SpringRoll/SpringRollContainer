@@ -16,18 +16,11 @@ describe('ControlsPlugin', () => {
   before(() => {
     document.body.innerHTML = '';
     Object.keys(options).forEach(key => {
-      if (/Button/.test(key)) {
-        const button = document.createElement('button');
-        button.id = options[key];
-        options[key] = `#${options[key]}`;
-        document.body.appendChild(button);
-      } else {
-        const slider = document.createElement('input');
-        slider.type = 'range';
-        slider.id = options[key];
-        options[key] = `#${options[key]}`;
-        document.body.appendChild(slider);
-      }
+      const slider = document.createElement('input');
+      slider.type = 'range';
+      slider.id = options[key];
+      options[key] = `#${options[key]}`;
+      document.body.appendChild(slider);
     });
     cp = new ControlsPlugin(options);
     cp.preload({ client: new Bellhop() });
@@ -41,14 +34,18 @@ describe('ControlsPlugin', () => {
   });
 
   it('.onControlSensitivityChange()', () => {
-    cp.sensitivitySlider.value = 1;
-    cp.sensitivitySlider.dispatchEvent(initEvent('change'));
+    cp.sensitivitySlider.slider.value = 1;
 
-    expect(cp.sensitivitySlider.value).to.equal('1');
+    cp.sensitivitySlider.slider.dispatchEvent(initEvent('change'));
 
-    cp.sensitivitySlider.value = 0.1;
-    cp.sensitivitySlider.dispatchEvent(initEvent('change'));
+    expect(cp.sensitivitySlider.slider.value).to.equal('1');
+    expect(cp.controlSensitivity).to.equal(1);
 
-    expect(cp.sensitivitySlider.value).to.equal('0.1');
+    cp.sensitivitySlider.slider.value = 0.1;
+
+    cp.sensitivitySlider.slider.dispatchEvent(initEvent('change'));
+
+    expect(cp.sensitivitySlider.slider.value).to.equal('0.1');
+    expect(cp.controlSensitivity).to.equal(0.1);
   });
 });

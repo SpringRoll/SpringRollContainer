@@ -1,6 +1,10 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
+import { Slider } from './Slider';
 
+const SOUND_SLIDER_MIN = 0;
+const SOUND_SLIDER_MAX = 1;
+const SOUND_SLIDER_STEP = 0.1;
 /**
  * @export
  * @class SoundPlugin
@@ -43,16 +47,34 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxVolume = 0;
     this.voVolume = 0;
 
-    this.soundSlider = this.sliderSetup(
+    this.soundSlider = new Slider(
       soundSlider,
-      SoundPlugin.soundVolumeKey
+      SoundPlugin.soundVolumeKey,
+      SOUND_SLIDER_MIN,
+      SOUND_SLIDER_MAX,
+      SOUND_SLIDER_STEP
     );
-    this.musicSlider = this.sliderSetup(
+    this.musicSlider = new Slider(
       musicSlider,
-      SoundPlugin.musicVolumeKey
+      SoundPlugin.musicVolumeKey,
+      SOUND_SLIDER_MIN,
+      SOUND_SLIDER_MAX,
+      SOUND_SLIDER_STEP
     );
-    this.sfxSlider = this.sliderSetup(sfxSlider, SoundPlugin.sfxVolumeKey);
-    this.voSlider = this.sliderSetup(voSlider, SoundPlugin.voVolumeKey);
+    this.sfxSlider = new Slider(
+      sfxSlider,
+      SoundPlugin.sfxVolumeKey,
+      SOUND_SLIDER_MIN,
+      SOUND_SLIDER_MAX,
+      SOUND_SLIDER_STEP
+    );
+    this.voSlider = new Slider(
+      voSlider,
+      SoundPlugin.voVolumeKey,
+      SOUND_SLIDER_MIN,
+      SOUND_SLIDER_MAX,
+      SOUND_SLIDER_STEP
+    );
 
     this.soundButton =
       soundButton instanceof HTMLElement
@@ -88,14 +110,19 @@ export class SoundPlugin extends ButtonPlugin {
       this.voButton.addEventListener('click', this.onVOToggle.bind(this));
     }
 
-    this.enableSliderEvents();
+    this.soundSlider.enableSliderEvents(this.onSoundVolumeChange.bind(this));
+    this.musicSlider.enableSliderEvents(this.onMusicVolumeChange.bind(this));
+    this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
+    this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
   }
 
   /**
    * @memberof SoundPlugin
    */
   onSoundVolumeChange() {
-    this.soundVolume = this.volumeRange(Number(this.soundSlider.value));
+    this.soundVolume = this.soundSlider.sliderRange(
+      Number(this.soundSlider.slider.value)
+    );
     this.soundMuted = !this.soundVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
@@ -104,66 +131,10 @@ export class SoundPlugin extends ButtonPlugin {
   /**
    * @memberof SoundPlugin
    */
-  enableSliderEvents() {
-    if (this.soundSlider) {
-      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
-      this.soundSlider.addEventListener('change', onSoundVolumeChange);
-      this.soundSlider.addEventListener('input', onSoundVolumeChange);
-    }
-
-    if (this.musicSlider) {
-      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
-      this.musicSlider.addEventListener('change', onMusicVolumeChange);
-      this.musicSlider.addEventListener('input', onMusicVolumeChange);
-    }
-
-    if (this.sfxSlider) {
-      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
-      this.sfxSlider.addEventListener('change', onSfxVolumeChange);
-      this.sfxSlider.addEventListener('input', onSfxVolumeChange);
-    }
-
-    if (this.voSlider) {
-      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
-      this.voSlider.addEventListener('change', onVoVolumeChange);
-      this.voSlider.addEventListener('input', onVoVolumeChange);
-    }
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  disableSliderEvents() {
-    if (this.soundSlider) {
-      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
-      this.soundSlider.removeEventListener('change', onSoundVolumeChange);
-      this.soundSlider.removeEventListener('input', onSoundVolumeChange);
-    }
-
-    if (this.musicSlider) {
-      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
-      this.musicSlider.removeEventListener('change', onMusicVolumeChange);
-      this.musicSlider.removeEventListener('input', onMusicVolumeChange);
-    }
-
-    if (this.sfxSlider) {
-      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
-      this.sfxSlider.removeEventListener('change', onSfxVolumeChange);
-      this.sfxSlider.removeEventListener('input', onSfxVolumeChange);
-    }
-
-    if (this.voSlider) {
-      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
-      this.voSlider.removeEventListener('change', onVoVolumeChange);
-      this.voSlider.removeEventListener('input', onVoVolumeChange);
-    }
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
   onMusicVolumeChange() {
-    this.musicVolume = this.volumeRange(Number(this.musicSlider.value));
+    this.musicVolume = this.musicSlider.sliderRange(
+      Number(this.musicSlider.slider.value)
+    );
     this.musicMuted = !this.musicVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
@@ -173,7 +144,9 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onVoVolumeChange() {
-    this.voVolume = this.volumeRange(Number(this.voSlider.value));
+    this.voVolume = this.voSlider.sliderRange(
+      Number(this.voSlider.slider.value)
+    );
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
@@ -183,7 +156,9 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSfxVolumeChange() {
-    this.sfxVolume = this.volumeRange(Number(this.sfxSlider.value));
+    this.sfxVolume = this.sfxSlider.sliderRange(
+      Number(this.sfxSlider.slider.value)
+    );
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
@@ -313,47 +288,6 @@ export class SoundPlugin extends ButtonPlugin {
     this.musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
     this.sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
     this.voMuted = !!SavedData.read(SoundPlugin.voMutedKey);
-  }
-
-  /**
-   * @param {string | HTMLInputElement | HTMLElement} slider
-   * @param {string} soundChannel The audio channel this slider will be controlling
-   * @returns {Element | HTMLElement}
-   * @memberof SoundPlugin
-   */
-  sliderSetup(slider, soundChannel) {
-    if ('string' === typeof slider) {
-      slider = document.querySelector(slider);
-    }
-
-    if (!slider || 'range' !== slider.type) {
-      return null;
-    }
-    const value = SavedData.read(soundChannel);
-    slider['value'] =
-      null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider['min'] = '0';
-    slider['max'] = '1';
-    slider['step'] = '0.1';
-    return slider;
-  }
-
-  /**
-   * Controls the volume range
-   * @param {number} i
-   * @param {number} [min=0]
-   * @param {number} [max=1]
-   * @returns
-   * @memberof SoundPlugin
-   */
-  volumeRange(i, min = 0, max = 1) {
-    if (i < min) {
-      return min;
-    } else if (i > max) {
-      return max;
-    } else {
-      return i;
-    }
   }
 
   /**

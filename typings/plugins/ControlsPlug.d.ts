@@ -1,25 +1,25 @@
 import { ButtonPlugin } from '..';
 
 type ControlsPluginOptions = {
-  pointerSlider?:string,
-  buttonSlider?:string
+  sensitivitySlider?:string,
 };
+
+type Slider = {
+  slider: HTMLInputElement | string, control: string, min: number, max: number, step: number, value: number
+}
+
+const SENSITIVITY_SLIDER_MIN: number;
+const SENSITIVITY_SLIDER_MAX: number;
+const SENSITIVITY_SLIDER_STEP: number;
 
 export class ControlsPlugin extends ButtonPlugin {
   constructor(options: ControlsluginOptions)
 
-
   controlSensitivity: number;
 
-  sensitivitySlider: HTMLInputElement | null;
+  sensitivitySlider: Slider | null;
 
   onControlSensitivityChange(): void;
-
-  sliderSetup(slider: HTMLInputElement | string, uiElement: string): HTMLInputElement | null;
-
-  sensitivityRange(i: number, min?: number, max?: number): number;
-  enableSliderEvents():void;
-  disableSliderEvents():void;
 
   static get controlSensitivityKey(): string;
 
