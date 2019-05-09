@@ -16,7 +16,7 @@ Install with [NPM](https://www.npmjs.com/).
 npm install springroll-container
 ```
 
-## Usage 
+## Usage
 
 Basic usage for opening a SpringRoll application via a local path. This can be used to open a game with a relative or absolute (e.g. "http://...") path.
 

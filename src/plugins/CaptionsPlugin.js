@@ -68,6 +68,9 @@ export class CaptionsPlugin extends ButtonPlugin {
       }.bind(this)
     );
 
+    this.client.on('loaded', () => {});
+    this.client.on('loadDone', () => {});
+
     this.client.on(
       'caption-set-style',
       function($event) {

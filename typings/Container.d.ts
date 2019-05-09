@@ -1,25 +1,24 @@
 import { Bellhop } from "bellhop-iframe";
-import { BasePlugin } from "../src/plugins/BasePlugin";
+import {IPlugin} from './plugins';
 
 type OpenOptions = {singlePlay?: boolean, playOption?: object | null, [key:string]: any};
 interface RemoteOptions extends OpenOptions {
   query?:string;
 }
 
-export class PluginManaer {
+export class PluginManager {
   client: Bellhop;
-  plugins: Array<BasePlugin>;
+  plugins: Array<IPlugin>;
   setupPlugins(): void;
-  uses(plugin: BasePlugin): void;
-  getPlugin(name:string): BasePlugin | undefined;
+  uses(plugin: IPlugin): void;
+  getPlugin(name:string): IPlugin | undefined;
 }
 
 export class Container extends PluginManager {
   client: Bellhop;
   loaded: boolean;
   loading: boolean;
-  dom: HTMLIFrameElement;
-  main: HTMLIFrameElement;
+  iFrame: HTMLIFrameElement;
   release?: any;
   constructor(iframeSelector: string);
   close(): void;
