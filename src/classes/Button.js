@@ -11,7 +11,7 @@ export class Button {
    * @param {string} [channel='']
    * @memberof ButtonPlugin
    */
-  constructor({ button, onClick, channel = '' }) {
+  constructor({ button, onClick, channel }) {
     this.button =
       button instanceof HTMLElement ? button : document.querySelector(button);
     this.onClick = onClick;
@@ -43,13 +43,5 @@ export class Button {
       return;
     }
     this.button.classList.remove('disabled');
-  }
-
-  /**
-   * @memberof Button
-   * @param {event} event event to be fired on the button
-   */
-  dispatch(event) {
-    this.Button.dispatchEvent(event);
   }
 }

@@ -11,7 +11,9 @@ before(() => {
 });
 describe('HelpPlugin', () => {
   it('construct', () => {
-    expect(hp.helpButton.button).to.be.instanceof(HTMLButtonElement);
+    expect(hp.helpButton).to.be.instanceof(HTMLButtonElement);
+    expect(hp.helpButton.style.display).to.equal('');
+    expect(hp.helpButton.classList.contains('disabled')).to.be.false;
     expect(hp.client).to.be.instanceof(Bellhop);
   });
 });

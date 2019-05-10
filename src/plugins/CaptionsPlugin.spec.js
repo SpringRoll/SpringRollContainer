@@ -14,6 +14,8 @@ describe('CaptionsPlugin', () => {
   });
   it('construct', () => {
     expect(cp.captionsButton).to.be.instanceof(HTMLButtonElement);
+    expect(cp.captionsButton.style.display).to.equal('');
+    expect(cp.captionsButton.classList.contains('disabled')).to.be.false;
   });
   it('On click', () => {
     cp.captionsButton.click();

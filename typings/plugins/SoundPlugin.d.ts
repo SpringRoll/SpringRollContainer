@@ -25,10 +25,10 @@ export class SoundPlugin extends ButtonPlugin {
   sfxVolume: number;
   voVolume: number;
 
-  soundButton: HTMLButtonElement | null;
-  musicButton: HTMLButtonElement | null;
-  sfxButton: HTMLButtonElement | null;
-  voButton: HTMLButtonElement | null;
+  _soundButton: HTMLButtonElement | null;
+  _musicButton: HTMLButtonElement | null;
+  _sfxButton: HTMLButtonElement | null;
+  _voButton: HTMLButtonElement | null;
 
   soundSlider: Slider | null;
   musicSlider: Slider | null;
@@ -53,6 +53,10 @@ export class SoundPlugin extends ButtonPlugin {
   get musicMuted(): boolean;
   set sfxMuted(muted:boolean): void;
   get sfxMuted(): boolean;
+  get soundButton(): HTMLButtonElement;
+  get musicButton(): HTMLButtonElement;
+  get sfxButton(): HTMLButtonElement;
+  get voButton(): HTMLButtonElement;
 
   static get musicVolumeKey(): string;
   static get voVolumeKey(): string;

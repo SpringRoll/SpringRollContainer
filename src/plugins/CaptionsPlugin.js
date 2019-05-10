@@ -1,5 +1,6 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
+import { Button } from '../classes';
 
 // Private Variables
 const CAPTIONS_STYLES = 'captionsStyles';
@@ -32,20 +33,19 @@ export class CaptionsPlugin extends ButtonPlugin {
       DEFAULT_CAPTIONS_STYLES,
       SavedData.read(CAPTIONS_STYLES) || {}
     );
-    this.captionsButton = document.querySelector(captionsButton);
+    this._captionsButton = new Button({
+      button: captionsButton,
+      onClick: this.captionsButtonClick.bind(this),
+      channel: 'captions'
+    });
     this._captionsMuted = false;
 
-    if (!this.captionsButton) {
+    if (!this._captionsButton) {
       console.warn(
         'SpringRollContainer: CaptionPlugin was not provided a button element'
       );
       return;
     }
-
-    this.captionsButton.addEventListener(
-      'click',
-      this.captionsButtonClick.bind(this)
-    );
   }
 
   /**
@@ -56,10 +56,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function($event) {
-        this.captionsButton.style.display = $event.data.captions
-          ? 'inline-block'
-          : 'none';
-
+        this._captionsButton.displayButton($event.data);
         if (null === SavedData.read(CAPTIONS_MUTED)) {
           return;
         }
@@ -81,9 +78,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
     this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 
-    if (null !== this.captionsButton) {
-      this.captionsButton.classList.remove('disabled');
-    }
+    this._captionsButton.enableButton();
   }
 
   /**
@@ -160,5 +155,13 @@ export class CaptionsPlugin extends ButtonPlugin {
       this.captionsButton,
       this._captionsMuted
     );
+  }
+
+  /**
+   * @readonly
+   * @memberof CaptionsPlugin
+   */
+  get captionsButton() {
+    return this._captionsButton.button;
   }
 }

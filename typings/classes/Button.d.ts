@@ -17,6 +17,4 @@ export class Button {
   displayButton(data: object): void;
   enableButton(): void;
 
-  dispatch(event: Event): void;
-
 }
