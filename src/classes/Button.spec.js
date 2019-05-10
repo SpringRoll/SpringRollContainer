@@ -1,13 +1,9 @@
 import { Button } from './Button';
 
-const initEvent = eventName => {
-  const event = document.createEvent('Event');
-  event.initEvent(eventName, false, true);
-  return event;
-};
+let clicked = false;
 
-const click = done => {
-  done();
+const click = () => {
+  clicked = true;
 };
 
 describe('Button', () => {
@@ -22,13 +18,19 @@ describe('Button', () => {
 
     b = new Button({
       button: document.querySelector('#button'),
-      onClick: click
+      onClick: click,
+      channel: ''
     });
   });
 
   it('construct', () => {
     expect(b.button).to.be.instanceof(HTMLElement);
+
     expect(b).to.be.instanceof(Button);
-    b.button.dispatchEvent(initEvent('click'));
+  });
+
+  it('fire click', () => {
+    b.button.click();
+    expect(clicked).to.be.true;
   });
 });

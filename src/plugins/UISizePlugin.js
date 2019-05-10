@@ -3,8 +3,10 @@ import { Slider } from '../classes/Slider';
 
 const POINTER_SLIDER_MIN = 0.01;
 const POINTER_SLIDER_STEP = 0.01;
-
+const POINTER_SLIDER_MAX = 1;
 const BUTTON_SLIDER_MIN = 0.1;
+const BUTTON_SLIDER_MAX = 1;
+const BUTTON_SLIDER_STEP = 0.1;
 
 /**
  * @export
@@ -35,6 +37,7 @@ export class UISizePlugin extends ButtonPlugin {
       slider: pointerSlider,
       control: UISizePlugin.pointerSizeKey,
       min: POINTER_SLIDER_MIN,
+      max: POINTER_SLIDER_MAX,
       step: POINTER_SLIDER_STEP,
       value: this.pointerSize
     });
@@ -43,6 +46,8 @@ export class UISizePlugin extends ButtonPlugin {
       slider: buttonSlider,
       control: UISizePlugin.buttonSizeKey,
       min: BUTTON_SLIDER_MIN,
+      max: BUTTON_SLIDER_MAX,
+      step: BUTTON_SLIDER_STEP,
       value: this.buttonSize
     });
 

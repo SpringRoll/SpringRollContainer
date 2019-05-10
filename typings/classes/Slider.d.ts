@@ -20,7 +20,7 @@ export class Slider {
 
   setupSlider(slider: HTMLInputElement | string, control: string): HTMLInputElement | null;
 
-  sliderRange(i: number, min?: number, max?: number): number;
+  sliderRange(i: number): number;
   enableSliderEvents(callBack: Function): void;
   disableSliderEvents(callBack: Function): void;
   displaySlider(data: object): void;

@@ -11,10 +11,8 @@ export class LayersPlugin extends ButtonPlugin {
 
   private layersToggleState: Object;
 
-
-
   onLayerToggle(layer: HTMLInputElement): void;
 
-  static get getLayersCheckBoxesKey(): string;
+  getLayersCheckBoxesKey(): string;
 
 }

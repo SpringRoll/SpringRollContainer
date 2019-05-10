@@ -25,10 +25,10 @@ export class SoundPlugin extends ButtonPlugin {
   sfxVolume: number;
   voVolume: number;
 
-  _soundButton: HTMLButtonElement | null;
-  _musicButton: HTMLButtonElement | null;
-  _sfxButton: HTMLButtonElement | null;
-  _voButton: HTMLButtonElement | null;
+  private _soundButton: HTMLButtonElement | null;
+  private _musicButton: HTMLButtonElement | null;
+  private _sfxButton: HTMLButtonElement | null;
+  private _voButton: HTMLButtonElement | null;
 
   soundSlider: Slider | null;
   musicSlider: Slider | null;

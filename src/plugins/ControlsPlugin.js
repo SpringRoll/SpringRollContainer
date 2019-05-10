@@ -2,7 +2,7 @@ import { ButtonPlugin } from './ButtonPlugin';
 import { Slider } from '../classes/Slider';
 
 const SENSITIVITY_SLIDER_MIN = 0.1;
-
+const SENSITIVITY_SLIDER_MAX = 1;
 const SENSITIVITY_SLIDER_STEP = 0.1;
 
 /**
@@ -26,6 +26,7 @@ export class ControlsPlugin extends ButtonPlugin {
       slider: sensitivitySlider,
       control: ControlsPlugin.controlSensitivityKey,
       min: SENSITIVITY_SLIDER_MIN,
+      max: SENSITIVITY_SLIDER_MAX,
       step: SENSITIVITY_SLIDER_STEP,
       value: this.controlSensitivity
     });

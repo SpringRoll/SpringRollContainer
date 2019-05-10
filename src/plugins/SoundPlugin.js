@@ -1,7 +1,6 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider } from '../classes/Slider';
-import { Button } from '../classes/Button';
+import { Slider, Button } from '../classes';
 
 /**
  * @export

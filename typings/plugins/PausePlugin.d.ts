@@ -16,7 +16,7 @@ export class PausePlugin extends ButtonPlugin {
   paused: boolean;
   pauseDisabled: boolean;
   pauseFocus: HTMLElement;
-  _pauseButton: Array<Button>;
+  private _pauseButton: Array<Button>;
   pauseButtons: NodeListOf<HTMLButtonElement>;
 
   set pause(paused: boolean): void;

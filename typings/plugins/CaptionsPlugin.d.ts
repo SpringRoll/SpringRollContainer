@@ -13,7 +13,7 @@ type CaptionStyles = {
 export class CaptionsPlugin extends ButtonPlugin {
   constructor(captionsButton:string);
   captionsStyle: CaptionStyles;
-  _captionsButton: Button;
+  private _captionsButton: Button;
   _captionsMuted: boolean;
 
   get captionsMuted(): boolean;

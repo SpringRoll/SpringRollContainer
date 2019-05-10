@@ -8,7 +8,7 @@ type ButtonOptions = {
 
 export class Button {
   constructor(
-    ButtonOptions: ButtonrOptions
+    ButtonOptions: ButtonOptions
   )
     button: HTMLElement | string;
     onClick: Function

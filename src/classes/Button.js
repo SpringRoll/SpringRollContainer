@@ -8,7 +8,7 @@ export class Button {
    * @param {object} params
    * @param {string | HTMLElement} params.button
    * @param {Function} params.onClick
-   * @param {string} [channel='']
+   * @param {string} channel
    * @memberof ButtonPlugin
    */
   constructor({ button, onClick, channel }) {
@@ -17,7 +17,7 @@ export class Button {
     this.onClick = onClick;
     this.channel = channel;
 
-    if (this.soundButton) {
+    if (this.button) {
       this.button.addEventListener('click', onClick);
     }
   }
