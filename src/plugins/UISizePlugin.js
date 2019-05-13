@@ -1,5 +1,5 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider } from '../classes/Slider';
+import { Slider } from '../ui-elements/Slider';
 
 const POINTER_SLIDER_MIN = 0.01;
 const POINTER_SLIDER_STEP = 0.01;

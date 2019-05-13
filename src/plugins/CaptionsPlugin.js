@@ -1,6 +1,6 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from '../classes';
+import { Button } from '../ui-elements';
 
 // Private Variables
 const CAPTIONS_STYLES = 'captionsStyles';

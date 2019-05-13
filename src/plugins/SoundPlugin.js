@@ -1,6 +1,6 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider, Button } from '../classes';
+import { Slider, Button } from '../ui-elements';
 
 /**
  * @export

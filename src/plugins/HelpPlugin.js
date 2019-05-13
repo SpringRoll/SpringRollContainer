@@ -1,5 +1,5 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from '../classes/Button';
+import { Button } from '../ui-elements/Button';
 
 /**
  *

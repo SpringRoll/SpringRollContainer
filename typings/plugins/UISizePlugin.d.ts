@@ -10,14 +10,6 @@ type Slider = {
   slider: HTMLInputElement | string, control: string, min: number, max: number, step: number, value: number
 }
 
-declare const POINTER_SLIDER_MIN: number;
-declare const POINTER_SLIDER_MAX: number;
-declare const POINTER_SLIDER_STEP : number;
-
-declare const BUTTON_SLIDER_MIN: number;
-declare const BUTTON_SLIDER_MAX: number;
-declare const BUTTON_SLIDER_STEP: number;
-
 export class UISizePlugin extends ButtonPlugin {
   constructor(options: UISizePluginOptions)
 

@@ -7,7 +7,7 @@ const initEvent = eventName => {
 };
 
 describe('Slider', () => {
-  let s;
+  let sl;
 
   before(() => {
     document.body.innerHTML = '';
@@ -17,43 +17,43 @@ describe('Slider', () => {
     slider.id = 'slider';
     document.body.appendChild(slider);
 
-    s = new Slider({
+    sl = new Slider({
       slider: document.querySelector('#slider'),
       control: 'slider'
     });
   });
 
   it('construct', () => {
-    expect(s.slider).to.be.instanceof(HTMLInputElement);
-    expect(s).to.be.instanceof(Slider);
+    expect(sl.slider).to.be.instanceof(HTMLInputElement);
+    expect(sl).to.be.instanceof(Slider);
   });
 
   it('.sliderRange()', () => {
-    expect(s.sliderRange(0.5)).to.equal(0.5);
-    expect(s.sliderRange(1.1)).to.equal(1);
-    expect(s.sliderRange(-1.1)).to.equal(0);
-    expect(s.sliderRange(0.1)).to.equal(0.1);
-    expect(s.sliderRange(1)).to.equal(1);
+    expect(sl.sliderRange(0.5)).to.equal(0.5);
+    expect(sl.sliderRange(1.1)).to.equal(1);
+    expect(sl.sliderRange(-1.1)).to.equal(0);
+    expect(sl.sliderRange(0.1)).to.equal(0.1);
+    expect(sl.sliderRange(1)).to.equal(1);
   });
 
   it('.enableSliderEvents()', done => {
-    s.enableSliderEvents(() => {
+    sl.enableSliderEvents(() => {
       done();
     });
 
-    s.slider.dispatchEvent(initEvent('change'));
-    s.slider.dispatchEvent(initEvent('input'));
+    sl.slider.dispatchEvent(initEvent('change'));
+    sl.slider.dispatchEvent(initEvent('input'));
   });
 
   it('.disableSliderEvents()', done => {
-    s.enableSliderEvents(() => {
+    sl.enableSliderEvents(() => {
       done();
     });
 
-    s.disableSliderEvents(() => {
+    sl.disableSliderEvents(() => {
       done();
     });
-    expect(s.slider.dispatchEvent(initEvent('input'))).to.throw(Error);
-    expect(s.slider.dispatchEvent(initEvent('change'))).to.throw(Error);
+    expect(sl.slider.dispatchEvent(initEvent('input'))).to.throw(Error);
+    expect(sl.slider.dispatchEvent(initEvent('change'))).to.throw(Error);
   });
 });

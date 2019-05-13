@@ -1,5 +1,5 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Slider } from '../classes/Slider';
+import { Slider } from '../ui-elements/Slider';
 
 const SENSITIVITY_SLIDER_MIN = 0.1;
 const SENSITIVITY_SLIDER_MAX = 1;

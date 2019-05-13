@@ -5,4 +5,4 @@ export as namespace SpringRollContainer;
   export * from './SavedData';
   export * from './SavedDatahandler';
   export * from './plugins';
-  export * from './classes';
+  export * from './ui-elements';

@@ -7,7 +7,7 @@ const click = () => {
 };
 
 describe('Button', () => {
-  let b;
+  let bt;
 
   before(() => {
     document.body.innerHTML = '';
@@ -16,7 +16,7 @@ describe('Button', () => {
     button.id = 'button';
     document.body.appendChild(button);
 
-    b = new Button({
+    bt = new Button({
       button: document.querySelector('#button'),
       onClick: click,
       channel: ''
@@ -24,13 +24,13 @@ describe('Button', () => {
   });
 
   it('construct', () => {
-    expect(b.button).to.be.instanceof(HTMLElement);
+    expect(bt.button).to.be.instanceof(HTMLElement);
 
-    expect(b).to.be.instanceof(Button);
+    expect(bt).to.be.instanceof(Button);
   });
 
   it('fire click', () => {
-    b.button.click();
+    bt.button.click();
     expect(clicked).to.be.true;
   });
 });
