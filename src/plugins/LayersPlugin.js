@@ -43,7 +43,10 @@ export class LayersPlugin extends ButtonPlugin {
     this.layersCheckBoxes.elements[layer.id].checked = this.layersToggleState[
       layer.value
     ];
-    this.sendProperty(layer.value, this.layersToggleState[layer.value]);
+    this.sendProperty(
+      LayersPlugin.layersToggleStateKey,
+      this.layersToggleState
+    );
   }
 
   /**
@@ -77,7 +80,7 @@ export class LayersPlugin extends ButtonPlugin {
    * @static
    * @memberof LayersPlugin
    */
-  static get layersCheckBoxesKey() {
-    return 'layersCheckBoxes';
+  static get layersToggleStateKey() {
+    return 'layersToggleState';
   }
 }
