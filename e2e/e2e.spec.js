@@ -7,7 +7,8 @@ import {
   UserDataPlugin,
   ControlsPlugin,
   UISizePlugin,
-  LayersPlugin
+  LayersPlugin,
+  LayersSliderPlugin
 } from '../src';
 
 const initEvent = eventName => {
@@ -31,6 +32,7 @@ describe('End to End Test', () => {
   const layersForm = document.createElement('form');
   const layersCB1 = document.createElement('input');
   const layersCB2 = document.createElement('input');
+  const layersSlider = document.createElement('input');
 
   before(() => {
     voButton.id = 'voButton';
@@ -40,12 +42,16 @@ describe('End to End Test', () => {
     pauseButton.id = 'pauseButton';
     sfxButton.id = 'sfxButton';
     soundButton.id = 'soundButton';
+
     sensitivitySlider.id = 'sensitivitySlider';
     sensitivitySlider.type = 'range';
     pointerSlider.id = 'pointerSlider';
     pointerSlider.type = 'range';
     buttonSlider.id = 'buttonSlider';
     buttonSlider.type = 'range';
+    layersSlider.id = 'layersSlider';
+    layersSlider.type = 'range';
+
     layersForm.id = 'layersForm';
     layersCB1.id = 'cb1';
     layersCB1.type = 'checkbox';
@@ -58,8 +64,8 @@ describe('End to End Test', () => {
 
     layersForm.appendChild(layersCB1);
     layersForm.appendChild(layersCB2);
-
     document.body.appendChild(layersForm);
+
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
     document.body.appendChild(captionsButton);
@@ -70,6 +76,7 @@ describe('End to End Test', () => {
     document.body.appendChild(sensitivitySlider);
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
+    document.body.appendChild(layersSlider);
     container = new Container('.karma-html');
   });
 
@@ -96,6 +103,9 @@ describe('End to End Test', () => {
       })
     );
     container.uses(new LayersPlugin({ layersCheckBoxes: '#layersForm' }));
+    container.uses(
+      new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 })
+    );
     container.initClient();
     container.setupPlugins();
   });
@@ -116,6 +126,8 @@ describe('End to End Test', () => {
     pointerSlider.dispatchEvent(initEvent('change'));
     buttonSlider.value = 0.3;
     buttonSlider.dispatchEvent(initEvent('change'));
+    layersSlider.value = 0.4;
+    layersSlider.dispatchEvent(initEvent('change'));
   });
 
   it('check the layers checkboxes', () => {
