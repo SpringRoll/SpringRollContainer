@@ -4,8 +4,17 @@ import {
   HelpPlugin,
   PausePlugin,
   SoundPlugin,
-  UserDataPlugin
+  UserDataPlugin,
+  ControlsPlugin,
+  UISizePlugin,
+  LayersPlugin
 } from '../src';
+
+const initEvent = eventName => {
+  const event = document.createEvent('Event');
+  event.initEvent(eventName, false, true);
+  return event;
+};
 
 describe('End to End Test', () => {
   let container;
@@ -16,6 +25,13 @@ describe('End to End Test', () => {
   const pauseButton = document.createElement('button');
   const sfxButton = document.createElement('button');
   const soundButton = document.createElement('button');
+  const sensitivitySlider = document.createElement('input');
+  const pointerSlider = document.createElement('input');
+  const buttonSlider = document.createElement('input');
+  const layersForm = document.createElement('form');
+  const layersCB1 = document.createElement('input');
+  const layersCB2 = document.createElement('input');
+
   before(() => {
     voButton.id = 'voButton';
     helpButton.id = 'helpButton';
@@ -24,6 +40,26 @@ describe('End to End Test', () => {
     pauseButton.id = 'pauseButton';
     sfxButton.id = 'sfxButton';
     soundButton.id = 'soundButton';
+    sensitivitySlider.id = 'sensitivitySlider';
+    sensitivitySlider.type = 'range';
+    pointerSlider.id = 'pointerSlider';
+    pointerSlider.type = 'range';
+    buttonSlider.id = 'buttonSlider';
+    buttonSlider.type = 'range';
+    layersForm.id = 'layersForm';
+    layersCB1.id = 'cb1';
+    layersCB1.type = 'checkbox';
+    layersCB1.name = 'layer';
+    layersCB1.value = 'layer1';
+    layersCB2.id = 'cb2';
+    layersCB2.type = 'checkbox';
+    layersCB2.name = 'layer';
+    layersCB2.value = 'layer2';
+
+    layersForm.appendChild(layersCB1);
+    layersForm.appendChild(layersCB2);
+
+    document.body.appendChild(layersForm);
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
     document.body.appendChild(captionsButton);
@@ -31,6 +67,9 @@ describe('End to End Test', () => {
     document.body.appendChild(pauseButton);
     document.body.appendChild(sfxButton);
     document.body.appendChild(soundButton);
+    document.body.appendChild(sensitivitySlider);
+    document.body.appendChild(pointerSlider);
+    document.body.appendChild(buttonSlider);
     container = new Container('.karma-html');
   });
 
@@ -47,6 +86,16 @@ describe('End to End Test', () => {
     );
     container.uses(new UserDataPlugin());
     container.uses(new HelpPlugin('#helpButton'));
+    container.uses(
+      new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' })
+    );
+    container.uses(
+      new UISizePlugin({
+        pointerSlider: pointerSlider,
+        buttonSlider: buttonSlider
+      })
+    );
+    container.uses(new LayersPlugin({ layersCheckBoxes: '#layersForm' }));
     container.initClient();
     container.setupPlugins();
   });
@@ -58,6 +107,20 @@ describe('End to End Test', () => {
     soundButton.click();
     musicButton.click();
     sfxButton.click();
+  });
+
+  it('check the slider change events', () => {
+    sensitivitySlider.value = 0.1;
+    sensitivitySlider.dispatchEvent(initEvent('change'));
+    pointerSlider.value = 0.2;
+    pointerSlider.dispatchEvent(initEvent('change'));
+    buttonSlider.value = 0.3;
+    buttonSlider.dispatchEvent(initEvent('change'));
+  });
+
+  it('check the layers checkboxes', () => {
+    layersCB1.click();
+    layersCB2.click();
   });
 
   it('Should open the path to the game', () => {

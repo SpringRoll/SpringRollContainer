@@ -45,24 +45,24 @@ describe('LayersPlugin', () => {
   it('.onLayerToggle()', () => {
     lp.layersCheckBoxes.elements['layer1'].dispatchEvent(initEvent('click'));
 
-    expect(lp.layersCheckBoxes['layer1'].checked).to.be.true;
-    expect(lp.layersToggleState['layer1']).to.be.true;
+    expect(lp.layersCheckBoxes['layer1'].checked).to.be.false;
+    expect(lp.layersToggleState['layer1']).to.be.false;
 
     lp.layersCheckBoxes.elements['layer1'].dispatchEvent(initEvent('click'));
 
-    expect(lp.layersCheckBoxes['layer1'].checked).to.be.false;
-    expect(lp.layersToggleState['layer1']).to.be.false;
+    expect(lp.layersCheckBoxes['layer1'].checked).to.be.true;
+    expect(lp.layersToggleState['layer1']).to.be.true;
   });
 
   it('.onLayerToggle()', () => {
     lp.layersCheckBoxes.elements['layer2'].dispatchEvent(initEvent('click'));
 
-    expect(lp.layersCheckBoxes['layer2'].checked).to.be.true;
-    expect(lp.layersToggleState['layer2']).to.be.true;
+    expect(lp.layersCheckBoxes['layer2'].checked).to.be.false;
+    expect(lp.layersToggleState['layer2']).to.be.false;
 
     lp.layersCheckBoxes.elements['layer2'].dispatchEvent(initEvent('click'));
 
-    expect(lp.layersCheckBoxes['layer2'].checked).to.be.false;
-    expect(lp.layersToggleState['layer2']).to.be.false;
+    expect(lp.layersCheckBoxes['layer2'].checked).to.be.true;
+    expect(lp.layersToggleState['layer2']).to.be.true;
   });
 });

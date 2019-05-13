@@ -25,7 +25,8 @@ export class LayersPlugin extends ButtonPlugin {
 
     const boxes = Object.values(this.layersCheckBoxes.elements); // used in the for loop
     for (let i = 0, l = boxes.length; i < l; i++) {
-      this.layersToggleState[boxes[i].value] = false;
+      this.layersToggleState[boxes[i].value] = true;
+      this.layersCheckBoxes.elements[boxes[i].id].checked = true;
       boxes[i].addEventListener('click', () => {
         this.onLayerToggle(boxes[i]);
       });
@@ -39,9 +40,9 @@ export class LayersPlugin extends ButtonPlugin {
     //invert the boolean value
     this.layersToggleState[layer.value] = !this.layersToggleState[layer.value];
     //also update the actual checked status to reflect the user's choice.
-    this.layersCheckBoxes.elements[
+    this.layersCheckBoxes.elements[layer.id].checked = this.layersToggleState[
       layer.value
-    ].checked = this.layersToggleState[layer.value];
+    ];
     this.sendProperty(layer.value, this.layersToggleState[layer.value]);
   }
 
