@@ -6,9 +6,9 @@ export class Button {
   /**
    *Creates an instance of Button
    * @param {object} params
-   * @param {string | HTMLElement} params.button
-   * @param {Function} params.onClick
-   * @param {string} channel
+   * @param {string | HTMLElement} params.button the button itself or a selector string
+   * @param {Function} params.onClick the function to call when the button is clicked
+   * @param {string} channel the feature this button controls
    * @memberof ButtonPlugin
    */
   constructor({ button, onClick, channel }) {
@@ -31,7 +31,9 @@ export class Button {
     if (!(this.button instanceof HTMLElement)) {
       return;
     }
-    this.button.style.display = data[this.channel] ? '' : 'none';
+
+    this.button.style.display =
+      data[this.channel] || this.channel === 'pause' ? '' : 'none';
   }
 
   /**

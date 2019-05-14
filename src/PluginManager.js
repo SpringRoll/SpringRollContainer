@@ -57,6 +57,7 @@ export default class PluginManager {
       this.plugins = this.plugins.filter(
         plugin => plugin.preloadFailed !== true
       );
+
       //init
       this.plugins.forEach(plugin => {
         if (!plugin.init) {
@@ -71,7 +72,6 @@ export default class PluginManager {
         if (!plugin.start) {
           return;
         }
-
         plugin.start(this);
       });
     });

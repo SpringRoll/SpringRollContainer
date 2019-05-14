@@ -36,13 +36,13 @@ describe('LayersSliderPlugin', () => {
     expect(lsp.layerSlider.value).to.equal('0');
 
     lsp.layerSlider.value = 1;
-    lsp.layerSlider.dispatch(initEvent('change'));
+    lsp.layerSlider.dispatchEvent(initEvent('change'));
 
     expect(lsp.layerSlider.value).to.equal('0.3');
     expect(lsp.layerValue).to.equal(0.3);
 
     lsp.layerSlider.value = 0.1;
-    lsp.layerSlider.dispatch(initEvent('change'));
+    lsp.layerSlider.dispatchEvent(initEvent('change'));
 
     expect(lsp.layerSlider.value).to.equal('0.1');
     expect(lsp.layerValue).to.equal(0.1);

@@ -36,13 +36,13 @@ describe('UISizePlugin', () => {
 
   it('.onPointerSizeChange()', () => {
     up.pointerSlider.value = 1;
-    up.pointerSlider.dispatch(initEvent('change'));
+    up.pointerSlider.dispatchEvent(initEvent('change'));
 
     expect(up.pointerSlider.value).to.equal('1');
     expect(up.pointerSize).to.equal(1);
 
     up.pointerSlider.value = 0.01;
-    up.pointerSlider.dispatch(initEvent('change'));
+    up.pointerSlider.dispatchEvent(initEvent('change'));
 
     expect(up.pointerSlider.value).to.equal('0.01');
     expect(up.pointerSize).to.equal(0.01);
@@ -50,13 +50,13 @@ describe('UISizePlugin', () => {
 
   it('.onButtonSizeChange()', () => {
     up.buttonSlider.value = 1;
-    up.buttonSlider.dispatch(initEvent('change'));
+    up.buttonSlider.dispatchEvent(initEvent('change'));
 
     expect(up.buttonSlider.value).to.equal('1');
     expect(up.buttonSize).to.equal(1);
 
     up.buttonSlider.value = 0.1;
-    up.buttonSlider.dispatch(initEvent('change'));
+    up.buttonSlider.dispatchEvent(initEvent('change'));
 
     expect(up.buttonSlider.value).to.equal('0.1');
     expect(up.buttonSize).to.equal(0.1);

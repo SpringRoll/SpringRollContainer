@@ -238,15 +238,17 @@ export class PausePlugin extends ButtonPlugin {
         if (features.disablePause) {
           this.pauseDisabled = true;
         }
+
+        for (let i = 0, l = this._pauseButton.length; i < l; i++) {
+          this._pauseButton[i].displayButton(features.data);
+        }
       }.bind(this)
     );
     this.client.on('focus', this.onFocus.bind(this));
     this.client.on('keepFocus', this.onKeepFocus.bind(this));
 
-    for (let i = 0, l = this._pauseButton.length; i < l; i++) {
-      this._pauseButton[i].displayButton();
-    }
     this.pause = this._paused;
+
     this.focus();
   }
 

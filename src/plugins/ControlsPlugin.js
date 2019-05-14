@@ -1,4 +1,4 @@
-import { ButtonPlugin } from './ButtonPlugin';
+import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
 const SENSITIVITY_SLIDER_MIN = 0.1;
@@ -10,7 +10,7 @@ const SENSITIVITY_SLIDER_STEP = 0.1;
  * @class ControlsPlugin
  * @extends {ButtonPlugin}
  */
-export class ControlsPlugin extends ButtonPlugin {
+export class ControlsPlugin extends BasePlugin {
   /**
    *Creates an instance of ControlsPlugin.
    * @param {object} params

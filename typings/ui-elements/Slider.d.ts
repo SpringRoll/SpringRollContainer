@@ -25,7 +25,7 @@ export class Slider {
   disableSliderEvents(callBack: Function): void;
   displaySlider(data: object): void;
 
-  dispatch(event: Event): void;
+  dispatchEvent(event: Event): void;
 
   get value(): string;
   set value(value: number): void;

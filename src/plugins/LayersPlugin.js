@@ -1,21 +1,20 @@
-import { ButtonPlugin } from './ButtonPlugin';
+import { BasePlugin } from './BasePlugin';
 
 /**
  * @export
  * @class LayersPlugin
- * @extends {ButtonPlugin}
+ * @extends {BasePlugin}
  *
  */
-export class LayersPlugin extends ButtonPlugin {
+export class LayersPlugin extends BasePlugin {
   /**
    *Creates an instance of LayersPlugin.
    * @param {object} params
-   * @param {string | HTMLElement} [params.layersCheckBoxes] // Form
+   * @param {string | HTMLElement} [params.layersCheckBoxes] selector string or the html form that contains the checkboxes
    * @memberof LayersPlugin
    */
   constructor({ layersCheckBoxes } = {}) {
     super('Layers-Button-Plugin');
-
     this.layersCheckBoxes =
       layersCheckBoxes instanceof HTMLElement
         ? layersCheckBoxes
@@ -25,8 +24,8 @@ export class LayersPlugin extends ButtonPlugin {
 
     const boxes = Object.values(this.layersCheckBoxes.elements); // used in the for loop
     for (let i = 0, l = boxes.length; i < l; i++) {
-      this.layersToggleState[boxes[i].value] = true;
-      this.layersCheckBoxes.elements[boxes[i].id].checked = true;
+      this.layersToggleState[boxes[i].value] = true; //sets the layer display value to true
+      this.layersCheckBoxes.elements[boxes[i].id].checked = true; //makes sure the checkboxes are all checked to reflect the layer toggle state
       boxes[i].addEventListener('click', () => {
         this.onLayerToggle(boxes[i]);
       });
@@ -35,6 +34,7 @@ export class LayersPlugin extends ButtonPlugin {
 
   /**
    * @memberof LayersPlugin
+   * @param {HTMLElement} layer the checkbox that was clicked
    */
   onLayerToggle(layer) {
     //invert the boolean value

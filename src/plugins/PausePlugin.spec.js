@@ -15,6 +15,7 @@ describe('PausePlugin', () => {
     for (let i = 0, l = pp.pauseButton.length; i < l; i++) {
       expect(pp.pauseButton[i]).to.be.instanceof(HTMLButtonElement);
       expect(pp.pauseButton[i].classList.contains('disabled')).to.be.false;
+      expect(pp.pauseButton[i].style.display).to.equal('');
     }
     expect(pp.client).to.be.instanceof(Bellhop);
   });

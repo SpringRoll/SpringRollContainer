@@ -105,48 +105,48 @@ describe('SoundPlugin', () => {
 
   it('.onSoundVolumeChange()', () => {
     sp.soundSlider.value = 1;
-    sp.soundSlider.dispatch(initEvent('change'));
+    sp.soundSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.soundVolume).to.equal(1);
 
     sp.soundSlider.value = 0;
-    sp.soundSlider.dispatch(initEvent('change'));
+    sp.soundSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.soundVolume).to.equal(0);
   });
 
   it('.onMusicVolumeChange()', () => {
     sp.musicSlider.value = 1;
-    sp.musicSlider.dispatch(initEvent('change'));
+    sp.musicSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.musicMuted).to.be.false;
 
     sp.musicSlider.value = 0;
-    sp.musicSlider.dispatch(initEvent('change'));
+    sp.musicSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.musicMuted).to.be.true;
   });
 
   it('.onVoVolumeChange()', () => {
     sp.voSlider.value = 1;
-    sp.voSlider.dispatch(initEvent('change'));
+    sp.voSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.voMuted).to.be.false;
 
     sp.voSlider.value = 0;
-    sp.voSlider.dispatch(initEvent('change'));
+    sp.voSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.voMuted).to.be.true;
   });
 
   it('.onSfxVolumeChange()', () => {
     sp.sfxSlider.value = 1;
-    sp.sfxSlider.dispatch(initEvent('change'));
+    sp.sfxSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.sfxMuted).to.be.false;
 
     sp.sfxSlider.value = 0;
-    sp.sfxSlider.dispatch(initEvent('change'));
+    sp.sfxSlider.dispatchEvent(initEvent('change'));
 
     expect(sp.sfxMuted).to.be.true;
   });

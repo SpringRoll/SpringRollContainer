@@ -1,4 +1,4 @@
-import { ButtonPlugin } from './ButtonPlugin';
+import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
 const POINTER_SLIDER_MIN = 0.01;
@@ -11,10 +11,10 @@ const BUTTON_SLIDER_STEP = 0.1;
 /**
  * @export
  * @class UISizePlugin
- * @extends {ButtonPlugin}
+ * @extends {BasePlugin}
  *
  */
-export class UISizePlugin extends ButtonPlugin {
+export class UISizePlugin extends BasePlugin {
   /**
    *Creates an instance of UISizePlugin.
    * @param {object} params

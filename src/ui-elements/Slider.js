@@ -108,7 +108,7 @@ export class Slider {
    * @param {Event} event the event to be fired on the slider
    * @memberof Slider
    */
-  dispatch(event) {
+  dispatchEvent(event) {
     this.slider.dispatchEvent(event);
   }
 
