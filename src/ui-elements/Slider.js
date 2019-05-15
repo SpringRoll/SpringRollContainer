@@ -8,12 +8,12 @@ export class Slider {
   /**
    *Creates an instance of Slider
    * @param {object} params
-   * @param {string | HTMLInputElement} params.slider
-   * @param {string} params.control
-   * @param {number} [min=0]
-   * @param {number} [max=1]
-   * @param {number} [step=0.1]
-   * @param {number} [value=1]
+   * @param {string | HTMLInputElement} params.slider the slider element or a selector string
+   * @param {string} params.control the feature that this slider controols
+   * @param {number} [min=0] slider min value
+   * @param {number} [max=1] slider max value
+   * @param {number} [step=0.1] slider step value
+   * @param {number} [value=1] slider starting value
    * @memberof SliderPlugin
    */
   constructor({ slider, control, min = 0, max = 1, step = 0.1, value = 1 }) {

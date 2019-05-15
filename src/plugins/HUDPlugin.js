@@ -9,22 +9,17 @@ export class HUDPlugin extends BasePlugin {
   /**
    * Creates an instance of HUDPlugin
    * @param {object} params
-   * @param {Array<string | HTMLElement>} [params.controls]
+   * @param {string} [params.positions] string that represents the name of the radio button group
    * @memberof HUDPlugin
    */
   constructor({ positions } = {}) {
     super('HUD-Layout-Plugin');
+    this.radioGroupName = positions;
 
-    this.positionControls = [];
-
-    //get the html elements that represent the positions(buttons, checkboxes, etc)
-    for (let i = 0, l = positions.length; i < l; i++) {
-      this.positionControls.push(
-        positions[i] instanceof HTMLElement
-          ? positions[i]
-          : document.querySelector(positions[i])
-      );
-    }
+    this.positionControls =
+      positions instanceof HTMLElement
+        ? positions
+        : document.querySelectorAll(`input[name="${this.radioGroupName}"]`);
 
     for (let i = 0, l = this.positionControls.length; i < l; i++) {
       this.positionControls[i].addEventListener('click', () => {
@@ -35,20 +30,11 @@ export class HUDPlugin extends BasePlugin {
 
   /**
    * @memberof HUDPlugin
-   * @param {HTMLElement} position
+   * @param {HTMLElement} pos the radio button that was clicked
    */
-  onHUDToggle(position) {
-    this.sendProperty(HUDPlugin.hudPositionKey, position.id);
-
-    if (position.type !== 'checkbox') {
-      return;
-    }
-
-    for (let i = 0, l = this.positionControls.length; i < l; i++) {
-      this.positionControls[i].checked = false;
-    }
-
-    position.checked = true;
+  onHUDToggle(pos) {
+    pos.checked = true; //to ensure the radio button reflects its selected state to the user.
+    this.sendProperty(HUDPlugin.hudPositionKey, pos.value);
   }
 
   /**
@@ -58,8 +44,14 @@ export class HUDPlugin extends BasePlugin {
     this.client.on(
       'features',
       function(features) {
-        return features;
-        //for loop to iterate through position controls and display them or not.
+        if (!features.data) {
+          return;
+        }
+        for (let i = 0, l = this.positionControls.length; i < l; i++) {
+          this.positionControls[i].style.display = features.data.hudPosition
+            ? ''
+            : 'none';
+        }
       }.bind(this)
     );
   }

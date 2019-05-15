@@ -1,10 +1,10 @@
-import { ButtonPlugin } from '..';
+import { BasePlugin } from '..';
 
 type LayersPluginOptions = {
   layersCheckBoxes?:string,
 };
 
-export class LayersPlugin extends ButtonPlugin {
+export class LayersPlugin extends BasePlugin {
   constructor(options: LayersPluginOptions)
 
   layersCheckBoxes: HTMLElement | null;

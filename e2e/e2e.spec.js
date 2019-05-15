@@ -8,7 +8,8 @@ import {
   ControlsPlugin,
   UISizePlugin,
   LayersPlugin,
-  LayersSliderPlugin
+  LayersSliderPlugin,
+  HUDPlugin
 } from '../src';
 
 const initEvent = eventName => {
@@ -33,6 +34,8 @@ describe('End to End Test', () => {
   const layersCB1 = document.createElement('input');
   const layersCB2 = document.createElement('input');
   const layersSlider = document.createElement('input');
+  const hudRBOne = document.createElement('input');
+  const hudRBTwo = document.createElement('input');
 
   before(() => {
     voButton.id = 'voButton';
@@ -62,6 +65,15 @@ describe('End to End Test', () => {
     layersCB2.name = 'layer';
     layersCB2.value = 'layer2';
 
+    hudRBOne.id = 'rb1';
+    hudRBOne.type = 'radio';
+    hudRBOne.name = 'hudButtons';
+    hudRBOne.value = 'top';
+    hudRBTwo.id = 'rb2';
+    hudRBTwo.type = 'radio';
+    hudRBTwo.name = 'hudButtons';
+    hudRBTwo.value = 'bottom';
+
     layersForm.appendChild(layersCB1);
     layersForm.appendChild(layersCB2);
     document.body.appendChild(layersForm);
@@ -77,6 +89,10 @@ describe('End to End Test', () => {
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
     document.body.appendChild(layersSlider);
+
+    document.body.appendChild(hudRBOne);
+    document.body.appendChild(hudRBTwo);
+
     container = new Container('.karma-html');
   });
 
@@ -106,6 +122,7 @@ describe('End to End Test', () => {
     container.uses(
       new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 })
     );
+    container.uses(new HUDPlugin({ positions: 'hudButtons' }));
     container.initClient();
     container.setupPlugins();
   });
@@ -133,6 +150,11 @@ describe('End to End Test', () => {
   it('check the layers checkboxes', () => {
     layersCB1.click();
     layersCB2.click();
+  });
+
+  it('check the HUD radio buttons', () => {
+    hudRBOne.click();
+    hudRBTwo.click();
   });
 
   it('Should open the path to the game', () => {

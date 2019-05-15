@@ -9,3 +9,4 @@ export * from './UISizePlugin';
 export * from './ControlsPlugin';
 export * from './LayersPlugin';
 export * from './LayersSliderPlugin';
+export * from './HUDPlugin';

@@ -59,7 +59,7 @@ export class LayersPlugin extends BasePlugin {
         if (!features.data || !(this.layersCheckBoxes instanceof HTMLElement)) {
           return;
         }
-        this.layersCheckBoxes.style.display = features.data.layersCheckBoxes
+        this.layersCheckBoxes.style.display = features.data.removableLayers
           ? ''
           : 'none';
       }.bind(this)

@@ -24,6 +24,7 @@ describe('Slider', () => {
   });
 
   it('construct', () => {
+    expect(sl.value).to.equal('1');
     expect(sl.slider).to.be.instanceof(HTMLInputElement);
     expect(sl).to.be.instanceof(Slider);
   });
