@@ -22,12 +22,11 @@ export class LayersPlugin extends BasePlugin {
 
     this.layersToggleState = {}; //object that tracks all layers and their values
 
-    const boxes = Object.values(this.layersCheckBoxes.elements); // used in the for loop
-    for (let i = 0, l = boxes.length; i < l; i++) {
-      this.layersToggleState[boxes[i].value] = true; //sets the layer display value to true
-      this.layersCheckBoxes.elements[boxes[i].id].checked = true; //makes sure the checkboxes are all checked to reflect the layer toggle state
-      boxes[i].addEventListener('click', () => {
-        this.onLayerToggle(boxes[i]);
+    for (let i = 0, l = this.layersCheckBoxes.length; i < l; i++) {
+      this.layersToggleState[this.layersCheckBoxes.elements[i].value] = true; //sets the layer display value to true
+      this.layersCheckBoxes.elements[i].checked = true; //makes sure the checkboxes are all checked to reflect the layer toggle state
+      this.layersCheckBoxes[i].addEventListener('click', () => {
+        this.onLayerToggle(this.layersCheckBoxes.elements[i]);
       });
     }
   }
