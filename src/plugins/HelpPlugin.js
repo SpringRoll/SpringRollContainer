@@ -1,4 +1,5 @@
 import { ButtonPlugin } from './ButtonPlugin';
+import { Button } from '../ui-elements/Button';
 
 /**
  *
@@ -15,11 +16,15 @@ export class HelpPlugin extends ButtonPlugin {
    */
   constructor(helpButton) {
     super('Help-Button-Plugin');
-    this.helpButton = document.querySelector(helpButton);
+
+    this._helpButton = new Button({
+      button: helpButton,
+      onClick: this.helpButtonClick.bind(this),
+      channel: 'hints' // the check to see if this feature exists is different than most so passing this ensures it'll work the same.
+    });
     this.paused = false;
     this._helpEnabled = false;
     this.onPause = this.onPause.bind(this);
-    this.helpButton.addEventListener('click', this.helpButtonClick.bind(this));
   }
   /**
    *  Called when the game is either paused or resumed
@@ -29,11 +34,14 @@ export class HelpPlugin extends ButtonPlugin {
   onPause($event) {
     this.paused = $event.data.paused;
     // Disable the help button when paused if it's active
-    if (this.paused && !this.helpButton.classList.contains('disabled')) {
-      this.helpButton.setAttribute('data-paused', 'true');
+    if (
+      this.paused &&
+      !this._helpButton.button.classList.contains('disabled')
+    ) {
+      this._helpButton.button.setAttribute('data-paused', 'true');
       this.helpEnabled = false;
-    } else if (this.helpButton.getAttribute('data-paused')) {
-      this.helpButton.setAttribute('data-paused', '');
+    } else if (this._helpButton.button.getAttribute('data-paused')) {
+      this._helpButton.button.setAttribute('data-paused', '');
       this.helpEnabled = true;
     }
   }
@@ -44,14 +52,15 @@ export class HelpPlugin extends ButtonPlugin {
    * @memberof HelpPlugin
    */
   helpButtonClick() {
-    if (!this.paused && !this.helpButton.classList.contains('disabled')) {
+    if (
+      !this.paused &&
+      !this._helpButton.button.classList.contains('disabled')
+    ) {
       this.client.send('playHelp');
     }
   }
 
   /**
-   *
-   *
    * @memberof HelpPlugin
    */
   init() {
@@ -63,13 +72,11 @@ export class HelpPlugin extends ButtonPlugin {
       'features',
       function(features) {
         this.helpEnabled = features.data.hints;
-        this.helpButton.style.display = this.helpEnabled
-          ? 'inline-block'
-          : 'none';
+        this._helpButton.displayButton(features.data);
       }.bind(this)
     );
 
-    if (!(this.helpButton instanceof HTMLElement)) {
+    if (!(this._helpButton.button instanceof HTMLElement)) {
       return;
     }
     this.client.on(
@@ -90,15 +97,13 @@ export class HelpPlugin extends ButtonPlugin {
   }
 
   /**
-   *
-   *
    * @memberof HelpPlugin
    */
   set helpEnabled(enabled) {
     this._helpEnabled = enabled;
-    this.helpButton.classList.remove('disabled');
-    this.helpButton.classList.remove('enabled');
-    this.helpButton.classList.add(enabled ? 'enabled' : 'disabled');
+    this._helpButton.button.classList.remove('disabled');
+    this._helpButton.button.classList.remove('enabled');
+    this._helpButton.button.classList.add(enabled ? 'enabled' : 'disabled');
 
     /**
      * Fired when the enabled status of the help button changes
@@ -106,5 +111,13 @@ export class HelpPlugin extends ButtonPlugin {
      * @param {boolean} enabled If the help button is enabled
      */
     this.client.trigger('helpEnabled');
+  }
+
+  /**
+   * @readonly
+   * @memberof HelpPlugin
+   */
+  get helpButton() {
+    return this._helpButton.button;
   }
 }

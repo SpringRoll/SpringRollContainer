@@ -40,8 +40,12 @@ describe('Container', () => {
     expect(container.iframe.src).to.contain('http://localhost:9876/');
   });
 
-  it('.openRemote()', () => {
-    container.openRemote('http://127.0.0.1');
+  it('.openRemote()', done => {
+    container.openRemote('127.0.0.1').catch(err => {
+      //TODO: Add test endpoint to improve this test?
+      expect(err instanceof Response).to.be.true;
+      done();
+    });
   });
 
   it('.destroy()', () => {

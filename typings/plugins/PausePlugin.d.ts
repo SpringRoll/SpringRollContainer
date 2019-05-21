@@ -1,4 +1,5 @@
 import { ButtonPlugin } from '..';
+import { Button } from '../classes/Button';
 export class PausePlugin extends ButtonPlugin {
   constructor(pauseButton: string, selector?: string);
 
@@ -15,12 +16,14 @@ export class PausePlugin extends ButtonPlugin {
   paused: boolean;
   pauseDisabled: boolean;
   pauseFocus: HTMLElement;
+  private _pauseButton: Array<Button>;
+  pauseButtons: NodeListOf<HTMLButtonElement>;
 
   set pause(paused: boolean): void;
   get pause(): boolean;
   get hasDom(): boolean;
+  get pauseButton(): Array<HTMLButtonElement>;
 
-  pauseButton: NodeListOf<HTMLButtonElement>;
 
   blur():void;
   focus():void;

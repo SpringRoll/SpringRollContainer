@@ -1,7 +1,6 @@
 import { Bellhop } from 'bellhop-iframe';
 // eslint-disable-next-line no-unused-vars
 import { BasePlugin } from './plugins';
-
 /**
  *
  *
@@ -57,6 +56,7 @@ export default class PluginManager {
       this.plugins = this.plugins.filter(
         plugin => plugin.preloadFailed !== true
       );
+
       //init
       this.plugins.forEach(plugin => {
         if (!plugin.init) {
@@ -71,7 +71,6 @@ export default class PluginManager {
         if (!plugin.start) {
           return;
         }
-
         plugin.start(this);
       });
     });
