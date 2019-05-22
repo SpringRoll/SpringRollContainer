@@ -98,9 +98,10 @@ export class SoundPlugin extends ButtonPlugin {
    */
   onSoundVolumeChange() {
     this.soundVolume = this.soundSlider.sliderRange(
-      Number(this.soundSlider.slider.value)
+      Number(this.soundSlider.value)
     );
     this.soundMuted = !this.soundVolume;
+    console.log('onsound');
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
   }
@@ -110,7 +111,7 @@ export class SoundPlugin extends ButtonPlugin {
    */
   onMusicVolumeChange() {
     this.musicVolume = this.musicSlider.sliderRange(
-      Number(this.musicSlider.slider.value)
+      Number(this.musicSlider.value)
     );
     this.musicMuted = !this.musicVolume;
     this._checkSoundMute();
@@ -121,9 +122,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onVoVolumeChange() {
-    this.voVolume = this.voSlider.sliderRange(
-      Number(this.voSlider.slider.value)
-    );
+    this.voVolume = this.voSlider.sliderRange(Number(this.voSlider.value));
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
@@ -133,9 +132,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSfxVolumeChange() {
-    this.sfxVolume = this.sfxSlider.sliderRange(
-      Number(this.sfxSlider.slider.value)
-    );
+    this.sfxVolume = this.sfxSlider.sliderRange(Number(this.sfxSlider.value));
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);

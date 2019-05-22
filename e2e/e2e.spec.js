@@ -27,6 +27,12 @@ describe('End to End Test', () => {
   const pauseButton = document.createElement('button');
   const sfxButton = document.createElement('button');
   const soundButton = document.createElement('button');
+
+  const soundSlider = document.createElement('input');
+  const voSlider = document.createElement('input');
+  const sfxSlider = document.createElement('input');
+  const musicSlider = document.createElement('input');
+
   const sensitivitySlider = document.createElement('input');
   const pointerSlider = document.createElement('input');
   const buttonSlider = document.createElement('input');
@@ -45,6 +51,15 @@ describe('End to End Test', () => {
     pauseButton.id = 'pauseButton';
     sfxButton.id = 'sfxButton';
     soundButton.id = 'soundButton';
+
+    soundSlider.id = 'soundSlider';
+    soundSlider.type = 'range';
+    voSlider.id = 'voSlider';
+    voSlider.type = 'range';
+    sfxSlider.id = 'sfxSlider';
+    sfxSlider.type = 'range';
+    musicSlider.id = 'musicSlider';
+    musicSlider.type = 'range';
 
     sensitivitySlider.id = 'sensitivitySlider';
     sensitivitySlider.type = 'range';
@@ -85,6 +100,11 @@ describe('End to End Test', () => {
     document.body.appendChild(pauseButton);
     document.body.appendChild(sfxButton);
     document.body.appendChild(soundButton);
+
+    document.body.appendChild(soundSlider);
+    document.body.appendChild(voSlider);
+    document.body.appendChild(musicSlider);
+    document.body.appendChild(sfxSlider);
     document.body.appendChild(sensitivitySlider);
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
@@ -104,7 +124,11 @@ describe('End to End Test', () => {
         voButton: '#voButton',
         musicButton: '#musicButton',
         sfxButton: '#sfxButton',
-        soundButton: '#soundButton'
+        soundButton: '#soundButton',
+        soundSlider: '#soundSlider',
+        musicSlider: '#musicSlider',
+        voSlider: '#voSlider',
+        sfxSlider: '#sfxSlider'
       })
     );
     container.uses(new UserDataPlugin());
@@ -114,8 +138,8 @@ describe('End to End Test', () => {
     );
     container.uses(
       new UISizePlugin({
-        pointerSlider: pointerSlider,
-        buttonSlider: buttonSlider
+        pointerSlider: '#pointerSlider',
+        buttonSlider: '#buttonSlider'
       })
     );
     container.uses(new LayersPlugin({ layersCheckBoxes: '#layersForm' }));
@@ -134,6 +158,17 @@ describe('End to End Test', () => {
     soundButton.click();
     musicButton.click();
     sfxButton.click();
+  });
+
+  it('Check the sound slider events', () => {
+    soundSlider.value = 0.5;
+    soundSlider.dispatchEvent(initEvent('change'));
+    musicSlider.value = 0.5;
+    musicSlider.dispatchEvent(initEvent('change'));
+    sfxSlider.value = 0.5;
+    sfxSlider.dispatchEvent(initEvent('change'));
+    voSlider.value = 0.5;
+    voSlider.dispatchEvent(initEvent('change'));
   });
 
   it('check the slider change events', () => {

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!-- frame.html -->
+<html>
+    <head>
+    <script src="node_modules/bellhop-iframe/bellhop-umd.js"></script>
+    </head>
+    <body>
+Hello, I'm a frame!
+<script>
+const bellhop = new Bellhop();
+
+bellhop.connect();
+
+bellhop.on('connected', () => {
+    bellhop.send('features', {
+        soundVolume: true,
+    });
+});
+
+bellhop.on('soundVolume', e => console.log(e));
+
+</script>
+    </body>
+</html>
