@@ -101,7 +101,6 @@ export class SoundPlugin extends ButtonPlugin {
       Number(this.soundSlider.value)
     );
     this.soundMuted = !this.soundVolume;
-    console.log('onsound');
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
   }

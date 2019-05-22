@@ -113,13 +113,9 @@ describe('End to End Test', () => {
     document.body.appendChild(hudRBOne);
     document.body.appendChild(hudRBTwo);
 
-    container = new Container('.karma-html');
-  });
-
-  it('setup the container and all it\'s plugins', () => {
-    container.uses(new CaptionsPlugin('#captionsButton'));
-    container.uses(new PausePlugin('#pauseButton'));
-    container.uses(
+    container = new Container('.karma-html', [
+      new CaptionsPlugin('#captionsButton'),
+      new PausePlugin('#pauseButton'),
       new SoundPlugin({
         voButton: '#voButton',
         musicButton: '#musicButton',
@@ -129,27 +125,54 @@ describe('End to End Test', () => {
         musicSlider: '#musicSlider',
         voSlider: '#voSlider',
         sfxSlider: '#sfxSlider'
-      })
-    );
-    container.uses(new UserDataPlugin());
-    container.uses(new HelpPlugin('#helpButton'));
-    container.uses(
-      new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' })
-    );
-    container.uses(
+      }),
+      new UserDataPlugin(),
+      new HelpPlugin('#helpButton'),
+      new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' }),
       new UISizePlugin({
         pointerSlider: '#pointerSlider',
         buttonSlider: '#buttonSlider'
-      })
-    );
-    container.uses(new LayersPlugin({ layersCheckBoxes: '#layersForm' }));
-    container.uses(
-      new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 })
-    );
-    container.uses(new HUDPlugin({ positions: 'hudButtons' }));
-    container.initClient();
-    container.setupPlugins();
+      }),
+      new LayersPlugin({ layersCheckBoxes: '#layersForm' }),
+      new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 }),
+      new HUDPlugin({ positions: 'hudButtons' })
+    ]);
   });
+
+  // it('setup the container and all it\'s plugins', () => {
+  //   container.uses(new CaptionsPlugin('#captionsButton'));
+  //   container.uses(new PausePlugin('#pauseButton'));
+  //   container.uses(
+  //     new SoundPlugin({
+  //       voButton: '#voButton',
+  //       musicButton: '#musicButton',
+  //       sfxButton: '#sfxButton',
+  //       soundButton: '#soundButton',
+  //       soundSlider: '#soundSlider',
+  //       musicSlider: '#musicSlider',
+  //       voSlider: '#voSlider',
+  //       sfxSlider: '#sfxSlider'
+  //     })
+  //   );
+  //   container.uses(new UserDataPlugin());
+  //   container.uses(new HelpPlugin('#helpButton'));
+  //   container.uses(
+  //     new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' })
+  //   );
+  //   container.uses(
+  //     new UISizePlugin({
+  //       pointerSlider: '#pointerSlider',
+  //       buttonSlider: '#buttonSlider'
+  //     })
+  //   );
+  //   container.uses(new LayersPlugin({ layersCheckBoxes: '#layersForm' }));
+  //   container.uses(
+  //     new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 })
+  //   );
+  //   container.uses(new HUDPlugin({ positions: 'hudButtons' }));
+  //   container.initClient();
+  //   container.setupPlugins();
+  // });
   it('Check all button click events', () => {
     voButton.click();
     helpButton.click();
