@@ -16,11 +16,12 @@ import { version } from '../package.json';
 export class Container extends PluginManager {
   /**
    *Creates an instance of Container.
+   * @param {Array<BasePlugin> | null} [plugins]
    * @param {string} iframeSelector
    * @memberof Container
    */
-  constructor(iframeSelector, plugins) {
-    super(plugins);
+  constructor({ iframeSelector, plugins }) {
+    super({ plugins: plugins });
 
     this.iframe = document.querySelector(iframeSelector);
 

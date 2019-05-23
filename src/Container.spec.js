@@ -4,7 +4,7 @@ document.body.innerHTML = '';
 const iframe = document.createElement('iframe');
 iframe.id = 'test';
 document.body.appendChild(iframe);
-const container = new Container('#test');
+const container = new Container({ iframeSelector: '#test' });
 
 describe('Container', () => {
   it('Should Construct', () => {

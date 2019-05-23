@@ -39,7 +39,9 @@ describe('LayersPlugin', () => {
     iframe.id = 'layers-plugin-iframe';
     document.body.appendChild(iframe);
     expect(lp.layersCheckBoxes).to.be.instanceof(HTMLFormElement);
-    new Container('#layers-plugin-iframe').client.trigger('features');
+    new Container({ iframeSelector: '#layers-plugin-iframe' }).client.trigger(
+      'features'
+    );
   });
 
   it('.onLayerToggle()', () => {

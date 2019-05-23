@@ -113,30 +113,33 @@ describe('End to End Test', () => {
     document.body.appendChild(hudRBOne);
     document.body.appendChild(hudRBTwo);
 
-    container = new Container('.karma-html', [
-      new CaptionsPlugin('#captionsButton'),
-      new PausePlugin('#pauseButton'),
-      new SoundPlugin({
-        voButton: '#voButton',
-        musicButton: '#musicButton',
-        sfxButton: '#sfxButton',
-        soundButton: '#soundButton',
-        soundSlider: '#soundSlider',
-        musicSlider: '#musicSlider',
-        voSlider: '#voSlider',
-        sfxSlider: '#sfxSlider'
-      }),
-      new UserDataPlugin(),
-      new HelpPlugin('#helpButton'),
-      new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' }),
-      new UISizePlugin({
-        pointerSlider: '#pointerSlider',
-        buttonSlider: '#buttonSlider'
-      }),
-      new LayersPlugin({ layersCheckBoxes: '#layersForm' }),
-      new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 }),
-      new HUDPlugin({ positions: 'hudButtons' })
-    ]);
+    container = new Container({
+      iframeSelector: '.karma-html',
+      plugins: [
+        new CaptionsPlugin('#captionsButton'),
+        new PausePlugin('#pauseButton'),
+        new SoundPlugin({
+          voButton: '#voButton',
+          musicButton: '#musicButton',
+          sfxButton: '#sfxButton',
+          soundButton: '#soundButton',
+          soundSlider: '#soundSlider',
+          musicSlider: '#musicSlider',
+          voSlider: '#voSlider',
+          sfxSlider: '#sfxSlider'
+        }),
+        new UserDataPlugin(),
+        new HelpPlugin('#helpButton'),
+        new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' }),
+        new UISizePlugin({
+          pointerSlider: '#pointerSlider',
+          buttonSlider: '#buttonSlider'
+        }),
+        new LayersPlugin({ layersCheckBoxes: '#layersForm' }),
+        new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 }),
+        new HUDPlugin({ positions: 'hudButtons' })
+      ]
+    });
   });
 
   // it('setup the container and all it\'s plugins', () => {

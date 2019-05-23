@@ -28,7 +28,10 @@ before(() => {
   const iframe = document.createElement('iframe');
   iframe.id = 'iframe';
   document.body.appendChild(iframe);
-  const container = new Container('#iframe', [new Plugin()]);
+  const container = new Container({
+    iframeSelector: '#iframe',
+    plugins: [new Plugin()]
+  });
 });
 
 describe('Container Plugin Integration', () => {});

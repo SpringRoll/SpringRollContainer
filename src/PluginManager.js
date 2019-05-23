@@ -12,7 +12,7 @@ export default class PluginManager {
    *Creates an instance of PluginManager.
    * @memberof PluginManager
    */
-  constructor(plugins) {
+  constructor({ plugins = [] }) {
     this.client = new Bellhop();
     // @ts-ignore
     this.client.hidden = this.client.receive.bind(this.client);
@@ -27,7 +27,7 @@ export default class PluginManager {
       this.hiddenSend(event, data);
     }.bind(this.client);
 
-    this.plugins = plugins ? plugins : [];
+    this.plugins = plugins;
   }
 
   /**

@@ -24,7 +24,9 @@ describe('ControlsPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'controls-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container('#controls-plugin-iframe').client.trigger('features');
+    new Container({ iframeSelector: '#controls-plugin-iframe' }).client.trigger(
+      'features'
+    );
   });
 
   it('.onControlSensitivityChange()', () => {

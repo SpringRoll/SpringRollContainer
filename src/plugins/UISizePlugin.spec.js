@@ -31,7 +31,9 @@ describe('UISizePlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'uisize-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container('#uisize-plugin-iframe').client.trigger('features');
+    new Container({ iframeSelector: '#uisize-plugin-iframe' }).client.trigger(
+      'features'
+    );
   });
 
   it('.onPointerSizeChange()', () => {

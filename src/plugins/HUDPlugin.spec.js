@@ -36,7 +36,9 @@ describe('HUDPlugin', () => {
     iframe.id = 'hud-plugin-iframe';
     document.body.appendChild(iframe);
     expect(hp.positionControls[1]).to.be.instanceof(HTMLInputElement);
-    new Container('#hud-plugin-iframe').client.trigger('features');
+    new Container({ iframeSelector: '#hud-plugin-iframe' }).client.trigger(
+      'features'
+    );
   });
 
   it('onHUDToggle()', () => {

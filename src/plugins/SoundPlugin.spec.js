@@ -61,7 +61,9 @@ describe('SoundPlugin', () => {
     expect(sp.voButton.style.display).to.equal('');
     expect(sp.voButton.classList.contains('disabled')).to.be.false;
 
-    new Container('#sound-plugin-iframe').client.trigger('features');
+    new Container({ iframeSelector: '#sound-plugin-iframe' }).client.trigger(
+      'features'
+    );
   });
 
   it('.setMuteProp()', () => {

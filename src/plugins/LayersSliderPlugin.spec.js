@@ -29,7 +29,9 @@ describe('LayersSliderPlugin', () => {
     document.body.appendChild(iframe);
 
     expect(lsp.layerSlider.slider).to.be.instanceof(HTMLInputElement);
-    new Container('#layers-slider-plugin-iframe').client.trigger('features');
+    new Container({
+      iframeSelector: '#layers-slider-plugin-iframe'
+    }).client.trigger('features');
   });
 
   it('.onLayerValueChange()', () => {
