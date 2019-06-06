@@ -8,16 +8,17 @@ const SENSITIVITY_SLIDER_STEP = 0.1;
 /**
  * @export
  * @class ControlsPlugin
- * @extends {ButtonPlugin}
+ * @extends {BasePlugin}
  */
 export class ControlsPlugin extends BasePlugin {
   /**
    *Creates an instance of ControlsPlugin.
    * @param {object} params
-   * @param {string | HTMLElement} [params.sensitivitySlider]
+   * @param {string | HTMLElement} params.sensitivitySlider
+   * @param {number} [params.sensitivity=0.5]
    * @memberof ControlsPlugin
    */
-  constructor({ sensitivitySlider, sensitivity = 0.5 } = {}) {
+  constructor({ sensitivitySlider, sensitivity = 0.5 }) {
     super('Control-Button-Plugin');
 
     this.controlSensitivity = sensitivity;

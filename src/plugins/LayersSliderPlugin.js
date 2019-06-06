@@ -9,10 +9,10 @@ export class LayersSliderPlugin extends BasePlugin {
   /**
    *
    * @param {Object} param
-   * @param {string | HTMLInputElement} [params.layerSlider] the slider that represents the layers of the game
-   * @param {number} [params.num = 1] the number of removable layers the game has
+   * @param {string | HTMLInputElement} param.layerSlider the slider that represents the layers of the game
+   * @param {number} [param.num=1] the number of removable layers the game has
    */
-  constructor({ layerSlider, num = 1 } = {}) {
+  constructor({ layerSlider, num = 1 }) {
     super('layer-slider-plugin');
     this.layerSlider = new Slider({
       slider: layerSlider,

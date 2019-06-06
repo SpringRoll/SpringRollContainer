@@ -142,40 +142,6 @@ describe('End to End Test', () => {
     });
   });
 
-  // it('setup the container and all it\'s plugins', () => {
-  //   container.uses(new CaptionsPlugin('#captionsButton'));
-  //   container.uses(new PausePlugin('#pauseButton'));
-  //   container.uses(
-  //     new SoundPlugin({
-  //       voButton: '#voButton',
-  //       musicButton: '#musicButton',
-  //       sfxButton: '#sfxButton',
-  //       soundButton: '#soundButton',
-  //       soundSlider: '#soundSlider',
-  //       musicSlider: '#musicSlider',
-  //       voSlider: '#voSlider',
-  //       sfxSlider: '#sfxSlider'
-  //     })
-  //   );
-  //   container.uses(new UserDataPlugin());
-  //   container.uses(new HelpPlugin('#helpButton'));
-  //   container.uses(
-  //     new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' })
-  //   );
-  //   container.uses(
-  //     new UISizePlugin({
-  //       pointerSlider: '#pointerSlider',
-  //       buttonSlider: '#buttonSlider'
-  //     })
-  //   );
-  //   container.uses(new LayersPlugin({ layersCheckBoxes: '#layersForm' }));
-  //   container.uses(
-  //     new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 })
-  //   );
-  //   container.uses(new HUDPlugin({ positions: 'hudButtons' }));
-  //   container.initClient();
-  //   container.setupPlugins();
-  // });
   it('Check all button click events', () => {
     voButton.click();
     helpButton.click();
@@ -187,24 +153,24 @@ describe('End to End Test', () => {
   });
 
   it('Check the sound slider events', () => {
-    soundSlider.value = 0.5;
+    soundSlider.value = String(0.5);
     soundSlider.dispatchEvent(initEvent('change'));
-    musicSlider.value = 0.5;
+    musicSlider.value = String(0.5);
     musicSlider.dispatchEvent(initEvent('change'));
-    sfxSlider.value = 0.5;
+    sfxSlider.value = String(0.5);
     sfxSlider.dispatchEvent(initEvent('change'));
-    voSlider.value = 0.5;
+    voSlider.value = String(0.5);
     voSlider.dispatchEvent(initEvent('change'));
   });
 
   it('check the slider change events', () => {
-    sensitivitySlider.value = 0.1;
+    sensitivitySlider.value = String(0.1);
     sensitivitySlider.dispatchEvent(initEvent('change'));
-    pointerSlider.value = 0.2;
+    pointerSlider.value = String(0.2);
     pointerSlider.dispatchEvent(initEvent('change'));
-    buttonSlider.value = 0.3;
+    buttonSlider.value = String(0.3);
     buttonSlider.dispatchEvent(initEvent('change'));
-    layersSlider.value = 0.4;
+    layersSlider.value = String(0.4);
     layersSlider.dispatchEvent(initEvent('change'));
   });
 

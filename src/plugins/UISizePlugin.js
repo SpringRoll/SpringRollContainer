@@ -20,6 +20,8 @@ export class UISizePlugin extends BasePlugin {
    * @param {object} params
    * @param {string | HTMLElement} [params.pointerSlider]
    * @param {string | HTMLElement} [params.buttonSlider]
+   * @param {number} [params.pointerSize=0.05]
+   * @param {number} [params.buttonSize=0.5]
    * @memberof UISizePlugin
    */
   constructor({
