@@ -8,6 +8,7 @@ import { Container } from '../Container';
  * @export
  * @class BasePlugin
  * @property {Bellhop} client
+ * @property {string} name
  */
 export class BasePlugin {
   /**
@@ -17,6 +18,7 @@ export class BasePlugin {
    */
   constructor(name) {
     this.name = name;
+    this.client = null;
   }
 
   /**

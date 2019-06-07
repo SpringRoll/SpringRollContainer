@@ -1,7 +1,3 @@
-/**
- * @typedef {import('./plugins/BasePlugin').BasePlugin} BasePlugin
- */
-
 import { Features } from './Features';
 import PluginManager from './PluginManager';
 // @ts-ignore
