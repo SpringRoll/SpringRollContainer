@@ -20,10 +20,10 @@ export class LayersPlugin extends BasePlugin {
         ? layersCheckBoxes
         : document.querySelector(layersCheckBoxes);
 
-    this.layersToggleState = {}; //object that tracks all layers and their values
+    this.removableLayers = {}; //object that tracks all layers and their values
 
     for (let i = 0, l = this.layersCheckBoxes.length; i < l; i++) {
-      this.layersToggleState[this.layersCheckBoxes.elements[i].value] = true; //sets the layer display value to true
+      this.removableLayers[this.layersCheckBoxes.elements[i].value] = true; //sets the layer display value to true
       this.layersCheckBoxes.elements[i].checked = true; //makes sure the checkboxes are all checked to reflect the layer toggle state
       this.layersCheckBoxes[i].addEventListener('click', () => {
         this.onLayerToggle(this.layersCheckBoxes.elements[i]);
@@ -37,15 +37,12 @@ export class LayersPlugin extends BasePlugin {
    */
   onLayerToggle(layer) {
     //invert the boolean value
-    this.layersToggleState[layer.value] = !this.layersToggleState[layer.value];
+    this.removableLayers[layer.value] = !this.removableLayers[layer.value];
     //also update the actual checked status to reflect the user's choice.
-    this.layersCheckBoxes.elements[layer.id].checked = this.layersToggleState[
+    this.layersCheckBoxes.elements[layer.id].checked = this.removableLayers[
       layer.value
     ];
-    this.sendProperty(
-      LayersPlugin.layersToggleStateKey,
-      this.layersToggleState
-    );
+    this.sendProperty(LayersPlugin.removableLayersKey, this.removableLayers);
   }
 
   /**
@@ -79,7 +76,7 @@ export class LayersPlugin extends BasePlugin {
    * @static
    * @memberof LayersPlugin
    */
-  static get layersToggleStateKey() {
-    return 'layersToggleState';
+  static get removableLayersKey() {
+    return 'removableLayers';
   }
 }
