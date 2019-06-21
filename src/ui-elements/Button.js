@@ -33,7 +33,9 @@ export class Button {
     }
 
     this.button.style.display =
-      data[this.channel] || this.channel === 'pause' ? '' : 'none';
+      data[this.channel] || this.channel === 'pause' || this.channel === 'hints'
+        ? ''
+        : 'none';
   }
 
   /**
