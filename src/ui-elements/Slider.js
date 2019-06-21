@@ -41,11 +41,11 @@ export class Slider {
     }
     const value = SavedData.read(control);
 
-    slider.value =
-      value && value.toString().trim().length > 0 ? value : this.sliderValue;
     slider.min = this.min;
     slider.max = this.max;
     slider.step = this.step;
+    slider.value =
+      value && value.toString().trim().length > 0 ? value : this.sliderValue;
     return slider;
   }
 

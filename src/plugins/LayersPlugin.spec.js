@@ -8,63 +8,50 @@ const initEvent = eventName => {
 };
 
 describe('LayersPlugin', () => {
-  let lp;
+  let lsp;
 
   before(() => {
-    document.body.innerHTML = '';
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.id = 'lss';
+    document.body.appendChild(slider);
 
-    const form = document.createElement('form');
-    form.id = 'lcb';
-    const cb1 = document.createElement('input');
-    cb1.type = 'checkbox';
-    cb1.name = 'layer';
-    cb1.value = 'layer1';
-    cb1.id = 'layer1';
-    const cb2 = document.createElement('input');
-    cb2.type = 'checkbox';
-    cb2.name = 'layer';
-    cb2.value = 'layer2';
-    cb2.id = 'layer2';
-
-    form.appendChild(cb1);
-    form.appendChild(cb2);
-
-    document.body.appendChild(form);
-    lp = new LayersPlugin({ layersCheckBoxes: '#lcb' });
-    lp.preload({ client: new Bellhop() });
+    lsp = new LayersPlugin({
+      layersSlider: '#lss'
+    });
+    lsp.preload({ client: new Bellhop() });
   });
 
   it('construct', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'layers-plugin-iframe';
     document.body.appendChild(iframe);
-    expect(lp.layersCheckBoxes).to.be.instanceof(HTMLFormElement);
-    new Container({ iframeSelector: '#layers-plugin-iframe' }).client.trigger(
-      'features'
-    );
+
+    expect(lsp.layersSlider.slider).to.be.instanceof(HTMLInputElement);
+    new Container({
+      iframeSelector: '#layers-plugin-iframe'
+    }).client.trigger('features');
   });
 
-  it('.onLayerToggle()', () => {
-    lp.layersCheckBoxes.elements['layer1'].dispatchEvent(initEvent('click'));
+  it('.onLayerValueChange()', () => {
+    expect(lsp.layersSlider.value).to.equal('0');
 
-    expect(lp.layersCheckBoxes['layer1'].checked).to.be.false;
-    expect(lp.removableLayers['layer1']).to.be.false;
+    lsp.layersSlider.value = 1;
+    lsp.layersSlider.dispatchEvent(initEvent('change'));
 
-    lp.layersCheckBoxes.elements['layer1'].dispatchEvent(initEvent('click'));
+    expect(lsp.layersSlider.value).to.equal('1');
+    expect(lsp.layerValue).to.equal(1);
 
-    expect(lp.layersCheckBoxes['layer1'].checked).to.be.true;
-    expect(lp.removableLayers['layer1']).to.be.true;
-  });
+    lsp.layersSlider.value = 1.5;
+    lsp.layersSlider.dispatchEvent(initEvent('change'));
 
-  it('.onLayerToggle()', () => {
-    lp.layersCheckBoxes.elements['layer2'].dispatchEvent(initEvent('click'));
+    expect(lsp.layersSlider.value).to.equal('1');
+    expect(lsp.layerValue).to.equal(1);
 
-    expect(lp.layersCheckBoxes['layer2'].checked).to.be.false;
-    expect(lp.removableLayers['layer2']).to.be.false;
+    lsp.layersSlider.value = 0.1;
+    lsp.layersSlider.dispatchEvent(initEvent('change'));
 
-    lp.layersCheckBoxes.elements['layer2'].dispatchEvent(initEvent('click'));
-
-    expect(lp.layersCheckBoxes['layer2'].checked).to.be.true;
-    expect(lp.removableLayers['layer2']).to.be.true;
+    expect(lsp.layersSlider.value).to.equal('0.1');
+    expect(lsp.layerValue).to.equal(0.1);
   });
 });

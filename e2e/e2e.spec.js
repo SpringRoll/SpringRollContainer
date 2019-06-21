@@ -8,7 +8,6 @@ import {
   ControlsPlugin,
   UISizePlugin,
   LayersPlugin,
-  LayersSliderPlugin,
   HUDPlugin
 } from '../src';
 
@@ -36,9 +35,6 @@ describe('End to End Test', () => {
   const sensitivitySlider = document.createElement('input');
   const pointerSlider = document.createElement('input');
   const buttonSlider = document.createElement('input');
-  const layersForm = document.createElement('form');
-  const layersCB1 = document.createElement('input');
-  const layersCB2 = document.createElement('input');
   const layersSlider = document.createElement('input');
   const hudRBOne = document.createElement('input');
   const hudRBTwo = document.createElement('input');
@@ -70,16 +66,6 @@ describe('End to End Test', () => {
     layersSlider.id = 'layersSlider';
     layersSlider.type = 'range';
 
-    layersForm.id = 'layersForm';
-    layersCB1.id = 'cb1';
-    layersCB1.type = 'checkbox';
-    layersCB1.name = 'layer';
-    layersCB1.value = 'layer1';
-    layersCB2.id = 'cb2';
-    layersCB2.type = 'checkbox';
-    layersCB2.name = 'layer';
-    layersCB2.value = 'layer2';
-
     hudRBOne.id = 'rb1';
     hudRBOne.type = 'radio';
     hudRBOne.name = 'hudButtons';
@@ -88,10 +74,6 @@ describe('End to End Test', () => {
     hudRBTwo.type = 'radio';
     hudRBTwo.name = 'hudButtons';
     hudRBTwo.value = 'bottom';
-
-    layersForm.appendChild(layersCB1);
-    layersForm.appendChild(layersCB2);
-    document.body.appendChild(layersForm);
 
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
@@ -135,8 +117,7 @@ describe('End to End Test', () => {
           pointerSlider: '#pointerSlider',
           buttonSlider: '#buttonSlider'
         }),
-        new LayersPlugin({ layersCheckBoxes: '#layersForm' }),
-        new LayersSliderPlugin({ layerSlider: '#layersSlider', num: 6 }),
+        new LayersPlugin({ layersSlider: '#layersSlider' }),
         new HUDPlugin({ positions: 'hudButtons' })
       ]
     });
@@ -172,11 +153,6 @@ describe('End to End Test', () => {
     buttonSlider.dispatchEvent(initEvent('change'));
     layersSlider.value = String(0.4);
     layersSlider.dispatchEvent(initEvent('change'));
-  });
-
-  it('check the layers checkboxes', () => {
-    layersCB1.click();
-    layersCB2.click();
   });
 
   it('check the HUD radio buttons', () => {

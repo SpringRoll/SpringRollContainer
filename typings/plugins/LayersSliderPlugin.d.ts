@@ -1,13 +1,13 @@
 import { BasePlugin } from '..';
 import { Slider } from '../classes';
 
-type LayersSliderPluginOptions = {
-  layerSlider?:string,
+type LayersPluginOptions = {
+  layersSlider?:string,
   num?: number
 };
 
-export class LayersSliderPlugin extends BasePlugin {
-  constructor(options: LayersSliderPluginOptions)
+export class LayersPlugin extends BasePlugin {
+  constructor(options: LayersPluginOptions)
 
   layersSlider: HTMLElement | null;
   layerValue: number;

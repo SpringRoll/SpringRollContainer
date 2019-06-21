@@ -1,48 +1,38 @@
+import { Slider } from '../ui-elements/Slider';
 import { BasePlugin } from './BasePlugin';
 
 /**
  * @export
  * @class LayersPlugin
- * @extends {BasePlugin}
- *
  */
 export class LayersPlugin extends BasePlugin {
   /**
-   *Creates an instance of LayersPlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} [params.layersCheckBoxes] selector string or the html form that contains the checkboxes
-   * @memberof LayersPlugin
+   *
+   * @param {Object} param
+   * @param {string | HTMLInputElement} param.layersSlider the slider that represents the layers of the game
    */
-  constructor({ layersCheckBoxes } = {}) {
-    super('Layers-Button-Plugin');
-    this.layersCheckBoxes =
-      layersCheckBoxes instanceof HTMLElement
-        ? layersCheckBoxes
-        : document.querySelector(layersCheckBoxes);
+  constructor({ layersSlider }) {
+    super('layer-plugin');
+    this.layersSlider = new Slider({
+      slider: layersSlider,
+      control: 'removableLayers',
+      min: 0,
+      max: 1,
+      step: 0.01, // 100 possible values, a game would be very unlikely to go over 100 layers.
+      value: 0
+    });
 
-    this.removableLayers = {}; //object that tracks all layers and their values
-
-    for (let i = 0, l = this.layersCheckBoxes.length; i < l; i++) {
-      this.removableLayers[this.layersCheckBoxes.elements[i].value] = true; //sets the layer display value to true
-      this.layersCheckBoxes.elements[i].checked = true; //makes sure the checkboxes are all checked to reflect the layer toggle state
-      this.layersCheckBoxes[i].addEventListener('click', () => {
-        this.onLayerToggle(this.layersCheckBoxes.elements[i]);
-      });
-    }
+    this.layerValue = 0;
+    this.layersSlider.enableSliderEvents(this.onLayerValueChange.bind(this));
   }
-
   /**
    * @memberof LayersPlugin
-   * @param {HTMLElement} layer the checkbox that was clicked
    */
-  onLayerToggle(layer) {
-    //invert the boolean value
-    this.removableLayers[layer.value] = !this.removableLayers[layer.value];
-    //also update the actual checked status to reflect the user's choice.
-    this.layersCheckBoxes.elements[layer.id].checked = this.removableLayers[
-      layer.value
-    ];
-    this.sendProperty(LayersPlugin.removableLayersKey, this.removableLayers);
+  onLayerValueChange() {
+    this.layerValue = this.layersSlider.sliderRange(
+      Number(this.layersSlider.slider.value)
+    );
+    this.sendProperty(LayersPlugin.layerValueKey, this.layerValue);
   }
 
   /**
@@ -52,31 +42,21 @@ export class LayersPlugin extends BasePlugin {
     this.client.on(
       'features',
       function(features) {
-        if (!features.data || !(this.layersCheckBoxes instanceof HTMLElement)) {
+        if (!features.data) {
           return;
         }
-        this.layersCheckBoxes.style.display = features.data.removableLayers
-          ? ''
-          : 'none';
+
+        this.layersSlider.displaySlider(features.data);
       }.bind(this)
     );
   }
 
   /**
-   * @memberof LayersPlugin
-   */
-  start() {
-    if (this.layersCheckBoxes !== null) {
-      this.layersCheckBoxes.classList.remove('disabled');
-    }
-  }
-
-  /**
    * @readonly
    * @static
-   * @memberof LayersPlugin
+   * @memberof UISizePlugin
    */
-  static get removableLayersKey() {
+  static get layerValueKey() {
     return 'removableLayers';
   }
 }
