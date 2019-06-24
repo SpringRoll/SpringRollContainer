@@ -7,27 +7,12 @@ describe('HUDPlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    const radioOne = document.createElement('input');
-    radioOne.id = 'r1';
-    radioOne.name = 'hrb';
-    radioOne.type = 'radio';
-    radioOne.value = 'top';
-    const radioTwo = document.createElement('input');
-    radioTwo.id = 'r2';
-    radioTwo.name = 'hrb';
-    radioTwo.type = 'radio';
-    radioTwo.value = 'bottom';
-    const radioThree = document.createElement('input');
-    radioThree.id = 'r3';
-    radioThree.name = 'hrb';
-    radioThree.type = 'radio';
-    radioThree.value = 'left';
+    const container = document.createElement('div');
+    container.id = 'container';
 
-    document.body.appendChild(radioOne);
-    document.body.appendChild(radioTwo);
-    document.body.appendChild(radioThree);
+    document.body.appendChild(container);
 
-    hp = new HUDPlugin({ positions: 'hrb' });
+    hp = new HUDPlugin({ positionsContainer: '#container' });
     hp.preload({ client: new Bellhop() });
   });
 
@@ -35,26 +20,31 @@ describe('HUDPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'hud-plugin-iframe';
     document.body.appendChild(iframe);
-    expect(hp.positionControls[1]).to.be.instanceof(HTMLInputElement);
-    new Container({ iframeSelector: '#hud-plugin-iframe' }).client.trigger(
-      'features'
+    new Container({
+      iframeSelector: '#hud-plugin-iframe',
+      plugins: [hp]
+    });
+    hp.init();
+    hp.client.trigger('features', { hudPosition: true });
+    hp.client.trigger('positions', ['top', 'bottom']);
+
+    expect(document.querySelector('#radio-top')).to.be.instanceof(HTMLElement);
+    expect(document.querySelector('#radio-bottom')).to.be.instanceof(
+      HTMLElement
     );
   });
 
   it('onHUDToggle()', () => {
-    hp.positionControls[0].click();
-    expect(hp.positionControls[0].checked).to.be.true;
-    expect(hp.positionControls[1].checked).to.be.false;
-    expect(hp.positionControls[2].checked).to.be.false;
+    expect(hp.currentPos).to.equal('top');
 
-    hp.positionControls[1].click();
-    expect(hp.positionControls[0].checked).to.be.false;
-    expect(hp.positionControls[1].checked).to.be.true;
-    expect(hp.positionControls[2].checked).to.be.false;
+    hp.radioButtons[1].click();
+    expect(hp.radioButtons[0].checked).to.be.false;
+    expect(hp.radioButtons[1].checked).to.be.true;
+    expect(hp.currentPos).to.equal('bottom');
 
-    hp.positionControls[2].click();
-    expect(hp.positionControls[0].checked).to.be.false;
-    expect(hp.positionControls[1].checked).to.be.false;
-    expect(hp.positionControls[2].checked).to.be.true;
+    hp.radioButtons[0].click();
+    expect(hp.radioButtons[0].checked).to.be.true;
+    expect(hp.radioButtons[1].checked).to.be.false;
+    expect(hp.currentPos).to.equal('top');
   });
 });

@@ -7,8 +7,9 @@ type HUDPluginOptions = {
 export class HUDPlugin extends BasePlugin {
   constructor(options: HUDPluginOptions)
 
-  radioGroupName: string;
-  positionControls: NodeList;
+  positionControls: HTMLElement;
+  radioButtons: Array<HTMLElements>;
+  currentPos: string | null;
 
   onHUDToggle(): void;
 
