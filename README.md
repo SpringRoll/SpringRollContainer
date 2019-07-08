@@ -17,7 +17,7 @@ Basic usage for opening a SpringRoll application via a local path. This can be u
 ```html
 <iframe id="game" scrolling="no"></iframe>
 <script>
-    var container = new springroll.Container({iframeSelector: "#game"});
+    const container = new springroll.Container({iframeSelector: "#game"});
     container.openPath("game.html");
 </script>
 ```
@@ -26,54 +26,104 @@ Basic usage for opening a SpringRoll application via a local path. This can be u
 
 The Container supports several built-in plugins that mirror the state features in the application/game. These are initialized with HTML elements like buttons or input sliders.
 
-Here's an example of creating a SoundPlugin with a button to toggle the sound within the game and an input slider to control the volume.
+Here are some examples of the syntax for declaring plugins when creating the container. Not all (or any) plugins need to be included, only the features supported by the game.
 
-```html
-<button id="soundButton">Mute</button>
-<label for="volume">Volume: </label>
-<input type="range" id="volume">
-<iframe id="game" scrolling="no"></iframe>
-<script>
-  var container = new springroll.Container({
+PausePlugin, CaptionsPlugin, HelpPlugin:
+```javascript
+import { PausePlugin, CaptionsPlugin, HelpPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+      //all three plugins here expect an HTML Button Element and take a single selector string
+      new PausePlugin('#pause-button-selector'), //Pauses or unpauses the game
+      new CaptionsPlugin('#caption-button-selector'), //enables or disables captions
+      new HelpPlugin('#help-button-selector'), //requests a hint or help from the game
+    ]
+  });
+	container.openPath('game.html');
+```
+SoundPlugin:
+```javascript
+import { SoundPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      //The SoundPlugin has 4 different audio types and can take a button(for mute/unmute) and/or an input slider(for volume control)
       new SoundPlugin({
-        soundButton: '#soundButton',
-        soundSlider: '#volume'
+        //Sliders expect an HTML Input Element of type="range"
+        //Buttons in the SoundPlugin expect an HTML Button Element
+        soundButton: '#soundButton', //mutes or unmutes all game audio
+        soundSlider: '#soundSlider', //controls the game's audio volume
+        musicButton: '#musicButton', //mutes or unmutes the music
+        musicSlider: '#musicSlider', //controls the game's music volume
+        voButton: '#voButton', //mutes or unmutes the voice over
+        voSlider: '#voSlider', //controls the game's voice over volume
+        sfxButton: '#sfxButton', //mutes or unmutes the game's sound effects
+        sfxSlider: '#sfxSlider', //controls the game's sound effects volume
       }),
     ]
   });
 	container.openPath('game.html');
-</script>
 ```
+UISizePlugin, ControlsPlugin:
+```javascript
+import { UISizePlugin, ControlsPlugin, Container } from 'springroll-container';
 
-If a plugin accepts multiple control elements only the supported options need to be included.
-e.g. If a game only supports one volume type then the SoundPlugin doesn't require any of the unused controls like sfxSlider, voButton, etc.
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      //UISizePlugin also accepts an [optional] initial value for its two options
+      new UISizePlugin({
+        pointerSlider: '#pointer-slider-selector', //controls the size of the pointer
+        pointerSize: 0.05, //pointer size goes from 0.01 to 1.00 (2 points of precision) default = 0.05
+        buttonSlider: '#button-slider-selector', //controls the size of UI buttons
+        buttonSize: 0.5, // button size goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+      }),
+      //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
+      new ControlsPlugin({
+        sensitivitySlider: '#sensitivity-slider-selector',
+        sensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+LayersPlugin
+```javascript
+import { LayersPlugin, Container } from 'springroll-container';
 
-This table describes the options and HTML elements that are used by each plugin
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
+      new LayersPlugin({
+        //Expects an HTML Input Element of type="range"
+        layersSlider: '#layers-slider-selector' // goes from 0.00 to 1.00 (two points of precision)
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+HUDPlugin *(see note below)
+```javascript
+import { HUDPlugin, Container } from 'springroll-container';
 
-| Plugin | Option | HTML Element | Description |
-|---|---|---|---|
-| **CaptionsPlugin** | captionsButton | Button | Toggles the display of captions |
-| **ControlsPlugin** | sensitivitySlider | Input(range) | Controls the player controls sensitivity |
-| **HelpPlugin** | helpButton | Button | Triggers in-game help |
-| **HUDPlugin** | positionsContainer | Container Element* | Container element that wraps the position buttons |
-| **LayersPlugin** | layersSlider | Input(range) | Controls which distracting layers should be removed |
-| **Pauseplugin** | pauseButton | Button | Plays and pause the game |
-| **SoundPlugin** | soundButton | Button | Toggles all audio mute |
-| **SoundPlugin** | voButton | Button | Toggles only voice-over mute |
-| **SoundPlugin** | sfxButton | Button | Toggles only sound effects mute|
-| **SoundPlugin** | musicButton | Button | Toggles only music mute |
-| **SoundPlugin** | soundSlider | Input(range) | Controls the overall audio volume |
-| **SoundPlugin** | voSlider | Input(range) | Controls the voice-over volume |
-| **SoundPlugin** | sfxSlider |  Input(range) |Controls the sound effects volume |
-| **SoundPlugin** | musicSlider | Input(range) | Controls the music volume |
-| **UISizePlugin** | pointerSlider | Input(range) | Controls the size of the mouse pointer |
-| **UISizePlugin** | buttonSlider | Input(range) | Controls the size of the UI buttons |
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      //HUDPlugin expects a container/wrapper element.
+      new HUDPlugin({
+        positionsContainer: '#a-div-or-other-wrapper' //any element that can accept radio buttons inside it is acceptable
 
-*The HUD Plugin differs slightly from the others in that it only requires a wrapper/container element(`div`, `form`, etc). It requests a list of positions from the game itself and dynamically builds out the radio buttons within that wrapper.
-
-
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+*The HUDPlugin is slightly different from other Plugins as it accepts a wrapper element, and requests the positions directly from the game itself and builds the radio buttons dynamically to match.
+e.g. if the game supports ['top', 'bottom'] then the Plugin will build 2 radio buttons with those labels and append them to the wrapper element. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information.
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
