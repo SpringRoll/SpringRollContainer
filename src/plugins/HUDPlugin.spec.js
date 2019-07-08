@@ -26,7 +26,7 @@ describe('HUDPlugin', () => {
     });
     hp.init();
     hp.client.trigger('features', { hudPosition: true });
-    hp.client.trigger('positions', ['top', 'bottom']);
+    hp.client.trigger('hudPositions', ['top', 'bottom']);
 
     expect(document.querySelector('#radio-top')).to.be.instanceof(HTMLElement);
     expect(document.querySelector('#radio-bottom')).to.be.instanceof(

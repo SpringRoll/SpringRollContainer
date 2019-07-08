@@ -45,7 +45,7 @@ export class HUDPlugin extends BasePlugin {
           return;
         }
         //get the game's reported HUD positions and build out the radio buttons
-        this.client.fetch('positions', result => {
+        this.client.fetch('hudPositions', result => {
           for (let i = 0, l = result.data.length; i < l; i++) {
             const radio = document.createElement('input');
             radio.id = `radio-${result.data[i]}`;
