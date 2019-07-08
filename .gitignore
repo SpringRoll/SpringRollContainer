@@ -5,3 +5,4 @@ docs
 .env
 e2e/client.js
 local.log
+.DS_Store
