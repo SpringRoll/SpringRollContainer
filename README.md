@@ -4,12 +4,6 @@ The `<iframe>` controller for interacting with SpringRoll applications either by
 
 ## Installation
 
-Install with [Bower](http://bower.io/).
-
-```bash
-bower install springroll-container
-```
-
 Install with [NPM](https://www.npmjs.com/).
 
 ```bash
@@ -23,42 +17,62 @@ Basic usage for opening a SpringRoll application via a local path. This can be u
 ```html
 <iframe id="game" scrolling="no"></iframe>
 <script>
-    var container = new springroll.Container("#game");
+    var container = new springroll.Container({iframeSelector: "#game"});
     container.openPath("game.html");
 </script>
 ```
 
-### Custom Interface Elements
+### Plugins
 
-The Container supports custom interface elements for managing things like toggle captions and sound. Here's an example of creating a button to toggle the sound within the game.
+The Container supports several built-in plugins that mirror the state features in the application/game. These are initialized with HTML elements like buttons or input sliders.
+
+Here's an example of creating a SoundPlugin with a button to toggle the sound within the game and an input slider to control the volume.
 
 ```html
 <button id="soundButton">Mute</button>
+<label for="volume">Volume: </label>
+<input type="range" id="volume">
 <iframe id="game" scrolling="no"></iframe>
 <script>
-	var container = new springroll.Container("#game", {
-	    soundButton: "#soundButton"
-	});
+  var container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      new SoundPlugin({
+        soundButton: '#soundButton',
+        soundSlider: '#volume'
+      }),
+    ]
+  });
 	container.openPath('game.html');
 </script>
 ```
 
-| Option | Description |
-|---|---|
-| **helpButton** | Triggers in-game help |
-| **captionsButton** | Toggles the display of captions |
-| **soundButton** | Toggles all audio mute |
-| **voButton** | Toggles only voice-over mute |
-| **sfxButton** | Toggles only sound effects mute|
-| **musicButton** | Toggles only music mute |
-| **pauseButton** | Plays and pause the game |
-| **soundSlider** | Controls the overall audio volume |
-| **voSlider** | Controls the voice-over volume |
-| **sfxSlider** | Controls the sound effects volume |
-| **musicSlider** | Controls the music volume |
-| **pointerSlider** | Controls the size of the mouse pointer |
-| **buttonSlider** | Controls the size of the UI buttons |
-| **sensitivitySlider** | Controls the player controls sensitivity |
+If a plugin accepts multiple control elements only the supported options need to be included.
+e.g. If a game only supports one volume type then the SoundPlugin doesn't require any of the unused controls like sfxSlider, voButton, etc.
+
+This table describes the options and HTML elements that are used by each plugin
+
+| Plugin | Option | HTML Element | Description |
+|---|---|---|---|
+| **CaptionsPlugin** | captionsButton | Button | Toggles the display of captions |
+| **ControlsPlugin** | sensitivitySlider | Input(range) | Controls the player controls sensitivity |
+| **HelpPlugin** | helpButton | Button | Triggers in-game help |
+| **HUDPlugin** | positionsContainer | Container Element* | Container element that wraps the position buttons |
+| **LayersPlugin** | layersSlider | Input(range) | Controls which distracting layers should be removed |
+| **Pauseplugin** | pauseButton | Button | Plays and pause the game |
+| **SoundPlugin** | soundButton | Button | Toggles all audio mute |
+| **SoundPlugin** | voButton | Button | Toggles only voice-over mute |
+| **SoundPlugin** | sfxButton | Button | Toggles only sound effects mute|
+| **SoundPlugin** | musicButton | Button | Toggles only music mute |
+| **SoundPlugin** | soundSlider | Input(range) | Controls the overall audio volume |
+| **SoundPlugin** | voSlider | Input(range) | Controls the voice-over volume |
+| **SoundPlugin** | sfxSlider |  Input(range) |Controls the sound effects volume |
+| **SoundPlugin** | musicSlider | Input(range) | Controls the music volume |
+| **UISizePlugin** | pointerSlider | Input(range) | Controls the size of the mouse pointer |
+| **UISizePlugin** | buttonSlider | Input(range) | Controls the size of the UI buttons |
+
+*The HUD Plugin differs slightly from the others in that it only requires a wrapper/container element(`div`, `form`, etc). It requests a list of positions from the game itself and dynamically builds out the radio buttons within that wrapper.
+
 
 
 ### Play Options
