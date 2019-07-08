@@ -1,5 +1,6 @@
 import { ButtonPlugin } from './ButtonPlugin';
 import { PageVisibility } from '../PageVisibility';
+import { Button } from '../ui-elements';
 /**
  * @class Container
  */
@@ -25,6 +26,7 @@ export class PausePlugin extends ButtonPlugin {
     this.onPauseFocus = this.onPauseFocus.bind(this);
     this.paused = false;
     this.pauseDisabled = false;
+    this._pauseButton = [];
 
     this.pageVisibility = new PageVisibility(
       this.onContainerFocus.bind(this),
@@ -33,19 +35,28 @@ export class PausePlugin extends ButtonPlugin {
 
     document.addEventListener('focus', this.focus);
 
-    this.pauseButton = document.querySelectorAll(pauseButton);
-    if (0 < this.pauseButton.length) {
+    this.pauseButtons = document.querySelectorAll(pauseButton);
+    if (0 < this.pauseButtons.length) {
       const onPauseToggle = this.onPauseToggle.bind(this);
 
-      this.pauseButton.forEach(e => e.addEventListener('click', onPauseToggle));
+      for (let i = 0, l = this.pauseButtons.length; i < l; i++) {
+        this._pauseButton.push(
+          new Button({
+            button: this.pauseButtons[i],
+            onClick: onPauseToggle,
+            channel: 'pause'
+          })
+        );
+      }
     }
 
     this.pauseFocus = document.querySelectorAll(selector);
 
-    if (null !== this.pauseFocus) {
-      this.pauseFocus.forEach(e =>
-        e.addEventListener('focus', this.onPauseFocus)
-      );
+    if (!this.pauseFocus) {
+      return;
+    }
+    for (let i = 0, l = this.pauseFocus.length; i < l; i++) {
+      this.pauseFocus[i].addEventListener('focus', this.onPauseFocus);
     }
   }
 
@@ -66,12 +77,11 @@ export class PausePlugin extends ButtonPlugin {
       paused: this._paused
     });
 
-    // Set the pause button state
-    this.pauseButton.forEach(element => {
-      element.classList.remove('unpaused');
-      element.classList.remove('paused');
-      element.classList.add(paused ? 'paused' : 'unpaused');
-    });
+    for (let i = 0, l = this._pauseButton.length; i < l; i++) {
+      this._pauseButton[i].button.classList.remove('unpaused');
+      this._pauseButton[i].button.classList.remove('paused');
+      this._pauseButton[i].button.classList.add(paused ? 'paused' : 'unpaused');
+    }
   }
   /**
    *
@@ -216,6 +226,7 @@ export class PausePlugin extends ButtonPlugin {
   }
 
   /**
+   *
    * @param {Container} container
    * @memberof FocusPlugin
    */
@@ -227,12 +238,17 @@ export class PausePlugin extends ButtonPlugin {
         if (features.disablePause) {
           this.pauseDisabled = true;
         }
+
+        for (let i = 0, l = this._pauseButton.length; i < l; i++) {
+          this._pauseButton[i].displayButton(features.data);
+        }
       }.bind(this)
     );
     this.client.on('focus', this.onFocus.bind(this));
     this.client.on('keepFocus', this.onKeepFocus.bind(this));
-    this.pauseButton.forEach(element => element.classList.remove('disabled'));
+
     this.pause = this._paused;
+
     this.focus();
   }
 
@@ -244,5 +260,17 @@ export class PausePlugin extends ButtonPlugin {
    */
   get hasDom() {
     return Boolean(null !== this.iframe && this.iframe.contentWindow);
+  }
+
+  /**
+   * @readonly
+   * @memberof PausePlugin
+   */
+  get pauseButton() {
+    const buttons = [];
+    for (let i = 0, l = this._pauseButton.length; i < l; i++) {
+      buttons.push(this._pauseButton[i].button);
+    }
+    return buttons;
   }
 }

@@ -35,7 +35,7 @@ const umd = Object.assign({}, base, {
   output: {
     file: 'dist/SpringRoll-Container-umd.js',
     format: 'umd',
-    name: 'SRC',
+    name: 'springroll',
     extend: true,
     sourceMap: true,
     globals: {

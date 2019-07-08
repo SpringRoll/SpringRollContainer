@@ -1,7 +1,6 @@
 import { BasePlugin } from './BasePlugin';
 import { Container } from '../Container';
 /*eslint-enable */
-let container;
 /*eslint-disable */
 class Plugin extends BasePlugin {
   constructor() {
@@ -29,8 +28,10 @@ before(() => {
   const iframe = document.createElement('iframe');
   iframe.id = 'iframe';
   document.body.appendChild(iframe);
-  container = new Container('#iframe');
-  container.uses(new Plugin());
+  const container = new Container({
+    iframeSelector: '#iframe',
+    plugins: [new Plugin()]
+  });
 });
 
 describe('Container Plugin Integration', () => {});

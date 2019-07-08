@@ -44,11 +44,26 @@ describe('SoundPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'sound-plugin-iframe';
     document.body.appendChild(iframe);
+
     expect(sp.soundButton).to.be.instanceof(HTMLButtonElement);
+    expect(sp.soundButton.style.display).to.equal('');
+    expect(sp.soundButton.classList.contains('disabled')).to.be.false;
+
     expect(sp.musicButton).to.be.instanceof(HTMLButtonElement);
+    expect(sp.musicButton.style.display).to.equal('');
+    expect(sp.musicButton.classList.contains('disabled')).to.be.false;
+
     expect(sp.sfxButton).to.be.instanceof(HTMLButtonElement);
+    expect(sp.sfxButton.style.display).to.equal('');
+    expect(sp.sfxButton.classList.contains('disabled')).to.be.false;
+
     expect(sp.voButton).to.be.instanceof(HTMLButtonElement);
-    new Container('#sound-plugin-iframe').client.trigger('features');
+    expect(sp.voButton.style.display).to.equal('');
+    expect(sp.voButton.classList.contains('disabled')).to.be.false;
+
+    new Container({ iframeSelector: '#sound-plugin-iframe' }).client.trigger(
+      'features'
+    );
   });
 
   it('.setMuteProp()', () => {

@@ -1,4 +1,5 @@
 import { ButtonPlugin } from './ButtonPlugin';
+import { Button } from'../classes/Button';
 
 type CaptionStyles = {
   size: string,
@@ -12,11 +13,12 @@ type CaptionStyles = {
 export class CaptionsPlugin extends ButtonPlugin {
   constructor(captionsButton:string);
   captionsStyle: CaptionStyles;
-  captionsButton: HTMLButtonElement;
+  private _captionsButton: Button;
   _captionsMuted: boolean;
 
   get captionsMuted(): boolean;
   set captionsMuted(muted: boolean);
+  get captionsButton(): HTMLButtonElement;
 
   captionButtonClick():void;
   clearCaptionStyles():void;

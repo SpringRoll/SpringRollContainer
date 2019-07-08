@@ -52,6 +52,14 @@ The Container supports custom interface elements for managing things like toggle
 | **sfxButton** | Toggles only sound effects mute|
 | **musicButton** | Toggles only music mute |
 | **pauseButton** | Plays and pause the game |
+| **soundSlider** | Controls the overall audio volume |
+| **voSlider** | Controls the voice-over volume |
+| **sfxSlider** | Controls the sound effects volume |
+| **musicSlider** | Controls the music volume |
+| **pointerSlider** | Controls the size of the mouse pointer |
+| **buttonSlider** | Controls the size of the UI buttons |
+| **sensitivitySlider** | Controls the player controls sensitivity |
+
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called

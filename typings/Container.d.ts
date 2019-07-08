@@ -1,5 +1,5 @@
 import { Bellhop } from "bellhop-iframe";
-import {IPlugin} from './plugins';
+import { IPlugin } from './plugins';
 
 type OpenOptions = {singlePlay?: boolean, playOption?: object | null, [key:string]: any};
 interface RemoteOptions extends OpenOptions {
@@ -20,7 +20,7 @@ export class Container extends PluginManager {
   loading: boolean;
   iFrame: HTMLIFrameElement;
   release?: any;
-  constructor(iframeSelector: string);
+  constructor(iframeSelector: string, plugins?: Array<IPlugin>);
   close(): void;
   destroy():void;
   initClient(): void;
@@ -33,5 +33,5 @@ export class Container extends PluginManager {
   reset():void;
   private _internalOpen(userPath:string, options?: OpenOptions): void;
   private _onCloseFailed(): void;
-  static get version(): string;
+  static version(): string;
 }

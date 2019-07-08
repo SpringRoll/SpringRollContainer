@@ -1,5 +1,6 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
+import { Slider, Button } from '../ui-elements';
 
 /**
  * @export
@@ -44,59 +45,61 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxVolume = 0;
     this.voVolume = 0;
 
-    this.soundSlider = this.sliderSetup(
-      soundSlider,
-      SoundPlugin.soundVolumeKey
-    );
-    this.musicSlider = this.sliderSetup(
-      musicSlider,
-      SoundPlugin.musicVolumeKey
-    );
-    this.sfxSlider = this.sliderSetup(sfxSlider, SoundPlugin.sfxVolumeKey);
-    this.voSlider = this.sliderSetup(voSlider, SoundPlugin.voVolumeKey);
+    this.soundSlider = new Slider({
+      slider: soundSlider,
+      control: SoundPlugin.soundVolumeKey,
+      value: this.soundVolume
+    });
+    this.musicSlider = new Slider({
+      slider: musicSlider,
+      control: SoundPlugin.musicVolumeKey,
+      value: this.musicVolume
+    });
+    this.sfxSlider = new Slider({
+      slider: sfxSlider,
+      control: SoundPlugin.sfxVolumeKey,
+      value: this.sfxVolume
+    });
+    this.voSlider = new Slider({
+      slider: voSlider,
+      control: SoundPlugin.voVolumeKey,
+      value: this.voVolume
+    });
 
-    this.soundButton =
-      soundButton instanceof HTMLElement
-        ? soundButton
-        : document.querySelector(soundButton);
-    this.musicButton =
-      musicButton instanceof HTMLElement
-        ? musicButton
-        : document.querySelector(musicButton);
-    this.sfxButton =
-      sfxButton instanceof HTMLElement
-        ? sfxButton
-        : document.querySelector(sfxButton);
+    this._soundButton = new Button({
+      button: soundButton,
+      onClick: this.onSoundToggle.bind(this),
+      channel: 'sound'
+    });
+    this._musicButton = new Button({
+      button: musicButton,
+      onClick: this.onMusicToggle.bind(this),
+      channel: 'music'
+    });
+    this._sfxButton = new Button({
+      button: sfxButton,
+      onClick: this.onSFXToggle.bind(this),
+      channel: 'sfx'
+    });
+    this._voButton = new Button({
+      button: voButton,
+      onClick: this.onVOToggle.bind(this),
+      channel: 'vo'
+    });
 
-    this.voButton =
-      voButton instanceof HTMLElement
-        ? voButton
-        : document.querySelector(voButton);
-
-    if (this.soundButton) {
-      this.soundButton.addEventListener('click', this.onSoundToggle.bind(this));
-    }
-
-    if (this.musicButton) {
-      this.musicButton.addEventListener('click', this.onMusicToggle.bind(this));
-    }
-
-    if (this.sfxButton) {
-      this.sfxButton.addEventListener('click', this.onSFXToggle.bind(this));
-    }
-
-    if (this.voButton) {
-      this.voButton.addEventListener('click', this.onVOToggle.bind(this));
-    }
-
-    this.enableSliderEvents();
+    this.soundSlider.enableSliderEvents(this.onSoundVolumeChange.bind(this));
+    this.musicSlider.enableSliderEvents(this.onMusicVolumeChange.bind(this));
+    this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
+    this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
   }
 
   /**
    * @memberof SoundPlugin
    */
   onSoundVolumeChange() {
-    this.soundVolume = this.volumeRange(Number(this.soundSlider['value']));
+    this.soundVolume = this.soundSlider.sliderRange(
+      Number(this.soundSlider.value)
+    );
     this.soundMuted = !this.soundVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
@@ -105,66 +108,10 @@ export class SoundPlugin extends ButtonPlugin {
   /**
    * @memberof SoundPlugin
    */
-  enableSliderEvents() {
-    if (this.soundSlider) {
-      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
-      this.soundSlider.addEventListener('change', onSoundVolumeChange);
-      this.soundSlider.addEventListener('input', onSoundVolumeChange);
-    }
-
-    if (this.musicSlider) {
-      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
-      this.musicSlider.addEventListener('change', onMusicVolumeChange);
-      this.musicSlider.addEventListener('input', onMusicVolumeChange);
-    }
-
-    if (this.sfxSlider) {
-      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
-      this.sfxSlider.addEventListener('change', onSfxVolumeChange);
-      this.sfxSlider.addEventListener('input', onSfxVolumeChange);
-    }
-
-    if (this.voSlider) {
-      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
-      this.voSlider.addEventListener('change', onVoVolumeChange);
-      this.voSlider.addEventListener('input', onVoVolumeChange);
-    }
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
-  disableSliderEvents() {
-    if (this.soundSlider) {
-      const onSoundVolumeChange = this.onSoundVolumeChange.bind(this);
-      this.soundSlider.removeEventListener('change', onSoundVolumeChange);
-      this.soundSlider.removeEventListener('input', onSoundVolumeChange);
-    }
-
-    if (this.musicSlider) {
-      const onMusicVolumeChange = this.onMusicVolumeChange.bind(this);
-      this.musicSlider.removeEventListener('change', onMusicVolumeChange);
-      this.musicSlider.removeEventListener('input', onMusicVolumeChange);
-    }
-
-    if (this.sfxSlider) {
-      const onSfxVolumeChange = this.onSfxVolumeChange.bind(this);
-      this.sfxSlider.removeEventListener('change', onSfxVolumeChange);
-      this.sfxSlider.removeEventListener('input', onSfxVolumeChange);
-    }
-
-    if (this.voSlider) {
-      const onVoVolumeChange = this.onVoVolumeChange.bind(this);
-      this.voSlider.removeEventListener('change', onVoVolumeChange);
-      this.voSlider.removeEventListener('input', onVoVolumeChange);
-    }
-  }
-
-  /**
-   * @memberof SoundPlugin
-   */
   onMusicVolumeChange() {
-    this.musicVolume = this.volumeRange(Number(this.musicSlider['value']));
+    this.musicVolume = this.musicSlider.sliderRange(
+      Number(this.musicSlider.value)
+    );
     this.musicMuted = !this.musicVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
@@ -174,7 +121,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onVoVolumeChange() {
-    this.voVolume = this.volumeRange(Number(this.voSlider['value']));
+    this.voVolume = this.voSlider.sliderRange(Number(this.voSlider.value));
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
@@ -184,7 +131,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   onSfxVolumeChange() {
-    this.sfxVolume = this.volumeRange(Number(this.sfxSlider['value']));
+    this.sfxVolume = this.sfxSlider.sliderRange(Number(this.sfxSlider.value));
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
     this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
@@ -250,42 +197,19 @@ export class SoundPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function(features) {
-        if (
-          !features.data ||
-          'object' !== typeof features.data ||
-          null === features.data
-        ) {
+        if (!features.data) {
           return;
         }
-        if (this.voButton instanceof HTMLElement) {
-          this.voButton.style.display = features.data.vo ? '' : 'none';
-        }
-        if (this.musicButton instanceof HTMLElement) {
-          this.musicButton.style.display = features.data.music ? '' : 'none';
-        }
-        if (this.soundButton instanceof HTMLElement) {
-          this.soundButton.style.display = features.data.sound ? '' : 'none';
-        }
-        if (this.sfxButton instanceof HTMLElement) {
-          this.sfxButton.style.display = features.data.sfx ? '' : 'none';
-        }
 
-        if (this.soundSlider) {
-          this.soundSlider.style.display = features.data.soundVolume
-            ? ''
-            : 'none';
-        }
-        if (this.voSlider) {
-          this.voSlider.style.display = features.data.voVolume ? '' : 'none';
-        }
-        if (this.musicSlider) {
-          this.musicSlider.style.display = features.data.musicVolume
-            ? ''
-            : 'none';
-        }
-        if (this.sfxSlider) {
-          this.sfxSlider.style.display = features.data.sfxVolume ? '' : 'none';
-        }
+        this._soundButton.displayButton(features.data);
+        this._musicButton.displayButton(features.data);
+        this._sfxButton.displayButton(features.data);
+        this._voButton.displayButton(features.data);
+
+        this.soundSlider.displaySlider(features.data);
+        this.sfxSlider.displaySlider(features.data);
+        this.voSlider.displaySlider(features.data);
+        this.musicSlider.displaySlider(features.data);
       }.bind(this)
     );
   }
@@ -294,21 +218,10 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   start() {
-    if (this.soundButton !== null) {
-      this.soundButton.classList.remove('disabled');
-    }
-
-    if (this.sfxButton !== null) {
-      this.sfxButton.classList.remove('disabled');
-    }
-
-    if (this.voButton !== null) {
-      this.voButton.classList.remove('disabled');
-    }
-
-    if (this.musicButton !== null) {
-      this.musicButton.classList.remove('disabled');
-    }
+    this._soundButton.enableButton();
+    this._musicButton.enableButton();
+    this._sfxButton.enableButton();
+    this._voButton.enableButton();
 
     this.soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
     this.musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
@@ -334,47 +247,6 @@ export class SoundPlugin extends ButtonPlugin {
     this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
     this.sendProperty(SoundPlugin.musicMutedKey, this.musicMuted);
     this.sendProperty(SoundPlugin.sfxMutedKey, this.sfxMuted);
-  }
-
-  /**
-   * @param {string | HTMLInputElement | HTMLElement} slider
-   * @param {string} soundChannel The audio channel this slider will be controlling
-   * @returns {Element | HTMLElement}
-   * @memberof SoundPlugin
-   */
-  sliderSetup(slider, soundChannel) {
-    if ('string' === typeof slider) {
-      slider = document.querySelector(slider);
-    }
-
-    if (!slider || 'range' !== slider.type) {
-      return null;
-    }
-    const value = SavedData.read(soundChannel);
-    slider.value =
-      null !== value && value.toString().trim().length > 0 ? value : 1;
-    slider.min = '0';
-    slider.max = '1';
-    slider.step = '0.1';
-    return slider;
-  }
-
-  /**
-   * Controls the volume range
-   * @param {number} i
-   * @param {number} [min=0]
-   * @param {number} [max=1]
-   * @returns
-   * @memberof SoundPlugin
-   */
-  volumeRange(i, min = 0, max = 1) {
-    if (i < min) {
-      return min;
-    } else if (i > max) {
-      return max;
-    } else {
-      return i;
-    }
   }
 
   /**
@@ -503,5 +375,35 @@ export class SoundPlugin extends ButtonPlugin {
    */
   static get musicVolumeKey() {
     return 'musicVolume';
+  }
+
+  /**
+   * @readonly
+   * @memberof SoundPlugin
+   */
+  get soundButton() {
+    return this._soundButton.button;
+  }
+
+  /**
+   * @readonly
+   * @memberof SoundPlugin
+   */
+  get musicButton() {
+    return this._musicButton.button;
+  }
+  /**
+   * @readonly
+   * @memberof SoundPlugin
+   */
+  get sfxButton() {
+    return this._sfxButton.button;
+  }
+  /**
+   * @readonly
+   * @memberof SoundPlugin
+   */
+  get voButton() {
+    return this._voButton.button;
   }
 }

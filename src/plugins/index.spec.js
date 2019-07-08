@@ -7,3 +7,7 @@ import './PausePlugin.spec';
 import './Plugin.spec';
 import './SoundPlugin.spec';
 import './UserDataPlugin.spec';
+import './UISizePlugin.spec';
+import './ControlsPlugin.spec';
+import './LayersPlugin.spec';
+import './HUDPlugin.spec';

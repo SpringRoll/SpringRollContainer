@@ -1,6 +1,7 @@
+/**
+ * @typedef {import('./plugins/BasePlugin').BasePlugin} BasePlugin
+ */
 import { Bellhop } from 'bellhop-iframe';
-// eslint-disable-next-line no-unused-vars
-import { BasePlugin } from './plugins';
 /**
  *
  *
@@ -12,21 +13,20 @@ export default class PluginManager {
    *Creates an instance of PluginManager.
    * @memberof PluginManager
    */
-  constructor() {
+  constructor({ plugins = [] }) {
     this.client = new Bellhop();
     // @ts-ignore
     this.client.hidden = this.client.receive.bind(this.client);
     // @ts-ignore
     this.client.hiddenSend = this.client.send.bind(this.client);
     this.client.receive = function(event) {
-      console.log(event.data);
       this.hidden(event);
     }.bind(this.client);
     this.client.send = function(event, data) {
-      console.log('SENDING =>', event, data);
       this.hiddenSend(event, data);
     }.bind(this.client);
-    this.plugins = [];
+
+    this.plugins = plugins;
   }
 
   /**
@@ -56,6 +56,7 @@ export default class PluginManager {
       this.plugins = this.plugins.filter(
         plugin => plugin.preloadFailed !== true
       );
+
       //init
       this.plugins.forEach(plugin => {
         if (!plugin.init) {
@@ -70,7 +71,6 @@ export default class PluginManager {
         if (!plugin.start) {
           return;
         }
-
         plugin.start(this);
       });
     });
