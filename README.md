@@ -115,15 +115,14 @@ import { HUDPlugin, Container } from 'springroll-container';
     plugins: [
       //HUDPlugin expects a container/wrapper element.
       new HUDPlugin({
-        positionsContainer: '#a-div-or-other-wrapper' //any element that can accept radio buttons inside it is acceptable
-
+        hudSelectorButton: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
       }),
     ]
   });
 	container.openPath('game.html');
 ```
-*The HUDPlugin is slightly different from other Plugins as it accepts a wrapper element, and requests the positions directly from the game itself and builds the radio buttons dynamically to match.
-e.g. if the game supports ['top', 'bottom'] then the Plugin will build 2 radio buttons with those labels and append them to the wrapper element. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information.
+*The HUDPlugin is slightly different from other Plugins as it requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
+e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called

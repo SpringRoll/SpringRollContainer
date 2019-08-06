@@ -7,12 +7,12 @@ describe('HUDPlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    const container = document.createElement('div');
-    container.id = 'container';
+    const button = document.createElement('button');
+    button.id = 'button';
 
-    document.body.appendChild(container);
+    document.body.appendChild(button);
 
-    hp = new HUDPlugin({ positionsContainer: '#container' });
+    hp = new HUDPlugin({ hudSelectorButton: '#button' });
     hp.preload({ client: new Bellhop() });
   });
 
@@ -26,25 +26,19 @@ describe('HUDPlugin', () => {
     });
     hp.init();
     hp.client.trigger('features', { hudPosition: true });
-    hp.client.trigger('hudPositions', ['top', 'bottom']);
+    hp.client.trigger('hudPositions', ['top', 'bottom', 'invalid-position']);
 
-    expect(document.querySelector('#radio-top')).to.be.instanceof(HTMLElement);
-    expect(document.querySelector('#radio-bottom')).to.be.instanceof(
-      HTMLElement
-    );
+    expect(hp.positions.length).to.equal(2); //should discard the 'invalid-position'
+    expect(document.querySelector('#button')).to.be.instanceof(HTMLElement);
   });
 
   it('onHUDToggle()', () => {
-    expect(hp.currentPos).to.equal('top');
+    expect(hp.positions[hp.currentPos]).to.equal('top');
 
-    hp.radioButtons[1].click();
-    expect(hp.radioButtons[0].checked).to.be.false;
-    expect(hp.radioButtons[1].checked).to.be.true;
-    expect(hp.currentPos).to.equal('bottom');
+    hp.hudButton.click();
+    expect(hp.positions[hp.currentPos]).to.equal('bottom');
 
-    hp.radioButtons[0].click();
-    expect(hp.radioButtons[0].checked).to.be.true;
-    expect(hp.radioButtons[1].checked).to.be.false;
-    expect(hp.currentPos).to.equal('top');
+    hp.hudButton.click();
+    expect(hp.positions[hp.currentPos]).to.equal('top');
   });
 });

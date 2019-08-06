@@ -26,6 +26,7 @@ describe('End to End Test', () => {
   const pauseButton = document.createElement('button');
   const sfxButton = document.createElement('button');
   const soundButton = document.createElement('button');
+  const hudButton = document.createElement('button');
 
   const soundSlider = document.createElement('input');
   const voSlider = document.createElement('input');
@@ -36,8 +37,6 @@ describe('End to End Test', () => {
   const pointerSlider = document.createElement('input');
   const buttonSlider = document.createElement('input');
   const layersSlider = document.createElement('input');
-  const hudRBOne = document.createElement('input');
-  const hudRBTwo = document.createElement('input');
 
   before(() => {
     voButton.id = 'voButton';
@@ -47,6 +46,7 @@ describe('End to End Test', () => {
     pauseButton.id = 'pauseButton';
     sfxButton.id = 'sfxButton';
     soundButton.id = 'soundButton';
+    hudButton.id = 'hudButton';
 
     soundSlider.id = 'soundSlider';
     soundSlider.type = 'range';
@@ -66,15 +66,6 @@ describe('End to End Test', () => {
     layersSlider.id = 'layersSlider';
     layersSlider.type = 'range';
 
-    hudRBOne.id = 'rb1';
-    hudRBOne.type = 'radio';
-    hudRBOne.name = 'hudButtons';
-    hudRBOne.value = 'top';
-    hudRBTwo.id = 'rb2';
-    hudRBTwo.type = 'radio';
-    hudRBTwo.name = 'hudButtons';
-    hudRBTwo.value = 'bottom';
-
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
     document.body.appendChild(captionsButton);
@@ -82,6 +73,7 @@ describe('End to End Test', () => {
     document.body.appendChild(pauseButton);
     document.body.appendChild(sfxButton);
     document.body.appendChild(soundButton);
+    document.body.appendChild(hudButton);
 
     document.body.appendChild(soundSlider);
     document.body.appendChild(voSlider);
@@ -91,9 +83,6 @@ describe('End to End Test', () => {
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
     document.body.appendChild(layersSlider);
-
-    document.body.appendChild(hudRBOne);
-    document.body.appendChild(hudRBTwo);
 
     container = new Container({
       iframeSelector: '.karma-html',
@@ -118,7 +107,7 @@ describe('End to End Test', () => {
           buttonSlider: '#buttonSlider'
         }),
         new LayersPlugin({ layersSlider: '#layersSlider' }),
-        new HUDPlugin({ positions: 'hudButtons' })
+        new HUDPlugin({ hudSelectorButton: '#hudButton' })
       ]
     });
   });
@@ -131,6 +120,7 @@ describe('End to End Test', () => {
     soundButton.click();
     musicButton.click();
     sfxButton.click();
+    hudButton.click();
   });
 
   it('Check the sound slider events', () => {
@@ -153,11 +143,6 @@ describe('End to End Test', () => {
     buttonSlider.dispatchEvent(initEvent('change'));
     layersSlider.value = String(0.4);
     layersSlider.dispatchEvent(initEvent('change'));
-  });
-
-  it('check the HUD radio buttons', () => {
-    hudRBOne.click();
-    hudRBTwo.click();
   });
 
   it('Should open the path to the game', () => {
