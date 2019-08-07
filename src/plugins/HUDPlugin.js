@@ -10,7 +10,7 @@ export class HUDPlugin extends ButtonPlugin {
   /**
    * Creates an instance of HUDPlugin
    * @param {object} params
-   * @param {string | HTMLElement} [params.button] string or HTML Element that represents the container that the radio buttons should be added to
+   * @param {string | HTMLElement} [params.button] string or HTML Element that represents the HTML button that toggles through the HUD positions
    * @memberof HUDPlugin
    */
   constructor({ hudSelectorButton } = {}) {

@@ -113,7 +113,7 @@ import { HUDPlugin, Container } from 'springroll-container';
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
-      //HUDPlugin expects a container/wrapper element.
+      //HUDPlugin expects a button element/selector string
       new HUDPlugin({
         hudSelectorButton: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
       }),
