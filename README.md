@@ -67,7 +67,7 @@ import { SoundPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-UISizePlugin, ControlsPlugin:
+UISizePlugin, ControlsPlugin, LayersPlugin, DifficultyPlugin:
 ```javascript
 import { UISizePlugin, ControlsPlugin, Container } from 'springroll-container';
 
@@ -86,21 +86,16 @@ import { UISizePlugin, ControlsPlugin, Container } from 'springroll-container';
         sensitivitySlider: '#sensitivity-slider-selector',
         sensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
       }),
-    ]
-  });
-	container.openPath('game.html');
-```
-LayersPlugin
-```javascript
-import { LayersPlugin, Container } from 'springroll-container';
-
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
       //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
       new LayersPlugin({
         //Expects an HTML Input Element of type="range"
         layersSlider: '#layers-slider-selector' // goes from 0.00 to 1.00 (two points of precision)
+      }),
+      //DifficultyPlugin controls the difficulty/speed of the game.
+      new DifficultyPlugin({
+        //Expects an HTML Input Element of type="range"
+        difficultySlider: '#difficulty-slider-selector',
+        difficulty: 0.5 // goes from 0.1 to 1.0 (one points of precision). Default = 0.5
       }),
     ]
   });

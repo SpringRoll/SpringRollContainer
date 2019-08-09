@@ -8,7 +8,8 @@ import {
   ControlsPlugin,
   UISizePlugin,
   LayersPlugin,
-  HUDPlugin
+  HUDPlugin,
+  DifficultyPlugin
 } from '../src';
 
 const initEvent = eventName => {
@@ -37,6 +38,7 @@ describe('End to End Test', () => {
   const pointerSlider = document.createElement('input');
   const buttonSlider = document.createElement('input');
   const layersSlider = document.createElement('input');
+  const difficultySlider = document.createElement('input');
 
   before(() => {
     voButton.id = 'voButton';
@@ -65,6 +67,8 @@ describe('End to End Test', () => {
     buttonSlider.type = 'range';
     layersSlider.id = 'layersSlider';
     layersSlider.type = 'range';
+    difficultySlider.id = 'difficultySlider';
+    difficultySlider.type = 'range';
 
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
@@ -83,6 +87,7 @@ describe('End to End Test', () => {
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
     document.body.appendChild(layersSlider);
+    document.body.appendChild(difficultySlider);
 
     container = new Container({
       iframeSelector: '.karma-html',
@@ -107,7 +112,8 @@ describe('End to End Test', () => {
           buttonSlider: '#buttonSlider'
         }),
         new LayersPlugin({ layersSlider: '#layersSlider' }),
-        new HUDPlugin({ hudSelectorButton: '#hudButton' })
+        new HUDPlugin({ hudSelectorButton: '#hudButton' }),
+        new DifficultyPlugin({ difficultySlider: '#difficultySlider' })
       ]
     });
   });
@@ -143,6 +149,8 @@ describe('End to End Test', () => {
     buttonSlider.dispatchEvent(initEvent('change'));
     layersSlider.value = String(0.4);
     layersSlider.dispatchEvent(initEvent('change'));
+    difficultySlider.value = String(0.5);
+    difficultySlider.dispatchEvent(initEvent('change'));
   });
 
   it('Should open the path to the game', () => {
