@@ -1,7 +1,9 @@
 import { ButtonPlugin } from '..';
 
 type ControlsPluginOptions = {
-  sensitivitySlider?:string,
+  sensitivitySlider?:string | HTMLElement,
+  sensitivity?: number,
+  keyContainer?: string | HTMLElement
 };
 
 type Slider = {
@@ -15,8 +17,17 @@ export class ControlsPlugin extends ButtonPlugin {
 
   sensitivitySlider: Slider | null;
 
+  keyContainer: string | HTMLInputElement;
+  keyBindings: object;
+  buttons: Array<HTMLButtonElement>;
+  activekeyButton: undefined | HTMLButtonElement;
+
+  onKeyButtonClick(): void;
+  bindKey(): void;
+
   onControlSensitivityChange(): void;
 
   static get controlSensitivityKey(): string;
+  static get keyBindingKey(): string;
 
 }
