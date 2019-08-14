@@ -10,3 +10,4 @@ export * from './ControlsPlugin';
 export * from './LayersPlugin';
 export * from './HUDPlugin';
 export * from './DifficultyPlugin';
+export * from './ColorVisionPlugin';
