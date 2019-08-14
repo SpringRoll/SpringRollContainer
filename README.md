@@ -114,7 +114,7 @@ import { HUDPlugin, Container } from 'springroll-container';
 	container.openPath('game.html');
 ```
 *The HUDPlugin requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
-e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
+e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
 ControlsPlugin
 ```javascript
@@ -133,7 +133,7 @@ import { ControlsPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-*The Key Binding functionality of the ControlsPlugin works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
+*The Key Binding functionality of the ControlsPlugin works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
 ColorVisionPlugin
 ```javascript
@@ -149,7 +149,7 @@ import { ColorVisionPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-*The color vision dropdown builds out the options dynamically based on what the application reports back. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
+*The color vision dropdown builds out the options dynamically based on what the application reports back. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
