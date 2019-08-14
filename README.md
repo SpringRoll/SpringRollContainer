@@ -96,7 +96,9 @@ import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springr
   });
 	container.openPath('game.html');
 ```
-HUDPlugin *(see note below)
+The following plugins require an extra bit of configuration from the game application to function correctly:
+
+HUDPlugin
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
@@ -111,10 +113,10 @@ import { HUDPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-*The HUDPlugin is slightly different from other Plugins as it requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
+*The HUDPlugin requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
 e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
 
-ControlsPlugin *
+ControlsPlugin
 ```javascript
 import { ControlsPlugin, Container } from 'springroll-container';
 
@@ -132,6 +134,22 @@ import { ControlsPlugin, Container } from 'springroll-container';
 	container.openPath('game.html');
 ```
 *The Key Binding functionality of the ControlsPlugin works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
+
+ColorVisionPlugin
+```javascript
+import { ColorVisionPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      new ColorVisionPlugin({
+        colorSelect: '#color-vision-dropdown-selector' //the plugin expects a <select> element
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+*The color vision dropdown builds out the options dynamically based on what the application reports back. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information on the request format.
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
