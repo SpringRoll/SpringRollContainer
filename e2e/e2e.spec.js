@@ -9,7 +9,8 @@ import {
   UISizePlugin,
   LayersPlugin,
   HUDPlugin,
-  DifficultyPlugin
+  DifficultyPlugin,
+  ColorVisionPlugin
 } from '../src';
 
 const initEvent = eventName => {
@@ -39,6 +40,9 @@ describe('End to End Test', () => {
   const buttonSlider = document.createElement('input');
   const layersSlider = document.createElement('input');
   const difficultySlider = document.createElement('input');
+
+  const colorSelect = document.createElement('select');
+  const keyContainer = document.createElement('div');
 
   before(() => {
     voButton.id = 'voButton';
@@ -70,6 +74,9 @@ describe('End to End Test', () => {
     difficultySlider.id = 'difficultySlider';
     difficultySlider.type = 'range';
 
+    colorSelect.id = 'colorSelect';
+    keyContainer.id = 'keyContainer';
+
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
     document.body.appendChild(captionsButton);
@@ -88,34 +95,82 @@ describe('End to End Test', () => {
     document.body.appendChild(buttonSlider);
     document.body.appendChild(layersSlider);
     document.body.appendChild(difficultySlider);
+    document.body.appendChild(colorSelect);
+    document.body.appendChild(keyContainer);
+
+    const colorVisionPlugin = new ColorVisionPlugin({
+      colorSelect: '#colorSelect'
+    });
+    const captionsPlugin = new CaptionsPlugin('#captionsButton');
+    const pausePlugin = new PausePlugin('#pauseButton');
+    const soundPlugin = new SoundPlugin({
+      voButton: '#voButton',
+      musicButton: '#musicButton',
+      sfxButton: '#sfxButton',
+      soundButton: '#soundButton',
+      soundSlider: '#soundSlider',
+      musicSlider: '#musicSlider',
+      voSlider: '#voSlider',
+      sfxSlider: '#sfxSlider'
+    });
+    const userDataPlugin = new UserDataPlugin();
+    const helpPlugin = new HelpPlugin('#helpButton');
+    const controlsPlugin = new ControlsPlugin({
+      sensitivitySlider: '#sensitivitySlider',
+      keyContainer: '#keyContainer'
+    });
+    const uiSizePlugin = new UISizePlugin({
+      pointerSlider: '#pointerSlider',
+      buttonSlider: '#buttonSlider'
+    });
+    const layersPlugin = new LayersPlugin({ layersSlider: '#layersSlider' });
+    const hudPlugin = new HUDPlugin({ hudSelectorButton: '#hudButton' });
+    const difficultyPlugin = new DifficultyPlugin({
+      difficultySlider: '#difficultySlider'
+    });
 
     container = new Container({
       iframeSelector: '.karma-html',
       plugins: [
-        new CaptionsPlugin('#captionsButton'),
-        new PausePlugin('#pauseButton'),
-        new SoundPlugin({
-          voButton: '#voButton',
-          musicButton: '#musicButton',
-          sfxButton: '#sfxButton',
-          soundButton: '#soundButton',
-          soundSlider: '#soundSlider',
-          musicSlider: '#musicSlider',
-          voSlider: '#voSlider',
-          sfxSlider: '#sfxSlider'
-        }),
-        new UserDataPlugin(),
-        new HelpPlugin('#helpButton'),
-        new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' }),
-        new UISizePlugin({
-          pointerSlider: '#pointerSlider',
-          buttonSlider: '#buttonSlider'
-        }),
-        new LayersPlugin({ layersSlider: '#layersSlider' }),
-        new HUDPlugin({ hudSelectorButton: '#hudButton' }),
-        new DifficultyPlugin({ difficultySlider: '#difficultySlider' })
+        captionsPlugin,
+        pausePlugin,
+        soundPlugin,
+        userDataPlugin,
+        helpPlugin,
+        controlsPlugin,
+        uiSizePlugin,
+        layersPlugin,
+        hudPlugin,
+        difficultyPlugin,
+        colorVisionPlugin
       ]
     });
+
+    //triggering the respond calls for plugins that require them
+    colorVisionPlugin.init();
+    hudPlugin.init();
+    controlsPlugin.init();
+
+    container.client.trigger('features', {
+      colorVision: true,
+      hudPosition: true,
+      keyBinding: true
+    });
+
+    controlsPlugin.client.trigger('keyBindings', [
+      { actionName: 'Up', defaultKey: 'w' }
+    ]);
+    hudPlugin.client.trigger('hudPositions', [
+      'top',
+      'bottom',
+      'invalid-position'
+    ]);
+    colorVisionPlugin.client.trigger('colorFilters', [
+      'None',
+      'Deuteranopia',
+      'Tritanopia',
+      'invalid'
+    ]);
   });
 
   it('Check all button click events', () => {
@@ -151,6 +206,19 @@ describe('End to End Test', () => {
     layersSlider.dispatchEvent(initEvent('change'));
     difficultySlider.value = String(0.5);
     difficultySlider.dispatchEvent(initEvent('change'));
+  });
+
+  it('check the color vision dropdown event', () => {
+    colorSelect.value = 'tritanopia';
+    colorSelect.dispatchEvent(initEvent('change'));
+  });
+
+  it('check the key binding change event', () => {
+    const event = document.createEvent('Event');
+    event.key = 'a';
+    event.initEvent('keyup');
+    keyContainer.firstChild.click();
+    document.dispatchEvent(event);
   });
 
   it('Should open the path to the game', () => {
