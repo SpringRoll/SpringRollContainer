@@ -4,7 +4,7 @@ type SliderOptions = {
   min?: number,
   max?: number,
   step?: number,
-  value?: number
+  defaultValue?: number
 };
 
 export class Slider {
