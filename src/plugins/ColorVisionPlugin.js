@@ -63,7 +63,7 @@ export class ColorVisionPlugin extends BasePlugin {
         }
         if (this.colorDropdown.tagName.toLowerCase() !== 'select') {
           this.colorDropdown.style.display = 'none';
-          console.warn(
+          console.error(
             `ColorVisionPlugin was given a ${
               this.colorDropdown.tagName
             } but expects an element of type: <select>`
