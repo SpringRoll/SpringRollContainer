@@ -15,13 +15,13 @@ export class DifficultyPlugin extends BasePlugin {
    *Creates an instance of ControlsPlugin.
    * @param {object} params
    * @param {string | HTMLElement} params.difficultySlider
-   * @param {number} [params.difficulty=0.5]
+   * @param {number} [params.defaultDifficulty=0.5]
    * @memberof DifficultyPlugin
    */
-  constructor({ difficultySlider, difficulty = 0.5 }) {
+  constructor({ difficultySlider, defaultDifficulty = 0.5 }) {
     super('Difficulty-Plugin');
 
-    this.difficulty = difficulty;
+    this.difficulty = defaultDifficulty;
 
     this.difficultySlider = new Slider({
       slider: difficultySlider,

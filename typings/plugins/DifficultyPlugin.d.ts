@@ -2,6 +2,7 @@ import { ButtonPlugin } from '..';
 
 type DifficultyPluginOptions = {
   difficultySlider?:string,
+  defaultDifficulty?: number,
 };
 
 type Slider = {
