@@ -41,7 +41,7 @@ export class UISizePlugin extends BasePlugin {
       min: POINTER_SLIDER_MIN,
       max: POINTER_SLIDER_MAX,
       step: POINTER_SLIDER_STEP,
-      value: this.pointerSize
+      defaultValue: this.pointerSize
     });
 
     this.buttonSlider = new Slider({
@@ -50,7 +50,7 @@ export class UISizePlugin extends BasePlugin {
       min: BUTTON_SLIDER_MIN,
       max: BUTTON_SLIDER_MAX,
       step: BUTTON_SLIDER_STEP,
-      value: this.buttonSize
+      defaultValue: this.buttonSize
     });
 
     this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));

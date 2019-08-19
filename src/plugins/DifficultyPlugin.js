@@ -29,7 +29,7 @@ export class DifficultyPlugin extends BasePlugin {
       min: DIFFICULTY_SLIDER_MIN,
       max: DIFFICULTY_SLIDER_MAX,
       step: DIFFICULTY_SLIDER_STEP,
-      value: this.difficulty
+      defaultValue: this.difficulty
     });
 
     this.difficultySlider.enableSliderEvents(

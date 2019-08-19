@@ -37,7 +37,7 @@ export class ControlsPlugin extends BasePlugin {
       min: SENSITIVITY_SLIDER_MIN,
       max: SENSITIVITY_SLIDER_MAX,
       step: SENSITIVITY_SLIDER_STEP,
-      value: this.controlSensitivity
+      defaultValue: this.controlSensitivity
     });
 
     this.sensitivitySlider.enableSliderEvents(
