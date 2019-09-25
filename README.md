@@ -126,7 +126,7 @@ import { ControlsPlugin, Container } from 'springroll-container';
       //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
       new ControlsPlugin({
         sensitivitySlider: '#sensitivity-slider-selector',
-        sensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+        defaultSensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
         keyContainer: '#key-container', // container element that will contain the mappable key buttons.
       }),
     ]

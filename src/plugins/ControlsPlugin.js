@@ -15,13 +15,13 @@ export class ControlsPlugin extends BasePlugin {
    *Creates an instance of ControlsPlugin.
    * @param {object} params
    * @param {string | HTMLElement} params.sensitivitySlider
-   * @param {number} [params.sensitivity=0.5]
+   * @param {number} [params.defaultSensitivity=0.5]
    * @memberof ControlsPlugin
    */
-  constructor({ sensitivitySlider, sensitivity = 0.5, keyContainer } = {}) {
+  constructor({ sensitivitySlider, defaultSensitivity = 0.5, keyContainer } = {}) {
     super('Control-Button-Plugin');
 
-    this.controlSensitivity = sensitivity;
+    this.controlSensitivity = defaultSensitivity;
 
     this.keyContainer =
       keyContainer instanceof HTMLElement
