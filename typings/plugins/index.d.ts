@@ -9,3 +9,5 @@ export * from './UserDataPlugin';
 export * from './UISizePlugin';
 export * from './ControlsPlugin';
 export * from './LayersPlugin';
+export * from './DifficultyPlugin';
+export * from './ColorVisionPlugin';

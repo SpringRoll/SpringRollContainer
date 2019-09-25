@@ -48,22 +48,22 @@ export class SoundPlugin extends ButtonPlugin {
     this.soundSlider = new Slider({
       slider: soundSlider,
       control: SoundPlugin.soundVolumeKey,
-      value: this.soundVolume
+      defaultValue: this.soundVolume
     });
     this.musicSlider = new Slider({
       slider: musicSlider,
       control: SoundPlugin.musicVolumeKey,
-      value: this.musicVolume
+      defaultValue: this.musicVolume
     });
     this.sfxSlider = new Slider({
       slider: sfxSlider,
       control: SoundPlugin.sfxVolumeKey,
-      value: this.sfxVolume
+      defaultValue: this.sfxVolume
     });
     this.voSlider = new Slider({
       slider: voSlider,
       control: SoundPlugin.voVolumeKey,
-      value: this.voVolume
+      defaultValue: this.voVolume
     });
 
     this._soundButton = new Button({

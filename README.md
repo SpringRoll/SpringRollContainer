@@ -67,9 +67,9 @@ import { SoundPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-UISizePlugin, ControlsPlugin:
+UISizePlugin, LayersPlugin, DifficultyPlugin:
 ```javascript
-import { UISizePlugin, ControlsPlugin, Container } from 'springroll-container';
+import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springroll-container';
 
   const container = new springroll.Container({
     iframeSelector: "#game",
@@ -81,49 +81,75 @@ import { UISizePlugin, ControlsPlugin, Container } from 'springroll-container';
         buttonSlider: '#button-slider-selector', //controls the size of UI buttons
         buttonSize: 0.5, // button size goes from 0.1 to 1.0 (1 point of precision) default = 0.5
       }),
-      //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
-      new ControlsPlugin({
-        sensitivitySlider: '#sensitivity-slider-selector',
-        sensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
-      }),
-    ]
-  });
-	container.openPath('game.html');
-```
-LayersPlugin
-```javascript
-import { LayersPlugin, Container } from 'springroll-container';
-
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
       //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
       new LayersPlugin({
         //Expects an HTML Input Element of type="range"
         layersSlider: '#layers-slider-selector' // goes from 0.00 to 1.00 (two points of precision)
       }),
+      //DifficultyPlugin controls the difficulty/speed of the game.
+      new DifficultyPlugin({
+        //Expects an HTML Input Element of type="range"
+        difficultySlider: '#difficulty-slider-selector',
+        defaultDifficulty: 0.5 // goes from 0.1 to 1.0 (one points of precision). Default = 0.5
+      }),
     ]
   });
 	container.openPath('game.html');
 ```
-HUDPlugin *(see note below)
+The following plugins require an extra bit of configuration from the game application to function correctly:
+
+HUDPlugin
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
-      //HUDPlugin expects a container/wrapper element.
+      //HUDPlugin expects a button element/selector string
       new HUDPlugin({
-        positionsContainer: '#a-div-or-other-wrapper' //any element that can accept radio buttons inside it is acceptable
-
+        hudSelectorButton: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
       }),
     ]
   });
 	container.openPath('game.html');
 ```
-*The HUDPlugin is slightly different from other Plugins as it accepts a wrapper element, and requests the positions directly from the game itself and builds the radio buttons dynamically to match.
-e.g. if the game supports ['top', 'bottom'] then the Plugin will build 2 radio buttons with those labels and append them to the wrapper element. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src) for more information.
+*The HUDPlugin requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
+e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+
+ControlsPlugin
+```javascript
+import { ControlsPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
+      new ControlsPlugin({
+        sensitivitySlider: '#sensitivity-slider-selector',
+        defaultSensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+        keyContainer: '#key-container', // container element that will contain the mappable key buttons.
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+*The Key Binding functionality of the ControlsPlugin works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+
+ColorVisionPlugin
+```javascript
+import { ColorVisionPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      new ColorVisionPlugin({
+        colorSelect: '#color-vision-dropdown-selector' //the plugin expects a <select> element
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+*The color vision dropdown builds out the options dynamically based on what the application reports back. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called

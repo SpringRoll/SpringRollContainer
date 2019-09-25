@@ -8,7 +8,9 @@ import {
   ControlsPlugin,
   UISizePlugin,
   LayersPlugin,
-  HUDPlugin
+  HUDPlugin,
+  DifficultyPlugin,
+  ColorVisionPlugin
 } from '../src';
 
 const initEvent = eventName => {
@@ -26,6 +28,7 @@ describe('End to End Test', () => {
   const pauseButton = document.createElement('button');
   const sfxButton = document.createElement('button');
   const soundButton = document.createElement('button');
+  const hudButton = document.createElement('button');
 
   const soundSlider = document.createElement('input');
   const voSlider = document.createElement('input');
@@ -36,8 +39,10 @@ describe('End to End Test', () => {
   const pointerSlider = document.createElement('input');
   const buttonSlider = document.createElement('input');
   const layersSlider = document.createElement('input');
-  const hudRBOne = document.createElement('input');
-  const hudRBTwo = document.createElement('input');
+  const difficultySlider = document.createElement('input');
+
+  const colorSelect = document.createElement('select');
+  const keyContainer = document.createElement('div');
 
   before(() => {
     voButton.id = 'voButton';
@@ -47,6 +52,7 @@ describe('End to End Test', () => {
     pauseButton.id = 'pauseButton';
     sfxButton.id = 'sfxButton';
     soundButton.id = 'soundButton';
+    hudButton.id = 'hudButton';
 
     soundSlider.id = 'soundSlider';
     soundSlider.type = 'range';
@@ -65,15 +71,11 @@ describe('End to End Test', () => {
     buttonSlider.type = 'range';
     layersSlider.id = 'layersSlider';
     layersSlider.type = 'range';
+    difficultySlider.id = 'difficultySlider';
+    difficultySlider.type = 'range';
 
-    hudRBOne.id = 'rb1';
-    hudRBOne.type = 'radio';
-    hudRBOne.name = 'hudButtons';
-    hudRBOne.value = 'top';
-    hudRBTwo.id = 'rb2';
-    hudRBTwo.type = 'radio';
-    hudRBTwo.name = 'hudButtons';
-    hudRBTwo.value = 'bottom';
+    colorSelect.id = 'colorSelect';
+    keyContainer.id = 'keyContainer';
 
     document.body.appendChild(voButton);
     document.body.appendChild(helpButton);
@@ -82,6 +84,7 @@ describe('End to End Test', () => {
     document.body.appendChild(pauseButton);
     document.body.appendChild(sfxButton);
     document.body.appendChild(soundButton);
+    document.body.appendChild(hudButton);
 
     document.body.appendChild(soundSlider);
     document.body.appendChild(voSlider);
@@ -91,36 +94,83 @@ describe('End to End Test', () => {
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
     document.body.appendChild(layersSlider);
+    document.body.appendChild(difficultySlider);
+    document.body.appendChild(colorSelect);
+    document.body.appendChild(keyContainer);
 
-    document.body.appendChild(hudRBOne);
-    document.body.appendChild(hudRBTwo);
+    const colorVisionPlugin = new ColorVisionPlugin({
+      colorSelect: '#colorSelect'
+    });
+    const captionsPlugin = new CaptionsPlugin('#captionsButton');
+    const pausePlugin = new PausePlugin('#pauseButton');
+    const soundPlugin = new SoundPlugin({
+      voButton: '#voButton',
+      musicButton: '#musicButton',
+      sfxButton: '#sfxButton',
+      soundButton: '#soundButton',
+      soundSlider: '#soundSlider',
+      musicSlider: '#musicSlider',
+      voSlider: '#voSlider',
+      sfxSlider: '#sfxSlider'
+    });
+    const userDataPlugin = new UserDataPlugin();
+    const helpPlugin = new HelpPlugin('#helpButton');
+    const controlsPlugin = new ControlsPlugin({
+      sensitivitySlider: '#sensitivitySlider',
+      keyContainer: '#keyContainer'
+    });
+    const uiSizePlugin = new UISizePlugin({
+      pointerSlider: '#pointerSlider',
+      buttonSlider: '#buttonSlider'
+    });
+    const layersPlugin = new LayersPlugin({ layersSlider: '#layersSlider' });
+    const hudPlugin = new HUDPlugin({ hudSelectorButton: '#hudButton' });
+    const difficultyPlugin = new DifficultyPlugin({
+      difficultySlider: '#difficultySlider'
+    });
 
     container = new Container({
       iframeSelector: '.karma-html',
       plugins: [
-        new CaptionsPlugin('#captionsButton'),
-        new PausePlugin('#pauseButton'),
-        new SoundPlugin({
-          voButton: '#voButton',
-          musicButton: '#musicButton',
-          sfxButton: '#sfxButton',
-          soundButton: '#soundButton',
-          soundSlider: '#soundSlider',
-          musicSlider: '#musicSlider',
-          voSlider: '#voSlider',
-          sfxSlider: '#sfxSlider'
-        }),
-        new UserDataPlugin(),
-        new HelpPlugin('#helpButton'),
-        new ControlsPlugin({ sensitivitySlider: '#sensitivitySlider' }),
-        new UISizePlugin({
-          pointerSlider: '#pointerSlider',
-          buttonSlider: '#buttonSlider'
-        }),
-        new LayersPlugin({ layersSlider: '#layersSlider' }),
-        new HUDPlugin({ positions: 'hudButtons' })
+        captionsPlugin,
+        pausePlugin,
+        soundPlugin,
+        userDataPlugin,
+        helpPlugin,
+        controlsPlugin,
+        uiSizePlugin,
+        layersPlugin,
+        hudPlugin,
+        difficultyPlugin,
+        colorVisionPlugin
       ]
     });
+
+    //triggering the respond calls for plugins that require them
+    colorVisionPlugin.init();
+    hudPlugin.init();
+    controlsPlugin.init();
+
+    container.client.trigger('features', {
+      colorVision: true,
+      hudPosition: true,
+      keyBinding: true
+    });
+
+    controlsPlugin.client.trigger('keyBindings', [
+      { actionName: 'Up', defaultKey: 'w' }
+    ]);
+    hudPlugin.client.trigger('hudPositions', [
+      'top',
+      'bottom',
+      'invalid-position'
+    ]);
+    colorVisionPlugin.client.trigger('colorFilters', [
+      'None',
+      'Deuteranopia',
+      'Tritanopia',
+      'invalid'
+    ]);
   });
 
   it('Check all button click events', () => {
@@ -131,6 +181,7 @@ describe('End to End Test', () => {
     soundButton.click();
     musicButton.click();
     sfxButton.click();
+    hudButton.click();
   });
 
   it('Check the sound slider events', () => {
@@ -153,11 +204,21 @@ describe('End to End Test', () => {
     buttonSlider.dispatchEvent(initEvent('change'));
     layersSlider.value = String(0.4);
     layersSlider.dispatchEvent(initEvent('change'));
+    difficultySlider.value = String(0.5);
+    difficultySlider.dispatchEvent(initEvent('change'));
   });
 
-  it('check the HUD radio buttons', () => {
-    hudRBOne.click();
-    hudRBTwo.click();
+  it('check the color vision dropdown event', () => {
+    colorSelect.value = 'tritanopia';
+    colorSelect.dispatchEvent(initEvent('change'));
+  });
+
+  it('check the key binding change event', () => {
+    const event = document.createEvent('Event');
+    event.key = 'a';
+    event.initEvent('keyup');
+    keyContainer.firstChild.click();
+    document.dispatchEvent(event);
   });
 
   it('Should open the path to the game', () => {

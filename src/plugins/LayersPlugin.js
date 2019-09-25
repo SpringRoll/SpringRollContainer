@@ -19,7 +19,7 @@ export class LayersPlugin extends BasePlugin {
       min: 0,
       max: 1,
       step: 0.01, // 100 possible values, a game would be very unlikely to go over 100 layers.
-      value: 0
+      defaultValue: 0
     });
 
     this.layerValue = 0;

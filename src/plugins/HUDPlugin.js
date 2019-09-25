@@ -1,37 +1,48 @@
-import { BasePlugin } from './BasePlugin';
+import { ButtonPlugin } from './ButtonPlugin';
+import { Button } from '../ui-elements';
 
 /**
  * @export
  * @class HUDPlugin
  * @extends {BasePlugin}
  */
-export class HUDPlugin extends BasePlugin {
+export class HUDPlugin extends ButtonPlugin {
   /**
    * Creates an instance of HUDPlugin
    * @param {object} params
-   * @param {string | HTMLElement} [params.positionsContainer] string or HTML Element that represents the container that the radio buttons should be added to
+   * @param {string | HTMLElement} [params.button] string or HTML Element that represents the HTML button that toggles through the HUD positions
    * @memberof HUDPlugin
    */
-  constructor({ positionsContainer } = {}) {
+  constructor({ hudSelectorButton } = {}) {
     super('HUD-Layout-Plugin');
 
-    this.positionControls =
-      positionsContainer instanceof HTMLElement
-        ? positionsContainer
-        : document.querySelector(positionsContainer);
+    this.hudSelectorButton = hudSelectorButton;
 
-    this.radioButtons = [];
-    this.currentPos;
+    this._hudButton;
+    this.supportedPositions = ['top', 'bottom', 'left', 'right'];
+    this.positions = [];
+    this.currentPos = 0; //always start at beginning of array
+
+    if (!this.hudSelectorButton) {
+      console.warn(
+        'SpringRollContainer: HUDPlugin was not provided a button element or selector string'
+      );
+      return;
+    }
   }
 
   /**
    * @memberof HUDPlugin
-   * @param {HTMLElement} pos the radio button that was clicked
    */
-  onHUDToggle(pos) {
-    this.currentPos = pos.value;
-    pos.checked = true; //to ensure the radio button reflects its selected state to the user.
-    this.sendProperty(HUDPlugin.hudPositionKey, pos.value);
+  onHUDToggle() {
+    this.currentPos =
+      this.currentPos + 1 < this.positions.length
+        ? this.currentPos + 1
+        : (this.currentPos = 0);
+    this.sendProperty(
+      HUDPlugin.hudPositionKey,
+      this.positions[this.currentPos]
+    );
   }
 
   /**
@@ -44,36 +55,36 @@ export class HUDPlugin extends BasePlugin {
         if (!features.data || !features.data.hudPosition) {
           return;
         }
-        //get the game's reported HUD positions and build out the radio buttons
+        //get the game's reported HUD positions to build out positions array
         this.client.fetch('hudPositions', result => {
           for (let i = 0, l = result.data.length; i < l; i++) {
-            const radio = document.createElement('input');
-            radio.id = `radio-${result.data[i]}`;
-            radio.name = 'hud-positions';
-            radio.type = 'radio';
-            radio.value = result.data[i];
+            if (
+              !this.supportedPositions.includes(result.data[i].toLowerCase())
+            ) {
+              console.warn(`${result.data[i]} is an invalid position name`);
+              continue;
+            }
 
-            const label = document.createElement('label');
-            label.htmlFor = radio.id;
-            label.innerHTML = result.data[i];
-
-            this.positionControls.appendChild(label);
-            this.positionControls.appendChild(radio);
-
-            radio.addEventListener('click', () => {
-              this.onHUDToggle(radio);
-            });
-
-            this.radioButtons.push(radio);
+            this.positions.push(result.data[i]);
           }
+        });
 
-          //set the currentPos to the first radio button(assume the first position is the default)
-          //also set it to checked to match.
-          this.radioButtons[0].checked = true;
-          this.currentPos = this.radioButtons[0].value;
+        //create button element AFTER the fetch from the application has occured.
+        this._hudButton = new Button({
+          button: this.hudSelectorButton,
+          onClick: this.onHUDToggle.bind(this),
+          channel: 'hudPosition'
         });
       }.bind(this)
     );
+  }
+
+  /**
+   * @readonly
+   * @memberof CaptionsPlugin
+   */
+  get hudButton() {
+    return this._hudButton.button;
   }
 
   /**

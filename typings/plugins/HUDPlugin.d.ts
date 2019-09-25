@@ -1,17 +1,19 @@
-import { BasePlugin } from '..';
+import { ButtonPlugin } from '..';
 
 type HUDPluginOptions = {
-  positions?: string
+  hudSelectorButton: string | HTMLButtonElement
 };
 
-export class HUDPlugin extends BasePlugin {
+export class HUDPlugin extends ButtonPlugin {
   constructor(options: HUDPluginOptions)
 
-  positionControls: HTMLElement;
-  radioButtons: Array<HTMLElements>;
-  currentPos: string | null;
+  _hudButton: HTMLButtonElement | null;
 
+  currentPos: number | null;
+  supportPositions: Array<string>;
+  positions: Array<string>;
   onHUDToggle(): void;
 
+  get hudButton(): HTMLButtonElement;
   get hudPositionKey(): string;
 }

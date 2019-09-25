@@ -3,7 +3,9 @@ import { Slider } from '../classes/Slider';
 
 type UISizePluginOptions = {
   pointerSlider?:string,
-  buttonSlider?:string
+  defaultPointerSize?: number,
+  buttonSlider?:string,
+  defaultButtonSize?: number,
 };
 
 type Slider = {

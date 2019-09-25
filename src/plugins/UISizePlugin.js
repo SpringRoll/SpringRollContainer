@@ -20,20 +20,20 @@ export class UISizePlugin extends BasePlugin {
    * @param {object} params
    * @param {string | HTMLElement} [params.pointerSlider]
    * @param {string | HTMLElement} [params.buttonSlider]
-   * @param {number} [params.pointerSize=0.05]
-   * @param {number} [params.buttonSize=0.5]
+   * @param {number} [params.defaultPointerSize=0.05]
+   * @param {number} [params.defaultButtonSize=0.5]
    * @memberof UISizePlugin
    */
   constructor({
     pointerSlider,
     buttonSlider,
-    pointerSize = 0.05,
-    buttonSize = 0.5
+    defaultPointerSize = 0.05,
+    defaultButtonSize = 0.5
   } = {}) {
     super('UISize-Button-Plugin');
 
-    this.pointerSize = pointerSize;
-    this.buttonSize = buttonSize;
+    this.pointerSize = defaultPointerSize;
+    this.buttonSize = defaultButtonSize;
 
     this.pointerSlider = new Slider({
       slider: pointerSlider,
@@ -41,7 +41,7 @@ export class UISizePlugin extends BasePlugin {
       min: POINTER_SLIDER_MIN,
       max: POINTER_SLIDER_MAX,
       step: POINTER_SLIDER_STEP,
-      value: this.pointerSize
+      defaultValue: this.pointerSize
     });
 
     this.buttonSlider = new Slider({
@@ -50,7 +50,7 @@ export class UISizePlugin extends BasePlugin {
       min: BUTTON_SLIDER_MIN,
       max: BUTTON_SLIDER_MAX,
       step: BUTTON_SLIDER_STEP,
-      value: this.buttonSize
+      defaultValue: this.buttonSize
     });
 
     this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));

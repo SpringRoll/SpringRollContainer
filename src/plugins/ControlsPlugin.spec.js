@@ -15,8 +15,17 @@ describe('ControlsPlugin', () => {
     const slider = document.createElement('input');
     slider.type = 'range';
     slider.id = 'ss';
+
+    const keyContainer = document.createElement('div');
+    keyContainer.id = 'keyContainer';
+
     document.body.appendChild(slider);
-    cp = new ControlsPlugin({ sensitivitySlider: '#ss' });
+    document.body.appendChild(keyContainer);
+
+    cp = new ControlsPlugin({
+      sensitivitySlider: '#ss',
+      keyContainer: '#keyContainer'
+    });
     cp.preload({ client: new Bellhop() });
   });
 
@@ -24,9 +33,18 @@ describe('ControlsPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'controls-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#controls-plugin-iframe' }).client.trigger(
-      'features'
-    );
+    new Container({ iframeSelector: '#controls-plugin-iframe', plugins: [cp] });
+    cp.init();
+    cp.client.trigger('features', {
+      controlSensitivity: true,
+      keyBinding: true
+    });
+    cp.client.trigger('keyBindings', [
+      { actionName: 'Up', defaultKey: 'w' },
+      { actionName: 'Down', defaultKey: 's' }
+    ]);
+
+    expect(cp.buttons.length).to.equal(2);
   });
 
   it('.onControlSensitivityChange()', () => {
@@ -43,5 +61,22 @@ describe('ControlsPlugin', () => {
 
     expect(cp.sensitivitySlider.value).to.equal('0.1');
     expect(cp.controlSensitivity).to.equal(0.1);
+  });
+
+  it('.onKeyButtonClick()', () => {
+    const event = document.createEvent('Event');
+    event.key = 'a';
+    event.initEvent('keyup');
+
+    expect(cp.keyBindings.Up.currentKey).to.equal('w');
+    cp.buttons[0].click();
+    document.dispatchEvent(event);
+    expect(cp.keyBindings.Up.currentKey).to.equal('a');
+
+    expect(cp.keyBindings.Down.currentKey).to.equal('s');
+    cp.buttons[1].click();
+    event.key = 'h';
+    document.dispatchEvent(event);
+    expect(cp.keyBindings.Down.currentKey).to.equal('h');
   });
 });

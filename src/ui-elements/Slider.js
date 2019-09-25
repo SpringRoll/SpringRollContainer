@@ -13,14 +13,21 @@ export class Slider {
    * @param {number} [min=0] slider min value
    * @param {number} [max=1] slider max value
    * @param {number} [step=0.1] slider step value
-   * @param {number} [value=1] slider starting value
+   * @param {number} [defaultValue=1] slider starting value
    * @memberof SliderPlugin
    */
-  constructor({ slider, control, min = 0, max = 1, step = 0.1, value = 1 }) {
+  constructor({
+    slider,
+    control,
+    min = 0,
+    max = 1,
+    step = 0.1,
+    defaultValue = 1
+  }) {
     this.min = min;
     this.max = max;
     this.step = step;
-    this.sliderValue = value;
+    this.sliderValue = defaultValue;
     this.control = control;
     this.slider = this.setUpSlider(slider, control);
   }
