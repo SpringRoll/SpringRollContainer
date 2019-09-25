@@ -90,7 +90,7 @@ import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springr
       new DifficultyPlugin({
         //Expects an HTML Input Element of type="range"
         difficultySlider: '#difficulty-slider-selector',
-        difficulty: 0.5 // goes from 0.1 to 1.0 (one points of precision). Default = 0.5
+        defaultDifficulty: 0.5 // goes from 0.1 to 1.0 (one points of precision). Default = 0.5
       }),
     ]
   });
