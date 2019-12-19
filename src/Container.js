@@ -204,14 +204,20 @@ export class Container extends PluginManager {
   ) {
     this.release = null;
 
+    console.log('FETCHING API:', api);
     return fetch(api, {
       headers: {
         'Content-Type': 'application/json'
       }
     })
-      .then(response =>
-        200 !== response.status ? Promise.reject(response) : response.json()
-      )
+      .then(response => {
+        console.log('RESPONSE:', response.status);
+        if (response.status >= 400) {
+          return Promise.reject(response);
+        }
+
+        return response.json();
+      })
       .then(json => {
         const release = json.data;
         const error = Features.test(release.capabilities);

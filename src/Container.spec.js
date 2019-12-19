@@ -1,3 +1,4 @@
+import sinon from 'sinon';
 import { Container, BasePlugin } from './index';
 
 document.body.innerHTML = '';
@@ -40,12 +41,46 @@ describe('Container', () => {
     expect(container.iframe.src).to.contain('http://localhost:9876/');
   });
 
-  it('.openRemote()', done => {
-    container.openRemote('127.0.0.1').catch(err => {
-      //TODO: Add test endpoint to improve this test?
-      expect(err instanceof Response).to.be.true;
-      done();
+  describe('.openRemote()', () => {
+    const API = 'http://localhost:3000';
+    let stubbedFetch;
+
+    beforeEach(() => {
+      stubbedFetch = sinon.stub(window, 'fetch');
     });
+
+    afterEach(() => {
+      stubbedFetch.reset();
+    });
+
+    const setFetchResponse = (code, value) => {
+      // from https://gist.github.com/coder36/a5c6f37623a066e50bbe52dd258b77f0
+      const promise = Promise.resolve(new window.Response(JSON.stringify(value), {
+        status: code,
+        headers: { 'Content-type': 'application/json' }
+      }));
+
+      stubbedFetch.returns(promise);
+    };
+
+    it('should reject with the raw response if the server fails to respond', async () => {
+      setFetchResponse(500, { success: false, error: '500' }); 
+
+      const response = await container.openRemote(`${API}`);
+      expect(response.status).to.equal(500);
+    });
+
+    /*
+    it('should reject with the raw response if there is a client error', async () => {
+      const response = await container.openRemote(`${API}/400`);
+      expect(response.status).to.equal(400);
+    });
+    
+    it('should reject with the raw response if the release does not exist', async () => {
+      const response = await container.openRemote(`${API}/404`);
+      expect(response.status).to.equal(404);
+    });
+   */
   });
 
   it('.destroy()', () => {
