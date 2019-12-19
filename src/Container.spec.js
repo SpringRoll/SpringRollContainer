@@ -51,12 +51,10 @@ describe('Container', () => {
 
     const setFetchResponse = (code, value) => {
       // from https://gist.github.com/coder36/a5c6f37623a066e50bbe52dd258b77f0
-      const promise = Promise.resolve(new window.Response(JSON.stringify(value), {
+      stubbedFetch.resolves(new window.Response(JSON.stringify(value), {
         status: code,
         headers: { 'Content-type': 'application/json' }
       }));
-
-      stubbedFetch.returns(promise);
     };
 
     it('should reject with the raw response if the server fails to respond', async () => {
