@@ -43,11 +43,7 @@ describe('Container', () => {
 
   describe('.openRemote()', () => {
     const API = 'http://localhost:3000';
-    let stubbedFetch;
-
-    beforeEach(() => {
-      stubbedFetch = sinon.stub(window, 'fetch');
-    });
+    const stubbedFetch = sinon.stub(window, 'fetch');
 
     afterEach(() => {
       stubbedFetch.reset();
@@ -73,17 +69,25 @@ describe('Container', () => {
       }
     });
 
-    /*
     it('should reject with the raw response if there is a client error', async () => {
-      const response = await container.openRemote(`${API}/400`);
-      expect(response.status).to.equal(400);
+      setFetchResponse(400, { success: false, error: '400' }); 
+
+      try {
+        await container.openRemote(`${API}`);
+        throw new Error('This test should throw');
+      } catch (e) {
+      }
     });
     
     it('should reject with the raw response if the release does not exist', async () => {
-      const response = await container.openRemote(`${API}/404`);
-      expect(response.status).to.equal(404);
+      setFetchResponse(400, { success: false, error: '400' }); 
+
+      try {
+        await container.openRemote(`${API}`);
+        throw new Error('This test should throw');
+      } catch (e) {
+      }
     });
-   */
   });
 
   it('.destroy()', () => {
