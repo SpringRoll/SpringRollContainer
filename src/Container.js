@@ -213,7 +213,7 @@ export class Container extends PluginManager {
       .then(response => {
         console.log('RESPONSE:', response.status);
         if (response.status >= 400) {
-          return Promise.reject(response);
+          return Promise.reject(new Error(response.statusText));
         }
 
         return response.json();
@@ -223,7 +223,7 @@ export class Container extends PluginManager {
         const error = Features.test(release.capabilities);
         if (error) {
           this.client.trigger('unsupported', { error });
-          return Promise.reject(json);
+          return Promise.reject(new Error(error));
         }
         this.release = release;
         this._internalOpen(release.url + query, {

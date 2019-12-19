@@ -66,8 +66,11 @@ describe('Container', () => {
     it('should reject with the raw response if the server fails to respond', async () => {
       setFetchResponse(500, { success: false, error: '500' }); 
 
-      const response = await container.openRemote(`${API}`);
-      expect(response.status).to.equal(500);
+      try {
+        await container.openRemote(`${API}`);
+        throw new Error('This test should throw');
+      } catch (e) {
+      }
     });
 
     /*
