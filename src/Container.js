@@ -210,14 +210,14 @@ export class Container extends PluginManager {
       }
     })
       .then(response =>
-        200 !== response.status ? Promise.reject(response) : response.json()
+        200 !== response.status ? Promise.reject(new Error(response.statusText)) : response.json()
       )
       .then(json => {
         const release = json.data;
         const error = Features.test(release.capabilities);
         if (error) {
           this.client.trigger('unsupported', { error });
-          return Promise.reject(json);
+          return Promise.reject(new Error(error));
         }
         this.release = release;
         this._internalOpen(release.url + query, {
