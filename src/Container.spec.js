@@ -58,22 +58,24 @@ describe('Container', () => {
     };
 
     it('should reject with the raw response if the server fails to respond', async () => {
-      setFetchResponse(500, { success: false, error: '500' }); 
+      setFetchResponse(500, { success: false, error: 'some message' }); 
 
       try {
         await container.openRemote(`${API}`);
         throw new Error('This test should throw');
       } catch (e) {
+        expect(e.message).to.equal('some message');
       }
     });
 
     it('should reject with the raw response if there is a client error', async () => {
-      setFetchResponse(400, { success: false, error: '400' }); 
+      setFetchResponse(400, { success: false, error: 'a message' }); 
 
       try {
         await container.openRemote(`${API}`);
         throw new Error('This test should throw');
       } catch (e) {
+        expect(e.message).to.equal('a message');
       }
     });
     
@@ -84,6 +86,7 @@ describe('Container', () => {
         await container.openRemote(`${API}`);
         throw new Error('This test should throw');
       } catch (e) {
+        expect(e.message).to.equal('not found');
       }
     });
   });
