@@ -210,15 +210,12 @@ export class Container extends PluginManager {
         'Content-Type': 'application/json'
       }
     })
-      .then(response => {
-        console.log('RESPONSE:', response.status);
-        if (response.status >= 400) {
-          return Promise.reject(new Error(response.statusText));
+      .then(response => response.json())
+      .then(json => {
+        if (!json.success) {
+          return Promise.reject(new Error(json.error));
         }
 
-        return response.json();
-      })
-      .then(json => {
         const release = json.data;
         const error = Features.test(release.capabilities);
         if (error) {
