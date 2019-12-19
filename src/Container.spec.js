@@ -43,10 +43,14 @@ describe('Container', () => {
 
   describe('.openRemote()', () => {
     const API = 'http://localhost:3000';
-    const stubbedFetch = sinon.stub(window, 'fetch');
+    let stubbedFetch;
+
+    beforeEach(() => {
+      stubbedFetch = sinon.stub(window, 'fetch');
+    });
 
     afterEach(() => {
-      stubbedFetch.reset();
+      sinon.restore();
     });
 
     const setFetchResponse = (code, value) => {
