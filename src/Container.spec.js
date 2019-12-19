@@ -78,7 +78,7 @@ describe('Container', () => {
     });
     
     it('should reject with the raw response if the release does not exist', async () => {
-      setFetchResponse(400, { success: false, error: '400' }); 
+      setFetchResponse(404, { success: false, error: 'not found' }); 
 
       try {
         await container.openRemote(`${API}`);
