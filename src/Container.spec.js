@@ -122,9 +122,26 @@ describe('Container', () => {
           expect(e.message).to.equal('oops');
         }
       });
+
+      it('should open the iframe appropriately if the api call succeeded and every feature was detected', async () => {
+        setFetchResponse(200, {
+          success: true,
+          data: {
+            features: {},
+            url: 'https://example.com/'
+          }
+        });
+
+        featuresStub.returns('');
+
+        container.iframe = document.createElement('iframe');
+
+        await container.openRemote(`${API}`);
+
+        expect(container.iframe.src).to.equal('https://example.com/');
+      });
     });
   });
-
   it('.destroy()', () => {
     container.destroy();
     expect(container.iframe).to.be.null;
