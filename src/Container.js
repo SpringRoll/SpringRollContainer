@@ -204,7 +204,6 @@ export class Container extends PluginManager {
   ) {
     this.release = null;
 
-    console.log('FETCHING API:', api);
     return fetch(api, {
       headers: {
         'Content-Type': 'application/json'
