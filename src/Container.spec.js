@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { Container, BasePlugin } from './index';
+import { Container, BasePlugin, Features } from './index';
 
 document.body.innerHTML = '';
 const iframe = document.createElement('iframe');
@@ -92,6 +92,36 @@ describe('Container', () => {
       } catch (e) {
         expect(e.message).to.equal('not found');
       }
+    });
+
+    describe('feature detection', () => {
+      let featuresStub;
+
+      beforeEach(() => {
+        featuresStub = sinon.stub(Features, 'test');
+      });
+
+      afterEach(() => {
+        sinon.restore();
+      });
+
+      it('should reject if there was an error testing features', async () => {
+        setFetchResponse(200, {
+          success: true,
+          data: {
+            features: {}
+          }
+        }); 
+
+        featuresStub.returns('oops');
+
+        try {
+          await container.openRemote(`${API}`);
+          throw new Error('This should throw');
+        } catch (e) {
+          expect(e.message).to.equal('oops');
+        }
+      });
     });
   });
 
