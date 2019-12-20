@@ -214,7 +214,7 @@ export class Container extends PluginManager {
 
     // if SpringRollConnect denoted that something failed, send that error back
     if (!json.success) {
-      return Promise.reject(new Error(json.error));
+      throw new Error(json.error);
     }
 
     // If the browser doesn't support the capabilities requested by this game, also fail.
@@ -222,7 +222,7 @@ export class Container extends PluginManager {
     const error = Features.test(release.capabilities);
     if (error) {
       this.client.trigger('unsupported', { error });
-      return Promise.reject(new Error(error));
+      throw new Error(error);
     }
 
     // otherwise, open the game
