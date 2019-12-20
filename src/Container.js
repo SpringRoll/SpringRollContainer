@@ -209,16 +209,22 @@ export class Container extends PluginManager {
         'Content-Type': 'application/json'
       }
     })
-      .then(response =>
-        200 !== response.status ? Promise.reject(response) : response.json()
-      )
+      .then(response => response.json())
       .then(json => {
+        // if SpringRollConnect denoted that something failed, send that error back
+        if (!json.success) {
+          return Promise.reject(new Error(json.error));
+        }
+
+        // If the browser doesn't support the capabilities requested by this game, also fail.
         const release = json.data;
         const error = Features.test(release.capabilities);
         if (error) {
           this.client.trigger('unsupported', { error });
-          return Promise.reject(json);
+          return Promise.reject(new Error(error));
         }
+
+        // otherwise, open the game
         this.release = release;
         this._internalOpen(release.url + query, {
           singlePlay,
