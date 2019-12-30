@@ -97,12 +97,11 @@ describe('Features', () => {
     Features.basic();
   });
 
-  it('.test()', () => {
-    const testData = {
-      features: {
-        geolocation: 'geolocation',
-        webWorkers: 'webworkers',
-        webSockets: 'websockets'
+  describe('test', () => {
+    const defaultCapabilities = {
+      features: {},
+      ui: {
+        touch: true
       },
       sizes: {
         xsmall: true,
@@ -110,14 +109,72 @@ describe('Features', () => {
         medium: true,
         large: true,
         xlarge: true
-      },
-      ui: {
-        touch: true,
-        mouse: true
       }
     };
 
-    Features.test(testData);
+    it('should run properly', () => {
+      const testData = Object.assign({}, defaultCapabilities);
+      Features.test(testData);
+    });
+
+    it('should return an error if basic compatibility is not supported', () => {
+      sinon.stub(Features, 'basic').returns('oops');
+      expect(Features.test({})).to.equal('oops');
+    });
+
+    describe('features', () => {
+      it('should return an error if a capability is required that is not supported', () => {
+        const capabilities = Object.assign({}, defaultCapabilities, {
+          features: {
+            websockets: true
+          }
+        });
+
+        sinon.stub(Features, 'websockets').get(() => false);
+
+        expect(Features.test(capabilities)).to.equal('Browser does not support websockets');
+      });
+
+      it('should not return an error if an unsupported capability is not required', () => {
+        const capabilities = Object.assign({}, defaultCapabilities, {
+          features: {
+            websockets: false
+          }
+        });
+
+        sinon.stub(Features, 'websockets').get(() => false);
+
+        expect(Features.test(capabilities)).to.equal(null);
+      });
+    });
+
+    describe('ui', () => {
+      describe('touch', () => {
+        it('should return an error if the browser supports touch but the game does not support it', () => {
+          sinon.stub(Features, 'touch').get(() => true);
+          
+          const capabilities = {
+            features: {},
+            ui: {},
+            size: {}
+          };
+
+          expect(Features.test(capabilities)).to.equal('Game does not support touch input');
+        });
+
+        it('should not return an error if the game supports touch but the browser does not', () => {
+          sinon.stub(Features, 'touch').get(() => false);
+
+          const capabilities = Object.assign({}, defaultCapabilities, {
+            ui: {
+              touch: true
+            }
+          });
+
+          expect(Features.test(capabilities)).to.equal(null);
+        });
+      });
+    });
   });
 
   it('.info()', () => {

@@ -118,7 +118,7 @@ export class Features {
     const sizes = capabilities.sizes;
 
     for (const name in features) {
-      if ('undefined' !== typeof features[name] && !Features[name]) {
+      if (features[name] === true && !Features[name]) {
         // Failed built-in feature check
         return 'Browser does not support ' + name;
       }
@@ -127,11 +127,6 @@ export class Features {
     // Failed negative touch requirement
     if (!ui.touch && Features.touch) {
       return 'Game does not support touch input';
-    }
-
-    // Failed mouse requirement
-    if (!ui.mouse && !Features.touch) {
-      return 'Game does not support mouse input';
     }
 
     // Check the sizes
