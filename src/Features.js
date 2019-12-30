@@ -103,7 +103,6 @@ export class Features {
    * @param {Boolean} [capabilities.sizes.xlarge] Screens >= 1200
    * @param {object} [capabilities.ui] The ui
    * @param {Boolean} [capabilities.ui.touch] Touch capable
-   * @param {Boolean} [capabilities.ui.mouse] Mouse capable
    * @return {String|null} The error, or else returns null
    */
   static test(capabilities) {
