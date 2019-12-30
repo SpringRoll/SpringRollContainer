@@ -22,7 +22,7 @@ export class Features {
    */
   static get canvas() {
     const canvas = document.createElement('canvas');
-    return !!(canvas.getContext && canvas.getContext('2d'));
+    return !!(canvas !== null && canvas.getContext && canvas.getContext('2d'));
   }
 
   /**

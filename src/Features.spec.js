@@ -46,8 +46,31 @@ describe('Features', () => {
     });
   });
 
-  it('.canvas()', () => {
-    expect(Features.canvas).to.be.a('boolean');
+  describe('canvas', () => {
+    it('should return false if the canvas element is not supported', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      stubbedCall.returns(null);
+
+      expect(Features.canvas).to.equal(false);
+    });
+
+    it('should return false if the getContext(2d) is not supported', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      const getContextStub = sinon.stub();
+      getContextStub.withArgs('2d').returns(null);
+      stubbedCall.returns({ getContext: getContextStub });
+
+      expect(Features.canvas).to.equal(false);
+    });
+
+    it('should return true if getContext(2d) returns something', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      const getContextStub = sinon.stub();
+      getContextStub.withArgs('2d').returns({});
+      stubbedCall.returns({ getContext: getContextStub });
+
+      expect(Features.canvas).to.equal(true);
+    });
   });
 
   it('.webAudio()', () => {
