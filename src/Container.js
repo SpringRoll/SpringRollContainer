@@ -204,33 +204,33 @@ export class Container extends PluginManager {
   ) {
     this.release = null;
 
-    return fetch(api, {
+    const response = await fetch(api, {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-      .then(response => response.json())
-      .then(json => {
-        // if SpringRollConnect denoted that something failed, send that error back
-        if (!json.success) {
-          return Promise.reject(new Error(json.error));
-        }
+    });
 
-        // If the browser doesn't support the capabilities requested by this game, also fail.
-        const release = json.data;
-        const error = Features.test(release.capabilities);
-        if (error) {
-          this.client.trigger('unsupported', { error });
-          return Promise.reject(new Error(error));
-        }
+    const json = await response.json();
 
-        // otherwise, open the game
-        this.release = release;
-        this._internalOpen(release.url + query, {
-          singlePlay,
-          playOptions
-        });
-      });
+    // if SpringRollConnect denoted that something failed, send that error back
+    if (!json.success) {
+      throw new Error(json.error);
+    }
+
+    // If the browser doesn't support the capabilities requested by this game, also fail.
+    const release = json.data;
+    const error = Features.test(release.capabilities);
+    if (error) {
+      this.client.trigger('unsupported', { error });
+      throw new Error(error);
+    }
+
+    // otherwise, open the game
+    this.release = release;
+    this._internalOpen(release.url + query, {
+      singlePlay,
+      playOptions
+    });
   }
 
   /**
