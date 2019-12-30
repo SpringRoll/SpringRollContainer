@@ -22,15 +22,28 @@ describe('Features', () => {
       getContextStub.withArgs('experimental-webgl').returns(null);
       stubbedCall.returns({ getContext: getContextStub });
 
-      const canvas = document.createElement('canvas');
-      console.log('getContext(webgl)', canvas.getContext('webgl'));
+      expect(Features.webgl).to.equal(true);
+    });
+
+    it('should return true if getContext(experimental-webgl) returns something', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      const getContextStub = sinon.stub();
+      getContextStub.withArgs('webgl').returns(null);
+      getContextStub.withArgs('experimental-webgl').returns({});
+      stubbedCall.returns({ getContext: getContextStub });
 
       expect(Features.webgl).to.equal(true);
     });
 
-    it('should return true if getContext(experimental-webgl) returns something');
+    it('should return false if getContext(webl) and getContext(experimental-webgl) dont return anything', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      const getContextStub = sinon.stub();
+      getContextStub.withArgs('webgl').returns(null);
+      getContextStub.withArgs('experimental-webgl').returns(null);
+      stubbedCall.returns({ getContext: getContextStub });
 
-    it('should return false if getContext(webl) and getContext(experimental-webgl) dont return anything');
+      expect(Features.webgl).to.equal(false);
+    });
   });
 
   it('.canvas()', () => {
