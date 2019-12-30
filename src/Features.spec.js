@@ -1,8 +1,36 @@
+import sinon from 'sinon';
+
 import { Features } from './Features';
 
 describe('Features', () => {
-  it('.webgl()', () => {
-    expect(Features.webgl).to.be.a('boolean');
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  describe('webgl', () => {
+    it('should return false if the canvas element is not supported', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      stubbedCall.returns(null);
+
+      expect(Features.webgl).to.equal(false);
+    });
+
+    it('should return true if getContext(webgl) returns something', () => {
+      const stubbedCall = sinon.stub(document, 'createElement');
+      const getContextStub = sinon.stub();
+      getContextStub.withArgs('webgl').returns({});
+      getContextStub.withArgs('experimental-webgl').returns(null);
+      stubbedCall.returns({ getContext: getContextStub });
+
+      const canvas = document.createElement('canvas');
+      console.log('getContext(webgl)', canvas.getContext('webgl'));
+
+      expect(Features.webgl).to.equal(true);
+    });
+
+    it('should return true if getContext(experimental-webgl) returns something');
+
+    it('should return false if getContext(webl) and getContext(experimental-webgl) dont return anything');
   });
 
   it('.canvas()', () => {
