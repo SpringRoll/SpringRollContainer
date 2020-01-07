@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import { Features } from './Features';
 import PluginManager from './PluginManager';
 // @ts-ignore
