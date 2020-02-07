@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
-    "bellhop-iframe": "^3.0.0",
+    "bellhop-iframe": "^3.2.0",
     "core-js": "^3.0.1",
     "whatwg-fetch": "^3.0.0"
   },
