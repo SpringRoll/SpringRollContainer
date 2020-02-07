@@ -35,7 +35,7 @@ export class Features {
 
   /**
    * If the browser has HTMLAudio support
-   * @property {boolean} canvas
+   * @property {boolean} htmlAudio
    */
   static get htmlAudio() {
     return 'HTMLAudioElement' in window;
