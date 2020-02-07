@@ -34,6 +34,14 @@ export class Features {
   }
 
   /**
+   * If the browser has HTMLAudio support
+   * @property {boolean} canvas
+   */
+  static get htmlAudio() {
+    return 'HTMLAudioElement' in window;
+  }
+
+  /**
    * If the browser has Web Sockets API
    * @property {boolean} websockets
    */
@@ -78,8 +86,8 @@ export class Features {
   static basic() {
     if (!Features.canvas) {
       return 'Browser does not support canvas';
-    } else if (!Features.webaudio) {
-      return 'Browser does not support WebAudio';
+    } else if (!Features.webaudio && !Features.htmlAudio) {
+      return 'Browser does not support WebAudio or HTMLAudio';
     }
     return null;
   }
