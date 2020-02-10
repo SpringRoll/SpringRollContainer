@@ -25,7 +25,7 @@ export class ButtonPlugin extends BasePlugin {
    * @memberof ButtonPlugin
    * @param {Container} [container]
    */
-  setup(container) {
+  init(container) {
     // eslint-disable-line no-unused-vars
     this.sendMutes = true;
   }
