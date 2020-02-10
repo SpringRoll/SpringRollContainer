@@ -21,8 +21,8 @@ describe('ButtonPlugin', () => {
     expect(bp.sendMutes).to.be.false;
   });
 
-  it('.setup()', () => {
-    bp.setup();
+  it('.init()', () => {
+    bp.init();
     expect(bp.sendMutes).to.be.true;
   });
 
