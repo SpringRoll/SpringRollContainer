@@ -20,7 +20,7 @@ export class UserDataPlugin extends BasePlugin {
    *
    * @memberof UserDataPlugin
    */
-  open() {
+  init() {
     this.client.on('userDataRemove', this.onUserDataRemove.bind(this));
     this.client.on('userDataRead', this.onUserDataRead.bind(this));
     this.client.on('userDataWrite', this.onUserDataWrite.bind(this));
