@@ -1,13 +1,6 @@
 import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
-const POINTER_SLIDER_MIN = 0.01;
-const POINTER_SLIDER_STEP = 0.01;
-const POINTER_SLIDER_MAX = 1;
-const BUTTON_SLIDER_MIN = 0.1;
-const BUTTON_SLIDER_MAX = 1;
-const BUTTON_SLIDER_STEP = 0.1;
-
 /**
  * @export
  * @class UISizePlugin
@@ -20,14 +13,14 @@ export class UISizePlugin extends BasePlugin {
    * @param {object} params
    * @param {string | HTMLElement} [params.pointerSlider]
    * @param {string | HTMLElement} [params.buttonSlider]
-   * @param {number} [params.defaultPointerSize=0.05]
+   * @param {number} [params.defaultPointerSize=0.5]
    * @param {number} [params.defaultButtonSize=0.5]
    * @memberof UISizePlugin
    */
   constructor({
     pointerSlider,
     buttonSlider,
-    defaultPointerSize = 0.05,
+    defaultPointerSize = 0.5,
     defaultButtonSize = 0.5
   } = {}) {
     super('UISize-Button-Plugin');
@@ -38,18 +31,12 @@ export class UISizePlugin extends BasePlugin {
     this.pointerSlider = new Slider({
       slider: pointerSlider,
       control: UISizePlugin.pointerSizeKey,
-      min: POINTER_SLIDER_MIN,
-      max: POINTER_SLIDER_MAX,
-      step: POINTER_SLIDER_STEP,
       defaultValue: this.pointerSize
     });
 
     this.buttonSlider = new Slider({
       slider: buttonSlider,
       control: UISizePlugin.buttonSizeKey,
-      min: BUTTON_SLIDER_MIN,
-      max: BUTTON_SLIDER_MAX,
-      step: BUTTON_SLIDER_STEP,
       defaultValue: this.buttonSize
     });
 

@@ -1,10 +1,6 @@
 import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
-const DIFFICULTY_SLIDER_MIN = 0.1;
-const DIFFICULTY_SLIDER_MAX = 1;
-const DIFFICULTY_SLIDER_STEP = 0.1;
-
 /**
  * @export
  * @class ControlsPlugin
@@ -26,9 +22,6 @@ export class DifficultyPlugin extends BasePlugin {
     this.difficultySlider = new Slider({
       slider: difficultySlider,
       control: DifficultyPlugin.difficultyKey,
-      min: DIFFICULTY_SLIDER_MIN,
-      max: DIFFICULTY_SLIDER_MAX,
-      step: DIFFICULTY_SLIDER_STEP,
       defaultValue: this.difficulty
     });
 

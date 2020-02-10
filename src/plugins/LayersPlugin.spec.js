@@ -48,10 +48,16 @@ describe('LayersPlugin', () => {
     expect(lsp.layersSlider.value).to.equal('1');
     expect(lsp.layerValue).to.equal(1);
 
-    lsp.layersSlider.value = 0.1;
+    lsp.layersSlider.value = 0;
     lsp.layersSlider.dispatchEvent(initEvent('change'));
 
-    expect(lsp.layersSlider.value).to.equal('0.1');
-    expect(lsp.layerValue).to.equal(0.1);
+    expect(lsp.layersSlider.value).to.equal('0');
+    expect(lsp.layerValue).to.equal(0);
+
+    lsp.layersSlider.value = -1;
+    lsp.layersSlider.dispatchEvent(initEvent('change'));
+
+    expect(lsp.layersSlider.value).to.equal('0');
+    expect(lsp.layerValue).to.equal(0);
   });
 });

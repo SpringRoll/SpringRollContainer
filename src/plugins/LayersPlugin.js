@@ -16,9 +16,6 @@ export class LayersPlugin extends BasePlugin {
     this.layersSlider = new Slider({
       slider: layersSlider,
       control: 'removableLayers',
-      min: 0,
-      max: 1,
-      step: 0.01, // 100 possible values, a game would be very unlikely to go over 100 layers.
       defaultValue: 0
     });
 

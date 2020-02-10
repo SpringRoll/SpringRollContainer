@@ -31,17 +31,29 @@ describe('DifficultyPlugin', () => {
 
   it('.onControldifficultyChange()', () => {
     dp.difficultySlider.value = 1;
-
     dp.difficultySlider.dispatchEvent(initEvent('change'));
 
     expect(dp.difficultySlider.value).to.equal('1');
     expect(dp.difficulty).to.equal(1);
 
-    dp.difficultySlider.value = 0.1;
-
+    dp.difficultySlider.value = 0;
     dp.difficultySlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.difficultySlider.value).to.equal('0.1');
-    expect(dp.difficulty).to.equal(0.1);
+    expect(dp.difficultySlider.value).to.equal('0');
+    expect(dp.difficulty).to.equal(0);
+
+
+    dp.difficultySlider.value = 1.1;
+    dp.difficultySlider.dispatchEvent(initEvent('change'));
+
+    expect(dp.difficultySlider.value).to.equal('1');
+    expect(dp.difficulty).to.equal(1);
+
+
+    dp.difficultySlider.value = -1;
+    dp.difficultySlider.dispatchEvent(initEvent('change'));
+
+    expect(dp.difficultySlider.value).to.equal('0');
+    expect(dp.difficulty).to.equal(0);
   });
 });
