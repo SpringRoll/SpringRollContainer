@@ -67,7 +67,40 @@ import { SoundPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-UISizePlugin, LayersPlugin, DifficultyPlugin:
+DifficultyPlugin:
+```javascript
+import { DifficultyPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      //The DifficultyPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user
+      //DifficultyPlugin also accepts an [optional] initial value for its difficulty types
+      new SoundPlugin({
+        //Sliders expect an HTML Input Element of type="range"
+        hitAreaScaleSlider: '#hitAreaScaleSlider',
+        //All difficulty values run 0.0 to 1.0. Default = 0.5
+        defaultHitAreaScale = 0.5,
+        dragThresholdScaleSlider: '#dragThresholdScaleSlider',
+        defaultDragThresholdScale = 0.5,
+        healthSlider: '#healthSlider',
+        defaultHealth = 0.5,
+        objectCountSlider: '#objectCountSlider',
+        defaultObjectCount = 0.5,
+        completionPercentageSlider: '#completionPercentageSlider',
+        defaultCompletionPercentage = 0.5,
+        speedScaleSlider: '#speedScaleSlider',
+        defaultSpeedScale = 0.5,
+        timersScaleSlider: '#timersScaleSlider',
+        defaultTimersScale = 0.5,
+        inputCountSlider: '#inputCountSlider',
+        defaultInputCount = 0.5,
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+UISizePlugin, LayersPlugin:
 ```javascript
 import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springroll-container';
 
@@ -92,14 +125,6 @@ import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springr
 
         //Expects an HTML Input Element of type="range"
         layersSlider: '#layers-slider-selector' // goes from 0.0 to 1.0
-      }),
-
-      //DifficultyPlugin controls the difficulty/speed of the game.
-      new DifficultyPlugin({
-
-        //Expects an HTML Input Element of type="range"
-        difficultySlider: '#difficulty-slider-selector',
-        defaultDifficulty: 0.5 // goes from 0.0 to 1.0. Default = 0.5
       }),
     ]
   });
