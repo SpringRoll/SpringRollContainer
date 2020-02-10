@@ -74,23 +74,32 @@ import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springr
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+
       //UISizePlugin also accepts an [optional] initial value for its two options
       new UISizePlugin({
+
+        //Expects an HTML Input Element of type="range"
         pointerSlider: '#pointer-slider-selector', //controls the size of the pointer
-        pointerSize: 0.05, //pointer size goes from 0.01 to 1.00 (2 points of precision) default = 0.05
+        pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
+
+        //Expects an HTML Input Element of type="range"
         buttonSlider: '#button-slider-selector', //controls the size of UI buttons
-        buttonSize: 0.5, // button size goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+        buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
       }),
+
       //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
       new LayersPlugin({
+
         //Expects an HTML Input Element of type="range"
-        layersSlider: '#layers-slider-selector' // goes from 0.00 to 1.00 (two points of precision)
+        layersSlider: '#layers-slider-selector' // goes from 0.0 to 1.0
       }),
+
       //DifficultyPlugin controls the difficulty/speed of the game.
       new DifficultyPlugin({
+
         //Expects an HTML Input Element of type="range"
         difficultySlider: '#difficulty-slider-selector',
-        defaultDifficulty: 0.5 // goes from 0.1 to 1.0 (one points of precision). Default = 0.5
+        defaultDifficulty: 0.5 // goes from 0.0 to 1.0. Default = 0.5
       }),
     ]
   });
@@ -105,8 +114,10 @@ import { HUDPlugin, Container } from 'springroll-container';
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+
       //HUDPlugin expects a button element/selector string
       new HUDPlugin({
+
         hudSelectorButton: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
       }),
     ]
@@ -123,10 +134,14 @@ import { ControlsPlugin, Container } from 'springroll-container';
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+
       //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
       new ControlsPlugin({
+
+        //Expects an HTML Input Element of type="range"
         sensitivitySlider: '#sensitivity-slider-selector',
-        defaultSensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+        defaultSensitivity: 0.5, //control sensitivity goes from 0.0 to 1.0. Default = 0.5
+
         keyContainer: '#key-container', // container element that will contain the mappable key buttons.
       }),
     ]
