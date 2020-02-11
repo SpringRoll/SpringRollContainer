@@ -1,3 +1,5 @@
+import 'whatwg-fetch';
+
 import { Features } from './Features';
 import PluginManager from './PluginManager';
 // @ts-ignore
@@ -204,27 +206,33 @@ export class Container extends PluginManager {
   ) {
     this.release = null;
 
-    return fetch(api, {
+    const response = await fetch(api, {
       headers: {
         'Content-Type': 'application/json'
       }
-    })
-      .then(response =>
-        200 !== response.status ? Promise.reject(response) : response.json()
-      )
-      .then(json => {
-        const release = json.data;
-        const error = Features.test(release.capabilities);
-        if (error) {
-          this.client.trigger('unsupported', { error });
-          return Promise.reject(json);
-        }
-        this.release = release;
-        this._internalOpen(release.url + query, {
-          singlePlay,
-          playOptions
-        });
-      });
+    });
+
+    const json = await response.json();
+
+    // if SpringRollConnect denoted that something failed, send that error back
+    if (!json.success) {
+      throw new Error(json.error);
+    }
+
+    // If the browser doesn't support the capabilities requested by this game, also fail.
+    const release = json.data;
+    const error = Features.test(release.capabilities);
+    if (error) {
+      this.client.trigger('unsupported', { error });
+      throw new Error(error);
+    }
+
+    // otherwise, open the game
+    this.release = release;
+    this._internalOpen(release.url + query, {
+      singlePlay,
+      playOptions
+    });
   }
 
   /**

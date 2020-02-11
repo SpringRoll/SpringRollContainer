@@ -20,7 +20,7 @@ export class UserDataPlugin extends BasePlugin {
    *
    * @memberof UserDataPlugin
    */
-  open() {
+  init() {
     this.client.on('userDataRemove', this.onUserDataRemove.bind(this));
     this.client.on('userDataRead', this.onUserDataRead.bind(this));
     this.client.on('userDataWrite', this.onUserDataWrite.bind(this));
@@ -51,7 +51,7 @@ export class UserDataPlugin extends BasePlugin {
    * @method onUserDataWrite
    * @private
    */
-  onUserDataWrite({ data: { name, value, type } }) {
+  onUserDataWrite({ type, data: { name, value } }) {
     SavedDataHandler.write(name, value, () => this.client.send(type));
   }
 }

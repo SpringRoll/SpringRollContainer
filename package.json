@@ -40,11 +40,12 @@
     "rollup-plugin-eslint": "^5.1.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^4.2.3",
-    "rollup-plugin-terser": "^4.0.4"
+    "rollup-plugin-terser": "^4.0.4",
+    "sinon": "^7.5.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
-    "bellhop-iframe": "^3.0.0",
+    "bellhop-iframe": "^3.2.0",
     "core-js": "^3.0.1",
     "whatwg-fetch": "^3.0.0"
   },

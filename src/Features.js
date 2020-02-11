@@ -22,7 +22,7 @@ export class Features {
    */
   static get canvas() {
     const canvas = document.createElement('canvas');
-    return !!(canvas.getContext && canvas.getContext('2d'));
+    return !!(canvas !== null && canvas.getContext && canvas.getContext('2d'));
   }
 
   /**
@@ -31,6 +31,14 @@ export class Features {
    */
   static get webaudio() {
     return 'webkitAudioContext' in window || 'AudioContext' in window;
+  }
+
+  /**
+   * If the browser has HTMLAudio support
+   * @property {boolean} htmlAudio
+   */
+  static get htmlAudio() {
+    return 'HTMLAudioElement' in window;
   }
 
   /**
@@ -78,8 +86,8 @@ export class Features {
   static basic() {
     if (!Features.canvas) {
       return 'Browser does not support canvas';
-    } else if (!Features.webaudio) {
-      return 'Browser does not support WebAudio';
+    } else if (!Features.webaudio && !Features.htmlAudio) {
+      return 'Browser does not support WebAudio or HTMLAudio';
     }
     return null;
   }
@@ -103,7 +111,6 @@ export class Features {
    * @param {Boolean} [capabilities.sizes.xlarge] Screens >= 1200
    * @param {object} [capabilities.ui] The ui
    * @param {Boolean} [capabilities.ui.touch] Touch capable
-   * @param {Boolean} [capabilities.ui.mouse] Mouse capable
    * @return {String|null} The error, or else returns null
    */
   static test(capabilities) {
@@ -118,7 +125,7 @@ export class Features {
     const sizes = capabilities.sizes;
 
     for (const name in features) {
-      if ('undefined' !== typeof features[name] && !Features[name]) {
+      if (features[name] === true && !Features[name]) {
         // Failed built-in feature check
         return 'Browser does not support ' + name;
       }
@@ -127,11 +134,6 @@ export class Features {
     // Failed negative touch requirement
     if (!ui.touch && Features.touch) {
       return 'Game does not support touch input';
-    }
-
-    // Failed mouse requirement
-    if (!ui.mouse && !Features.touch) {
-      return 'Game does not support mouse input';
     }
 
     // Check the sizes

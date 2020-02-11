@@ -15,7 +15,6 @@ type testOptions = {
   }
   ui?: {
     touch: boolean;
-    mouse: boolean;
   }
 };
 export class Features {
