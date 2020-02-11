@@ -132,14 +132,6 @@ export class DifficultyPlugin extends BasePlugin {
         if (!features.data) {
           return;
         }
-        this.hitAreaScaleSlider.displaySlider(features.data);
-        this.dragThresholdScaleSlider.displaySlider(features.data);
-        this.healthSlider.displaySlider(features.data);
-        this.objectCountSlider.displaySlider(features.data);
-        this.completionPercentageSlider.displaySlider(features.data);
-        this.speedScaleSlider.displaySlider(features.data);
-        this.timersScaleSlider.displaySlider(features.data);
-        this.inputCountSlider.displaySlider(features.data);
 
         Object.keys(this.sliders).forEach(key => {
           this.sliders[key].displaySlider(features.data);
