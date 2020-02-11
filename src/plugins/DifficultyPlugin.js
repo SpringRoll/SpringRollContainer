@@ -115,7 +115,6 @@ export class DifficultyPlugin extends BasePlugin {
    * @memberof ControlsPlugin
    */
   onDifficultyChange(control) {
-    console.log(this.sliders);
     this.values[control] = this.sliders[`${control}Slider`].sliderRange(
       Number(this.sliders[`${control}Slider`].slider.value)
     );
