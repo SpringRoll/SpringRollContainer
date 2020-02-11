@@ -51,7 +51,7 @@ export class UserDataPlugin extends BasePlugin {
    * @method onUserDataWrite
    * @private
    */
-  onUserDataWrite({ data: { name, value, type } }) {
+  onUserDataWrite({ type, data: { name, value } }) {
     SavedDataHandler.write(name, value, () => this.client.send(type));
   }
 }
