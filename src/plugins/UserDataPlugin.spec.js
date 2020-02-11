@@ -16,7 +16,8 @@ describe('UserDataPlugin', () => {
   });
   it('.onUserDataWrite()', () => {
     udp.onUserDataWrite({
-      data: { name: 't', value: true, type: 'test-data' }
+      type: 'test-data',
+      data: { name: 't', value: true,  }
     });
   });
 });
