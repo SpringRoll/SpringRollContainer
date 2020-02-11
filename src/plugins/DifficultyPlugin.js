@@ -140,6 +140,10 @@ export class DifficultyPlugin extends BasePlugin {
         this.speedScaleSlider.displaySlider(features.data);
         this.timersScaleSlider.displaySlider(features.data);
         this.inputCountSlider.displaySlider(features.data);
+
+        Object.keys(this.sliders).forEach(key => {
+          this.sliders[key].displaySlider(features.data);
+        });
       }.bind(this)
     );
   }
