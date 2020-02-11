@@ -34,177 +34,94 @@ export class DifficultyPlugin extends BasePlugin {
   } = {}) {
     super('Difficulty-Plugin');
 
-    this.hitAreaScale = defaultHitAreaScale;
-    this.dragThresholdScale = defaultDragThresholdScale;
-    this.health = defaultHealth;
-    this.objectCount = defaultObjectCount;
-    this.completionPercentage = defaultCompletionPercentage;
-    this.speedScale = defaultSpeedScale;
-    this.timersScale = defaultTimersScale;
-    this.inputCount = defaultInputCount;
+    this.values = {
+      hitAreaScale: defaultHitAreaScale,
+      dragThresholdScale: defaultDragThresholdScale,
+      health: defaultHealth,
+      objectCount: defaultObjectCount,
+      completionPercentage: defaultCompletionPercentage,
+      speedScale: defaultSpeedScale,
+      timersScale: defaultTimersScale,
+      inputCount: defaultInputCount,
+    };
 
-    //Hit Area Scale
-    this.hitAreaScaleSlider = new Slider({
-      slider: hitAreaScaleSlider,
-      control: DifficultyPlugin.hitAreaKey,
-      defaultValue: this.hitAreaScale
+    this.sliders = {
+      //Hit Area Scale
+      hitAreaScaleSlider: new Slider({
+        slider: hitAreaScaleSlider,
+        control: DifficultyPlugin.hitAreaScaleKey,
+        defaultValue: this.hitAreaScale
+      }),
+
+      //Drag Threshold Scale
+      dragThresholdScaleSlider: new Slider({
+        slider: dragThresholdScaleSlider,
+        control: DifficultyPlugin.dragThresholdScaleKey,
+        defaultValue: this.dragThresholdScale
+      }),
+
+      //Health
+      healthSlider: new Slider({
+        slider: healthSlider,
+        control: DifficultyPlugin.healthKey,
+        defaultValue: this.health
+      }),
+
+      //Object Count
+      objectCountSlider: new Slider({
+        slider: objectCountSlider,
+        control: DifficultyPlugin.objectCountKey,
+        defaultValue: this.objectCount
+      }),
+
+      //Completion Percentage
+      completionPercentageSlider: new Slider({
+        slider: completionPercentageSlider,
+        control: DifficultyPlugin.completionPercentageKey,
+        defaultValue: this.completionPercentage
+      }),
+
+      //Speed Scale
+      speedScaleSlider: new Slider({
+        slider: speedScaleSlider,
+        control: DifficultyPlugin.speedScaleKey,
+        defaultValue: this.speedScale
+      }),
+
+      //Timer Scale
+      timersScaleSlider: new Slider({
+        slider: timersScaleSlider,
+        control: DifficultyPlugin.timersScaleKey,
+        defaultValue: this.timersScale
+      }),
+
+      //Input Count
+      inputCountSlider: new Slider({
+        slider: inputCountSlider,
+        control: DifficultyPlugin.inputCountKey,
+        defaultValue: this.inputCount
+      }),
+
+    };
+
+    Object.keys(this.sliders).forEach(key => {
+      this.sliders[key].enableSliderEvents(() => {
+        this.onDifficultyChange(this.sliders[key].control);
+      });
     });
-
-    this.hitAreaScaleSlider.enableSliderEvents(
-      this.onHitAreaScaleChange.bind(this)
-    );
-
-    //Drag Threshold Scale
-    this.dragThresholdScaleSlider = new Slider({
-      slider: dragThresholdScaleSlider,
-      control: DifficultyPlugin.dragThresholdScaleKey,
-      defaultValue: this.dragThresholdScale
-    });
-
-    this.dragThresholdScaleSlider.enableSliderEvents(
-      this.onDragThresholdScaleChange.bind(this)
-    );
-
-    //Health
-    this.healthSlider = new Slider({
-      slider: healthSlider,
-      control: DifficultyPlugin.healthKey,
-      defaultValue: this.health
-    });
-
-    this.healthSlider.enableSliderEvents(
-      this.onHealthChange.bind(this)
-    );
-
-    //Object Count
-    this.objectCountSlider = new Slider({
-      slider: objectCountSlider,
-      control: DifficultyPlugin.objectCountKey,
-      defaultValue: this.objectCount
-    });
-
-    this.objectCountSlider.enableSliderEvents(
-      this.onObjectCountChange.bind(this)
-    );
-
-    //Completion Percentage
-    this.completionPercentageSlider = new Slider({
-      slider: completionPercentageSlider,
-      control: DifficultyPlugin.completionPercentageKey,
-      defaultValue: this.completionPercentage
-    });
-
-    this.completionPercentageSlider.enableSliderEvents(
-      this.onCompletionPercentageChange.bind(this)
-    );
-
-    //Speed Scale
-    this.speedScaleSlider = new Slider({
-      slider: speedScaleSlider,
-      control: DifficultyPlugin.speedScaleKey,
-      defaultValue: this.speedScale
-    });
-
-    this.speedScaleSlider.enableSliderEvents(
-      this.onSpeedScaleChange.bind(this)
-    );
-
-    //Timer Scale
-    this.timersScaleSlider = new Slider({
-      slider: timersScaleSlider,
-      control: DifficultyPlugin.timersScaleKey,
-      defaultValue: this.timersScale
-    });
-
-    this.timersScaleSlider.enableSliderEvents(
-      this.onTimersScaleChange.bind(this)
-    );
-
-    //Input Count
-    this.inputCountSlider = new Slider({
-      slider: inputCountSlider,
-      control: DifficultyPlugin.inputCountKey,
-      defaultValue: this.inputCount
-    });
-
-    this.inputCountSlider.enableSliderEvents(
-      this.onInputCountChange.bind(this)
-    );
-
   }
 
   /**
    * @memberof ControlsPlugin
    */
-  onHitAreaScaleChange() {
-    this.hitAreaScale = this.hitAreaScaleSlider.sliderRange(
-      Number(this.hitAreaScaleSlider.slider.value)
+  onDifficultyChange(control) {
+    console.log(this.sliders);
+    this.values[control] = this.sliders[`${control}Slider`].sliderRange(
+      Number(this.sliders[`${control}Slider`].slider.value)
     );
-    this.sendProperty(DifficultyPlugin.hitAreaScaleKey, this.hitAreaScale);
+    this.sendProperty(DifficultyPlugin[`${control}Key`], this.values[control]);
   }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onDragThresholdScaleChange() {
-    this.dragThresholdScale = this.dragThresholdScaleSlider.sliderRange(
-      Number(this.dragThresholdScaleSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.dragThresholdScaleKey, this.dragThresholdScale);
-  }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onHealthChange() {
-    this.health = this.healthSlider.sliderRange(
-      Number(this.healthSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.healthKey, this.health);
-  }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onObjectCountChange() {
-    this.objectCount = this.objectCountSlider.sliderRange(
-      Number(this.objectCountSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.objectCountKey, this.objectCount);
-  }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onCompletionPercentageChange() {
-    this.completionPercentage = this.completionPercentageSlider.sliderRange(
-      Number(this.completionPercentageSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.completionPercentageKey, this.completionPercentage);
-  }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onSpeedScaleChange() {
-    this.speedScale = this.speedScaleSlider.sliderRange(
-      Number(this.speedScaleSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.speedScaleKey, this.speedScale);
-  }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onTimersScaleChange() {
-    this.timersScale = this.timersScaleSlider.sliderRange(
-      Number(this.timersScaleSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.timersScaleKey, this.timersScale);
-  }
-  /**
-   * @memberof ControlsPlugin
-   */
-  onInputCountChange() {
-    this.inputCount = this.inputCountSlider.sliderRange(
-      Number(this.inputCountSlider.slider.value)
-    );
-    this.sendProperty(DifficultyPlugin.inputCountKey, this.inputCount);
-  }
+
 
   /**
    * @memberof ControlsPlugin
@@ -216,7 +133,14 @@ export class DifficultyPlugin extends BasePlugin {
         if (!features.data) {
           return;
         }
-        this.difficultySlider.displaySlider(features.data);
+        this.hitAreaScaleSlider.displaySlider(features.data);
+        this.dragThresholdScaleSlider.displaySlider(features.data);
+        this.healthSlider.displaySlider(features.data);
+        this.objectCountSlider.displaySlider(features.data);
+        this.completionPercentageSlider.displaySlider(features.data);
+        this.speedScaleSlider.displaySlider(features.data);
+        this.timersScaleSlider.displaySlider(features.data);
+        this.inputCountSlider.displaySlider(features.data);
       }.bind(this)
     );
   }

@@ -43,210 +43,210 @@ describe('DifficultyPlugin', () => {
   });
 
   it('.onHitAreaScaleChange()', () => {
-    dp.hitAreaScaleSlider.value = 1;
-    dp.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.hitAreaScaleSlider.value = 1;
+    dp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.hitAreaScaleSlider.value).to.equal('1');
-    expect(dp.hitAreaScale).to.equal(1);
+    expect(dp.sliders.hitAreaScaleSlider.value).to.equal('1');
+    expect(dp.values.hitAreaScale).to.equal(1);
 
-    dp.hitAreaScaleSlider.value = 0;
-    dp.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.hitAreaScaleSlider.value = 0;
+    dp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.hitAreaScaleSlider.value).to.equal('0');
-    expect(dp.hitAreaScale).to.equal(0);
+    expect(dp.sliders.hitAreaScaleSlider.value).to.equal('0');
+    expect(dp.values.hitAreaScale).to.equal(0);
 
-    dp.hitAreaScaleSlider.value = 1.1;
-    dp.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.hitAreaScaleSlider.value = 1.1;
+    dp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.hitAreaScaleSlider.value).to.equal('1');
-    expect(dp.hitAreaScale).to.equal(1);
+    expect(dp.sliders.hitAreaScaleSlider.value).to.equal('1');
+    expect(dp.values.hitAreaScale).to.equal(1);
 
-    dp.hitAreaScaleSlider.value = -1;
-    dp.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.hitAreaScaleSlider.value = -1;
+    dp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.hitAreaScaleSlider.value).to.equal('0');
-    expect(dp.hitAreaScale).to.equal(0);
+    expect(dp.sliders.hitAreaScaleSlider.value).to.equal('0');
+    expect(dp.values.hitAreaScale).to.equal(0);
   });
 
   it('.onDragThresholdScaleChange()', () => {
-    dp.dragThresholdScaleSlider.value = 1;
-    dp.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.dragThresholdScaleSlider.value = 1;
+    dp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.dragThresholdScaleSlider.value).to.equal('1');
-    expect(dp.dragThresholdScale).to.equal(1);
+    expect(dp.sliders.dragThresholdScaleSlider.value).to.equal('1');
+    expect(dp.values.dragThresholdScale).to.equal(1);
 
-    dp.dragThresholdScaleSlider.value = 0;
-    dp.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.dragThresholdScaleSlider.value = 0;
+    dp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.dragThresholdScaleSlider.value).to.equal('0');
-    expect(dp.dragThresholdScale).to.equal(0);
+    expect(dp.sliders.dragThresholdScaleSlider.value).to.equal('0');
+    expect(dp.values.dragThresholdScale).to.equal(0);
 
-    dp.dragThresholdScaleSlider.value = 1.1;
-    dp.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.dragThresholdScaleSlider.value = 1.1;
+    dp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.dragThresholdScaleSlider.value).to.equal('1');
-    expect(dp.dragThresholdScale).to.equal(1);
+    expect(dp.sliders.dragThresholdScaleSlider.value).to.equal('1');
+    expect(dp.values.dragThresholdScale).to.equal(1);
 
-    dp.dragThresholdScaleSlider.value = -1;
-    dp.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.dragThresholdScaleSlider.value = -1;
+    dp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.dragThresholdScaleSlider.value).to.equal('0');
-    expect(dp.dragThresholdScale).to.equal(0);
+    expect(dp.sliders.dragThresholdScaleSlider.value).to.equal('0');
+    expect(dp.values.dragThresholdScale).to.equal(0);
   });
 
   it('.onHealthChange()', () => {
-    dp.healthSlider.value = 1;
-    dp.healthSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.healthSlider.value = 1;
+    dp.sliders.healthSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.healthSlider.value).to.equal('1');
-    expect(dp.health).to.equal(1);
+    expect(dp.sliders.healthSlider.value).to.equal('1');
+    expect(dp.values.health).to.equal(1);
 
-    dp.healthSlider.value = 0;
-    dp.healthSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.healthSlider.value = 0;
+    dp.sliders.healthSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.healthSlider.value).to.equal('0');
-    expect(dp.health).to.equal(0);
+    expect(dp.sliders.healthSlider.value).to.equal('0');
+    expect(dp.values.health).to.equal(0);
 
-    dp.healthSlider.value = 1.1;
-    dp.healthSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.healthSlider.value = 1.1;
+    dp.sliders.healthSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.healthSlider.value).to.equal('1');
-    expect(dp.health).to.equal(1);
+    expect(dp.sliders.healthSlider.value).to.equal('1');
+    expect(dp.values.health).to.equal(1);
 
-    dp.healthSlider.value = -1;
-    dp.healthSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.healthSlider.value = -1;
+    dp.sliders.healthSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.healthSlider.value).to.equal('0');
-    expect(dp.health).to.equal(0);
+    expect(dp.sliders.healthSlider.value).to.equal('0');
+    expect(dp.values.health).to.equal(0);
   });
 
   it('.onObjectCountChange()', () => {
-    dp.objectCountSlider.value = 1;
-    dp.objectCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.objectCountSlider.value = 1;
+    dp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.objectCountSlider.value).to.equal('1');
-    expect(dp.objectCount).to.equal(1);
+    expect(dp.sliders.objectCountSlider.value).to.equal('1');
+    expect(dp.values.objectCount).to.equal(1);
 
-    dp.objectCountSlider.value = 0;
-    dp.objectCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.objectCountSlider.value = 0;
+    dp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.objectCountSlider.value).to.equal('0');
-    expect(dp.objectCount).to.equal(0);
+    expect(dp.sliders.objectCountSlider.value).to.equal('0');
+    expect(dp.values.objectCount).to.equal(0);
 
-    dp.objectCountSlider.value = 1.1;
-    dp.objectCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.objectCountSlider.value = 1.1;
+    dp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.objectCountSlider.value).to.equal('1');
-    expect(dp.objectCount).to.equal(1);
+    expect(dp.sliders.objectCountSlider.value).to.equal('1');
+    expect(dp.values.objectCount).to.equal(1);
 
-    dp.objectCountSlider.value = -1;
-    dp.objectCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.objectCountSlider.value = -1;
+    dp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.objectCountSlider.value).to.equal('0');
-    expect(dp.objectCount).to.equal(0);
+    expect(dp.sliders.objectCountSlider.value).to.equal('0');
+    expect(dp.values.objectCount).to.equal(0);
   });
 
   it('.onCompletionPercentageChange()', () => {
-    dp.completionPercentageSlider.value = 1;
-    dp.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.completionPercentageSlider.value = 1;
+    dp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.completionPercentageSlider.value).to.equal('1');
-    expect(dp.completionPercentage).to.equal(1);
+    expect(dp.sliders.completionPercentageSlider.value).to.equal('1');
+    expect(dp.values.completionPercentage).to.equal(1);
 
-    dp.completionPercentageSlider.value = 0;
-    dp.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.completionPercentageSlider.value = 0;
+    dp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.completionPercentageSlider.value).to.equal('0');
-    expect(dp.completionPercentage).to.equal(0);
+    expect(dp.sliders.completionPercentageSlider.value).to.equal('0');
+    expect(dp.values.completionPercentage).to.equal(0);
 
-    dp.completionPercentageSlider.value = 1.1;
-    dp.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.completionPercentageSlider.value = 1.1;
+    dp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.completionPercentageSlider.value).to.equal('1');
-    expect(dp.completionPercentage).to.equal(1);
+    expect(dp.sliders.completionPercentageSlider.value).to.equal('1');
+    expect(dp.values.completionPercentage).to.equal(1);
 
-    dp.completionPercentageSlider.value = -1;
-    dp.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.completionPercentageSlider.value = -1;
+    dp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.completionPercentageSlider.value).to.equal('0');
-    expect(dp.completionPercentage).to.equal(0);
+    expect(dp.sliders.completionPercentageSlider.value).to.equal('0');
+    expect(dp.values.completionPercentage).to.equal(0);
   });
 
   it('.onSpeedScaleChange()', () => {
-    dp.speedScaleSlider.value = 1;
-    dp.speedScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.speedScaleSlider.value = 1;
+    dp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.speedScaleSlider.value).to.equal('1');
-    expect(dp.speedScale).to.equal(1);
+    expect(dp.sliders.speedScaleSlider.value).to.equal('1');
+    expect(dp.values.speedScale).to.equal(1);
 
-    dp.speedScaleSlider.value = 0;
-    dp.speedScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.speedScaleSlider.value = 0;
+    dp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.speedScaleSlider.value).to.equal('0');
-    expect(dp.speedScale).to.equal(0);
+    expect(dp.sliders.speedScaleSlider.value).to.equal('0');
+    expect(dp.values.speedScale).to.equal(0);
 
-    dp.speedScaleSlider.value = 1.1;
-    dp.speedScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.speedScaleSlider.value = 1.1;
+    dp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.speedScaleSlider.value).to.equal('1');
-    expect(dp.speedScale).to.equal(1);
+    expect(dp.sliders.speedScaleSlider.value).to.equal('1');
+    expect(dp.values.speedScale).to.equal(1);
 
-    dp.speedScaleSlider.value = -1;
-    dp.speedScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.speedScaleSlider.value = -1;
+    dp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.speedScaleSlider.value).to.equal('0');
-    expect(dp.speedScale).to.equal(0);
+    expect(dp.sliders.speedScaleSlider.value).to.equal('0');
+    expect(dp.values.speedScale).to.equal(0);
   });
 
   it('.onTimersScaleChange()', () => {
-    dp.timersScaleSlider.value = 1;
-    dp.timersScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.timersScaleSlider.value = 1;
+    dp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.timersScaleSlider.value).to.equal('1');
-    expect(dp.timersScale).to.equal(1);
+    expect(dp.sliders.timersScaleSlider.value).to.equal('1');
+    expect(dp.values.timersScale).to.equal(1);
 
-    dp.timersScaleSlider.value = 0;
-    dp.timersScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.timersScaleSlider.value = 0;
+    dp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.timersScaleSlider.value).to.equal('0');
-    expect(dp.timersScale).to.equal(0);
+    expect(dp.sliders.timersScaleSlider.value).to.equal('0');
+    expect(dp.values.timersScale).to.equal(0);
 
-    dp.timersScaleSlider.value = 1.1;
-    dp.timersScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.timersScaleSlider.value = 1.1;
+    dp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.timersScaleSlider.value).to.equal('1');
-    expect(dp.timersScale).to.equal(1);
+    expect(dp.sliders.timersScaleSlider.value).to.equal('1');
+    expect(dp.values.timersScale).to.equal(1);
 
-    dp.timersScaleSlider.value = -1;
-    dp.timersScaleSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.timersScaleSlider.value = -1;
+    dp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.timersScaleSlider.value).to.equal('0');
-    expect(dp.timersScale).to.equal(0);
+    expect(dp.sliders.timersScaleSlider.value).to.equal('0');
+    expect(dp.values.timersScale).to.equal(0);
   });
 
   it('.onInputCountChange()', () => {
-    dp.inputCountSlider.value = 1;
-    dp.inputCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.inputCountSlider.value = 1;
+    dp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.inputCountSlider.value).to.equal('1');
-    expect(dp.inputCount).to.equal(1);
+    expect(dp.sliders.inputCountSlider.value).to.equal('1');
+    expect(dp.values.inputCount).to.equal(1);
 
-    dp.inputCountSlider.value = 0;
-    dp.inputCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.inputCountSlider.value = 0;
+    dp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.inputCountSlider.value).to.equal('0');
-    expect(dp.inputCount).to.equal(0);
+    expect(dp.sliders.inputCountSlider.value).to.equal('0');
+    expect(dp.values.inputCount).to.equal(0);
 
-    dp.inputCountSlider.value = 1.1;
-    dp.inputCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.inputCountSlider.value = 1.1;
+    dp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.inputCountSlider.value).to.equal('1');
-    expect(dp.inputCount).to.equal(1);
+    expect(dp.sliders.inputCountSlider.value).to.equal('1');
+    expect(dp.values.inputCount).to.equal(1);
 
-    dp.inputCountSlider.value = -1;
-    dp.inputCountSlider.dispatchEvent(initEvent('change'));
+    dp.sliders.inputCountSlider.value = -1;
+    dp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
 
-    expect(dp.inputCountSlider.value).to.equal('0');
-    expect(dp.inputCount).to.equal(0);
+    expect(dp.sliders.inputCountSlider.value).to.equal('0');
+    expect(dp.values.inputCount).to.equal(0);
   });
 });

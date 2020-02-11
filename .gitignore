@@ -6,3 +6,5 @@ docs
 e2e/client.js
 local.log
 .DS_Store
+index.html
+frame.html
