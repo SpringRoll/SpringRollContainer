@@ -51,8 +51,14 @@ export class Slider {
     slider.min = this.min;
     slider.max = this.max;
     slider.step = this.step;
-    slider.value =
-      value && value.toString().trim().length > 0 ? value : this.sliderValue;
+
+    if ((value || value === 0) && value.toString().trim().length > 0) {
+      slider.value = value;
+      this.sliderValue = value;
+    } else {
+      slider.value = this.sliderValue;
+    }
+
     return slider;
   }
 

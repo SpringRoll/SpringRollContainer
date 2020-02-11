@@ -19,7 +19,7 @@ export class LayersPlugin extends BasePlugin {
       defaultValue: 0
     });
 
-    this.layerValue = 0;
+    this.layerValue = this.layersSlider.value;
     this.layersSlider.enableSliderEvents(this.onLayerValueChange.bind(this));
   }
   /**

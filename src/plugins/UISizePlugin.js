@@ -42,6 +42,9 @@ export class UISizePlugin extends BasePlugin {
 
     this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));
     this.buttonSlider.enableSliderEvents(this.onButtonSizeChange.bind(this));
+
+    this.pointerSize = this.pointerSlider.value;
+    this.buttonSize = this.buttonSlider.value;
   }
 
   /**

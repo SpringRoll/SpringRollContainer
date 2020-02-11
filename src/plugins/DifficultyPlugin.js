@@ -50,56 +50,56 @@ export class DifficultyPlugin extends BasePlugin {
       hitAreaScaleSlider: new Slider({
         slider: hitAreaScaleSlider,
         control: DifficultyPlugin.hitAreaScaleKey,
-        defaultValue: this.hitAreaScale
+        defaultValue: this.values.hitAreaScale
       }),
 
       //Drag Threshold Scale
       dragThresholdScaleSlider: new Slider({
         slider: dragThresholdScaleSlider,
         control: DifficultyPlugin.dragThresholdScaleKey,
-        defaultValue: this.dragThresholdScale
+        defaultValue: this.values.dragThresholdScale
       }),
 
       //Health
       healthSlider: new Slider({
         slider: healthSlider,
         control: DifficultyPlugin.healthKey,
-        defaultValue: this.health
+        defaultValue: this.values.health
       }),
 
       //Object Count
       objectCountSlider: new Slider({
         slider: objectCountSlider,
         control: DifficultyPlugin.objectCountKey,
-        defaultValue: this.objectCount
+        defaultValue: this.values.objectCount
       }),
 
       //Completion Percentage
       completionPercentageSlider: new Slider({
         slider: completionPercentageSlider,
         control: DifficultyPlugin.completionPercentageKey,
-        defaultValue: this.completionPercentage
+        defaultValue: this.values.completionPercentage
       }),
 
       //Speed Scale
       speedScaleSlider: new Slider({
         slider: speedScaleSlider,
         control: DifficultyPlugin.speedScaleKey,
-        defaultValue: this.speedScale
+        defaultValue: this.values.speedScale
       }),
 
       //Timer Scale
       timersScaleSlider: new Slider({
         slider: timersScaleSlider,
         control: DifficultyPlugin.timersScaleKey,
-        defaultValue: this.timersScale
+        defaultValue: this.values.timersScale
       }),
 
       //Input Count
       inputCountSlider: new Slider({
         slider: inputCountSlider,
         control: DifficultyPlugin.inputCountKey,
-        defaultValue: this.inputCount
+        defaultValue: this.values.inputCount
       }),
 
     };
@@ -108,6 +108,7 @@ export class DifficultyPlugin extends BasePlugin {
       this.sliders[key].enableSliderEvents(() => {
         this.onDifficultyChange(this.sliders[key].control);
       });
+      this.values[this.sliders[key].control] = this.sliders[key].value;
     });
   }
 

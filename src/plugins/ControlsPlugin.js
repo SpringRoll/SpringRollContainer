@@ -37,6 +37,8 @@ export class ControlsPlugin extends BasePlugin {
       this.onControlSensitivityChange.bind(this)
     );
 
+    this.controlSensitivity = this.sensitivitySlider.value;
+
     //Allows for removing and readding event listeners
     this.bindKey = this.bindKey.bind(this);
     this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
