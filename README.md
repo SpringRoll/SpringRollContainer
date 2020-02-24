@@ -74,9 +74,9 @@ import { DifficultyPlugin, Container } from 'springroll-container';
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
-      //The DifficultyPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user
+      //The DifficultyPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
       //DifficultyPlugin also accepts an [optional] initial value for its difficulty types
-      new SoundPlugin({
+      new DifficultyPlugin({
         //Sliders expect an HTML Input Element of type="range"
         hitAreaScaleSlider: '#hitAreaScaleSlider',
         //All difficulty values run 0.0 to 1.0. Default = 0.5
@@ -100,6 +100,21 @@ import { DifficultyPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
+DifficultyPlugin Options:
+
+See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#difficulty-features "Springroll Application Documentation") for more detailed information.
+| Feature             | Key               | Description   |
+| ------------------- | ----------------- | ------------- |
+| Hit Area Scale      | hitAreaScale      | Allows the player to define how large or small they want hit boxes for clicking/touching to be in the game. Gives the player the ability to make elements easier or harder to hit. |
+| Drag Threshold Area | dragThresholdArea | Allows the player to define how sensitive they want object drag detection to be. More or less sensitivity can make certain game challenges more completable for players |
+| Health              | health            | Allows the player to define how many attempts, retries, lives, or health they have in the game. |
+| Object Count | objectCount | Allows the player to define how many objects, hidden or otherwise, are required to complete objectives throughout gameplay.  |
+| Speed Scale | speedScale | Allows the player to define how quickly or slowly game mechanics move. |
+| Completion Percentage | completionPercentage | Allows the player to define what percentage of a task is required to be finished to complete that task. |
+| Timer Scale | timerScale | Allows the player to adjust timers in game to give more or less time to complete tasks. |
+| Input Count | inputCount | Allows the player to define how many clicks, taps, or keyboard inputs are required to complete objectives.  |
+
+
 UISizePlugin, LayersPlugin:
 ```javascript
 import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springroll-container';
