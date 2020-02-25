@@ -102,7 +102,7 @@ import { DifficultyPlugin, Container } from 'springroll-container';
 ```
 DifficultyPlugin Options:
 
-See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#difficulty-features "Springroll Application Documentation") for more detailed information.
+See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "Springroll Application Documentation") for more detailed information.
 | Feature             | Key               | Description   |
 | ------------------- | ----------------- | ------------- |
 | Hit Area Scale      | hitAreaScale      | Allows the player to define how large or small they want hit boxes for clicking/touching to be in the game. Gives the player the ability to make elements easier or harder to hit. |
