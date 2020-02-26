@@ -11,5 +11,5 @@ import './UISizePlugin.spec';
 import './ControlsPlugin.spec';
 import './LayersPlugin.spec';
 import './HUDPlugin.spec';
-import './DifficultyPlugin.spec';
+import './MechanicsPlugin.spec';
 import './ColorVisionPlugin.spec';

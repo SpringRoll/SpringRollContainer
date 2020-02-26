@@ -67,16 +67,16 @@ import { SoundPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-DifficultyPlugin:
+MechanicsPlugin:
 ```javascript
-import { DifficultyPlugin, Container } from 'springroll-container';
+import { MechanicsPlugin, Container } from 'springroll-container';
 
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
-      //The DifficultyPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
-      //DifficultyPlugin also accepts an [optional] initial value for its difficulty types
-      new DifficultyPlugin({
+      //The MechanicsPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
+      //MechanicsPlugin also accepts an [optional] initial value for its difficulty types
+      new MechanicsPlugin({
         //Sliders expect an HTML Input Element of type="range"
         hitAreaScaleSlider: '#hitAreaScaleSlider',
         //All difficulty values run 0.0 to 1.0. Default = 0.5
@@ -100,7 +100,7 @@ import { DifficultyPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-DifficultyPlugin Options:
+MechanicsPlugin Options:
 
 See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "Springroll Application Documentation") for more detailed information.
 | Feature             | Key               | Description   |
@@ -117,7 +117,7 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 
 UISizePlugin, LayersPlugin:
 ```javascript
-import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springroll-container';
+import { UISizePlugin, LayersPlugin, MechanicsPlugin, Container } from 'springroll-container';
 
   const container = new springroll.Container({
     iframeSelector: "#game",

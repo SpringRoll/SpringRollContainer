@@ -9,5 +9,5 @@ export * from './UISizePlugin';
 export * from './ControlsPlugin';
 export * from './LayersPlugin';
 export * from './HUDPlugin';
-export * from './DifficultyPlugin';
+export * from './MechanicsPlugin';
 export * from './ColorVisionPlugin';
