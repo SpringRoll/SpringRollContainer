@@ -9,8 +9,8 @@ import {
   UISizePlugin,
   LayersPlugin,
   HUDPlugin,
-  DifficultyPlugin,
-  ColorVisionPlugin
+  MechanicsPlugin,
+  ColorVisionPlugin,
 } from '../src';
 
 const initEvent = eventName => {
@@ -39,7 +39,15 @@ describe('End to End Test', () => {
   const pointerSlider = document.createElement('input');
   const buttonSlider = document.createElement('input');
   const layersSlider = document.createElement('input');
-  const difficultySlider = document.createElement('input');
+
+  const hitAreaScaleSlider = document.createElement('input');
+  const dragThresholdScaleSlider = document.createElement('input');
+  const healthSlider = document.createElement('input');
+  const objectCountSlider = document.createElement('input');
+  const completionPercentageSlider = document.createElement('input');
+  const speedScaleSlider = document.createElement('input');
+  const timersScaleSlider = document.createElement('input');
+  const inputCountSlider = document.createElement('input');
 
   const colorSelect = document.createElement('select');
   const keyContainer = document.createElement('div');
@@ -71,8 +79,23 @@ describe('End to End Test', () => {
     buttonSlider.type = 'range';
     layersSlider.id = 'layersSlider';
     layersSlider.type = 'range';
-    difficultySlider.id = 'difficultySlider';
-    difficultySlider.type = 'range';
+
+    hitAreaScaleSlider.id = 'hitAreaScaleSlider';
+    dragThresholdScaleSlider.id = 'dragThresholdScaleSlider';
+    healthSlider.id = 'healthSlider';
+    objectCountSlider.id = 'objectCountSlider';
+    completionPercentageSlider.id = 'completionPercentageSlider';
+    speedScaleSlider.id = 'speedScaleSlider';
+    timersScaleSlider.id = 'timersScaleSlider';
+    inputCountSlider.id = 'inputCountSlider';
+    hitAreaScaleSlider.type = 'range';
+    dragThresholdScaleSlider.type = 'range';
+    healthSlider.type = 'range';
+    objectCountSlider.type = 'range';
+    completionPercentageSlider.type = 'range';
+    speedScaleSlider.type = 'range';
+    timersScaleSlider.type = 'range';
+    inputCountSlider.type = 'range';
 
     colorSelect.id = 'colorSelect';
     keyContainer.id = 'keyContainer';
@@ -94,7 +117,16 @@ describe('End to End Test', () => {
     document.body.appendChild(pointerSlider);
     document.body.appendChild(buttonSlider);
     document.body.appendChild(layersSlider);
-    document.body.appendChild(difficultySlider);
+
+    document.body.appendChild(hitAreaScaleSlider);
+    document.body.appendChild(dragThresholdScaleSlider);
+    document.body.appendChild(healthSlider);
+    document.body.appendChild(objectCountSlider);
+    document.body.appendChild(completionPercentageSlider);
+    document.body.appendChild(speedScaleSlider);
+    document.body.appendChild(timersScaleSlider);
+    document.body.appendChild(inputCountSlider);
+
     document.body.appendChild(colorSelect);
     document.body.appendChild(keyContainer);
 
@@ -125,8 +157,15 @@ describe('End to End Test', () => {
     });
     const layersPlugin = new LayersPlugin({ layersSlider: '#layersSlider' });
     const hudPlugin = new HUDPlugin({ hudSelectorButton: '#hudButton' });
-    const difficultyPlugin = new DifficultyPlugin({
-      difficultySlider: '#difficultySlider'
+    const mechanicsPlugin = new MechanicsPlugin({
+      hitAreaScaleSlider: '#hitAreaScaleSlider',
+      dragThresholdScaleSlider: '#dragThresholdScaleSlider',
+      healthSlider: '#healthSlider',
+      objectCountSlider: '#objectCountSlider',
+      completionPercentageSlider: '#completionPercentageSlider',
+      speedScaleSlider: '#speedScaleSlider',
+      timersScaleSlider: '#timersScaleSlider',
+      inputCountSlider: '#inputCountSlider',
     });
 
     container = new Container({
@@ -141,7 +180,7 @@ describe('End to End Test', () => {
         uiSizePlugin,
         layersPlugin,
         hudPlugin,
-        difficultyPlugin,
+        mechanicsPlugin,
         colorVisionPlugin
       ]
     });
@@ -204,8 +243,26 @@ describe('End to End Test', () => {
     buttonSlider.dispatchEvent(initEvent('change'));
     layersSlider.value = String(0.4);
     layersSlider.dispatchEvent(initEvent('change'));
-    difficultySlider.value = String(0.5);
-    difficultySlider.dispatchEvent(initEvent('change'));
+  });
+
+  it('check the mechanic slider change events', () => {
+    hitAreaScaleSlider.value = String(0.3);
+    dragThresholdScaleSlider.value = String(0.3);
+    healthSlider.value = String(0.3);
+    objectCountSlider.value = String(0.3);
+    completionPercentageSlider.value = String(0.3);
+    speedScaleSlider.value = String(0.3);
+    timersScaleSlider.value = String(0.3);
+    inputCountSlider.value = String(0.3);
+
+    hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    healthSlider.dispatchEvent(initEvent('change'));
+    objectCountSlider.dispatchEvent(initEvent('change'));
+    completionPercentageSlider.dispatchEvent(initEvent('change'));
+    speedScaleSlider.dispatchEvent(initEvent('change'));
+    timersScaleSlider.dispatchEvent(initEvent('change'));
+    inputCountSlider.dispatchEvent(initEvent('change'));
   });
 
   it('check the color vision dropdown event', () => {
