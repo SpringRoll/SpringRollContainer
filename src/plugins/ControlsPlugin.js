@@ -1,10 +1,6 @@
 import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
-const SENSITIVITY_SLIDER_MIN = 0.1;
-const SENSITIVITY_SLIDER_MAX = 1;
-const SENSITIVITY_SLIDER_STEP = 0.1;
-
 /**
  * @export
  * @class ControlsPlugin
@@ -34,15 +30,14 @@ export class ControlsPlugin extends BasePlugin {
     this.sensitivitySlider = new Slider({
       slider: sensitivitySlider,
       control: ControlsPlugin.controlSensitivityKey,
-      min: SENSITIVITY_SLIDER_MIN,
-      max: SENSITIVITY_SLIDER_MAX,
-      step: SENSITIVITY_SLIDER_STEP,
       defaultValue: this.controlSensitivity
     });
 
     this.sensitivitySlider.enableSliderEvents(
       this.onControlSensitivityChange.bind(this)
     );
+
+    this.controlSensitivity = this.sensitivitySlider.value;
 
     //Allows for removing and readding event listeners
     this.bindKey = this.bindKey.bind(this);

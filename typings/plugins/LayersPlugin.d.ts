@@ -1,18 +1,19 @@
 import { BasePlugin } from '..';
+import { Slider } from '../classes';
 
 type LayersPluginOptions = {
-  layersCheckBoxes?:string,
+  layersSlider?:string,
+  num?: number
 };
 
 export class LayersPlugin extends BasePlugin {
   constructor(options: LayersPluginOptions)
 
-  layersCheckBoxes: HTMLElement | null;
+  layersSlider: HTMLElement | null;
+  layerValue: number;
 
-  private layersToggleState: Object;
+  onLayerValueChange(): void;
 
-  onLayerToggle(layer: HTMLInputElement): void;
-
-  getLayersCheckBoxesKey(): string;
+  get getLayerValueKey(): string;
 
 }

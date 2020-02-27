@@ -49,18 +49,28 @@ describe('ControlsPlugin', () => {
 
   it('.onControlSensitivityChange()', () => {
     cp.sensitivitySlider.value = 1;
-
     cp.sensitivitySlider.dispatchEvent(initEvent('change'));
 
     expect(cp.sensitivitySlider.value).to.equal('1');
     expect(cp.controlSensitivity).to.equal(1);
 
-    cp.sensitivitySlider.value = 0.1;
-
+    cp.sensitivitySlider.value = 0;
     cp.sensitivitySlider.dispatchEvent(initEvent('change'));
 
-    expect(cp.sensitivitySlider.value).to.equal('0.1');
-    expect(cp.controlSensitivity).to.equal(0.1);
+    expect(cp.sensitivitySlider.value).to.equal('0');
+    expect(cp.controlSensitivity).to.equal(0);
+
+    cp.sensitivitySlider.value = 1.1;
+    cp.sensitivitySlider.dispatchEvent(initEvent('change'));
+
+    expect(cp.sensitivitySlider.value).to.equal('1');
+    expect(cp.controlSensitivity).to.equal(1);
+
+    cp.sensitivitySlider.value = -1;
+    cp.sensitivitySlider.dispatchEvent(initEvent('change'));
+
+    expect(cp.sensitivitySlider.value).to.equal('0');
+    expect(cp.controlSensitivity).to.equal(0);
   });
 
   it('.onKeyButtonClick()', () => {

@@ -67,30 +67,79 @@ import { SoundPlugin, Container } from 'springroll-container';
   });
 	container.openPath('game.html');
 ```
-UISizePlugin, LayersPlugin, DifficultyPlugin:
+MechanicsPlugin:
 ```javascript
-import { UISizePlugin, LayersPlugin, DifficultyPlugin, Container } from 'springroll-container';
+import { MechanicsPlugin, Container } from 'springroll-container';
 
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+      //The MechanicsPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
+      //MechanicsPlugin also accepts an [optional] initial value for its difficulty types
+      new MechanicsPlugin({
+        //Sliders expect an HTML Input Element of type="range"
+        hitAreaScaleSlider: '#hitAreaScaleSlider',
+        //All difficulty values run 0.0 to 1.0. Default = 0.5
+        defaultHitAreaScale = 0.5,
+        dragThresholdScaleSlider: '#dragThresholdScaleSlider',
+        defaultDragThresholdScale = 0.5,
+        healthSlider: '#healthSlider',
+        defaultHealth = 0.5,
+        objectCountSlider: '#objectCountSlider',
+        defaultObjectCount = 0.5,
+        completionPercentageSlider: '#completionPercentageSlider',
+        defaultCompletionPercentage = 0.5,
+        speedScaleSlider: '#speedScaleSlider',
+        defaultSpeedScale = 0.5,
+        timersScaleSlider: '#timersScaleSlider',
+        defaultTimersScale = 0.5,
+        inputCountSlider: '#inputCountSlider',
+        defaultInputCount = 0.5,
+      }),
+    ]
+  });
+	container.openPath('game.html');
+```
+MechanicsPlugin Options:
+
+See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "Springroll Application Documentation") for more detailed information.
+| Feature             | Key               | Description   |
+| ------------------- | ----------------- | ------------- |
+| Hit Area Scale      | hitAreaScale      | Allows the player to define how large or small they want hit boxes for clicking/touching to be in the game. Gives the player the ability to make elements easier or harder to hit. |
+| Drag Threshold Area | dragThresholdArea | Allows the player to define how sensitive they want object drag detection to be. More or less sensitivity can make certain game challenges more completable for players |
+| Health              | health            | Allows the player to define how many attempts, retries, lives, or health they have in the game. |
+| Object Count | objectCount | Allows the player to define how many objects, hidden or otherwise, are required to complete objectives throughout gameplay.  |
+| Speed Scale | speedScale | Allows the player to define how quickly or slowly game mechanics move. |
+| Completion Percentage | completionPercentage | Allows the player to define what percentage of a task is required to be finished to complete that task. |
+| Timer Scale | timerScale | Allows the player to adjust timers in game to give more or less time to complete tasks. |
+| Input Count | inputCount | Allows the player to define how many clicks, taps, or keyboard inputs are required to complete objectives.  |
+
+
+UISizePlugin, LayersPlugin:
+```javascript
+import { UISizePlugin, LayersPlugin, MechanicsPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+
       //UISizePlugin also accepts an [optional] initial value for its two options
       new UISizePlugin({
+
+        //Expects an HTML Input Element of type="range"
         pointerSlider: '#pointer-slider-selector', //controls the size of the pointer
-        pointerSize: 0.05, //pointer size goes from 0.01 to 1.00 (2 points of precision) default = 0.05
+        pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
+
+        //Expects an HTML Input Element of type="range"
         buttonSlider: '#button-slider-selector', //controls the size of UI buttons
-        buttonSize: 0.5, // button size goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+        buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
       }),
+
       //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
       new LayersPlugin({
+
         //Expects an HTML Input Element of type="range"
-        layersSlider: '#layers-slider-selector' // goes from 0.00 to 1.00 (two points of precision)
-      }),
-      //DifficultyPlugin controls the difficulty/speed of the game.
-      new DifficultyPlugin({
-        //Expects an HTML Input Element of type="range"
-        difficultySlider: '#difficulty-slider-selector',
-        defaultDifficulty: 0.5 // goes from 0.1 to 1.0 (one points of precision). Default = 0.5
+        layersSlider: '#layers-slider-selector' // goes from 0.0 to 1.0
       }),
     ]
   });
@@ -105,8 +154,10 @@ import { HUDPlugin, Container } from 'springroll-container';
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+
       //HUDPlugin expects a button element/selector string
       new HUDPlugin({
+
         hudSelectorButton: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
       }),
     ]
@@ -123,10 +174,14 @@ import { ControlsPlugin, Container } from 'springroll-container';
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
+
       //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
       new ControlsPlugin({
+
+        //Expects an HTML Input Element of type="range"
         sensitivitySlider: '#sensitivity-slider-selector',
-        defaultSensitivity: 0.5, //control sensitivity goes from 0.1 to 1.0 (1 point of precision) default = 0.5
+        defaultSensitivity: 0.5, //control sensitivity goes from 0.0 to 1.0. Default = 0.5
+
         keyContainer: '#key-container', // container element that will contain the mappable key buttons.
       }),
     ]

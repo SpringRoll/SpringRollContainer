@@ -40,10 +40,10 @@ export class SoundPlugin extends ButtonPlugin {
     this._voMuted = false;
     this._sfxMuted = false;
 
-    this.soundVolume = 0;
-    this.musicVolume = 0;
-    this.sfxVolume = 0;
-    this.voVolume = 0;
+    this.soundVolume = 1;
+    this.musicVolume = 1;
+    this.sfxVolume = 1;
+    this.voVolume = 1;
 
     this.soundSlider = new Slider({
       slider: soundSlider,
@@ -91,6 +91,11 @@ export class SoundPlugin extends ButtonPlugin {
     this.musicSlider.enableSliderEvents(this.onMusicVolumeChange.bind(this));
     this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
     this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
+
+    this.soundVolume = this.soundSlider.value;
+    this.musicVolume = this.musicSlider.value;
+    this.sfxVolume = this.sfxSlider.value;
+    this.voVolume = this.voSlider.value;
   }
 
   /**
