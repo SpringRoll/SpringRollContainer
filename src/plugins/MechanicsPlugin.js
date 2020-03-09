@@ -47,7 +47,7 @@ export class MechanicsPlugin extends BasePlugin {
     defaultInputCount = 0.5,
   } = {}) {
     super('Mechanics-Plugin');
-
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this.values = {
       hitAreaScale: defaultHitAreaScale,
       dragThresholdScale: defaultDragThresholdScale,
@@ -156,9 +156,28 @@ export class MechanicsPlugin extends BasePlugin {
   }
 
   /**
-   * @memberof MechanicsPlugin
-   */
-  start() {}
+  * @memberof MechanicsPlugin
+  */
+  start() {
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
+  }
+
+  /**
+*
+* Sends initial mechanics properties to the application
+* @memberof MechanicsPlugin
+*/
+  sendAllProperties() {
+    this.sendProperty(MechanicsPlugin.hitAreaScaleKey, this.values.hitAreaScale);
+    this.sendProperty(MechanicsPlugin.dragThresholdScaleKey, this.values.dragThresholdScale);
+    this.sendProperty(MechanicsPlugin.healthKey, this.values.health);
+    this.sendProperty(MechanicsPlugin.objectCountKey, this.values.objectCount);
+    this.sendProperty(MechanicsPlugin.completionPercentageKey, this.values.completionPercentage);
+    this.sendProperty(MechanicsPlugin.speedScaleKey, this.values.speedScale);
+    this.sendProperty(MechanicsPlugin.timersScaleKey, this.values.timersScale);
+    this.sendProperty(MechanicsPlugin.inputCountKey, this.values.inputCount);
+  }
 
   /**
    * @readonly

@@ -28,6 +28,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    */
   constructor(captionsButton) {
     super('Caption-Button-Plugin');
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this.captionsStyles = Object.assign(
       {},
       DEFAULT_CAPTIONS_STYLES,
@@ -75,10 +76,27 @@ export class CaptionsPlugin extends ButtonPlugin {
       }.bind(this)
     );
 
+    this._captionsButton.enableButton();
+  }
+  /**
+  * @memberof CaptionsPlugin
+  */
+  start() {
     this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
     this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 
-    this._captionsButton.enableButton();
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
+  }
+
+  /**
+  *
+  * Sends initial caption properties to the application
+  * @memberof CaptionsPlugin
+  */
+  sendAllProperties() {
+    this.sendProperty(CAPTIONS_MUTED, this.captionsMuted);
+    this.sendProperty(CAPTIONS_STYLES, this.captionsStyles);
   }
 
   /**

@@ -1,5 +1,6 @@
 import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements/Slider';
+import { SavedData } from '../SavedData';
 
 /**
  * @export
@@ -18,7 +19,7 @@ export class ControlsPlugin extends BasePlugin {
     super('Control-Button-Plugin');
 
     this.controlSensitivity = defaultSensitivity;
-
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this.keyContainer =
       keyContainer instanceof HTMLElement
         ? keyContainer
@@ -26,6 +27,8 @@ export class ControlsPlugin extends BasePlugin {
     this.keyBindings = {};
     this.buttons = [];
     this.activekeyButton;
+    this.sendAfterFetch = false;
+    this.canEmit = false;
 
     this.sensitivitySlider = new Slider({
       slider: sensitivitySlider,
@@ -110,11 +113,20 @@ export class ControlsPlugin extends BasePlugin {
           return;
         }
 
+        const data = SavedData.read(ControlsPlugin.keyBindingKey);
+
+
         this.client.fetch('keyBindings', result => {
           for (let i = 0, l = result.data.length; i < l; i++) {
+            let currentKey;
+            if (data[result.data[i].actionName]) {
+              currentKey = data[result.data[i].actionName].currentKey;
+            } else {
+              currentKey = result.data[i].defaultKey.toLowerCase();
+            }
             this.keyBindings[result.data[i].actionName] = {
               defaultKey: result.data[i].defaultKey.toLowerCase(),
-              currentKey: result.data[i].defaultKey.toLowerCase()
+              currentKey: currentKey,
             };
             this.buttons[i] = document.createElement('button');
             this.buttons[i].classList.add('key-binding__button');
@@ -128,9 +140,38 @@ export class ControlsPlugin extends BasePlugin {
             this.keyContainer.appendChild(this.label);
             this.keyContainer.appendChild(this.buttons[i]);
           }
+
+          this.canEmit = true;
+          if (this.sendAfterFetch) {
+            this.sendAllProperties();
+          }
         });
       }.bind(this)
     );
+  }
+
+
+  /**
+  * @memberof ControlsPlugin
+  */
+  start() {
+
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
+  }
+
+  /**
+*
+* Sends initial caption properties to the application
+* @memberof ControlsPlugin
+*/
+  sendAllProperties() {
+    if (this.canEmit) {
+      this.sendProperty(ControlsPlugin.controlSensitivityKey, this.controlSensitivity);
+      this.sendProperty(ControlsPlugin.keyBindingKey, this.keyBindings);
+    } else {
+      this.sendAfterFetch = true;
+    }
   }
 
   /**
