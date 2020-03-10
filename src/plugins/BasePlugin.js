@@ -33,10 +33,13 @@ export class BasePlugin {
 
   /**
    *
-   * @param {Container} [_]
    * @memberof BasePlugin
    */
-  start(_) {}
+  start() {
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
+  }
+
   /**
    *
    * @param {Container} [_]
@@ -55,4 +58,12 @@ export class BasePlugin {
     SavedData.write(prop, value);
     this.client.send(prop, value);
   }
+
+
+  /**
+   *
+   * @param {Container} [_]
+   * @memberof BasePlugin
+   */
+  sendAllProperties(_) {}
 }

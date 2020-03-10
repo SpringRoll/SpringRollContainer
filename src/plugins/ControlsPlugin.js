@@ -115,15 +115,15 @@ export class ControlsPlugin extends BasePlugin {
 
         const data = SavedData.read(ControlsPlugin.keyBindingKey);
 
-
         this.client.fetch('keyBindings', result => {
           for (let i = 0, l = result.data.length; i < l; i++) {
-            let currentKey;
-            if (data[result.data[i].actionName]) {
-              currentKey = data[result.data[i].actionName].currentKey;
-            } else {
-              currentKey = result.data[i].defaultKey.toLowerCase();
+            let currentKey = result.data[i].defaultKey.toLowerCase();
+            if (data) {
+              if (data[result.data[i].actionName]) {
+                currentKey = data[result.data[i].actionName].currentKey;
+              }
             }
+            console.log(currentKey);
             this.keyBindings[result.data[i].actionName] = {
               defaultKey: result.data[i].defaultKey.toLowerCase(),
               currentKey: currentKey,
@@ -148,16 +148,6 @@ export class ControlsPlugin extends BasePlugin {
         });
       }.bind(this)
     );
-  }
-
-
-  /**
-  * @memberof ControlsPlugin
-  */
-  start() {
-
-    this.client.on('loaded', this.sendAllProperties);
-    this.client.on('loadDone', this.sendAllProperties);
   }
 
   /**

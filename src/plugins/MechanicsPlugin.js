@@ -156,14 +156,6 @@ export class MechanicsPlugin extends BasePlugin {
   }
 
   /**
-  * @memberof MechanicsPlugin
-  */
-  start() {
-    this.client.on('loaded', this.sendAllProperties);
-    this.client.on('loadDone', this.sendAllProperties);
-  }
-
-  /**
 *
 * Sends initial mechanics properties to the application
 * @memberof MechanicsPlugin

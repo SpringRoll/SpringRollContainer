@@ -85,14 +85,6 @@ export class UISizePlugin extends BasePlugin {
   }
 
   /**
-   * @memberof UISizePlugin
-   */
-  start() {
-    this.client.on('loaded', this.sendAllProperties);
-    this.client.on('loadDone', this.sendAllProperties);
-  }
-
-  /**
    *
    * Saves the current state of all volume properties, and then sends them to the game
    * @memberof UISizePlugin

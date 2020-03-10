@@ -50,19 +50,10 @@ export class LayersPlugin extends BasePlugin {
   }
 
   /**
+  *
+  * Sends initial layers properties to the application
   * @memberof LayersPlugin
   */
-  start() {
-
-    this.client.on('loaded', this.sendAllProperties);
-    this.client.on('loadDone', this.sendAllProperties);
-  }
-
-  /**
-*
-* Sends initial layers properties to the application
-* @memberof LayersPlugin
-*/
   sendAllProperties() {
     this.sendProperty(LayersPlugin.layerValueKey, this.layerValue);
   }
