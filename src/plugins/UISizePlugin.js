@@ -95,13 +95,6 @@ export class UISizePlugin extends BasePlugin {
   }
 
   /**
-   * @memberof SoundPlugin
-   */
-  set soundMuted(muted) {
-    this.setMuteProp('soundMuted', muted, this.soundButton);
-  }
-
-  /**
    * @readonly
    * @static
    * @memberof UISizePlugin
