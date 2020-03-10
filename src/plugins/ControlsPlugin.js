@@ -123,7 +123,6 @@ export class ControlsPlugin extends BasePlugin {
                 currentKey = data[result.data[i].actionName].currentKey;
               }
             }
-            console.log(currentKey);
             this.keyBindings[result.data[i].actionName] = {
               defaultKey: result.data[i].defaultKey.toLowerCase(),
               currentKey: currentKey,
