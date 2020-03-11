@@ -24,7 +24,7 @@ export class UISizePlugin extends BasePlugin {
     defaultButtonSize = 0.5
   } = {}) {
     super('UISize-Button-Plugin');
-
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this.pointerSize = defaultPointerSize;
     this.buttonSize = defaultButtonSize;
 
@@ -82,6 +82,16 @@ export class UISizePlugin extends BasePlugin {
         this.buttonSlider.displaySlider(features.data);
       }.bind(this)
     );
+  }
+
+  /**
+   *
+   * Saves the current state of all volume properties, and then sends them to the game
+   * @memberof UISizePlugin
+   */
+  sendAllProperties() {
+    this.sendProperty(UISizePlugin.pointerSizeKey, this.pointerSize);
+    this.sendProperty(UISizePlugin.buttonSizeKey, this.buttonSize);
   }
 
   /**

@@ -13,6 +13,7 @@ export class LayersPlugin extends BasePlugin {
    */
   constructor({ layersSlider }) {
     super('layer-plugin');
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this.layersSlider = new Slider({
       slider: layersSlider,
       control: 'removableLayers',
@@ -46,6 +47,15 @@ export class LayersPlugin extends BasePlugin {
         this.layersSlider.displaySlider(features.data);
       }.bind(this)
     );
+  }
+
+  /**
+  *
+  * Sends initial layers properties to the application
+  * @memberof LayersPlugin
+  */
+  sendAllProperties() {
+    this.sendProperty(LayersPlugin.layerValueKey, this.layerValue);
   }
 
   /**

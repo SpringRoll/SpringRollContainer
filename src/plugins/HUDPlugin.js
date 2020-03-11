@@ -1,5 +1,6 @@
 import { ButtonPlugin } from './ButtonPlugin';
 import { Button } from '../ui-elements';
+import { SavedData } from '../SavedData';
 
 /**
  * @export
@@ -17,11 +18,14 @@ export class HUDPlugin extends ButtonPlugin {
     super('HUD-Layout-Plugin');
 
     this.hudSelectorButton = hudSelectorButton;
-
+    this.sendAllProperties = this.sendAllProperties.bind(this);
+    this.sendAfterFetch = false;
+    this.canEmit = false;
     this._hudButton;
     this.supportedPositions = ['top', 'bottom', 'left', 'right'];
     this.positions = [];
     this.currentPos = 0; //always start at beginning of array
+
 
     if (!this.hudSelectorButton) {
       console.warn(
@@ -39,6 +43,7 @@ export class HUDPlugin extends ButtonPlugin {
       this.currentPos + 1 < this.positions.length
         ? this.currentPos + 1
         : (this.currentPos = 0);
+
     this.sendProperty(
       HUDPlugin.hudPositionKey,
       this.positions[this.currentPos]
@@ -67,6 +72,11 @@ export class HUDPlugin extends ButtonPlugin {
 
             this.positions.push(result.data[i]);
           }
+
+          this.canEmit = true;
+          if (this.sendAfterFetch) {
+            this.sendAllProperties();
+          }
         });
 
         //create button element AFTER the fetch from the application has occured.
@@ -77,6 +87,31 @@ export class HUDPlugin extends ButtonPlugin {
         });
       }.bind(this)
     );
+  }
+
+  /**
+  * @memberof HUDPlugin
+  */
+  start() {
+    const data = this.positions.indexOf(SavedData.read(this.hudPositionKey));
+    if (data >= 0) {
+      this.currentPos = data;
+    }
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
+  }
+
+  /**
+*
+* Sends initial HUD position properties to the application
+* @memberof HUDPlugin
+*/
+  sendAllProperties() {
+    if (this.canEmit) {
+      this.sendProperty(HUDPlugin.hudPositionKey, this.positions[this.currentPos]);
+    } else {
+      this.sendAfterFetch = true;
+    }
   }
 
   /**
