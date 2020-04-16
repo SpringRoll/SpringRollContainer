@@ -213,7 +213,6 @@ export class SoundPlugin extends ButtonPlugin {
           return;
         }
 
-        console.log(features.data);
         this._soundButton.displayButton(features.data);
         this._musicButton.displayButton(features.data);
         this._sfxButton.displayButton(features.data);
