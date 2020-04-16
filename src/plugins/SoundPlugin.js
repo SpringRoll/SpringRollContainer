@@ -92,10 +92,18 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
     this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
 
-    this.soundVolume = this.soundSlider.slider ? this.soundSlider.value : 1;
-    this.musicVolume = this.musicSlider.slider ? this.musicSlider.value : 1;
-    this.sfxVolume = this.sfxSlider.slider ? this.sfxSlider.value : 1;
-    this.voVolume = this.voSlider.slider ? this.voSlider.value : 1;
+    if (this.soundSlider.slider) {
+      this.soundVolume = this.soundSlider.value;
+    }
+    if (this.musicSlider.slider) {
+      this.musicVolume = this.musicSlider.value;
+    }
+    if (this.sfxSlider.slider) {
+      this.sfxVolume = this.sfxSlider.value;
+    }
+    if (this.voSlider.slider) {
+      this.voVolume = this.voSlider.value;
+    }
   }
 
   /**
