@@ -20,8 +20,10 @@ export class LayersPlugin extends BasePlugin {
       defaultValue: 0
     });
 
-    this.layerValue = this.layersSlider.value;
-    this.layersSlider.enableSliderEvents(this.onLayerValueChange.bind(this));
+    if (this.layersSlider.slider) {
+      this.layerValue = this.layersSlider.value;
+      this.layersSlider.enableSliderEvents(this.onLayerValueChange.bind(this));
+    }
   }
   /**
    * @memberof LayersPlugin

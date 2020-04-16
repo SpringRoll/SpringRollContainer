@@ -119,6 +119,9 @@ export class MechanicsPlugin extends BasePlugin {
     };
 
     Object.keys(this.sliders).forEach(key => {
+      if (!this.sliders[key].slider) {
+        return;
+      }
       this.sliders[key].enableSliderEvents(() => {
         this.onMechanicsChange(this.sliders[key].control);
       });

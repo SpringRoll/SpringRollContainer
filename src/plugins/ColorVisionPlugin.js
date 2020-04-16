@@ -75,7 +75,7 @@ export class ColorVisionPlugin extends BasePlugin {
           );
           return;
         }
-        //get the game's reported HUD positions to build out positions array
+        //get the game's reported colors to build out positions array
         this.client.fetch('colorFilters', result => {
           for (let i = 0, l = result.data.length; i < l; i++) {
             if (!COLOR_BLIND_TYPES.includes(result.data[i].toLowerCase())) {

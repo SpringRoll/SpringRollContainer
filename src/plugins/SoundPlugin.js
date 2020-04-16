@@ -92,10 +92,10 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
     this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
 
-    this.soundVolume = this.soundSlider.value;
-    this.musicVolume = this.musicSlider.value;
-    this.sfxVolume = this.sfxSlider.value;
-    this.voVolume = this.voSlider.value;
+    this.soundVolume = this.soundSlider.slider ? this.soundSlider.value : 1;
+    this.musicVolume = this.musicSlider.slider ? this.musicSlider.value : 1;
+    this.sfxVolume = this.sfxSlider.slider ? this.sfxSlider.value : 1;
+    this.voVolume = this.voSlider.slider ? this.voSlider.value : 1;
   }
 
   /**
@@ -206,6 +206,7 @@ export class SoundPlugin extends ButtonPlugin {
           return;
         }
 
+        console.log(features.data);
         this._soundButton.displayButton(features.data);
         this._musicButton.displayButton(features.data);
         this._sfxButton.displayButton(features.data);

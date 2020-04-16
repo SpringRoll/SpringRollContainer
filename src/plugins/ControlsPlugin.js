@@ -36,11 +36,13 @@ export class ControlsPlugin extends BasePlugin {
       defaultValue: this.controlSensitivity
     });
 
-    this.sensitivitySlider.enableSliderEvents(
-      this.onControlSensitivityChange.bind(this)
-    );
+    if (this.sensitivitySlider.slider) {
+      this.controlSensitivity = this.sensitivitySlider.value;
 
-    this.controlSensitivity = this.sensitivitySlider.value;
+      this.sensitivitySlider.enableSliderEvents(
+        this.onControlSensitivityChange.bind(this)
+      );
+    }
 
     //Allows for removing and readding event listeners
     this.bindKey = this.bindKey.bind(this);

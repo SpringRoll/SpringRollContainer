@@ -40,11 +40,15 @@ export class UISizePlugin extends BasePlugin {
       defaultValue: this.buttonSize
     });
 
-    this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));
-    this.buttonSlider.enableSliderEvents(this.onButtonSizeChange.bind(this));
 
-    this.pointerSize = this.pointerSlider.value;
-    this.buttonSize = this.buttonSlider.value;
+    if (this.pointerSlider.slider) {
+      this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));
+      this.pointerSize = this.pointerSlider.value;
+    }
+    if (this.buttonSlider.slider) {
+      this.buttonSlider.enableSliderEvents(this.onButtonSizeChange.bind(this));
+      this.buttonSize = this.buttonSlider.value;
+    }
   }
 
   /**
