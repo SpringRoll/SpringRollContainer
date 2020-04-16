@@ -60,4 +60,16 @@ describe('LayersPlugin', () => {
     expect(lsp.layersSlider.value).to.equal('0');
     expect(lsp.layerValue).to.equal(0);
   });
+
+  it('Plugin should work without any controls', (done) => {
+    //set up empty plugin
+    lsp = new LayersPlugin();
+    lsp.preload({ client: new Bellhop() });
+    lsp.init();
+    lsp.client.trigger('features', {
+    });
+
+    done();
+
+  });
 });

@@ -11,7 +11,7 @@ export class LayersPlugin extends BasePlugin {
    * @param {Object} param
    * @param {string | HTMLInputElement} param.layersSlider the slider that represents the layers of the game
    */
-  constructor({ layersSlider }) {
+  constructor({ layersSlider } = {}) {
     super('layer-plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.layersSlider = new Slider({

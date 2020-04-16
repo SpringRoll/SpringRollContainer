@@ -172,4 +172,16 @@ describe('SoundPlugin', () => {
     sp._checkSoundMute();
     expect(sp.soundMuted).to.be.a('boolean');
   });
+
+  it('Plugin should work without any controls', (done) => {
+    //set up empty plugin
+    sp = new SoundPlugin();
+    sp.preload({ client: new Bellhop() });
+    sp.init();
+    sp.client.trigger('features', {
+    });
+
+    done();
+
+  });
 });

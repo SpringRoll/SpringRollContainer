@@ -53,4 +53,21 @@ describe('ColorVisionPlugin', () => {
 
     expect(cvp.colorDropdown.value).to.equal('tritanopia');
   });
+
+  it('Plugin should work without any controls', (done) => {
+    //set up empty plugin
+    cvp = new ColorVisionPlugin();
+    cvp.preload({ client: new Bellhop() });
+
+    // const emptyIframe = document.createElement('iframe');
+    // emptyIframe.id = 'empty-iframe';
+    // document.body.appendChild(emptyIframe);
+    // new Container({ iframeSelector: '#empty-iframe', plugins: [cvp] });
+    cvp.init();
+    cvp.client.trigger('features', {
+    });
+
+    done();
+
+  });
 });

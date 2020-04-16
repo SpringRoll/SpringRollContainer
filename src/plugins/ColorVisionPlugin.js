@@ -21,7 +21,7 @@ export class ColorVisionPlugin extends BasePlugin {
    * @param {string | HTMLElement} params.colorSelect
    * @memberof ColorVision
    */
-  constructor({ colorSelect }) {
+  constructor({ colorSelect } = {}) {
     super('Color-Filter-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.colorDropdown =

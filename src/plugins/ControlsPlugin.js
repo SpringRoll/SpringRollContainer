@@ -38,7 +38,6 @@ export class ControlsPlugin extends BasePlugin {
 
     if (this.sensitivitySlider.slider) {
       this.controlSensitivity = this.sensitivitySlider.value;
-
       this.sensitivitySlider.enableSliderEvents(
         this.onControlSensitivityChange.bind(this)
       );
