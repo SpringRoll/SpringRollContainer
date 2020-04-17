@@ -66,7 +66,6 @@ describe('LayersPlugin', () => {
     lsp = new LayersPlugin();
     lsp.preload({ client: new Bellhop() });
     lsp.init();
-    lsp.client.trigger('features', {
-    });
+    lsp.client.trigger('features', {});
   });
 });

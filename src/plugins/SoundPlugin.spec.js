@@ -178,7 +178,6 @@ describe('SoundPlugin', () => {
     sp = new SoundPlugin();
     sp.preload({ client: new Bellhop() });
     sp.init();
-    sp.client.trigger('features', {
-    });
+    sp.client.trigger('features', {});
   });
 });

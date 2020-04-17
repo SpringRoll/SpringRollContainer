@@ -59,7 +59,6 @@ describe('ColorVisionPlugin', () => {
     cvp = new ColorVisionPlugin();
     cvp.preload({ client: new Bellhop() });
     cvp.init();
-    cvp.client.trigger('features', {
-    });
+    cvp.client.trigger('features', {});
   });
 });

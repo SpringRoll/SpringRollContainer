@@ -255,7 +255,6 @@ describe('MechanicsPlugin', () => {
     mp = new MechanicsPlugin();
     mp.preload({ client: new Bellhop() });
     mp.init();
-    mp.client.trigger('features', {
-    });
+    mp.client.trigger('features', {});
   });
 });

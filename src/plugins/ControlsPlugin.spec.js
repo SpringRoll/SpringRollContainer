@@ -95,7 +95,6 @@ describe('ControlsPlugin', () => {
     cp = new ControlsPlugin();
     cp.preload({ client: new Bellhop() });
     cp.init();
-    cp.client.trigger('features', {
-    });
+    cp.client.trigger('features', {});
   });
 });

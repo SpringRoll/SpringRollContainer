@@ -34,15 +34,11 @@ describe('CaptionsPlugin', () => {
     expect(cp.getCaptionsStyles()).to.be.instanceof(Object);
   });
 
-  it('Plugin should work without any controls', (done) => {
+  it('Plugin should work without any controls', () => {
     //set up empty plugin
     cp = new CaptionsPlugin();
     cp.preload({ client: new Bellhop() });
     cp.init();
-    cp.client.trigger('features', {
-    });
-
-    done();
-
+    cp.client.trigger('features', {});
   });
 });

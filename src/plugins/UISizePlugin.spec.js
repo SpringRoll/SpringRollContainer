@@ -93,7 +93,6 @@ describe('UISizePlugin', () => {
     up = new UISizePlugin();
     up.preload({ client: new Bellhop() });
     up.init();
-    up.client.trigger('features', {
-    });
+    up.client.trigger('features', {});
   });
 });
