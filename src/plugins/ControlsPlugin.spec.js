@@ -89,4 +89,12 @@ describe('ControlsPlugin', () => {
     document.dispatchEvent(event);
     expect(cp.keyBindings.Down.currentKey).to.equal('h');
   });
+
+  it('Plugin should work without any controls', () => {
+    //set up empty plugin
+    cp = new ControlsPlugin();
+    cp.preload({ client: new Bellhop() });
+    cp.init();
+    cp.client.trigger('features', {});
+  });
 });

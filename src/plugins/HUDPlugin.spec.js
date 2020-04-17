@@ -41,4 +41,12 @@ describe('HUDPlugin', () => {
     hp.hudButton.click();
     expect(hp.positions[hp.currentPos]).to.equal('top');
   });
+
+  it('Plugin should work without any controls', () => {
+    //set up empty plugin
+    hp = new HUDPlugin();
+    hp.preload({ client: new Bellhop() });
+    hp.init();
+    hp.client.trigger('features', {});
+  });
 });

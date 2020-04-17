@@ -249,4 +249,12 @@ describe('MechanicsPlugin', () => {
     expect(mp.sliders.inputCountSlider.value).to.equal('0');
     expect(mp.values.inputCount).to.equal(0);
   });
+
+  it('Plugin should work without any controls', () => {
+    //set up empty plugin
+    mp = new MechanicsPlugin();
+    mp.preload({ client: new Bellhop() });
+    mp.init();
+    mp.client.trigger('features', {});
+  });
 });

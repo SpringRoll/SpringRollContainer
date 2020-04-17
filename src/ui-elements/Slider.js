@@ -112,9 +112,14 @@ export class Slider {
    * @param {object} data Object containing which features are enabled
    */
   displaySlider(data) {
+    if (!this.slider && data[this.control]) {
+      console.warn(`${this.control} was not provided a valid input element or selector but was included as a game feature`);
+    }
+
     if (!this.slider) {
       return;
     }
+
     this.slider.style.display = data[this.control] ? '' : 'none';
   }
 

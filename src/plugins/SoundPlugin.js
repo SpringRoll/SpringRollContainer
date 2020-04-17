@@ -87,15 +87,22 @@ export class SoundPlugin extends ButtonPlugin {
       channel: 'vo'
     });
 
-    this.soundSlider.enableSliderEvents(this.onSoundVolumeChange.bind(this));
-    this.musicSlider.enableSliderEvents(this.onMusicVolumeChange.bind(this));
-    this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
-    this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
-
-    this.soundVolume = this.soundSlider.value;
-    this.musicVolume = this.musicSlider.value;
-    this.sfxVolume = this.sfxSlider.value;
-    this.voVolume = this.voSlider.value;
+    if (this.soundSlider.slider) {
+      this.soundSlider.enableSliderEvents(this.onSoundVolumeChange.bind(this));
+      this.soundVolume = this.soundSlider.value;
+    }
+    if (this.musicSlider.slider) {
+      this.musicSlider.enableSliderEvents(this.onMusicVolumeChange.bind(this));
+      this.musicVolume = this.musicSlider.value;
+    }
+    if (this.sfxSlider.slider) {
+      this.sfxSlider.enableSliderEvents(this.onSfxVolumeChange.bind(this));
+      this.sfxVolume = this.sfxSlider.value;
+    }
+    if (this.voSlider.slider) {
+      this.voSlider.enableSliderEvents(this.onVoVolumeChange.bind(this));
+      this.voVolume = this.voSlider.value;
+    }
   }
 
   /**
