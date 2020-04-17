@@ -250,15 +250,12 @@ describe('MechanicsPlugin', () => {
     expect(mp.values.inputCount).to.equal(0);
   });
 
-  it('Plugin should work without any controls', (done) => {
+  it('Plugin should work without any controls', () => {
     //set up empty plugin
     mp = new MechanicsPlugin();
     mp.preload({ client: new Bellhop() });
     mp.init();
     mp.client.trigger('features', {
     });
-
-    done();
-
   });
 });

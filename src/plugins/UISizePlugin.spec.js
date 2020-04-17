@@ -88,15 +88,12 @@ describe('UISizePlugin', () => {
     expect(up.buttonSize).to.equal(0);
   });
 
-  it('Plugin should work without any controls', (done) => {
+  it('Plugin should work without any controls', () => {
     //set up empty plugin
     up = new UISizePlugin();
     up.preload({ client: new Bellhop() });
     up.init();
     up.client.trigger('features', {
     });
-
-    done();
-
   });
 });

@@ -54,15 +54,12 @@ describe('ColorVisionPlugin', () => {
     expect(cvp.colorDropdown.value).to.equal('tritanopia');
   });
 
-  it('Plugin should work without any controls', (done) => {
+  it('Plugin should work without any controls', () => {
     //set up empty plugin
     cvp = new ColorVisionPlugin();
     cvp.preload({ client: new Bellhop() });
     cvp.init();
     cvp.client.trigger('features', {
     });
-
-    done();
-
   });
 });
