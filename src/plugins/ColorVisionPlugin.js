@@ -21,32 +21,42 @@ export class ColorVisionPlugin extends BasePlugin {
    * @param {string | HTMLElement} params.colorSelect
    * @memberof ColorVision
    */
-  constructor({ colorSelect } = {}) {
+  constructor({ colorSelects } = {}) {
     super('Color-Filter-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
-    this.colorDropdown =
-      colorSelect instanceof HTMLSelectElement
-        ? colorSelect
-        : document.querySelector(colorSelect);
+    this.colorDropdowns =
+      colorSelects instanceof HTMLSelectElement
+        ? [colorSelects]
+        : document.querySelectorAll(colorSelects);
+
     this.sendAfterFetch = false;
     this.canEmit = false;
     this.colorVisionValue = '';
 
-    if (!this.colorDropdown) {
-      console.error(
-        'ColorVisionPlugin was not provided with a correct selector string'
+    if (this.colorDropdowns.length <= 0) {
+      console.warn(
+        'ColorVisionPlugin was not provided any valid select elements'
       );
       return;
     }
 
-    this.colorDropdown.innerHTML = '';
+    this.colorDropdownsLength = this.colorDropdowns.length;
+
+    for (let i = 0; i < this.colorDropdownsLength; i++) {
+      this.colorDropdowns[i].innerHTML = '';
+    }
   }
 
   /**
    * @memberof ColorVisionPlugin
    */
-  onColorChange() {
-    this.colorVisionValue = this.colorDropdown.value;
+  onColorChange(e) {
+    this.colorVisionValue = e.target.value;
+
+    for (let i = 0; i < this.colorDropdownsLength; i ++) {
+      this.colorDropdowns[i].value = this.colorVisionValue;
+    }
+
     this.sendProperty(
       ColorVisionPlugin.colorVisionKey,
       this.colorVisionValue
@@ -63,48 +73,57 @@ export class ColorVisionPlugin extends BasePlugin {
         if (!features.data) {
           return;
         }
-        if (!this.colorDropdown) {
+        if (this.colorDropdownsLength <= 0) {
           return;
         }
-        if (this.colorDropdown.tagName.toLowerCase() !== 'select') {
-          this.colorDropdown.style.display = 'none';
-          console.error(
-            `ColorVisionPlugin was given a ${
-              this.colorDropdown.tagName
-            } but expects an element of type: <select>`
-          );
-          return;
+        for (let i = 0; i < this.colorDropdownsLength; i++) {
+          if (this.colorDropdowns[i].tagName.toLowerCase() !== 'select') {
+            this.colorDropdowns[i].style.display = 'none';
+            console.error(
+              `ColorVisionPlugin was given a ${
+                this.colorDropdown.tagName
+              } but expects an element of type: <select>`
+            );
+            return;
+          }
         }
+
         //get the game's reported colors to build out positions array
         this.client.fetch('colorFilters', result => {
-          for (let i = 0, l = result.data.length; i < l; i++) {
-            if (!COLOR_BLIND_TYPES.includes(result.data[i].toLowerCase())) {
-              console.warn(
-                `${result.data[i]} is not a supported color blindness filter`
-              );
-              continue;
+          for (let i = 0; i < this.colorDropdownsLength; i++) {
+            for (let j = 0, l = result.data.length; j < l; j++) {
+              if (!COLOR_BLIND_TYPES.includes(result.data[j].toLowerCase())) {
+                console.warn(
+                  `${result.data[j]} is not a supported color blindness filter. Skipping`
+                );
+                continue;
+              }
+              const option = document.createElement('option');
+              option.textContent = result.data[j];
+              option.value = result.data[j].toLowerCase();
+
+              this.colorDropdowns[i].appendChild(option);
             }
-            const option = document.createElement('option');
-            option.textContent = result.data[i];
-            option.value = result.data[i].toLowerCase();
 
-            this.colorDropdown.appendChild(option);
+            this.colorDropdowns[i].addEventListener(
+              'change',
+              this.onColorChange.bind(this)
+            );
+
+            this.colorDropdowns[i].style.display = features.data['colorVision']
+              ? ''
+              : 'none';
           }
-          this.colorDropdown.addEventListener(
-            'change',
-            this.onColorChange.bind(this)
-          );
-
-          this.colorVisionValue = this.colorDropdown.value;
+          //use the first select to set the default value since they should all be the same
+          this.colorVisionValue = this.colorDropdowns[0].value;
 
           this.canEmit = true;
+
           if (this.sendAfterFetch) {
             this.sendAllProperties();
           }
         });
-        this.colorDropdown.style.display = features.data['colorVision']
-          ? ''
-          : 'none';
+
       }.bind(this)
     );
   }
@@ -117,7 +136,10 @@ export class ColorVisionPlugin extends BasePlugin {
 
     if (COLOR_BLIND_TYPES.includes(data)) {
       this.colorVisionValue = data;
-      this.colorDropdown.value = this.colorVisionValue;
+
+      for (let i = 0; i < this.colorDropdownsLength; i++) {
+        this.colorDropdowns[i].value = this.colorVisionValue;
+      }
     }
 
     this.client.on('loaded', this.sendAllProperties);
@@ -145,4 +167,17 @@ export class ColorVisionPlugin extends BasePlugin {
   static get colorVisionKey() {
     return 'colorVision';
   }
+
+  // /**
+  //  * @readonly
+  //  * @static
+  //  * @memberof ColorVisionPlugin
+  //  */
+  // static set colorVisionValue(value) {
+  //   console.log('setter yo');
+  //   for (let i = 0; i < this.colorDropdownsLength; i++) {
+  //     this.colorDropdowns[i].value = value;
+  //   }
+  //   this.colorVisionValue = value;
+  // }
 }

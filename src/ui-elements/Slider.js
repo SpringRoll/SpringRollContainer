@@ -94,7 +94,7 @@ export class Slider {
   }
 
   /**
-   * removes the event listeners from the give slider.
+   * removes the event listeners from the given slider.
    * @memberof Slider
    * @param {Function} callBack event to fire on change or input
    */

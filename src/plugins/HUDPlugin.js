@@ -44,6 +44,8 @@ export class HUDPlugin extends ButtonPlugin {
         ? this.currentPos + 1
         : (this.currentPos = 0);
 
+    this.hudButton.dataset['hudPosition'] = this.positions[this.currentPos];
+
     this.sendProperty(
       HUDPlugin.hudPositionKey,
       this.positions[this.currentPos]
