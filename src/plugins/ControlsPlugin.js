@@ -60,16 +60,16 @@ export class ControlsPlugin extends BasePlugin {
     this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
 
     if (this.sensitivitySlidersLength <= 0 && this.keyContainersLength <= 0) {
-      console.warn('ControlsPlugin was not provided any valid input elements, or key binding containers');
+      console.warn('SpringRollContainer: ControlsPlugin was not provided any valid input elements, or key binding containers');
       return;
     }
     if (this.sensitivitySliders[0].slider) {
       this.controlSensitivity = this.sensitivitySliders[0].value;
-      for (let i = 0; i < this.sensitivitySlidersLength; i++) {
-        this.sensitivitySliders[i].enableSliderEvents(
-          this.onControlSensitivityChange.bind(this)
-        );
-      }
+    }
+    for (let i = 0; i < this.sensitivitySlidersLength; i++) {
+      this.sensitivitySliders[i].enableSliderEvents(
+        this.onControlSensitivityChange.bind(this)
+      );
     }
   }
 
@@ -90,9 +90,6 @@ export class ControlsPlugin extends BasePlugin {
     for (let i = 0; i < this.sensitivitySlidersLength; i++) {
       this.sensitivitySliders[i].value = this.controlSensitivity;
     }
-
-    console.log(this.sensitivitySliders);
-    console.log(this.sensitivitySliders[0].value, this.sensitivitySliders[1].value);
   }
 
   /**
@@ -185,7 +182,7 @@ export class ControlsPlugin extends BasePlugin {
                   currentKey: currentKey,
                 };
               }
-              console.log(this.buttons, j);
+
               this.buttons[j][i] =  document.createElement('button');
               this.buttons[j][i].classList.add('key-binding__button');
               this.buttons[j][i].value = result.data[i].actionName;

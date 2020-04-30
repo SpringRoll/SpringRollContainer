@@ -110,11 +110,61 @@ describe('ControlsPlugin', () => {
     expect(cp.buttons[1][1].textContent).to.equal('h');
   });
 
-  it('Plugin should work without any controls', () => {
+  it('should work without any controls', () => {
     //set up empty plugin
     cp = new ControlsPlugin();
     cp.preload({ client: new Bellhop() });
     cp.init();
     cp.client.trigger('features', {});
+  });
+
+  it('should work with an HTMLElement as parameters', () => {
+    //Plugin re-setup
+    document.body.innerHTML = '';
+    const sliderOne = document.createElement('input');
+    sliderOne.type = 'range';
+    sliderOne.id = 'ssOne';
+
+    const keyContainerOne = document.createElement('div');
+    keyContainerOne.id = 'keyContainerOne';
+
+    document.body.appendChild(sliderOne);
+    document.body.appendChild(keyContainerOne);
+
+    cp = new ControlsPlugin({
+      sensitivitySliders: sliderOne,
+      keyContainers: keyContainerOne
+    });
+    cp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'controls-plugin-iframe';
+    document.body.appendChild(iframe);
+    new Container({ iframeSelector: '#controls-plugin-iframe', plugins: [cp] });
+    cp.init();
+    cp.client.trigger('features', {
+      controlSensitivity: true,
+      keyBinding: true
+    });
+    cp.client.trigger('keyBindings', [
+      { actionName: 'Up', defaultKey: 'w' },
+      { actionName: 'Down', defaultKey: 's' }
+    ]);
+
+    const event = document.createEvent('Event');
+    event.key = 'a';
+    event.initEvent('keyup');
+
+    expect(cp.keyBindings.Up.currentKey).to.equal('w');
+    cp.buttons[0][0].click();
+    document.dispatchEvent(event);
+    expect(cp.keyBindings.Up.currentKey).to.equal('a');
+
+
+    cp.sensitivitySliders[0].value = 1;
+    cp.sensitivitySliders[0].dispatchEvent(initEvent('change'));
+
+    expect(cp.sensitivitySliders[0].value).to.equal('1');
+    expect(cp.controlSensitivity).to.equal(1);
   });
 });

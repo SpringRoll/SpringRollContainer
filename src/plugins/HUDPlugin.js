@@ -11,28 +11,46 @@ export class HUDPlugin extends ButtonPlugin {
   /**
    * Creates an instance of HUDPlugin
    * @param {object} params
-   * @param {string | HTMLElement} [params.button] string or HTML Element that represents the HTML button that toggles through the HUD positions
+   * @param {string | HTMLElement} [params.hudSelectorButtons] string or HTML Element that represents the HTML button that toggles through the HUD positions
    * @memberof HUDPlugin
    */
-  constructor({ hudSelectorButton } = {}) {
+  constructor({ hudSelectorButtons } = {}) {
     super('HUD-Layout-Plugin');
 
-    this.hudSelectorButton = hudSelectorButton;
+    this.hudSelectorButtons = hudSelectorButtons;
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.sendAfterFetch = false;
     this.canEmit = false;
-    this._hudButton;
+    this._hudButtons = [];
     this.supportedPositions = ['top', 'bottom', 'left', 'right'];
     this.positions = [];
     this.currentPos = 0; //always start at beginning of array
+    this.hudButtonsLength = 0;
 
-
-    if (!this.hudSelectorButton) {
-      console.warn(
-        'SpringRollContainer: HUDPlugin was not provided a button element or selector string'
-      );
-      return;
+    //create button elements AFTER the fetch from the application has occured.
+    if (this.hudSelectorButtons instanceof HTMLElement) {
+      this._hudButtons[0] = new Button({
+        button: this.hudSelectorButtons,
+        onClick: this.onHUDToggle.bind(this),
+        channel: 'hudPosition'
+      });
+    } else {
+      document.querySelectorAll(this.hudSelectorButtons).forEach((button) => {
+        this._hudButtons.push(
+          new Button({
+            button: button,
+            onClick: this.onHUDToggle.bind(this),
+            channel: 'hudPosition'
+          })
+        );
+      });
     }
+
+    this.hudButtonsLength = this._hudButtons.length;
+    if (this.hudButtonsLength <= 0) {
+      console.warn('SpringRollContainer: HUDPlugin was not provided any valid HTML elements');
+    }
+
   }
 
   /**
@@ -44,7 +62,9 @@ export class HUDPlugin extends ButtonPlugin {
         ? this.currentPos + 1
         : (this.currentPos = 0);
 
-    this.hudButton.dataset['hudPosition'] = this.positions[this.currentPos];
+    for (let i = 0; i < this.hudButtonsLength; i++) {
+      this._hudButtons[i].button.dataset['hudPosition'] = this.positions[this.currentPos];
+    }
 
     this.sendProperty(
       HUDPlugin.hudPositionKey,
@@ -81,12 +101,10 @@ export class HUDPlugin extends ButtonPlugin {
           }
         });
 
-        //create button element AFTER the fetch from the application has occured.
-        this._hudButton = new Button({
-          button: this.hudSelectorButton,
-          onClick: this.onHUDToggle.bind(this),
-          channel: 'hudPosition'
-        });
+        for (let i = 0; i < this.hudButtonsLength; i++) {
+          this._hudButtons[i].displayButton(features.data);
+        }
+
       }.bind(this)
     );
   }
@@ -120,9 +138,9 @@ export class HUDPlugin extends ButtonPlugin {
    * @readonly
    * @memberof CaptionsPlugin
    */
-  get hudButton() {
-    return this._hudButton.button;
-  }
+  // get hudButton() {
+  //   return this._hudButton.button;
+  // }
 
   /**
    * @static

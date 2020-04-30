@@ -35,7 +35,7 @@ export class ColorVisionPlugin extends BasePlugin {
 
     if (this.colorDropdowns.length <= 0) {
       console.warn(
-        'ColorVisionPlugin was not provided any valid select elements'
+        'SpringRollContainer: ColorVisionPlugin was not provided any valid select elements'
       );
       return;
     }
