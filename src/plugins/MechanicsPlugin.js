@@ -130,6 +130,8 @@ export class MechanicsPlugin extends BasePlugin {
 
   /**
    * @memberof MechanicsPlugin
+   * @param {Event} target
+   * @param {string} control
    */
   onMechanicsChange(target, control) {
     this.values[control] = this.sliders[`${control}Sliders`][0].sliderRange(
