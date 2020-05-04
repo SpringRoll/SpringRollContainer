@@ -1,19 +1,24 @@
-import { ButtonPlugin } from '..';
+import { ButtonPlugin } from '../plugins';
+import { Button } from '../ui-elements';
 
 type HUDPluginOptions = {
-  hudSelectorButton: string | HTMLButtonElement
+  hudSelectorButtons: string | HTMLButtonElement
 };
 
 export class HUDPlugin extends ButtonPlugin {
   constructor(options: HUDPluginOptions)
 
-  _hudButton: HTMLButtonElement | null;
+  hudSelectorButtons: string | HTMLButtonElement;
+  sendAfterFetch: boolean;
+  canEmit: boolean;
+  _hudButtons: Button[];
+  supportedPositions: string[];
+  positions: string[];
+  currentPos: number;
+  hudButtonsLength: number;
 
-  currentPos: number | null;
-  supportPositions: Array<string>;
-  positions: Array<string>;
   onHUDToggle(): void;
 
-  get hudButton(): HTMLButtonElement;
+  sendAllProperties(): void;
   get hudPositionKey(): string;
 }

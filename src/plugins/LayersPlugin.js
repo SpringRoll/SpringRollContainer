@@ -53,6 +53,7 @@ export class LayersPlugin extends BasePlugin {
 
   /**
    * @memberof LayersPlugin
+   * @param {Event} e
    */
   onLayerValueChange(e) {
     this.layerValue = this.layersSliders[0].sliderRange(

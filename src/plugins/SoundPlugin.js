@@ -232,6 +232,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {Event} e
    */
   onSoundVolumeChange(e) {
     this.soundVolume = this.soundSliders[0].sliderRange(
@@ -248,6 +249,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {Event} e
    */
   onMusicVolumeChange(e) {
     this.musicVolume = this.musicSliders[0].sliderRange(
@@ -264,6 +266,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {Event} e
    */
   onVOVolumeChange(e) {
     this.voVolume = this.voSliders[0].sliderRange(Number(e.target.value));
@@ -277,6 +280,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {Event} e
    */
   onSFXVolumeChange(e) {
     this.sfxVolume = this.sfxSliders[0].sliderRange(Number(e.target.value));
@@ -427,6 +431,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {boolean} muted
    */
   set soundMuted(muted) {
     this.setMuteProp('soundMuted', muted, this.soundButtons);
@@ -441,6 +446,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {boolean} muted
    */
   set voMuted(muted) {
     this.setMuteProp('voMuted', muted, this.voButtons);
@@ -455,6 +461,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {boolean} muted
    */
   set musicMuted(muted) {
     this.setMuteProp('musicMuted', muted, this.musicButtons);
@@ -469,6 +476,7 @@ export class SoundPlugin extends ButtonPlugin {
 
   /**
    * @memberof SoundPlugin
+   * @param {boolean} muted
    */
   set sfxMuted(muted) {
     this.setMuteProp('sfxMuted', muted, this.sfxButtons);

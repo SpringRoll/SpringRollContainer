@@ -87,6 +87,7 @@ export class UISizePlugin extends BasePlugin {
 
   /**
    * @memberof UISizePlugin
+   * @param {Event} e
    */
   onPointerSizeChange(e) {
     this.pointerSize = this.pointerSliders[0].sliderRange(
@@ -101,6 +102,7 @@ export class UISizePlugin extends BasePlugin {
 
   /**
    * @memberof UISizePlugin
+   * @param {Event} e
    */
   onButtonSizeChange(e) {
     this.buttonSize = this.buttonSliders[0].sliderRange(

@@ -197,12 +197,4 @@ export class CaptionsPlugin extends ButtonPlugin {
       this._captionsMuted
     );
   }
-
-  // /**
-  //  * @readonly
-  //  * @memberof CaptionsPlugin
-  //  */
-  // get captionsButton() {
-  //   return this._captionsButton.button;
-  // }
 }

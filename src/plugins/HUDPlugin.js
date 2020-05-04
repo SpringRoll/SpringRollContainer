@@ -135,14 +135,6 @@ export class HUDPlugin extends ButtonPlugin {
   }
 
   /**
-   * @readonly
-   * @memberof CaptionsPlugin
-   */
-  // get hudButton() {
-  //   return this._hudButton.button;
-  // }
-
-  /**
    * @static
    * @readonly
    * @memberof HUDPlugin

@@ -139,11 +139,4 @@ export class HelpPlugin extends ButtonPlugin {
     this.client.trigger('helpEnabled');
   }
 
-  /**
-   * @readonly
-   * @memberof HelpPlugin
-   */
-  // get helpButton() {
-  //   return this._helpButton.button;
-  // }
 }

@@ -18,7 +18,7 @@ export class ColorVisionPlugin extends BasePlugin {
   /**
    *Creates an instance of ColorVisionPlugin.
    * @param {object} params
-   * @param {string | HTMLElement} params.colorSelect
+   * @param {string | HTMLElement} params.colorSelects
    * @memberof ColorVision
    */
   constructor({ colorSelects } = {}) {
@@ -30,7 +30,7 @@ export class ColorVisionPlugin extends BasePlugin {
         : document.querySelectorAll(colorSelects);
 
     this.sendAfterFetch = false;
-    this.canEmit = false;
+    this.canEmit;
     this.colorVisionValue = '';
 
     this.colorDropdownsLength = this.colorDropdowns.length;
@@ -49,6 +49,7 @@ export class ColorVisionPlugin extends BasePlugin {
 
   /**
    * @memberof ColorVisionPlugin
+   * @param {MouseEvent} e
    */
   onColorChange(e) {
     this.colorVisionValue = e.target.value;

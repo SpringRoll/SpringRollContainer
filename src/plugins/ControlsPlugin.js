@@ -75,6 +75,7 @@ export class ControlsPlugin extends BasePlugin {
 
   /**
    * @memberof ControlsPlugin
+   * @param {MouseEvent} e
    * Sets the new controlSensitivity value, and replicates that value across the other sliders
    */
   onControlSensitivityChange(e) {
@@ -94,6 +95,7 @@ export class ControlsPlugin extends BasePlugin {
 
   /**
    * @memberof ControlsPlugin
+   * @param {MouseEvent} e
    * Sets up a rebinding of a key once a key button is clicked.
    */
   onKeyButtonClick(e) {
@@ -110,6 +112,7 @@ export class ControlsPlugin extends BasePlugin {
 
   /**
    * @memberof ControlsPlugin
+   * @param {KeyboardEvent} key
    * Actually updates the key binding and sends the value. Also
    * replicates the new key across the other keycontainers
    */

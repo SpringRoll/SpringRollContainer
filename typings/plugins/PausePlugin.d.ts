@@ -1,5 +1,5 @@
 import { ButtonPlugin } from '..';
-import { Button } from '../classes/Button';
+import { Button } from '../ui-elements';
 export class PausePlugin extends ButtonPlugin {
   constructor(pauseButton: string, selector?: string);
 
