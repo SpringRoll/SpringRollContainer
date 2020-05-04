@@ -30,7 +30,7 @@ export class ColorVisionPlugin extends BasePlugin {
         : document.querySelectorAll(colorSelects);
 
     this.sendAfterFetch = false;
-    this.canEmit;
+    this.canEmit = false;
     this.colorVisionValue = '';
 
     this.colorDropdownsLength = this.colorDropdowns.length;
@@ -169,16 +169,4 @@ export class ColorVisionPlugin extends BasePlugin {
     return 'colorVision';
   }
 
-  // /**
-  //  * @readonly
-  //  * @static
-  //  * @memberof ColorVisionPlugin
-  //  */
-  // static set colorVisionValue(value) {
-  //   console.log('setter yo');
-  //   for (let i = 0; i < this.colorDropdownsLength; i++) {
-  //     this.colorDropdowns[i].value = value;
-  //   }
-  //   this.colorVisionValue = value;
-  // }
 }

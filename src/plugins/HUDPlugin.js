@@ -21,7 +21,7 @@ export class HUDPlugin extends ButtonPlugin {
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.sendAfterFetch = false;
     this.canEmit = false;
-    this._hudButtons = [];
+    this.hudButtons = [];
     this.supportedPositions = ['top', 'bottom', 'left', 'right'];
     this.positions = [];
     this.currentPos = 0; //always start at beginning of array
@@ -29,24 +29,24 @@ export class HUDPlugin extends ButtonPlugin {
 
     //create button elements AFTER the fetch from the application has occured.
     if (this.hudSelectorButtons instanceof HTMLElement) {
-      this._hudButtons[0] = new Button({
+      this.hudButtons[0] = new Button({
         button: this.hudSelectorButtons,
         onClick: this.onHUDToggle.bind(this),
         channel: 'hudPosition'
       });
     } else {
       document.querySelectorAll(this.hudSelectorButtons).forEach((button) => {
-        this._hudButtons.push(
+        this.hudButtons.push(
           new Button({
             button: button,
             onClick: this.onHUDToggle.bind(this),
-            channel: 'hudPosition'
+            channel: HUDPlugin.hudPositionKey
           })
         );
       });
     }
 
-    this.hudButtonsLength = this._hudButtons.length;
+    this.hudButtonsLength = this.hudButtons.length;
     if (this.hudButtonsLength <= 0) {
       console.warn('SpringRollContainer: HUDPlugin was not provided any valid HTML elements');
     }
@@ -63,7 +63,7 @@ export class HUDPlugin extends ButtonPlugin {
         : (this.currentPos = 0);
 
     for (let i = 0; i < this.hudButtonsLength; i++) {
-      this._hudButtons[i].button.dataset['hudPosition'] = this.positions[this.currentPos];
+      this.hudButtons[i].button.dataset['hudPosition'] = this.positions[this.currentPos];
     }
 
     this.sendProperty(
@@ -102,7 +102,7 @@ export class HUDPlugin extends ButtonPlugin {
         });
 
         for (let i = 0; i < this.hudButtonsLength; i++) {
-          this._hudButtons[i].displayButton(features.data);
+          this.hudButtons[i].displayButton(features.data);
         }
 
       }.bind(this)

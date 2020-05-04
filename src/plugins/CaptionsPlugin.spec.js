@@ -25,7 +25,6 @@ describe('CaptionsPlugin', () => {
 
   it('On click', () => {
     cp._captionsButtons[0].button.click();
-    //expect(cp.captionsMuted).to.not.equal(test);
     expect(cp.captionsMuted).to.equal(true);
     //check that the data attribute is being set correctly for both control elements
     expect(cp._captionsButtons[0].button.dataset.captionsMuted).to.equal('true');

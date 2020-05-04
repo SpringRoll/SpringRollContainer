@@ -31,22 +31,22 @@ describe('HUDPlugin', () => {
     hp.client.trigger('hudPositions', ['top', 'bottom', 'invalid-position']);
 
     expect(hp.positions.length).to.equal(2); //should discard the 'invalid-position'
-    expect(hp._hudButtons[0].button).to.be.instanceof(HTMLElement);
-    expect(hp._hudButtons[1].button).to.be.instanceof(HTMLElement);
+    expect(hp.hudButtons[0].button).to.be.instanceof(HTMLElement);
+    expect(hp.hudButtons[1].button).to.be.instanceof(HTMLElement);
   });
 
   it('onHUDToggle()', () => {
     expect(hp.positions[hp.currentPos]).to.equal('top');
 
-    hp._hudButtons[0].button.click();
+    hp.hudButtons[0].button.click();
     expect(hp.positions[hp.currentPos]).to.equal('bottom');
-    expect(hp._hudButtons[0].button.dataset['hudPosition']).to.equal('bottom');
-    expect(hp._hudButtons[1].button.dataset['hudPosition']).to.equal('bottom');
+    expect(hp.hudButtons[0].button.dataset['hudPosition']).to.equal('bottom');
+    expect(hp.hudButtons[1].button.dataset['hudPosition']).to.equal('bottom');
 
-    hp._hudButtons[1].button.click();
+    hp.hudButtons[1].button.click();
     expect(hp.positions[hp.currentPos]).to.equal('top');
-    expect(hp._hudButtons[0].button.dataset['hudPosition']).to.equal('top');
-    expect(hp._hudButtons[1].button.dataset['hudPosition']).to.equal('top');
+    expect(hp.hudButtons[0].button.dataset['hudPosition']).to.equal('top');
+    expect(hp.hudButtons[1].button.dataset['hudPosition']).to.equal('top');
   });
 
   it('Plugin should work without any controls', () => {
@@ -78,8 +78,8 @@ describe('HUDPlugin', () => {
 
     expect(hp.positions[hp.currentPos]).to.equal('top');
 
-    hp._hudButtons[0].button.click();
+    hp.hudButtons[0].button.click();
     expect(hp.positions[hp.currentPos]).to.equal('bottom');
-    expect(hp._hudButtons[0].button.dataset['hudPosition']).to.equal('bottom');
+    expect(hp.hudButtons[0].button.dataset['hudPosition']).to.equal('bottom');
   });
 });

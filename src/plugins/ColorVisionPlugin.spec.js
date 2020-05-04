@@ -65,7 +65,7 @@ describe('ColorVisionPlugin', () => {
     expect(cvp.colorDropdowns[1].value).to.equal('deuteranopia');
   });
 
-  it('should not fail or crash if there are no controls', () => {
+  it('should work without any controls', () => {
     //set up empty plugin
     cvp = new ColorVisionPlugin();
     cvp.preload({ client: new Bellhop() });

@@ -76,7 +76,6 @@ export class CaptionsPlugin extends ButtonPlugin {
         for (let i = 0; i < this.captionsButtonLength; i ++) {
           this._captionsButtons[i].displayButton($event.data);
         }
-        //this._captionsButtons.forEach.displayButton($event.data);
         if (null === SavedData.read(CAPTIONS_MUTED)) {
           return;
         }
@@ -95,7 +94,6 @@ export class CaptionsPlugin extends ButtonPlugin {
     for (let i = 0; i < this.captionsButtonLength; i ++) {
       this._captionsButtons[i].enableButton();
     }
-    // this._captionsButton.enableButton();
   }
   /**
   * @memberof CaptionsPlugin

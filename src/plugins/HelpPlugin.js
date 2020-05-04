@@ -104,9 +104,6 @@ export class HelpPlugin extends ButtonPlugin {
       }.bind(this)
     );
 
-    // if (!(this._helpButton.button instanceof HTMLElement)) {
-    //   return;
-    // }
     this.client.on(
       'helpEnabled',
       function(event) {
@@ -124,7 +121,7 @@ export class HelpPlugin extends ButtonPlugin {
 
   /**
    * Fired when the enabled status of the help button changes
-   * @event helpEnabled
+   * @function helpEnabled
    * @param {boolean} enabled If the help button is enabled
    * @memberof HelpPlugin
    */

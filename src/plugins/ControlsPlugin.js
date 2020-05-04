@@ -75,7 +75,7 @@ export class ControlsPlugin extends BasePlugin {
 
   /**
    * @memberof ControlsPlugin
-   * @param {MouseEvent} e
+   * @param {Event} e
    * Sets the new controlSensitivity value, and replicates that value across the other sliders
    */
   onControlSensitivityChange(e) {
