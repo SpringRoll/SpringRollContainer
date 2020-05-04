@@ -1,5 +1,5 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from '../classes/Button';
+import { Button } from '../ui-elements/Button';
 
 export class HelpPlugin extends ButtonPlugin {
   constructor(helpButton: string);
@@ -7,8 +7,8 @@ export class HelpPlugin extends ButtonPlugin {
   pause: boolean;
   helpButtonsLength: number;
 
-  get helpEnabled(): void;
-  private _helpEnabled: false;
+  get helpEnabled(): boolean;
+  private _helpEnabled: boolean;
   set helpEnabled(enabled: boolean);
 
   helpButtonClick(): void;

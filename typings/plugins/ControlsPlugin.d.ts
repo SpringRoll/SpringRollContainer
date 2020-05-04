@@ -8,7 +8,7 @@ type ControlsPluginOptions = {
 };
 
 export class ControlsPlugin extends BasePlugin {
-  constructor(options: ControlsluginOptions)
+  constructor(options: ControlsPluginOptions)
 
   controlSensitivity: number;
 

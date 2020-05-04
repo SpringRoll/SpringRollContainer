@@ -1,9 +1,9 @@
 import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from'../classes/Button';
+import { Button } from'../ui-elements';
 
-const CAPTIONS_STYLES: string;
-const CAPTIONS_MUTED: string;
-const DEFAULT_CAPTIONS_STYLES: object;
+declare const CAPTIONS_STYLES: string;
+declare const CAPTIONS_MUTED: string;
+declare const DEFAULT_CAPTIONS_STYLES: object;
 
 type CaptionStyles = {
   size: string,

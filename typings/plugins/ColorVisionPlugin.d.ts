@@ -3,7 +3,7 @@ import { BasePlugin } from '..';
 export const COLOR_BLIND_TYPES: string[];
 
 type ColorVisionPluginOptions = {
-  colorSelects?:string | HTMLElement,
+  colorSelects?: string | HTMLElement,
 };
 
 export class ColorVisionPlugin extends BasePlugin {

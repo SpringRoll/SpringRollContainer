@@ -2,7 +2,7 @@ import { BasePlugin } from '..';
 import { Slider } from '../ui-elements';
 
 type LayersPluginOptions = {
-  layersSliders?:string,
+  layersSliders?: string | HTMLInputElement,
 };
 
 export class LayersPlugin extends BasePlugin {

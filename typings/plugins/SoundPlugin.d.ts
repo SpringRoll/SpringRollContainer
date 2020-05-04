@@ -56,13 +56,13 @@ export class SoundPlugin extends ButtonPlugin {
   setMuteProp(key: string, value: boolean, element: Button[]): void;
   sendAllProperties(): void;
 
-  set soundMuted(muted: boolean): void;
+  set soundMuted(muted: boolean);
   get soundMuted(): boolean;
-  set voMuted(muted: boolean): void;
+  set voMuted(muted: boolean);
   get voMuted():boolean;
-  set musicMuted(muted: boolean): void;
+  set musicMuted(muted: boolean);
   get musicMuted(): boolean;
-  set sfxMuted(muted:boolean): void;
+  set sfxMuted(muted:boolean);
   get sfxMuted(): boolean;
   get soundButton(): HTMLButtonElement;
   get musicButton(): HTMLButtonElement;

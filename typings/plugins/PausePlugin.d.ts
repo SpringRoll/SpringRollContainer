@@ -1,5 +1,6 @@
 import { ButtonPlugin } from '..';
 import { Button } from '../ui-elements';
+import { PageVisibility } from '..'
 export class PausePlugin extends ButtonPlugin {
   constructor(pauseButton: string, selector?: string);
 
@@ -10,8 +11,6 @@ export class PausePlugin extends ButtonPlugin {
   _keepFocus: boolean;
   _paused: boolean;
   iframe: null | HTMLIFrameElement;
-  manageFocus:function;
-  onKeepFocus:function;
   pageVisibility: PageVisibility;
   paused: boolean;
   pauseDisabled: boolean;
@@ -19,7 +18,7 @@ export class PausePlugin extends ButtonPlugin {
   private _pauseButton: Array<Button>;
   pauseButtons: NodeListOf<HTMLButtonElement>;
 
-  set pause(paused: boolean): void;
+  set pause(paused: boolean);
   get pause(): boolean;
   get hasDom(): boolean;
   get pauseButton(): Array<HTMLButtonElement>;
