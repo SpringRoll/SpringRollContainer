@@ -7,7 +7,10 @@ before(() => {
   document.body.innerHTML = '';
   button.id = 'test';
   document.body.appendChild(button);
-  pp = new PausePlugin('#test');
+  const buttonTwo = document.createElement('button');
+  buttonTwo.id = 'testTwo';
+  document.body.appendChild(buttonTwo);
+  pp = new PausePlugin('#test, #testTwo');
   pp.preload({ client: new Bellhop() });
 });
 describe('PausePlugin', () => {

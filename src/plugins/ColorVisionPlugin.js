@@ -33,14 +33,14 @@ export class ColorVisionPlugin extends BasePlugin {
     this.canEmit = false;
     this.colorVisionValue = '';
 
+    this.colorDropdownsLength = this.colorDropdowns.length;
+
     if (this.colorDropdowns.length <= 0) {
       console.warn(
         'SpringRollContainer: ColorVisionPlugin was not provided any valid select elements'
       );
       return;
     }
-
-    this.colorDropdownsLength = this.colorDropdowns.length;
 
     for (let i = 0; i < this.colorDropdownsLength; i++) {
       this.colorDropdowns[i].innerHTML = '';

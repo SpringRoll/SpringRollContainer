@@ -10,25 +10,32 @@ const initEvent = eventName => {
 describe('MechanicsPlugin', () => {
   let mp;
   const options = {
-    hitAreaScaleSlider: 'hass',
-    dragThresholdScaleSlider: 'dtss',
-    healthSlider: 'hs',
-    objectCountSlider: 'ocs',
-    completionPercentageSlider: 'cps',
-    speedScaleSlider: 'sss',
-    timersScaleSlider: 'tss',
-    inputCountSlider: 'ics'
+    hitAreaScaleSliders: 'hass',
+    dragThresholdScaleSliders: 'dtss',
+    healthSliders: 'hs',
+    objectCountSliders: 'ocs',
+    completionPercentageSliders: 'cps',
+    speedScaleSliders: 'sss',
+    timersScaleSliders: 'tss',
+    inputCountSliders: 'ics'
   };
 
   before(() => {
     document.body.innerHTML = '';
     Object.keys(options).forEach(key => {
-      const slider = document.createElement('input');
-      slider.type = 'range';
-      slider.id = options[key];
-      options[key] = `#${options[key]}`;
-      document.body.appendChild(slider);
+      const sliderOne = document.createElement('input');
+      const sliderTwo = document.createElement('input');
+      sliderOne.type = 'range';
+      sliderTwo.type = 'range';
+      sliderOne.id = `${options[key]}One`;
+      sliderTwo.id = `${options[key]}Two`;
+
+      document.body.appendChild(sliderOne);
+      document.body.appendChild(sliderTwo);
+
+      options[key] = `#${options[key]}One, #${options[key]}Two`;
     });
+
     mp = new MechanicsPlugin(options);
     mp.preload({ client: new Bellhop() });
   });
@@ -43,210 +50,242 @@ describe('MechanicsPlugin', () => {
   });
 
   it('.onHitAreaScaleChange()', () => {
-    mp.sliders.hitAreaScaleSlider.value = 1;
-    mp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.hitAreaScaleSliders[0].value = 1;
+    mp.sliders.hitAreaScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.hitAreaScaleSlider.value).to.equal('1');
+    expect(mp.sliders.hitAreaScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.hitAreaScaleSliders[1].value).to.equal('1');
     expect(mp.values.hitAreaScale).to.equal(1);
 
-    mp.sliders.hitAreaScaleSlider.value = 0;
-    mp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.hitAreaScaleSliders[0].value = 0;
+    mp.sliders.hitAreaScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.hitAreaScaleSlider.value).to.equal('0');
+    expect(mp.sliders.hitAreaScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.hitAreaScaleSliders[1].value).to.equal('0');
     expect(mp.values.hitAreaScale).to.equal(0);
 
-    mp.sliders.hitAreaScaleSlider.value = 1.1;
-    mp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.hitAreaScaleSliders[1].value = 1.1;
+    mp.sliders.hitAreaScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.hitAreaScaleSlider.value).to.equal('1');
+    expect(mp.sliders.hitAreaScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.hitAreaScaleSliders[1].value).to.equal('1');
     expect(mp.values.hitAreaScale).to.equal(1);
 
-    mp.sliders.hitAreaScaleSlider.value = -1;
-    mp.sliders.hitAreaScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.hitAreaScaleSliders[1].value = -1;
+    mp.sliders.hitAreaScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.hitAreaScaleSlider.value).to.equal('0');
+    expect(mp.sliders.hitAreaScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.hitAreaScaleSliders[1].value).to.equal('0');
     expect(mp.values.hitAreaScale).to.equal(0);
   });
 
   it('.onDragThresholdScaleChange()', () => {
-    mp.sliders.dragThresholdScaleSlider.value = 1;
-    mp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.dragThresholdScaleSliders[0].value = 1;
+    mp.sliders.dragThresholdScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.dragThresholdScaleSlider.value).to.equal('1');
+    expect(mp.sliders.dragThresholdScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.dragThresholdScaleSliders[1].value).to.equal('1');
     expect(mp.values.dragThresholdScale).to.equal(1);
 
-    mp.sliders.dragThresholdScaleSlider.value = 0;
-    mp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.dragThresholdScaleSliders[0].value = 0;
+    mp.sliders.dragThresholdScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.dragThresholdScaleSlider.value).to.equal('0');
+    expect(mp.sliders.dragThresholdScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.dragThresholdScaleSliders[1].value).to.equal('0');
     expect(mp.values.dragThresholdScale).to.equal(0);
 
-    mp.sliders.dragThresholdScaleSlider.value = 1.1;
-    mp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.dragThresholdScaleSliders[1].value = 1.1;
+    mp.sliders.dragThresholdScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.dragThresholdScaleSlider.value).to.equal('1');
+    expect(mp.sliders.dragThresholdScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.dragThresholdScaleSliders[1].value).to.equal('1');
     expect(mp.values.dragThresholdScale).to.equal(1);
 
-    mp.sliders.dragThresholdScaleSlider.value = -1;
-    mp.sliders.dragThresholdScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.dragThresholdScaleSliders[1].value = -1;
+    mp.sliders.dragThresholdScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.dragThresholdScaleSlider.value).to.equal('0');
+    expect(mp.sliders.dragThresholdScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.dragThresholdScaleSliders[1].value).to.equal('0');
     expect(mp.values.dragThresholdScale).to.equal(0);
   });
 
   it('.onHealthChange()', () => {
-    mp.sliders.healthSlider.value = 1;
-    mp.sliders.healthSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.healthSliders[0].value = 1;
+    mp.sliders.healthSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.healthSlider.value).to.equal('1');
+    expect(mp.sliders.healthSliders[0].value).to.equal('1');
+    expect(mp.sliders.healthSliders[1].value).to.equal('1');
     expect(mp.values.health).to.equal(1);
 
-    mp.sliders.healthSlider.value = 0;
-    mp.sliders.healthSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.healthSliders[0].value = 0;
+    mp.sliders.healthSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.healthSlider.value).to.equal('0');
+    expect(mp.sliders.healthSliders[0].value).to.equal('0');
+    expect(mp.sliders.healthSliders[1].value).to.equal('0');
     expect(mp.values.health).to.equal(0);
 
-    mp.sliders.healthSlider.value = 1.1;
-    mp.sliders.healthSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.healthSliders[1].value = 1.1;
+    mp.sliders.healthSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.healthSlider.value).to.equal('1');
+    expect(mp.sliders.healthSliders[0].value).to.equal('1');
+    expect(mp.sliders.healthSliders[1].value).to.equal('1');
     expect(mp.values.health).to.equal(1);
 
-    mp.sliders.healthSlider.value = -1;
-    mp.sliders.healthSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.healthSliders[1].value = -1;
+    mp.sliders.healthSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.healthSlider.value).to.equal('0');
+    expect(mp.sliders.healthSliders[0].value).to.equal('0');
+    expect(mp.sliders.healthSliders[1].value).to.equal('0');
     expect(mp.values.health).to.equal(0);
   });
 
   it('.onObjectCountChange()', () => {
-    mp.sliders.objectCountSlider.value = 1;
-    mp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.objectCountSliders[0].value = 1;
+    mp.sliders.objectCountSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.objectCountSlider.value).to.equal('1');
+    expect(mp.sliders.objectCountSliders[0].value).to.equal('1');
+    expect(mp.sliders.objectCountSliders[1].value).to.equal('1');
     expect(mp.values.objectCount).to.equal(1);
 
-    mp.sliders.objectCountSlider.value = 0;
-    mp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.objectCountSliders[0].value = 0;
+    mp.sliders.objectCountSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.objectCountSlider.value).to.equal('0');
+    expect(mp.sliders.objectCountSliders[0].value).to.equal('0');
+    expect(mp.sliders.objectCountSliders[1].value).to.equal('0');
     expect(mp.values.objectCount).to.equal(0);
 
-    mp.sliders.objectCountSlider.value = 1.1;
-    mp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.objectCountSliders[1].value = 1.1;
+    mp.sliders.objectCountSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.objectCountSlider.value).to.equal('1');
+    expect(mp.sliders.objectCountSliders[0].value).to.equal('1');
+    expect(mp.sliders.objectCountSliders[1].value).to.equal('1');
     expect(mp.values.objectCount).to.equal(1);
 
-    mp.sliders.objectCountSlider.value = -1;
-    mp.sliders.objectCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.objectCountSliders[1].value = -1;
+    mp.sliders.objectCountSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.objectCountSlider.value).to.equal('0');
+    expect(mp.sliders.objectCountSliders[0].value).to.equal('0');
+    expect(mp.sliders.objectCountSliders[1].value).to.equal('0');
     expect(mp.values.objectCount).to.equal(0);
   });
 
   it('.onCompletionPercentageChange()', () => {
-    mp.sliders.completionPercentageSlider.value = 1;
-    mp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.completionPercentageSliders[0].value = 1;
+    mp.sliders.completionPercentageSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.completionPercentageSlider.value).to.equal('1');
+    expect(mp.sliders.completionPercentageSliders[0].value).to.equal('1');
+    expect(mp.sliders.completionPercentageSliders[1].value).to.equal('1');
     expect(mp.values.completionPercentage).to.equal(1);
 
-    mp.sliders.completionPercentageSlider.value = 0;
-    mp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.completionPercentageSliders[0].value = 0;
+    mp.sliders.completionPercentageSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.completionPercentageSlider.value).to.equal('0');
+    expect(mp.sliders.completionPercentageSliders[0].value).to.equal('0');
+    expect(mp.sliders.completionPercentageSliders[1].value).to.equal('0');
     expect(mp.values.completionPercentage).to.equal(0);
 
-    mp.sliders.completionPercentageSlider.value = 1.1;
-    mp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.completionPercentageSliders[1].value = 1.1;
+    mp.sliders.completionPercentageSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.completionPercentageSlider.value).to.equal('1');
+    expect(mp.sliders.completionPercentageSliders[0].value).to.equal('1');
+    expect(mp.sliders.completionPercentageSliders[1].value).to.equal('1');
     expect(mp.values.completionPercentage).to.equal(1);
 
-    mp.sliders.completionPercentageSlider.value = -1;
-    mp.sliders.completionPercentageSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.completionPercentageSliders[1].value = -1;
+    mp.sliders.completionPercentageSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.completionPercentageSlider.value).to.equal('0');
+    expect(mp.sliders.completionPercentageSliders[0].value).to.equal('0');
+    expect(mp.sliders.completionPercentageSliders[1].value).to.equal('0');
     expect(mp.values.completionPercentage).to.equal(0);
   });
 
   it('.onSpeedScaleChange()', () => {
-    mp.sliders.speedScaleSlider.value = 1;
-    mp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.speedScaleSliders[0].value = 1;
+    mp.sliders.speedScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.speedScaleSlider.value).to.equal('1');
+    expect(mp.sliders.speedScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.speedScaleSliders[1].value).to.equal('1');
     expect(mp.values.speedScale).to.equal(1);
 
-    mp.sliders.speedScaleSlider.value = 0;
-    mp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.speedScaleSliders[0].value = 0;
+    mp.sliders.speedScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.speedScaleSlider.value).to.equal('0');
+    expect(mp.sliders.speedScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.speedScaleSliders[1].value).to.equal('0');
     expect(mp.values.speedScale).to.equal(0);
 
-    mp.sliders.speedScaleSlider.value = 1.1;
-    mp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.speedScaleSliders[1].value = 1.1;
+    mp.sliders.speedScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.speedScaleSlider.value).to.equal('1');
+    expect(mp.sliders.speedScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.speedScaleSliders[1].value).to.equal('1');
     expect(mp.values.speedScale).to.equal(1);
 
-    mp.sliders.speedScaleSlider.value = -1;
-    mp.sliders.speedScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.speedScaleSliders[1].value = -1;
+    mp.sliders.speedScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.speedScaleSlider.value).to.equal('0');
+    expect(mp.sliders.speedScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.speedScaleSliders[1].value).to.equal('0');
     expect(mp.values.speedScale).to.equal(0);
   });
 
   it('.onTimersScaleChange()', () => {
-    mp.sliders.timersScaleSlider.value = 1;
-    mp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.timersScaleSliders[0].value = 1;
+    mp.sliders.timersScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.timersScaleSlider.value).to.equal('1');
+    expect(mp.sliders.timersScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.timersScaleSliders[1].value).to.equal('1');
     expect(mp.values.timersScale).to.equal(1);
 
-    mp.sliders.timersScaleSlider.value = 0;
-    mp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.timersScaleSliders[0].value = 0;
+    mp.sliders.timersScaleSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.timersScaleSlider.value).to.equal('0');
+    expect(mp.sliders.timersScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.timersScaleSliders[1].value).to.equal('0');
     expect(mp.values.timersScale).to.equal(0);
 
-    mp.sliders.timersScaleSlider.value = 1.1;
-    mp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.timersScaleSliders[1].value = 1.1;
+    mp.sliders.timersScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.timersScaleSlider.value).to.equal('1');
+    expect(mp.sliders.timersScaleSliders[0].value).to.equal('1');
+    expect(mp.sliders.timersScaleSliders[1].value).to.equal('1');
     expect(mp.values.timersScale).to.equal(1);
 
-    mp.sliders.timersScaleSlider.value = -1;
-    mp.sliders.timersScaleSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.timersScaleSliders[1].value = -1;
+    mp.sliders.timersScaleSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.timersScaleSlider.value).to.equal('0');
+    expect(mp.sliders.timersScaleSliders[0].value).to.equal('0');
+    expect(mp.sliders.timersScaleSliders[1].value).to.equal('0');
     expect(mp.values.timersScale).to.equal(0);
   });
 
   it('.onInputCountChange()', () => {
-    mp.sliders.inputCountSlider.value = 1;
-    mp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.inputCountSliders[0].value = 1;
+    mp.sliders.inputCountSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.inputCountSlider.value).to.equal('1');
+    expect(mp.sliders.inputCountSliders[0].value).to.equal('1');
+    expect(mp.sliders.inputCountSliders[1].value).to.equal('1');
     expect(mp.values.inputCount).to.equal(1);
 
-    mp.sliders.inputCountSlider.value = 0;
-    mp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.inputCountSliders[0].value = 0;
+    mp.sliders.inputCountSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.inputCountSlider.value).to.equal('0');
+    expect(mp.sliders.inputCountSliders[0].value).to.equal('0');
+    expect(mp.sliders.inputCountSliders[1].value).to.equal('0');
     expect(mp.values.inputCount).to.equal(0);
 
-    mp.sliders.inputCountSlider.value = 1.1;
-    mp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.inputCountSliders[1].value = 1.1;
+    mp.sliders.inputCountSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.inputCountSlider.value).to.equal('1');
+    expect(mp.sliders.inputCountSliders[0].value).to.equal('1');
+    expect(mp.sliders.inputCountSliders[1].value).to.equal('1');
     expect(mp.values.inputCount).to.equal(1);
 
-    mp.sliders.inputCountSlider.value = -1;
-    mp.sliders.inputCountSlider.dispatchEvent(initEvent('change'));
+    mp.sliders.inputCountSliders[1].value = -1;
+    mp.sliders.inputCountSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(mp.sliders.inputCountSlider.value).to.equal('0');
+    expect(mp.sliders.inputCountSliders[0].value).to.equal('0');
+    expect(mp.sliders.inputCountSliders[1].value).to.equal('0');
     expect(mp.values.inputCount).to.equal(0);
   });
 

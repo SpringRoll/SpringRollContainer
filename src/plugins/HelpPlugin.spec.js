@@ -26,6 +26,13 @@ describe('HelpPlugin', () => {
     expect(hp.client).to.be.instanceof(Bellhop);
   });
 
+  it('should not crash or fail if no controls are passed', () => {
+    hp = new HelpPlugin();
+    hp.preload({ client: new Bellhop() });
+    hp.init();
+    hp.client.trigger('features', {});
+  });
+
   it('should work with an HTMLElement as parameter', () => {
     document.body.innerHTML = '';
 
