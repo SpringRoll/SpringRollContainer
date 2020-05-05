@@ -23,10 +23,10 @@ const DEFAULT_CAPTIONS_STYLES = {
 export class CaptionsPlugin extends ButtonPlugin {
   /**
    *Creates an instance of CaptionsPlugin.
-   * @param {string} captionsButton
+   * @param {string | HTMLElement} captionsButtons selector string for one or more captions mute buttons
    * @memberof CaptionsPlugin
    */
-  constructor(captionsButton) {
+  constructor(captionsButtons) {
     super('Caption-Button-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.captionsStyles = Object.assign(
@@ -34,19 +34,35 @@ export class CaptionsPlugin extends ButtonPlugin {
       DEFAULT_CAPTIONS_STYLES,
       SavedData.read(CAPTIONS_STYLES) || {}
     );
-    this._captionsButton = new Button({
-      button: captionsButton,
-      onClick: this.captionsButtonClick.bind(this),
-      channel: 'captions'
-    });
+
+    this._captionsButtons = [];
+
+    if ( captionsButtons instanceof HTMLElement ) {
+      this._captionsButtons[0] = new Button({
+        button: captionsButtons,
+        onClick: this.captionsButtonClick.bind(this),
+        channel: 'captions'
+      });
+    } else {
+      document.querySelectorAll(captionsButtons).forEach((button) => {
+        this._captionsButtons.push(new Button({
+          button: button,
+          onClick: this.captionsButtonClick.bind(this),
+          channel: 'captions'
+        }));
+      });
+    }
+
     this._captionsMuted = false;
 
-    if (!this._captionsButton) {
+    if (this._captionsButtons.length <= 0) {
       console.warn(
-        'SpringRollContainer: CaptionPlugin was not provided a button element'
+        'SpringRollContainer: CaptionPlugin was not provided any valid button elements'
       );
       return;
     }
+
+    this.captionsButtonLength = this._captionsButtons.length;
   }
 
   /**
@@ -57,7 +73,9 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.client.on(
       'features',
       function($event) {
-        this._captionsButton.displayButton($event.data);
+        for (let i = 0; i < this.captionsButtonLength; i ++) {
+          this._captionsButtons[i].displayButton($event.data);
+        }
         if (null === SavedData.read(CAPTIONS_MUTED)) {
           return;
         }
@@ -73,7 +91,9 @@ export class CaptionsPlugin extends ButtonPlugin {
       }.bind(this)
     );
 
-    this._captionsButton.enableButton();
+    for (let i = 0; i < this.captionsButtonLength; i ++) {
+      this._captionsButtons[i].enableButton();
+    }
   }
   /**
   * @memberof CaptionsPlugin
@@ -103,6 +123,10 @@ export class CaptionsPlugin extends ButtonPlugin {
    */
   captionsButtonClick() {
     this.captionsMuted = !this.captionsMuted;
+
+    for (let i = 0; i < this.captionsButtonLength; i ++) {
+      this._captionsButtons[i].button.dataset['captionsMuted'] = this.captionsMuted;
+    }
   }
 
   /**
@@ -170,13 +194,5 @@ export class CaptionsPlugin extends ButtonPlugin {
       this.captionsButton,
       this._captionsMuted
     );
-  }
-
-  /**
-   * @readonly
-   * @memberof CaptionsPlugin
-   */
-  get captionsButton() {
-    return this._captionsButton.button;
   }
 }

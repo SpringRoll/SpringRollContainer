@@ -11,15 +11,15 @@ export class UISizePlugin extends BasePlugin {
   /**
    *Creates an instance of UISizePlugin.
    * @param {object} params
-   * @param {string | HTMLElement} [params.pointerSlider]
-   * @param {string | HTMLElement} [params.buttonSlider]
+   * @param {string | HTMLElement} [params.pointerSliders]
+   * @param {string | HTMLElement} [params.buttonSliders]
    * @param {number} [params.defaultPointerSize=0.5]
    * @param {number} [params.defaultButtonSize=0.5]
    * @memberof UISizePlugin
    */
   constructor({
-    pointerSlider,
-    buttonSlider,
+    pointerSliders,
+    buttonSliders,
     defaultPointerSize = 0.5,
     defaultButtonSize = 0.5
   } = {}) {
@@ -27,48 +27,92 @@ export class UISizePlugin extends BasePlugin {
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.pointerSize = defaultPointerSize;
     this.buttonSize = defaultButtonSize;
+    this.pointerSliders = [];
+    this.buttonSliders = [];
 
-    this.pointerSlider = new Slider({
-      slider: pointerSlider,
-      control: UISizePlugin.pointerSizeKey,
-      defaultValue: this.pointerSize
-    });
-
-    this.buttonSlider = new Slider({
-      slider: buttonSlider,
-      control: UISizePlugin.buttonSizeKey,
-      defaultValue: this.buttonSize
-    });
-
-
-    if (this.pointerSlider.slider) {
-      this.pointerSlider.enableSliderEvents(this.onPointerSizeChange.bind(this));
-      this.pointerSize = this.pointerSlider.value;
+    if (pointerSliders instanceof HTMLElement) {
+      this.pointerSliders[0] = new Slider({
+        slider: pointerSliders,
+        control: UISizePlugin.pointerSizeKey,
+        defaultValue: this.pointerSize
+      });
+    } else {
+      document.querySelectorAll(pointerSliders).forEach((slider) => {
+        this.pointerSliders.push( new Slider({
+          slider: slider,
+          control: UISizePlugin.pointerSizeKey,
+          defaultValue: this.pointerSize
+        }));
+      });
     }
-    if (this.buttonSlider.slider) {
-      this.buttonSlider.enableSliderEvents(this.onButtonSizeChange.bind(this));
-      this.buttonSize = this.buttonSlider.value;
+
+    if (buttonSliders instanceof HTMLElement) {
+      this.buttonSliders[0] = new Slider({
+        slider: buttonSliders,
+        control: UISizePlugin.buttonSizeKey,
+        defaultValue: this.buttonSize
+      });
+    } else {
+      document.querySelectorAll(buttonSliders).forEach((slider) => {
+        this.buttonSliders.push( new Slider({
+          slider: slider,
+          control: UISizePlugin.buttonSizeKey,
+          defaultValue: this.buttonSize
+        }));
+      });
+    }
+
+    this.pointerSlidersLength = this.pointerSliders.length;
+    this.buttonSlidersLength = this.buttonSliders.length;
+
+    if (0 >= this.pointerSlidersLength + this.buttonSlidersLength) {
+      console.warn('SpringrollContainer: UISizePlugin was not provided any valid HTML Elements');
+      return;
+    }
+
+    if (this.pointerSliders[0].slider) {
+      this.pointerSize = this.pointerSliders[0].value;
+    }
+    if (this.buttonSliders[0].slider) {
+      this.buttonSize = this.buttonSliders[0].value;
+    }
+
+    for (let i = 0; i < this.pointerSlidersLength; i++) {
+      this.pointerSliders[i].enableSliderEvents(this.onPointerSizeChange.bind(this));
+    }
+    for (let i = 0; i < this.buttonSlidersLength; i++) {
+      this.buttonSliders[i].enableSliderEvents(this.onButtonSizeChange.bind(this));
     }
   }
 
   /**
    * @memberof UISizePlugin
+   * @param {Event} e
    */
-  onPointerSizeChange() {
-    this.pointerSize = this.pointerSlider.sliderRange(
-      Number(this.pointerSlider.slider.value)
+  onPointerSizeChange(e) {
+    this.pointerSize = this.pointerSliders[0].sliderRange(
+      Number(e.target.value)
     );
     this.sendProperty(UISizePlugin.pointerSizeKey, this.pointerSize);
+
+    for (let i = 0; i < this.pointerSlidersLength; i++) {
+      this.pointerSliders[i].value = this.pointerSize;
+    }
   }
 
   /**
    * @memberof UISizePlugin
+   * @param {Event} e
    */
-  onButtonSizeChange() {
-    this.buttonSize = this.buttonSlider.sliderRange(
-      Number(this.buttonSlider.slider.value)
+  onButtonSizeChange(e) {
+    this.buttonSize = this.buttonSliders[0].sliderRange(
+      Number(e.target.value)
     );
     this.sendProperty(UISizePlugin.buttonSizeKey, this.buttonSize);
+
+    for (let i = 0; i < this.buttonSlidersLength; i++) {
+      this.buttonSliders[i].value = this.buttonSize;
+    }
   }
 
   /**
@@ -82,8 +126,12 @@ export class UISizePlugin extends BasePlugin {
           return;
         }
 
-        this.pointerSlider.displaySlider(features.data);
-        this.buttonSlider.displaySlider(features.data);
+        for (let i = 0; i < this.pointerSlidersLength; i++) {
+          this.pointerSliders[i].displaySlider(features.data);
+        }
+        for (let i = 0; i < this.buttonSlidersLength; i++) {
+          this.buttonSliders[i].displaySlider(features.data);
+        }
       }.bind(this)
     );
   }

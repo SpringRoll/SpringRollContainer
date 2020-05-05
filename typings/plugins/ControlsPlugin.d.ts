@@ -1,31 +1,35 @@
-import { ButtonPlugin } from '..';
+import { BasePlugin } from './BasePlugin';
+import { Slider } from '../ui-elements/Slider';
 
 type ControlsPluginOptions = {
-  sensitivitySlider?:string | HTMLElement,
+  sensitivitySliders?:string | HTMLElement,
   sensitivity?: number,
-  keyContainer?: string | HTMLElement
+  keyContainers?: string | HTMLElement
 };
 
-type Slider = {
-  slider: HTMLInputElement | string, control: string, min: number, max: number, step: number, value: number
-}
-
-export class ControlsPlugin extends ButtonPlugin {
-  constructor(options: ControlsluginOptions)
+export class ControlsPlugin extends BasePlugin {
+  constructor(options: ControlsPluginOptions)
 
   controlSensitivity: number;
 
-  sensitivitySlider: Slider | null;
+  sensitivitySliders: Slider[];
 
-  keyContainer: string | HTMLInputElement;
+  keyContainer: HTMLElement[] | NodeListOf<HTMLElement>;
   keyBindings: object;
-  buttons: Array<HTMLButtonElement>;
+  buttons: HTMLButtonElement[];
   activekeyButton: undefined | HTMLButtonElement;
 
-  onKeyButtonClick(): void;
-  bindKey(): void;
+  sendAfterFetch: boolean;
+  canEmit: boolean;
 
-  onControlSensitivityChange(): void;
+  sensitivitySlidersLength: number;
+  keyContainersLength: number;
+
+  onControlSensitivityChange(e: MouseEvent): void;
+  onKeyButtonClick(e: MouseEvent): void;
+  bindKey(key: KeyboardEvent): void;
+
+  sendAllProperties(): void;
 
   static get controlSensitivityKey(): string;
   static get keyBindingKey(): string;

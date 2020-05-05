@@ -1,15 +1,16 @@
 import { ButtonPlugin } from '..';
-import { Slider } from '..';
+import { Slider } from '../ui-elements';
+import { Button } from '../ui-elements';
 
 type SoundPluginOptions = {
-  soundButton?:string,
-  musicButton?:string,
-  sfxButton?:string,
-  voButton?:string,
-  soundSlider?:string,
-  musicSlider?:string,
-  sfxSlider?:string,
-  voSlider?:string
+  soundButtons?: string,
+  musicButtons?: string,
+  sfxButtons?: string,
+  voButtons?: string,
+  soundSliders?: string,
+  musicSliders?: string,
+  sfxSliders?: string,
+  voSliders?: string
 };
 
 export class SoundPlugin extends ButtonPlugin {
@@ -25,33 +26,43 @@ export class SoundPlugin extends ButtonPlugin {
   sfxVolume: number;
   voVolume: number;
 
-  private _soundButton: HTMLButtonElement | null;
-  private _musicButton: HTMLButtonElement | null;
-  private _sfxButton: HTMLButtonElement | null;
-  private _voButton: HTMLButtonElement | null;
+  soundButtons: Button[];
+  musicButtons: Button[];
+  sfxButtons: Button[];
+  voButtons: Button[];
 
-  soundSlider: Slider | null;
-  musicSlider: Slider | null;
-  sfxSlider: Slider | null;
-  voSlider: Slider | null;
+  soundSliders: Slider[];
+  musicSliders: Slider[];
+  sfxSliders: Slider[];
+  voSliders: Slider[];
 
-  onSoundVolumeChange(): void;
-  onMusicVolumeChange(): void;
-  onVoVolumeChange(): void;
-  onSfxVolumeChange(): void;
+  soundSlidersLength: number;
+  musicSlidersLength: number;
+  sfxSlidersLength: number;
+  voSlidersLength: number;
+  soundButtonsLength: number;
+  musicButtonsLength: number;
+  sfxButtonsLength: number;
+  voButtonsLength: number;
+
+  onSoundVolumeChange(e: Event): void;
+  onMusicVolumeChange(e: Event): void;
+  onVoVolumeChange(e: Event): void;
+  onSfxVolumeChange(e: Event): void;
   onSoundToggle(): void;
   onMusicToggle(): void;
   onVOToggle(): void;
   onSFXToggle(): void;
-  setMuteProp(): void;
+  setMuteProp(key: string, value: boolean, element: Button[]): void;
+  sendAllProperties(): void;
 
-  set soundMuted(muted: boolean): void;
+  set soundMuted(muted: boolean);
   get soundMuted(): boolean;
-  set voMuted(muted: boolean): void;
+  set voMuted(muted: boolean);
   get voMuted():boolean;
-  set musicMuted(muted: boolean): void;
+  set musicMuted(muted: boolean);
   get musicMuted(): boolean;
-  set sfxMuted(muted:boolean): void;
+  set sfxMuted(muted:boolean);
   get sfxMuted(): boolean;
   get soundButton(): HTMLButtonElement;
   get musicButton(): HTMLButtonElement;

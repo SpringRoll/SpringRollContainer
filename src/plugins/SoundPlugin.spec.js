@@ -10,14 +10,14 @@ const initEvent = eventName => {
 describe('SoundPlugin', () => {
   let sp;
   const options = {
-    soundButton: 'sb',
-    musicButton: 'mb',
-    sfxButton: 'sfxb',
-    voButton: 'vb',
-    soundSlider: 'ss',
-    musicSlider: 'ms',
-    sfxSlider: 'sfxs',
-    voSlider: 'vs'
+    soundButtons: 'sb',
+    musicButtons: 'mb',
+    sfxButtons: 'sfxb',
+    voButtons: 'vb',
+    soundSliders: 'ss',
+    musicSliders: 'ms',
+    sfxSliders: 'sfxs',
+    voSliders: 'vs'
   };
 
   before(() => {
@@ -25,15 +25,29 @@ describe('SoundPlugin', () => {
     Object.keys(options).forEach(key => {
       if (/Button/.test(key)) {
         const button = document.createElement('button');
+        const buttonTwo = document.createElement('button');
+
         button.id = options[key];
-        options[key] = `#${options[key]}`;
+        buttonTwo.id = `${options[key]}Two`;
+
         document.body.appendChild(button);
+        document.body.appendChild(buttonTwo);
+
+        options[key] = `#${options[key]}, #${options[key]}Two`;
       } else {
         const slider = document.createElement('input');
+        const sliderTwo = document.createElement('input');
+
         slider.type = 'range';
+        sliderTwo.type = 'range';
+
         slider.id = options[key];
-        options[key] = `#${options[key]}`;
+        sliderTwo.id = `${options[key]}Two`;
+
+        options[key] = `#${options[key]}, #${options[key]}Two`;
+
         document.body.appendChild(slider);
+        document.body.appendChild(sliderTwo);
       }
     });
     sp = new SoundPlugin(options);
@@ -45,21 +59,33 @@ describe('SoundPlugin', () => {
     iframe.id = 'sound-plugin-iframe';
     document.body.appendChild(iframe);
 
-    expect(sp.soundButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.soundButton.style.display).to.equal('');
-    expect(sp.soundButton.classList.contains('disabled')).to.be.false;
+    expect(sp.soundButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.soundButtons[0].button.style.display).to.equal('');
+    expect(sp.soundButtons[0].button.classList.contains('disabled')).to.be.false;
+    expect(sp.soundButtons[1].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.soundButtons[1].button.style.display).to.equal('');
+    expect(sp.soundButtons[1].button.classList.contains('disabled')).to.be.false;
 
-    expect(sp.musicButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.musicButton.style.display).to.equal('');
-    expect(sp.musicButton.classList.contains('disabled')).to.be.false;
+    expect(sp.musicButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.musicButtons[0].button.style.display).to.equal('');
+    expect(sp.musicButtons[0].button.classList.contains('disabled')).to.be.false;
+    expect(sp.musicButtons[1].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.musicButtons[1].button.style.display).to.equal('');
+    expect(sp.musicButtons[1].button.classList.contains('disabled')).to.be.false;
 
-    expect(sp.sfxButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.sfxButton.style.display).to.equal('');
-    expect(sp.sfxButton.classList.contains('disabled')).to.be.false;
+    expect(sp.sfxButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.sfxButtons[0].button.style.display).to.equal('');
+    expect(sp.sfxButtons[0].button.classList.contains('disabled')).to.be.false;
+    expect(sp.sfxButtons[1].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.sfxButtons[1].button.style.display).to.equal('');
+    expect(sp.sfxButtons[1].button.classList.contains('disabled')).to.be.false;
 
-    expect(sp.voButton).to.be.instanceof(HTMLButtonElement);
-    expect(sp.voButton.style.display).to.equal('');
-    expect(sp.voButton.classList.contains('disabled')).to.be.false;
+    expect(sp.voButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.voButtons[0].button.style.display).to.equal('');
+    expect(sp.voButtons[0].button.classList.contains('disabled')).to.be.false;
+    expect(sp.voButtons[1].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.voButtons[1].button.style.display).to.equal('');
+    expect(sp.voButtons[1].button.classList.contains('disabled')).to.be.false;
 
     new Container({ iframeSelector: '#sound-plugin-iframe' }).client.trigger(
       'features'
@@ -67,9 +93,9 @@ describe('SoundPlugin', () => {
   });
 
   it('.setMuteProp()', () => {
-    sp.setMuteProp('soundMuted', true, sp.soundButton);
+    sp.setMuteProp('soundMuted', true, sp.soundButtons);
     expect(sp._soundMuted).to.be.true;
-    sp.setMuteProp('soundMuted', false, sp.soundButton);
+    sp.setMuteProp('soundMuted', false, sp.soundButtons);
     expect(sp._soundMuted).to.be.false;
   });
 
@@ -97,60 +123,76 @@ describe('SoundPlugin', () => {
     expect(sp.sfxMuted).to.be.true;
   });
 
+  it('.onSoundVolumeChange()', () => {
+    sp.soundSliders[0].value = 1;
+    sp.soundSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.soundVolume).to.equal(1);
+    expect(sp.soundSliders[0].value).to.equal('1');
+    expect(sp.soundSliders[1].value).to.equal('1');
+
+    sp.soundSliders[1].value = 0;
+    sp.soundSliders[1].dispatchEvent(initEvent('change'));
+
+    expect(sp.soundVolume).to.equal(0);
+    expect(sp.soundSliders[0].value).to.equal('0');
+    expect(sp.soundSliders[1].value).to.equal('0');
+  });
+
+  it('.onMusicVolumeChange()', () => {
+    sp.musicSliders[0].value = 1;
+    sp.musicSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.musicMuted).to.be.false;
+    expect(sp.musicSliders[0].value).to.equal('1');
+    expect(sp.musicSliders[1].value).to.equal('1');
+
+    sp.musicSliders[0].value = 0;
+    sp.musicSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.musicMuted).to.be.true;
+    expect(sp.musicSliders[0].value).to.equal('0');
+    expect(sp.musicSliders[1].value).to.equal('0');
+  });
+
+  it('.onVoVolumeChange()', () => {
+    sp.voSliders[0].value = 1;
+    sp.voSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.voMuted).to.be.false;
+    expect(sp.voSliders[0].value).to.equal('1');
+    expect(sp.voSliders[1].value).to.equal('1');
+
+    sp.voSliders[0].value = 0;
+    sp.voSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.voMuted).to.be.true;
+    expect(sp.voSliders[0].value).to.equal('0');
+    expect(sp.voSliders[1].value).to.equal('0');
+  });
+
+  it('.onSfxVolumeChange()', () => {
+    sp.sfxSliders[0].value = 1;
+    sp.sfxSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.sfxMuted).to.be.false;
+    expect(sp.sfxSliders[0].value).to.equal('1');
+    expect(sp.sfxSliders[1].value).to.equal('1');
+
+    sp.sfxSliders[0].value = 0;
+    sp.sfxSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(sp.sfxMuted).to.be.true;
+    expect(sp.sfxSliders[0].value).to.equal('0');
+    expect(sp.sfxSliders[1].value).to.equal('0');
+  });
+
   it('.onSoundToggle()', () => {
     sp.onSoundToggle();
     expect(sp.soundMuted).to.be.false;
     expect(sp.voMuted).to.be.false;
     expect(sp.musicMuted).to.be.false;
     expect(sp.sfxMuted).to.be.false;
-  });
-
-  it('.onSoundVolumeChange()', () => {
-    sp.soundSlider.value = 1;
-    sp.soundSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.soundVolume).to.equal(1);
-
-    sp.soundSlider.value = 0;
-    sp.soundSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.soundVolume).to.equal(0);
-  });
-
-  it('.onMusicVolumeChange()', () => {
-    sp.musicSlider.value = 1;
-    sp.musicSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.musicMuted).to.be.false;
-
-    sp.musicSlider.value = 0;
-    sp.musicSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.musicMuted).to.be.true;
-  });
-
-  it('.onVoVolumeChange()', () => {
-    sp.voSlider.value = 1;
-    sp.voSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.voMuted).to.be.false;
-
-    sp.voSlider.value = 0;
-    sp.voSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.voMuted).to.be.true;
-  });
-
-  it('.onSfxVolumeChange()', () => {
-    sp.sfxSlider.value = 1;
-    sp.sfxSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.sfxMuted).to.be.false;
-
-    sp.sfxSlider.value = 0;
-    sp.sfxSlider.dispatchEvent(initEvent('change'));
-
-    expect(sp.sfxMuted).to.be.true;
   });
 
   it('.onMusicToggle()', () => {
@@ -173,11 +215,75 @@ describe('SoundPlugin', () => {
     expect(sp.soundMuted).to.be.a('boolean');
   });
 
-  it('Plugin should work without any controls', () => {
+  it('should work without any controls', () => {
     //set up empty plugin
     sp = new SoundPlugin();
     sp.preload({ client: new Bellhop() });
     sp.init();
     sp.client.trigger('features', {});
+  });
+
+  it('should work with HTML elements as parameters', () => {
+    document.body.innerHTML = '';
+
+    Object.keys(options).forEach(key => {
+      if (/Button/.test(key)) {
+
+        const button = document.createElement('button');
+        button.id = options[key];
+        document.body.appendChild(button);
+        options[key] = button;
+
+      } else {
+
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = options[key];
+        options[key] = slider;
+        document.body.appendChild(slider);
+
+      }
+    });
+    sp = new SoundPlugin(options);
+    sp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
+
+    new Container({ iframeSelector: '#sound-plugin-iframe' }).client.trigger(
+      'features'
+    );
+
+    //buttons
+    expect(sp.soundButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.soundButtons[0].button.style.display).to.equal('');
+    expect(sp.soundButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    expect(sp.musicButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.musicButtons[0].button.style.display).to.equal('');
+    expect(sp.musicButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    expect(sp.sfxButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.sfxButtons[0].button.style.display).to.equal('');
+    expect(sp.sfxButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    expect(sp.voButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.voButtons[0].button.style.display).to.equal('');
+    expect(sp.voButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    //sliders
+    expect(sp.soundSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.soundSliders[0].slider.style.display).to.equal('');
+
+    expect(sp.musicSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.musicSliders[0].slider.style.display).to.equal('');
+
+    expect(sp.sfxSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.sfxSliders[0].slider.style.display).to.equal('');
+
+    expect(sp.voSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.voSliders[0].slider.style.display).to.equal('');
+
   });
 });

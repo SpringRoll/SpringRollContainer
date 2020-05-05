@@ -10,40 +10,40 @@ export class MechanicsPlugin extends BasePlugin {
   /**
    *Creates an instance of MechanicsPlugin.
    * @param {object} params
-   * @param {string | HTMLElement} params.hitAreaScaleSlider
+   * @param {string | HTMLElement} params.hitAreaScaleSliders
    * @param {number} [params.defaultHitAreaScale=0.5]
-   * @param {string | HTMLElement} params.dragThresholdScaleSlider
+   * @param {string | HTMLElement} params.dragThresholdScaleSliders
    * @param {number} [params.defaultDragThresholdScale=0.5]
-   * @param {string | HTMLElement} params.healthSlider
+   * @param {string | HTMLElement} params.healthSliders
    * @param {number} [params.defaultHealth=0.5]
-   * @param {string | HTMLElement} params.objectCountSlider
+   * @param {string | HTMLElement} params.objectCountSliders
    * @param {number} [params.defaultObjectCount=0.5]
-   * @param {string | HTMLElement} params.completionPercentageSlider
+   * @param {string | HTMLElement} params.completionPercentageSliders
    * @param {number} [params.defaultCompletionPercentage=0.5]
-   * @param {string | HTMLElement} params.speedScaleSlider
+   * @param {string | HTMLElement} params.speedScaleSliders
    * @param {number} [params.defaultSpeedScale=0.5]
-   * @param {string | HTMLElement} params.timersScaleSlider
+   * @param {string | HTMLElement} params.timersScaleSliders
    * @param {number} [params.defaultTimersScale=0.5]
-   * @param {string | HTMLElement} params.inputCountSlider
+   * @param {string | HTMLElement} params.inputCountSliders
    * @param {number} [params.defaultInputCount=0.5]
    * @memberof MechanicsPlugin
    */
   constructor({
-    hitAreaScaleSlider,
+    hitAreaScaleSliders,
     defaultHitAreaScale = 0.5,
-    dragThresholdScaleSlider,
+    dragThresholdScaleSliders,
     defaultDragThresholdScale = 0.5,
-    healthSlider,
+    healthSliders,
     defaultHealth = 0.5,
-    objectCountSlider,
+    objectCountSliders,
     defaultObjectCount = 0.5,
-    completionPercentageSlider,
+    completionPercentageSliders,
     defaultCompletionPercentage = 0.5,
-    speedScaleSlider,
+    speedScaleSliders,
     defaultSpeedScale = 0.5,
-    timersScaleSlider,
+    timersScaleSliders,
     defaultTimersScale = 0.5,
-    inputCountSlider,
+    inputCountSliders,
     defaultInputCount = 0.5,
   } = {}) {
     super('Mechanics-Plugin');
@@ -59,84 +59,90 @@ export class MechanicsPlugin extends BasePlugin {
       inputCount: defaultInputCount,
     };
 
-    this.sliders = {
-      //Hit Area Scale
-      hitAreaScaleSlider: new Slider({
-        slider: hitAreaScaleSlider,
-        control: MechanicsPlugin.hitAreaScaleKey,
-        defaultValue: this.values.hitAreaScale
-      }),
-
-      //Drag Threshold Scale
-      dragThresholdScaleSlider: new Slider({
-        slider: dragThresholdScaleSlider,
-        control: MechanicsPlugin.dragThresholdScaleKey,
-        defaultValue: this.values.dragThresholdScale
-      }),
-
-      //Health
-      healthSlider: new Slider({
-        slider: healthSlider,
-        control: MechanicsPlugin.healthKey,
-        defaultValue: this.values.health
-      }),
-
-      //Object Count
-      objectCountSlider: new Slider({
-        slider: objectCountSlider,
-        control: MechanicsPlugin.objectCountKey,
-        defaultValue: this.values.objectCount
-      }),
-
-      //Completion Percentage
-      completionPercentageSlider: new Slider({
-        slider: completionPercentageSlider,
-        control: MechanicsPlugin.completionPercentageKey,
-        defaultValue: this.values.completionPercentage
-      }),
-
-      //Speed Scale
-      speedScaleSlider: new Slider({
-        slider: speedScaleSlider,
-        control: MechanicsPlugin.speedScaleKey,
-        defaultValue: this.values.speedScale
-      }),
-
-      //Timer Scale
-      timersScaleSlider: new Slider({
-        slider: timersScaleSlider,
-        control: MechanicsPlugin.timersScaleKey,
-        defaultValue: this.values.timersScale
-      }),
-
-      //Input Count
-      inputCountSlider: new Slider({
-        slider: inputCountSlider,
-        control: MechanicsPlugin.inputCountKey,
-        defaultValue: this.values.inputCount
-      }),
-
+    this.selectors = {
+      hitAreaScaleSliders: hitAreaScaleSliders,
+      dragThresholdScaleSliders: dragThresholdScaleSliders,
+      healthSliders: healthSliders,
+      objectCountSliders: objectCountSliders,
+      completionPercentageSliders: completionPercentageSliders,
+      speedScaleSliders: speedScaleSliders,
+      timersScaleSliders: timersScaleSliders,
+      inputCountSliders: inputCountSliders,
     };
 
-    Object.keys(this.sliders).forEach(key => {
-      if (!this.sliders[key].slider) {
-        return;
+    this.sliders = {
+      hitAreaScaleSliders: [],
+      dragThresholdScaleSliders: [],
+      healthSliders: [],
+      objectCountSliders: [],
+      completionPercentageSliders: [],
+      speedScaleSliders: [],
+      timersScaleSliders: [],
+      inputCountSliders: [],
+    };
+
+    for (const key in this.values) {
+      if (this.selectors[`${key}Sliders`] instanceof HTMLElement) {
+        this.sliders[`${key}Sliders`][0] = new Slider({
+          slider: this.selectors[`${key}Sliders`],
+          control: MechanicsPlugin[`${key}Key`],
+          defaultValue: this.values[key]
+        });
+      } else {
+        document.querySelectorAll(this.selectors[`${key}Sliders`]).forEach((slider) => {
+          this.sliders[`${key}Sliders`].push(new Slider({
+            slider: slider,
+            control: MechanicsPlugin[`${key}Key`],
+            defaultValue: this.values[key]
+          }));
+        });
       }
-      this.sliders[key].enableSliderEvents(() => {
-        this.onMechanicsChange(this.sliders[key].control);
-      });
-      this.values[this.sliders[key].control] = this.sliders[key].value;
-    });
+    }
+
+    this.slidersLength = {
+      hitAreaScaleSliders: this.sliders.hitAreaScaleSliders.length,
+      dragThresholdScaleSliders: this.sliders.dragThresholdScaleSliders.length,
+      healthSliders: this.sliders.healthSliders.length,
+      objectCountSliders: this.sliders.objectCountSliders.length,
+      completionPercentageSliders: this.sliders.completionPercentageSliders.length,
+      speedScaleSliders: this.sliders.speedScaleSliders.length,
+      timersScaleSliders: this.sliders.timersScaleSliders.length,
+      inputCountSliders: this.sliders.inputCountSliders.length,
+    };
+
+    if (Object.values(this.slidersLength).reduce((accumulator, currentValue) => accumulator + currentValue, 0) <= 0) {
+      console.warn('SpringrollContainer: MechanicsPlugin was not provided any valid HTML Input Elements');
+      return;
+    }
+
+    for (const key in this.sliders) {
+      for (let i = 0; i < this.slidersLength[key]; i++) {
+        this.sliders[key][i].enableSliderEvents((e) => {
+          this.onMechanicsChange(e.target, this.sliders[key][i].control);
+        });
+      }
+
+      if (this.sliders[key][0].slider) {
+        this.values[this.sliders[key].control] = this.sliders[key][0].value;
+      }
+    }
   }
 
   /**
    * @memberof MechanicsPlugin
+   * @param {Event} target
+   * @param {string} control
    */
-  onMechanicsChange(control) {
-    this.values[control] = this.sliders[`${control}Slider`].sliderRange(
-      Number(this.sliders[`${control}Slider`].slider.value)
+  onMechanicsChange(target, control) {
+    this.values[control] = this.sliders[`${control}Sliders`][0].sliderRange(
+      Number(target.value)
     );
+
     this.sendProperty(MechanicsPlugin[`${control}Key`], this.values[control]);
+
+    for (let i = 0; i < this.slidersLength[`${control}Sliders`]; i++) {
+      this.sliders[`${control}Sliders`][i].slider.value = this.values[control];
+    }
   }
 
 
@@ -151,9 +157,11 @@ export class MechanicsPlugin extends BasePlugin {
           return;
         }
 
-        Object.keys(this.sliders).forEach(key => {
-          this.sliders[key].displaySlider(features.data);
-        });
+        for (const key in this.sliders) {
+          for (let i = 0; i < this.slidersLength[key]; i++) {
+            this.sliders[key][i].displaySlider(features.data);
+          }
+        }
       }.bind(this)
     );
   }

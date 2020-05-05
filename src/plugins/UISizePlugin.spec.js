@@ -9,21 +9,32 @@ const initEvent = eventName => {
 
 describe('UISizePlugin', () => {
   let up;
-  const options = {
-    pointerSlider: 'ps',
-    buttonSlider: 'bs'
-  };
 
   before(() => {
     document.body.innerHTML = '';
-    Object.keys(options).forEach(key => {
-      const slider = document.createElement('input');
-      slider.type = 'range';
-      slider.id = options[key];
-      options[key] = `#${options[key]}`;
-      document.body.appendChild(slider);
+
+    const pointerSliderOne = document.createElement('input');
+    pointerSliderOne.type = 'range';
+    pointerSliderOne.id = 'psOne';
+    document.body.appendChild(pointerSliderOne);
+    const pointerSliderTwo = document.createElement('input');
+    pointerSliderTwo.type = 'range';
+    pointerSliderTwo.id = 'psTwo';
+    document.body.appendChild(pointerSliderTwo);
+
+    const buttonSliderOne = document.createElement('input');
+    buttonSliderOne.type = 'range';
+    buttonSliderOne.id = 'bsOne';
+    document.body.appendChild(buttonSliderOne);
+    const buttonSliderTwo = document.createElement('input');
+    buttonSliderTwo.type = 'range';
+    buttonSliderTwo.id = 'bsTwo';
+    document.body.appendChild(buttonSliderTwo);
+
+    up = new UISizePlugin({
+      pointerSliders: '#psOne, #psTwo',
+      buttonSliders: '#bsOne, #bsTwo' //worlds worst console name
     });
-    up = new UISizePlugin(options);
     up.preload({ client: new Bellhop() });
   });
 
@@ -37,62 +48,116 @@ describe('UISizePlugin', () => {
   });
 
   it('.onPointerSizeChange()', () => {
-    up.pointerSlider.value = 1;
-    up.pointerSlider.dispatchEvent(initEvent('change'));
+    up.pointerSliders[0].value = 1;
+    up.pointerSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(up.pointerSlider.value).to.equal('1');
+    expect(up.pointerSliders[0].value).to.equal('1');
+    expect(up.pointerSliders[1].value).to.equal('1');
     expect(up.pointerSize).to.equal(1);
 
-    up.pointerSlider.value = 0;
-    up.pointerSlider.dispatchEvent(initEvent('change'));
+    up.pointerSliders[0].value = 0;
+    up.pointerSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(up.pointerSlider.value).to.equal('0');
+    expect(up.pointerSliders[0].value).to.equal('0');
+    expect(up.pointerSliders[1].value).to.equal('0');
     expect(up.pointerSize).to.equal(0);
 
-    up.pointerSlider.value = 1.1;
-    up.pointerSlider.dispatchEvent(initEvent('change'));
+    up.pointerSliders[1].value = 1.1;
+    up.pointerSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(up.pointerSlider.value).to.equal('1');
+    expect(up.pointerSliders[0].value).to.equal('1');
+    expect(up.pointerSliders[1].value).to.equal('1');
     expect(up.pointerSize).to.equal(1);
 
-    up.pointerSlider.value = -1;
-    up.pointerSlider.dispatchEvent(initEvent('change'));
+    up.pointerSliders[1].value = -1;
+    up.pointerSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(up.pointerSlider.value).to.equal('0');
+    expect(up.pointerSliders[0].value).to.equal('0');
+    expect(up.pointerSliders[1].value).to.equal('0');
     expect(up.pointerSize).to.equal(0);
   });
 
   it('.onButtonSizeChange()', () => {
-    up.buttonSlider.value = 1;
-    up.buttonSlider.dispatchEvent(initEvent('change'));
+    up.buttonSliders[0].value = 1;
+    up.buttonSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(up.buttonSlider.value).to.equal('1');
+    expect(up.buttonSliders[0].value).to.equal('1');
+    expect(up.buttonSliders[1].value).to.equal('1');
     expect(up.buttonSize).to.equal(1);
 
-    up.buttonSlider.value = 0;
-    up.buttonSlider.dispatchEvent(initEvent('change'));
+    up.buttonSliders[0].value = 0;
+    up.buttonSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(up.buttonSlider.value).to.equal('0');
+    expect(up.buttonSliders[0].value).to.equal('0');
+    expect(up.buttonSliders[1].value).to.equal('0');
     expect(up.buttonSize).to.equal(0);
 
-    up.buttonSlider.value = 1.1;
-    up.buttonSlider.dispatchEvent(initEvent('change'));
+    up.buttonSliders[1].value = 1.1;
+    up.buttonSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(up.buttonSlider.value).to.equal('1');
+    expect(up.buttonSliders[0].value).to.equal('1');
+    expect(up.buttonSliders[1].value).to.equal('1');
     expect(up.buttonSize).to.equal(1);
 
-    up.buttonSlider.value = -1;
-    up.buttonSlider.dispatchEvent(initEvent('change'));
+    up.buttonSliders[1].value = -1;
+    up.buttonSliders[1].dispatchEvent(initEvent('change'));
 
-    expect(up.buttonSlider.value).to.equal('0');
+    expect(up.buttonSliders[0].value).to.equal('0');
+    expect(up.buttonSliders[1].value).to.equal('0');
     expect(up.buttonSize).to.equal(0);
   });
 
-  it('Plugin should work without any controls', () => {
+  it('should work without any controls', () => {
     //set up empty plugin
     up = new UISizePlugin();
     up.preload({ client: new Bellhop() });
     up.init();
     up.client.trigger('features', {});
+  });
+
+  it('should work with HTML Elements as paramters', () => {
+
+    //plugin set up
+    document.body.innerHTML = '';
+    const pointerSliderOne = document.createElement('input');
+    pointerSliderOne.type = 'range';
+    pointerSliderOne.id = 'psOne';
+    document.body.appendChild(pointerSliderOne);
+
+    const buttonSliderOne = document.createElement('input');
+    buttonSliderOne.type = 'range';
+    buttonSliderOne.id = 'bsOne';
+    document.body.appendChild(buttonSliderOne);
+
+    up = new UISizePlugin({
+      pointerSliders: pointerSliderOne,
+      buttonSliders: buttonSliderOne //worlds worst console name
+    });
+    up.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'uisize-plugin-iframe';
+    document.body.appendChild(iframe);
+    new Container({ iframeSelector: '#uisize-plugin-iframe' }).client.trigger(
+      'features'
+    );
+
+    //pointer sliders
+    expect(up.pointerSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(up.pointerSliders[0].value).to.equal('0.5');
+
+    up.pointerSliders[0].value = 1;
+    up.pointerSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(up.pointerSliders[0].value).to.equal('1');
+
+    //button sliders
+    expect(up.buttonSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(up.buttonSliders[0].value).to.equal('0.5');
+
+    up.buttonSliders[0].value = 1;
+    up.buttonSliders[0].dispatchEvent(initEvent('change'));
+
+    expect(up.buttonSliders[0].value).to.equal('1');
   });
 });
