@@ -238,7 +238,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.captionsMuted = !this.captionsMuted;
 
     for (let i = 0; i < this.captionsButtonLength; i ++) {
-      this._captionsButtons[i].button.dataset['captionsMuted'] = this.captionsMuted;
+      this._captionsButtons[i].button.classList.add(this.captionsMuted ? 'muted' : 'unmuted');
     }
   }
 
