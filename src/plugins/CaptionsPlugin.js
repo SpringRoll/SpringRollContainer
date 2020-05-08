@@ -7,7 +7,7 @@ const CAPTIONS_STYLES = 'captionsStyles';
 const CAPTIONS_MUTED = 'captionsMuted';
 const DEFAULT_CAPTIONS_STYLES = {
   size: 'md',
-  background: 'black-semi',
+  background: 'black',
   color: 'white',
   edge: 'none',
   font: 'arial',
@@ -18,15 +18,29 @@ const DEFAULT_CAPTIONS_STYLES = {
  * @export
  * @class CaptionsPlugin
  * @property {object} captionsStyles The collection of captions styles
+ * @property {string[]} fontSizeSelectors selector strings for the radio button groups
+ * @property {string[]} colorSelectors selector strings for the radio button groups
+ * @property {string[]} alignmentSelectors selector strings for the radio button groups
+ * @property {Button[]} _captionsButtons array of caption mute buttons
+ * @property {Object[]} fontSizeRadios array that contains each radio group
+ * @property {Object[]} colorRadios array that contains each radio group
+ * @property {Object[]} alignmentRadios array that contains each radio group
+ * @property {number} captionsButtonsLength
+ * @property {number} fontSizeRadiosLength
+ * @property {number} colorRadiosLength
+ * @property {number} alignmentRadiosLength
  * @extends {ButtonPlugin}
  */
 export class CaptionsPlugin extends ButtonPlugin {
   /**
    *Creates an instance of CaptionsPlugin.
    * @param {string | HTMLElement} captionsButtons selector string for one or more captions mute buttons
+   * @param {string } fontSizeRadios selector string for one or more radio groups for caption font size
+   * @param {string } colorRadios selector string for one or more radio groups for caption font/background colors
+   * @param {string } alignmentRadios selector string for one or more radio groups for caption position
    * @memberof CaptionsPlugin
    */
-  constructor(captionsButtons) {
+  constructor({ captionsButtons, fontSizeRadios, colorRadios, alignmentRadios } = {}) {
     super('Caption-Button-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.captionsStyles = Object.assign(
@@ -35,7 +49,16 @@ export class CaptionsPlugin extends ButtonPlugin {
       SavedData.read(CAPTIONS_STYLES) || {}
     );
 
+    //split the selector strings into individual selectors.
+    //Helps keep the input style consistent across plugins.
+    this.fontSizeSelectors = fontSizeRadios ? fontSizeRadios.split(',') : [];
+    this.colorSelectors = colorRadios ? colorRadios.split(',') : [];
+    this.alignmentSelectors = alignmentRadios ? alignmentRadios.split(',') : [];
+
     this._captionsButtons = [];
+    this.fontSizeRadios = [];
+    this.colorRadios = [];
+    this.alignmentRadios = [];
 
     if ( captionsButtons instanceof HTMLElement ) {
       this._captionsButtons[0] = new Button({
@@ -53,16 +76,92 @@ export class CaptionsPlugin extends ButtonPlugin {
       });
     }
 
+    this.fontSizeSelectors.forEach((selector) => {
+      const radios = document.querySelectorAll(`input[name=${selector}]`);
+      if (radios.length !== 3) {
+        console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 3 radio buttons for font size with Selector "${selector}". Skipping selector`);
+        return;
+      }
+      radios[0].value = 'sm';
+      radios[1].value = 'md';
+      radios[2].value = 'lg';
+
+      this.fontSizeRadios.push({
+        sm: radios[0],
+        md: radios[1],
+        lg: radios[2]
+      });
+
+      this.fontSizeRadios[this.fontSizeRadios.length - 1][this.captionsStyles.size].checked = true;
+    });
+
+    this.colorSelectors.forEach((selector) => {
+      const radios = document.querySelectorAll(`input[name=${selector}]`);
+      if (radios.length !== 2) {
+        console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 2 radio buttons for font color with Selector "${selector}". Skipping selector`);
+        return;
+      }
+      radios[0].value = 'default';
+      radios[1].value = 'inverted';
+
+      this.colorRadios.push({
+        default: radios[0],
+        inverted: radios[1],
+      });
+
+      if (this.getCaptionsStyles('background') === 'black') {
+        this.colorRadios[this.colorRadios.length - 1].default.checked = true;
+      } else {
+        this.colorRadios[this.colorRadios.length - 1].inverted.checked = true;
+      }
+
+    });
+
+    this.alignmentSelectors.forEach((selector) => {
+      const radios = document.querySelectorAll(`input[name=${selector}]`);
+      if (radios.length !== 2) {
+        console.warn(`CaptionsPlugin did not find exactly 2 radio buttons for caption alignment with Selector "${selector}". Skipping selector`);
+        return;
+      }
+      radios[0].value = 'top';
+      radios[1].value = 'bottom';
+
+      this.alignmentRadios.push({
+        top: radios[0],
+        bottom: radios[1],
+      });
+
+      this.alignmentRadios[this.alignmentRadios.length - 1][this.captionsStyles.align].checked = true;
+    });
+
     this._captionsMuted = false;
 
-    if (this._captionsButtons.length <= 0) {
+    this.captionsButtonLength = this._captionsButtons.length;
+    this.alignmentRadiosLength = this.alignmentRadios.length;
+    this.fontSizeRadiosLength = this.fontSizeRadios.length;
+    this.colorRadiosLength = this.colorRadios.length;
+
+    if (0 >= (this.captionsButtonLength + this.alignmentRadiosLength + this.fontSizeRadiosLength + this.colorRadiosLength)) {
       console.warn(
-        'SpringRollContainer: CaptionPlugin was not provided any valid button elements'
+        'SpringRollContainer: CaptionPlugin was not provided any valid button or input elements'
       );
       return;
     }
 
-    this.captionsButtonLength = this._captionsButtons.length;
+    //set up change events
+    for (let i = 0; i < this.colorRadiosLength; i++) {
+      this.colorRadios[i].default.addEventListener('change', this.onColorChange.bind(this));
+      this.colorRadios[i].inverted.addEventListener('change', this.onColorChange.bind(this));
+    }
+    for (let i = 0; i < this.alignmentRadiosLength; i++) {
+      this.alignmentRadios[i].top.addEventListener('change', this.onAlignmentChange.bind(this));
+      this.alignmentRadios[i].bottom.addEventListener('change', this.onAlignmentChange.bind(this));
+    }
+    for (let i = 0; i < this.fontSizeRadiosLength; i++) {
+      this.fontSizeRadios[i].sm.addEventListener('change', this.onFontSizeChange.bind(this));
+      this.fontSizeRadios[i].md.addEventListener('change', this.onFontSizeChange.bind(this));
+      this.fontSizeRadios[i].lg.addEventListener('change', this.onFontSizeChange.bind(this));
+    }
   }
 
   /**
@@ -76,11 +175,27 @@ export class CaptionsPlugin extends ButtonPlugin {
         for (let i = 0; i < this.captionsButtonLength; i ++) {
           this._captionsButtons[i].displayButton($event.data);
         }
+        if (!$event.data.captions) {
+          for (let i = 0; i < this.colorRadiosLength; i++) {
+            this.colorRadios[i].default.style.display = 'none';
+            this.colorRadios[i].inverted.style.display = 'none';
+          }
+          for (let i = 0; i < this.alignmentRadiosLength; i++) {
+            this.alignmentRadios[i].top.style.display = 'none';
+            this.alignmentRadios[i].bottom.style.display = 'none';
+          }
+          for (let i = 0; i < this.fontSizeRadiosLength; i++) {
+            this.fontSizeRadios[i].sm.style.display = 'none';
+            this.fontSizeRadios[i].md.style.display = 'none';
+            this.fontSizeRadios[i].lg.style.display = 'none';
+          }
+        }
         if (null === SavedData.read(CAPTIONS_MUTED)) {
           return;
         }
 
         this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+
       }.bind(this)
     );
 
@@ -117,8 +232,6 @@ export class CaptionsPlugin extends ButtonPlugin {
   }
 
   /**
-   *
-   *
    * @memberof CaptionsPlugin
    */
   captionsButtonClick() {
@@ -130,12 +243,62 @@ export class CaptionsPlugin extends ButtonPlugin {
   }
 
   /**
+   * Fired whenever the font size radios are updated
+   * @memberof CaptionsPlugin
+   */
+  onFontSizeChange(e) {
+    this.setCaptionsStyles('size', e.target.value);
+
+    this.fontSizeRadios.forEach((group) => {
+      group[e.target.value].checked = true;
+    });
+  }
+
+  /**
+   * Fired whenever the alignment radios are updated
+   * @param {Event} e
+   * @memberof CaptionsPlugin
+   */
+  onAlignmentChange(e) {
+    this.setCaptionsStyles('align', e.target.value);
+
+    this.alignmentRadios.forEach((group) => {
+      group[e.target.value].checked = true;
+    });
+  }
+
+  /**
+   * Fired whenever the color radios are updated
+   * @param {Event} e
+   * @memberof CaptionsPlugin
+   */
+  onColorChange(e) {
+    const styles = e.target.value === 'default' ? {color: 'white', background: 'black'} : {color: 'black', background: 'white'};
+
+    this.setCaptionsStyles(styles);
+
+    this.colorRadios.forEach((group) => {
+      group[e.target.value].checked = true;
+    });
+  }
+
+  /**
    * Reset the captions styles
+   * @param {Event} e
    * @memberof CaptionsPlugin
    */
   clearCaptionsStyles() {
     this.captionsStyles = Object.assign({}, DEFAULT_CAPTIONS_STYLES);
     this.setCaptionsStyles();
+    this.colorRadios.forEach((group) => {
+      group.default.checked = true;
+    });
+    this.alignmentRadios.forEach((group) => {
+      group.top.checked = true;
+    });
+    this.fontSizeRadios.forEach((group) => {
+      group.md.checked = true;
+    });
   }
 
   /**
@@ -156,7 +319,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @param {string} [styles.color='white'] The text color, the default is white
    * @param {string} [styles.edge='none'] The edge style, default is none
    * @param {string} [styles.font='arial'] The font style, default is arial
-   * @param {string} [styles.background='black-semi'] The background style, black semi-transparent
+   * @param {string} [styles.background='black'] The background style, black
    * @param {string} [styles.size='md'] The font style default is medium
    * @param {string} [styles.align='top'] The align style default is top of the window
    * @param {string} [value=''] If setting styles parameter as a string, this is the value of the property.
