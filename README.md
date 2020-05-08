@@ -28,20 +28,38 @@ The Container supports several built-in plugins that mirror the state features i
 
 Here are some examples of the syntax for declaring plugins when creating the container. Not all (or any) plugins need to be included, only the features supported by the game.
 
-PausePlugin, CaptionsPlugin, HelpPlugin:
+PausePlugin, HelpPlugin:
 ```javascript
-import { PausePlugin, CaptionsPlugin, HelpPlugin, Container } from 'springroll-container';
+import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 
   const container = new springroll.Container({
     iframeSelector: "#game",
     plugins: [
       //all three plugins here expect an HTML Button Element and take a single selector string
       new PausePlugin('#pause-button-selector'), //Pauses or unpauses the game
-      new CaptionsPlugin('#caption-button-selector'), //enables or disables captions
       new HelpPlugin('#help-button-selector'), //requests a hint or help from the game
     ]
   });
 	container.openPath('game.html');
+```
+CaptionsPlugin:
+```javascript
+import { CaptionsPlugin, Container } from 'springroll-container';
+
+  const container = new springroll.Container({
+    iframeSelector: "#game",
+    plugins: [
+      new CaptionsPlugin({
+        captionsButtons: '#caption-button-selector',
+        //the three following options control caption styles and expect radio button group names instead of full selectors
+        fontSizeRadios: 'font-size-radio-name',  //expects exactly three(3) radio buttons for sm, md, and lg font sizes
+        colorRadios: 'color-radio-name', //expects exactly two(2) radio buttons for default (black background, white text), and inverted (black text, white background) color schemes
+        alignmentRadios: 'alignment-radio-name', //expects exactly two(2) radio buttons for the caption placement: top or bottom of the screen.
+      })
+    ]
+  });
+	container.openPath('game.html');
+
 ```
 SoundPlugin:
 ```javascript
