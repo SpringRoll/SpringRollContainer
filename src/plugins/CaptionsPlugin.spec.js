@@ -112,13 +112,13 @@ describe('CaptionsPlugin', () => {
     cp._captionsButtons[0].button.click();
     expect(cp.captionsMuted).to.equal(true);
     //check that the data attribute is being set correctly for both control elements
-    expect(cp._captionsButtons[0].button.dataset.captionsMuted).to.equal('true');
-    expect(cp._captionsButtons[1].button.dataset.captionsMuted).to.equal('true');
+    expect(cp._captionsButtons[0].button.classList.contains('muted')).to.equal(true);
+    expect(cp._captionsButtons[1].button.classList.contains('muted')).to.equal(true);
 
     cp._captionsButtons[1].button.click();
     expect(cp.captionsMuted).to.equal(false);
-    expect(cp._captionsButtons[0].button.dataset.captionsMuted).to.equal('false');
-    expect(cp._captionsButtons[1].button.dataset.captionsMuted).to.equal('false');
+    expect(cp._captionsButtons[0].button.classList.contains('unmuted')).to.equal(true);
+    expect(cp._captionsButtons[1].button.classList.contains('unmuted')).to.equal(true);
   });
 
   it('.onFontSizeChange()', () => {
@@ -214,7 +214,7 @@ describe('CaptionsPlugin', () => {
 
     cp._captionsButtons[0].button.click();
     expect(cp.captionsMuted).to.equal(true);
-    expect(cp._captionsButtons[0].button.dataset.captionsMuted).to.equal('true');
+    expect(cp._captionsButtons[0].button.classList.contains('muted')).to.equal(true);
 
   });
 });
