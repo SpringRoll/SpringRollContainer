@@ -55,10 +55,10 @@ import { CaptionsPlugin, Container } from 'springroll-container';
     plugins: [
       new CaptionsPlugin({
         captionsButtons: '#caption-button-selector',
-        //the three following options control caption styles and expect radio button group names instead of full selectors
-        fontSizeRadios: 'font-size-radio-name',  //expects exactly three(3) radio buttons for sm, md, and lg font sizes
-        colorRadios: 'color-radio-name', //expects exactly two(2) radio buttons for default (black background, white text), and inverted (black text, white background) color schemes
-        alignmentRadios: 'alignment-radio-name', //expects exactly two(2) radio buttons for the caption placement: top or bottom of the screen.
+        //the three following options control caption styles, as radio buttons using the group name is ideal for selecting multiple radio buttons.
+        fontSizeRadios: 'input[name=font-size-radio-name]',  //expects exactly three(3) radio buttons for sm, md, and lg font sizes
+        colorRadios: 'input[name=color-radio-name]', //expects exactly two(2) radio buttons for default (black background, white text), and inverted (black text, white background) color schemes
+        alignmentRadios: 'input[name=alignment-radio-name]', //expects exactly two(2) radio buttons for the caption placement: top or bottom of the screen.
       })
     ]
   });

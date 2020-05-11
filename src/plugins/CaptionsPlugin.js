@@ -77,7 +77,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     }
 
     this.fontSizeSelectors.forEach((selector) => {
-      const radios = document.querySelectorAll(`input[name=${selector}]`);
+      const radios = document.querySelectorAll(selector);
       if (radios.length !== 3) {
         console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 3 radio buttons for font size with Selector "${selector}". Skipping selector`);
         return;
@@ -96,7 +96,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     });
 
     this.colorSelectors.forEach((selector) => {
-      const radios = document.querySelectorAll(`input[name=${selector}]`);
+      const radios = document.querySelectorAll(selector);
       if (radios.length !== 2) {
         console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 2 radio buttons for font color with Selector "${selector}". Skipping selector`);
         return;
@@ -118,7 +118,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     });
 
     this.alignmentSelectors.forEach((selector) => {
-      const radios = document.querySelectorAll(`input[name=${selector}]`);
+      const radios = document.querySelectorAll(selector);
       if (radios.length !== 2) {
         console.warn(`CaptionsPlugin did not find exactly 2 radio buttons for caption alignment with Selector "${selector}". Skipping selector`);
         return;

@@ -89,9 +89,9 @@ describe('CaptionsPlugin', () => {
 
     cp = new CaptionsPlugin({
       captionsButtons: `#${idOne}, #${idTwo}`,
-      fontSizeRadios: 'caption-fontSize, caption-fontSizeTwo',
-      colorRadios: 'caption-color, caption-colorTwo',
-      alignmentRadios: 'caption-align, caption-alignTwo, bogus-align',
+      fontSizeRadios: 'input[name=caption-fontSize], input[name=caption-fontSizeTwo]',
+      colorRadios: 'input[name=caption-color], input[name=caption-colorTwo]',
+      alignmentRadios: 'input[name=caption-align], input[name=caption-alignTwo], input[name=bogus-align]',
     });
     cp.preload({ client: new Bellhop() });
 
