@@ -13,6 +13,9 @@ const DEFAULT_CAPTIONS_STYLES = {
   font: 'arial',
   align: 'top'
 };
+const FONT_SIZE_VALUES = ['sm', 'md', 'lg'];
+const COLOR_VALUES = ['default', 'inverted'];
+const ALIGN_VALUES = ['top', 'bottom'];
 
 /**
  * @export
@@ -82,15 +85,37 @@ export class CaptionsPlugin extends ButtonPlugin {
         console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 3 radio buttons for font size with Selector "${selector}". Skipping selector`);
         return;
       }
-      radios[0].value = 'sm';
-      radios[1].value = 'md';
-      radios[2].value = 'lg';
 
-      this.fontSizeRadios.push({
-        sm: radios[0],
-        md: radios[1],
-        lg: radios[2]
-      });
+      //convert values to lowercase for easier checking later on
+      radios[0].value = radios[0].value.toLowerCase();
+      radios[1].value = radios[1].value.toLowerCase();
+      radios[2].value = radios[2].value.toLowerCase();
+
+      if (FONT_SIZE_VALUES.indexOf(radios[0].value) === -1) {
+        console.warn(`CaptionsPlugin: Font Size radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+      if (FONT_SIZE_VALUES.indexOf(radios[1].value) === -1) {
+        console.warn(`CaptionsPlugin: Font Size radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+      if (FONT_SIZE_VALUES.indexOf(radios[2].value) === -1) {
+        console.warn(`CaptionsPlugin: Font Size radio button value: ${radios[2].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+
+      const group = {};
+
+      group[radios[0].value] = radios[0];
+      group[radios[1].value] = radios[1];
+      group[radios[2].value] = radios[2];
+
+      if (!group.sm || !group.md || !group.lg) {
+        console.warn(`CaptionsPlugin: Duplicate radio button values detected (values: ${radios[0].value}, ${radios[1].value}, ${radios[2].value}). Skipping radio group`);
+        return;
+      }
+
+      this.fontSizeRadios.push(group);
 
       this.fontSizeRadios[this.fontSizeRadios.length - 1][this.captionsStyles.size].checked = true;
     });
@@ -101,13 +126,31 @@ export class CaptionsPlugin extends ButtonPlugin {
         console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 2 radio buttons for font color with Selector "${selector}". Skipping selector`);
         return;
       }
-      radios[0].value = 'default';
-      radios[1].value = 'inverted';
 
-      this.colorRadios.push({
-        default: radios[0],
-        inverted: radios[1],
-      });
+      //convert values to lowercase for easier checking later on
+      radios[0].value = radios[0].value.toLowerCase();
+      radios[1].value = radios[1].value.toLowerCase();
+
+      if (COLOR_VALUES.indexOf(radios[0].value) === -1) {
+        console.warn(`CaptionsPlugin: Caption color radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+      if (COLOR_VALUES.indexOf(radios[1].value) === -1) {
+        console.warn(`CaptionsPlugin: Caption color radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+
+      if (radios[0].value === radios[1].value) {
+        console.warn(`CaptionsPlugin: Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
+      }
+
+      const group = {};
+      group[radios[0].value] = radios[0];
+      group[radios[1].value] = radios[1];
+
+
+
+      this.colorRadios.push(group);
 
       if (this.getCaptionsStyles('background') === 'black') {
         this.colorRadios[this.colorRadios.length - 1].default.checked = true;
@@ -123,13 +166,31 @@ export class CaptionsPlugin extends ButtonPlugin {
         console.warn(`CaptionsPlugin did not find exactly 2 radio buttons for caption alignment with Selector "${selector}". Skipping selector`);
         return;
       }
-      radios[0].value = 'top';
-      radios[1].value = 'bottom';
 
-      this.alignmentRadios.push({
-        top: radios[0],
-        bottom: radios[1],
-      });
+      //convert values to lowercase for easier checking later on
+      radios[0].value = radios[0].value.toLowerCase();
+      radios[1].value = radios[1].value.toLowerCase();
+
+      if (ALIGN_VALUES.indexOf(radios[0].value) === -1) {
+        console.warn(`CaptionsPlugin: Caption alignment radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+      if (ALIGN_VALUES.indexOf(radios[1].value) === -1) {
+        console.warn(`CaptionsPlugin: Caption alignment radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+        return;
+      }
+
+      if (radios[0].value === radios[1].value) {
+        console.warn(`CaptionsPlugin: Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
+      }
+
+      const group = {};
+      group[radios[0].value] = radios[0];
+      group[radios[1].value] = radios[1];
+
+
+
+      this.alignmentRadios.push(group);
 
       this.alignmentRadios[this.alignmentRadios.length - 1][this.captionsStyles.align].checked = true;
     });

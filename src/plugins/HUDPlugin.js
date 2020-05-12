@@ -88,7 +88,7 @@ export class HUDPlugin extends ButtonPlugin {
             if (
               !this.supportedPositions.includes(result.data[i].toLowerCase())
             ) {
-              console.warn(`${result.data[i]} is an invalid position name`);
+              console.warn(`HUDPlugin: ${result.data[i]} is an invalid position name`);
               continue;
             }
 
