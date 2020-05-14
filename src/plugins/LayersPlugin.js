@@ -38,7 +38,7 @@ export class LayersPlugin extends BasePlugin {
     this.layersSlidersLength = this.layersSliders.length;
 
     if (this.layersSlidersLength <= 0) {
-      console.warn('SpringRollContainer: LayersPlugin was not provided any valid input elements, or key binding containers');
+      this.warn('Plugin was not provided any valid input elements, or key binding containers');
       return;
     }
 

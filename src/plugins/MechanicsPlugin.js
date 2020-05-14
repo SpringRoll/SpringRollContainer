@@ -111,7 +111,7 @@ export class MechanicsPlugin extends BasePlugin {
     };
 
     if (Object.values(this.slidersLength).reduce((accumulator, currentValue) => accumulator + currentValue, 0) <= 0) {
-      console.warn('SpringrollContainer: MechanicsPlugin was not provided any valid HTML Input Elements');
+      this.warn('Plugin was not provided any valid HTML Input Elements');
       return;
     }
 

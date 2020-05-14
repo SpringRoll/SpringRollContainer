@@ -199,7 +199,7 @@ export class SoundPlugin extends ButtonPlugin {
     this.voButtonsLength = this.voButtons.length;
 
     if (0 >= (this.soundSlidersLength + this.musicSlidersLength + this.sfxSlidersLength + this.voSlidersLength + this.soundButtonsLength + this.musicButtonsLength + this.sfxButtonsLength + this.voButtonsLength)) {
-      console.warn('SpringrollContainer: SoundPlugin was not provided any valid HTML Elements');
+      this.warn('Plugin was not provided any valid HTML Elements');
       return;
     }
 

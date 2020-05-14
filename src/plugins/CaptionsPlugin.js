@@ -82,7 +82,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.fontSizeSelectors.forEach((selector) => {
       const radios = document.querySelectorAll(selector);
       if (radios.length !== 3) {
-        console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 3 radio buttons for font size with Selector "${selector}". Skipping selector`);
+        this.warn(`Selector "${selector}" did not find exactly three(3) radio buttons for caption font size. Skipping selector`);
         return;
       }
 
@@ -92,15 +92,15 @@ export class CaptionsPlugin extends ButtonPlugin {
       radios[2].value = radios[2].value.toLowerCase();
 
       if (FONT_SIZE_VALUES.indexOf(radios[0].value) === -1) {
-        console.warn(`CaptionsPlugin: Font Size radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Font Size radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
         return;
       }
       if (FONT_SIZE_VALUES.indexOf(radios[1].value) === -1) {
-        console.warn(`CaptionsPlugin: Font Size radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Font Size radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
         return;
       }
       if (FONT_SIZE_VALUES.indexOf(radios[2].value) === -1) {
-        console.warn(`CaptionsPlugin: Font Size radio button value: ${radios[2].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Font Size radio button value: ${radios[2].value} is not an accepted value. Skipping radio group`);
         return;
       }
 
@@ -111,7 +111,7 @@ export class CaptionsPlugin extends ButtonPlugin {
       group[radios[2].value] = radios[2];
 
       if (!group.sm || !group.md || !group.lg) {
-        console.warn(`CaptionsPlugin: Duplicate radio button values detected (values: ${radios[0].value}, ${radios[1].value}, ${radios[2].value}). Skipping radio group`);
+        this.warn(`Duplicate radio button values detected (values: ${radios[0].value}, ${radios[1].value}, ${radios[2].value}). Skipping radio group`);
         return;
       }
 
@@ -123,7 +123,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.colorSelectors.forEach((selector) => {
       const radios = document.querySelectorAll(selector);
       if (radios.length !== 2) {
-        console.warn(`SpringrollContainer: CaptionsPlugin did not find exactly 2 radio buttons for font color with Selector "${selector}". Skipping selector`);
+        this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption colors. Skipping selector`);
         return;
       }
 
@@ -132,16 +132,16 @@ export class CaptionsPlugin extends ButtonPlugin {
       radios[1].value = radios[1].value.toLowerCase();
 
       if (COLOR_VALUES.indexOf(radios[0].value) === -1) {
-        console.warn(`CaptionsPlugin: Caption color radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Caption color radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
         return;
       }
       if (COLOR_VALUES.indexOf(radios[1].value) === -1) {
-        console.warn(`CaptionsPlugin: Caption color radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Caption color radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
         return;
       }
 
       if (radios[0].value === radios[1].value) {
-        console.warn(`CaptionsPlugin: Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
+        this.warn(`Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
       }
 
       const group = {};
@@ -163,7 +163,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.alignmentSelectors.forEach((selector) => {
       const radios = document.querySelectorAll(selector);
       if (radios.length !== 2) {
-        console.warn(`CaptionsPlugin did not find exactly 2 radio buttons for caption alignment with Selector "${selector}". Skipping selector`);
+        this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption alignment. Skipping selector`);
         return;
       }
 
@@ -172,16 +172,16 @@ export class CaptionsPlugin extends ButtonPlugin {
       radios[1].value = radios[1].value.toLowerCase();
 
       if (ALIGN_VALUES.indexOf(radios[0].value) === -1) {
-        console.warn(`CaptionsPlugin: Caption alignment radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Caption alignment radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
         return;
       }
       if (ALIGN_VALUES.indexOf(radios[1].value) === -1) {
-        console.warn(`CaptionsPlugin: Caption alignment radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+        this.warn(`Caption alignment radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
         return;
       }
 
       if (radios[0].value === radios[1].value) {
-        console.warn(`CaptionsPlugin: Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
+        this.warn(`Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
       }
 
       const group = {};
@@ -203,8 +203,8 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.colorRadiosLength = this.colorRadios.length;
 
     if (0 >= (this.captionsButtonLength + this.alignmentRadiosLength + this.fontSizeRadiosLength + this.colorRadiosLength)) {
-      console.warn(
-        'SpringRollContainer: CaptionPlugin was not provided any valid button or input elements'
+      this.warn(
+        'Plugin was not provided any valid button or input elements'
       );
       return;
     }
