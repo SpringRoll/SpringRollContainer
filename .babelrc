@@ -6,9 +6,11 @@
         "useBuiltIns": "usage",
         "corejs": 2,
         "targets": {
-          "android": "4",
-          "ios": "8",
-          "ie": "11"
+          "android": "5",
+          "ios": "10",
+          "edge": "16",
+          "firefox": "68",
+          "chrome": "75"
         }
       }
     ]
