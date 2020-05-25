@@ -1,6 +1,6 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from '../ui-elements';
+import { Button, RadioGroup } from '../ui-elements';
 
 // Private Variables
 const CAPTIONS_STYLES = 'captionsStyles';
@@ -80,119 +80,60 @@ export class CaptionsPlugin extends ButtonPlugin {
     }
 
     this.fontSizeSelectors.forEach((selector) => {
-      const radios = document.querySelectorAll(selector);
-      if (radios.length !== 3) {
+      const radioGroup = new RadioGroup({selector: selector.trim(), controlName: 'Font Size', defaultValue: 'md', pluginName: 'Caption-Button-Plugin'});
+      if (radioGroup.length !== 3) {
         this.warn(`Selector "${selector}" did not find exactly three(3) radio buttons for caption font size. Skipping selector`);
         return;
       }
 
-      //convert values to lowercase for easier checking later on
-      radios[0].value = radios[0].value.toLowerCase();
-      radios[1].value = radios[1].value.toLowerCase();
-      radios[2].value = radios[2].value.toLowerCase();
-
-      if (FONT_SIZE_VALUES.indexOf(radios[0].value) === -1) {
-        this.warn(`Font Size radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
-        return;
-      }
-      if (FONT_SIZE_VALUES.indexOf(radios[1].value) === -1) {
-        this.warn(`Font Size radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
-        return;
-      }
-      if (FONT_SIZE_VALUES.indexOf(radios[2].value) === -1) {
-        this.warn(`Font Size radio button value: ${radios[2].value} is not an accepted value. Skipping radio group`);
+      if (!radioGroup.hasOnly(FONT_SIZE_VALUES)) {
         return;
       }
 
-      const group = {};
-
-      group[radios[0].value] = radios[0];
-      group[radios[1].value] = radios[1];
-      group[radios[2].value] = radios[2];
-
-      if (!group.sm || !group.md || !group.lg) {
-        this.warn(`Duplicate radio button values detected (values: ${radios[0].value}, ${radios[1].value}, ${radios[2].value}). Skipping radio group`);
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
         return;
       }
 
-      this.fontSizeRadios.push(group);
-
-      this.fontSizeRadios[this.fontSizeRadios.length - 1][this.captionsStyles.size].checked = true;
+      this.fontSizeRadios.push(radioGroup);
     });
 
     this.colorSelectors.forEach((selector) => {
-      const radios = document.querySelectorAll(selector);
-      if (radios.length !== 2) {
+      const radioGroup = new RadioGroup({selector: selector.trim(), controlName: 'Color', defaultValue: 'default', pluginName: 'Caption-Button-Plugin'});
+      if (radioGroup.length !== 2) {
         this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption colors. Skipping selector`);
         return;
       }
 
-      //convert values to lowercase for easier checking later on
-      radios[0].value = radios[0].value.toLowerCase();
-      radios[1].value = radios[1].value.toLowerCase();
-
-      if (COLOR_VALUES.indexOf(radios[0].value) === -1) {
-        this.warn(`Caption color radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
-        return;
-      }
-      if (COLOR_VALUES.indexOf(radios[1].value) === -1) {
-        this.warn(`Caption color radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+      if (!radioGroup.hasOnly(COLOR_VALUES)) {
         return;
       }
 
-      if (radios[0].value === radios[1].value) {
-        this.warn(`Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
+        return;
       }
 
-      const group = {};
-      group[radios[0].value] = radios[0];
-      group[radios[1].value] = radios[1];
-
-
-
-      this.colorRadios.push(group);
-
-      if (this.getCaptionsStyles('background') === 'black') {
-        this.colorRadios[this.colorRadios.length - 1].default.checked = true;
-      } else {
-        this.colorRadios[this.colorRadios.length - 1].inverted.checked = true;
-      }
-
+      this.colorRadios.push(radioGroup);
     });
 
     this.alignmentSelectors.forEach((selector) => {
-      const radios = document.querySelectorAll(selector);
-      if (radios.length !== 2) {
+      const radioGroup = new RadioGroup({selector: selector.trim(), controlName: 'Alignment', defaultValue: 'top', pluginName: 'Caption-Button-Plugin'});
+      if (radioGroup.length !== 2) {
         this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption alignment. Skipping selector`);
         return;
       }
 
-      //convert values to lowercase for easier checking later on
-      radios[0].value = radios[0].value.toLowerCase();
-      radios[1].value = radios[1].value.toLowerCase();
-
-      if (ALIGN_VALUES.indexOf(radios[0].value) === -1) {
-        this.warn(`Caption alignment radio button value: ${radios[0].value} is not an accepted value. Skipping radio group`);
-        return;
-      }
-      if (ALIGN_VALUES.indexOf(radios[1].value) === -1) {
-        this.warn(`Caption alignment radio button value: ${radios[1].value} is not an accepted value. Skipping radio group`);
+      if (!radioGroup.hasOnly(ALIGN_VALUES)) {
         return;
       }
 
-      if (radios[0].value === radios[1].value) {
-        this.warn(`Duplicate radio values detected (value: ${radios[0]}). Skipping radio group`);
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
+        return;
       }
 
-      const group = {};
-      group[radios[0].value] = radios[0];
-      group[radios[1].value] = radios[1];
-
-
-
-      this.alignmentRadios.push(group);
-
-      this.alignmentRadios[this.alignmentRadios.length - 1][this.captionsStyles.align].checked = true;
+      this.alignmentRadios.push(radioGroup);
     });
 
     this._captionsMuted = false;
@@ -211,17 +152,13 @@ export class CaptionsPlugin extends ButtonPlugin {
 
     //set up change events
     for (let i = 0; i < this.colorRadiosLength; i++) {
-      this.colorRadios[i].default.addEventListener('change', this.onColorChange.bind(this));
-      this.colorRadios[i].inverted.addEventListener('change', this.onColorChange.bind(this));
+      this.colorRadios[i].enableRadioEvents(this.onColorChange.bind(this));
     }
     for (let i = 0; i < this.alignmentRadiosLength; i++) {
-      this.alignmentRadios[i].top.addEventListener('change', this.onAlignmentChange.bind(this));
-      this.alignmentRadios[i].bottom.addEventListener('change', this.onAlignmentChange.bind(this));
+      this.alignmentRadios[i].enableRadioEvents(this.onAlignmentChange.bind(this));
     }
     for (let i = 0; i < this.fontSizeRadiosLength; i++) {
-      this.fontSizeRadios[i].sm.addEventListener('change', this.onFontSizeChange.bind(this));
-      this.fontSizeRadios[i].md.addEventListener('change', this.onFontSizeChange.bind(this));
-      this.fontSizeRadios[i].lg.addEventListener('change', this.onFontSizeChange.bind(this));
+      this.fontSizeRadios[i].enableRadioEvents(this.onFontSizeChange.bind(this));
     }
   }
 
@@ -236,20 +173,14 @@ export class CaptionsPlugin extends ButtonPlugin {
         for (let i = 0; i < this.captionsButtonLength; i ++) {
           this._captionsButtons[i].displayButton($event.data);
         }
-        if (!$event.data.captions) {
-          for (let i = 0; i < this.colorRadiosLength; i++) {
-            this.colorRadios[i].default.style.display = 'none';
-            this.colorRadios[i].inverted.style.display = 'none';
-          }
-          for (let i = 0; i < this.alignmentRadiosLength; i++) {
-            this.alignmentRadios[i].top.style.display = 'none';
-            this.alignmentRadios[i].bottom.style.display = 'none';
-          }
-          for (let i = 0; i < this.fontSizeRadiosLength; i++) {
-            this.fontSizeRadios[i].sm.style.display = 'none';
-            this.fontSizeRadios[i].md.style.display = 'none';
-            this.fontSizeRadios[i].lg.style.display = 'none';
-          }
+        for (let i = 0; i < this.colorRadiosLength; i++) {
+          this.colorRadios[i].displayRadios($event.data);
+        }
+        for (let i = 0; i < this.alignmentRadiosLength; i++) {
+          this.alignmentRadios[i].displayRadios($event.data);
+        }
+        for (let i = 0; i < this.fontSizeRadiosLength; i++) {
+          this.fontSizeRadios[i].displayRadios($event.data);
         }
         if (null === SavedData.read(CAPTIONS_MUTED)) {
           return;
@@ -305,13 +236,14 @@ export class CaptionsPlugin extends ButtonPlugin {
 
   /**
    * Fired whenever the font size radios are updated
+   * @param {Event} e
    * @memberof CaptionsPlugin
    */
   onFontSizeChange(e) {
     this.setCaptionsStyles('size', e.target.value);
 
     this.fontSizeRadios.forEach((group) => {
-      group[e.target.value].checked = true;
+      group.radioGroup[e.target.value].checked = true;
     });
   }
 
@@ -324,7 +256,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.setCaptionsStyles('align', e.target.value);
 
     this.alignmentRadios.forEach((group) => {
-      group[e.target.value].checked = true;
+      group.radioGroup[e.target.value].checked = true;
     });
   }
 
@@ -339,7 +271,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.setCaptionsStyles(styles);
 
     this.colorRadios.forEach((group) => {
-      group[e.target.value].checked = true;
+      group.radioGroup[e.target.value].checked = true;
     });
   }
 
@@ -352,13 +284,13 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.captionsStyles = Object.assign({}, DEFAULT_CAPTIONS_STYLES);
     this.setCaptionsStyles();
     this.colorRadios.forEach((group) => {
-      group.default.checked = true;
+      group.resetState();
     });
     this.alignmentRadios.forEach((group) => {
-      group.top.checked = true;
+      group.resetState();
     });
     this.fontSizeRadios.forEach((group) => {
-      group.md.checked = true;
+      group.resetState();
     });
   }
 

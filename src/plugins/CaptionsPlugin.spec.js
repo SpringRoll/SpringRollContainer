@@ -106,6 +106,7 @@ describe('CaptionsPlugin', () => {
     document.body.appendChild(alignRadioTwo);
     document.body.appendChild(alignRadioThree);
     document.body.appendChild(alignRadioFour);
+    document.body.appendChild(alignRadioFive);
 
     document.body.appendChild(fontSizeRadioOne);
     document.body.appendChild(fontSizeRadioTwo);
@@ -130,13 +131,12 @@ describe('CaptionsPlugin', () => {
     expect(cp._captionsButtons[0].button).to.be.instanceof(HTMLButtonElement);
     expect(cp._captionsButtons[0].button.style.display).to.equal('');
     expect(cp._captionsButtons[0].button.classList.contains('disabled')).to.be.false;
-
     expect(cp.fontSizeRadios.length).to.equal(2);
     expect(cp.colorRadios.length).to.equal(2); //should skip the not-tubular group as the value is incorrect
     expect(cp.alignmentRadios.length).to.equal(2); //Should skip the bogus-align group since there is only one radio button
   });
 
-  it('On click', () => {
+  it('.captionsButtonClick()', () => {
     cp._captionsButtons[0].button.click();
     expect(cp.captionsMuted).to.equal(true);
     //check that the data attribute is being set correctly for both control elements
@@ -150,58 +150,58 @@ describe('CaptionsPlugin', () => {
   });
 
   it('.onFontSizeChange()', () => {
-    expect(cp.fontSizeRadios[0].md.checked).to.be.true;
-    expect(cp.fontSizeRadios[1].md.checked).to.be.true;
+    expect(cp.fontSizeRadios[0].radioGroup.md.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.md.checked).to.be.true;
     expect(cp.getCaptionsStyles('size')).to.equal('md');
 
-    cp.fontSizeRadios[0].sm.click();
+    cp.fontSizeRadios[0].radioGroup.sm.click();
 
-    expect(cp.fontSizeRadios[0].sm.checked).to.be.true;
-    expect(cp.fontSizeRadios[1].sm.checked).to.be.true;
+    expect(cp.fontSizeRadios[0].radioGroup.sm.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.sm.checked).to.be.true;
     expect(cp.getCaptionsStyles('size')).to.equal('sm');
 
-    cp.fontSizeRadios[1].lg.click();
+    cp.fontSizeRadios[1].radioGroup.lg.click();
 
-    expect(cp.fontSizeRadios[0].lg.checked).to.be.true;
-    expect(cp.fontSizeRadios[1].lg.checked).to.be.true;
+    expect(cp.fontSizeRadios[0].radioGroup.lg.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.lg.checked).to.be.true;
     expect(cp.getCaptionsStyles('size')).to.equal('lg');
   });
 
   it('.onAlignmentChange()', () => {
-    expect(cp.alignmentRadios[0].top.checked).to.be.true;
-    expect(cp.alignmentRadios[1].top.checked).to.be.true;
+    expect(cp.alignmentRadios[0].radioGroup.top.checked).to.be.true;
+    expect(cp.alignmentRadios[1].radioGroup.top.checked).to.be.true;
     expect(cp.getCaptionsStyles('align')).to.equal('top');
 
-    cp.alignmentRadios[0].bottom.click();
+    cp.alignmentRadios[0].radioGroup.bottom.click();
 
-    expect(cp.alignmentRadios[0].bottom.checked).to.be.true;
-    expect(cp.alignmentRadios[1].bottom.checked).to.be.true;
+    expect(cp.alignmentRadios[0].radioGroup.bottom.checked).to.be.true;
+    expect(cp.alignmentRadios[1].radioGroup.bottom.checked).to.be.true;
     expect(cp.getCaptionsStyles('align')).to.equal('bottom');
 
-    cp.alignmentRadios[1].top.click();
+    cp.alignmentRadios[1].radioGroup.top.click();
 
-    expect(cp.alignmentRadios[0].top.checked).to.be.true;
-    expect(cp.alignmentRadios[1].top.checked).to.be.true;
+    expect(cp.alignmentRadios[0].radioGroup.top.checked).to.be.true;
+    expect(cp.alignmentRadios[1].radioGroup.top.checked).to.be.true;
     expect(cp.getCaptionsStyles('align')).to.equal('top');
   });
 
   it('.onColorChange()', () => {
-    expect(cp.colorRadios[0].default.checked).to.be.true;
-    expect(cp.colorRadios[1].default.checked).to.be.true;
+    expect(cp.colorRadios[0].radioGroup.default.checked).to.be.true;
+    expect(cp.colorRadios[1].radioGroup.default.checked).to.be.true;
     expect(cp.getCaptionsStyles('background')).to.equal('black');
     expect(cp.getCaptionsStyles('color')).to.equal('white');
 
-    cp.colorRadios[0].inverted.click();
+    cp.colorRadios[0].radioGroup.inverted.click();
 
-    expect(cp.colorRadios[0].inverted.checked).to.be.true;
-    expect(cp.colorRadios[1].inverted.checked).to.be.true;
+    expect(cp.colorRadios[0].radioGroup.inverted.checked).to.be.true;
+    expect(cp.colorRadios[1].radioGroup.inverted.checked).to.be.true;
     expect(cp.getCaptionsStyles('background')).to.equal('white');
     expect(cp.getCaptionsStyles('color')).to.equal('black');
 
-    cp.colorRadios[1].default.click();
+    cp.colorRadios[1].radioGroup.default.click();
 
-    expect(cp.colorRadios[0].default.checked).to.be.true;
-    expect(cp.colorRadios[1].default.checked).to.be.true;
+    expect(cp.colorRadios[0].radioGroup.default.checked).to.be.true;
+    expect(cp.colorRadios[1].radioGroup.default.checked).to.be.true;
     expect(cp.getCaptionsStyles('background')).to.equal('black');
     expect(cp.getCaptionsStyles('color')).to.equal('white');
   });
