@@ -79,62 +79,9 @@ export class CaptionsPlugin extends ButtonPlugin {
       });
     }
 
-    this.fontSizeSelectors.forEach((selector) => {
-      const radioGroup = new RadioGroup({selector: selector.trim(), controlName: 'Font Size', defaultValue: 'md', pluginName: 'Caption-Button-Plugin'});
-      if (radioGroup.length !== 3) {
-        this.warn(`Selector "${selector}" did not find exactly three(3) radio buttons for caption font size. Skipping selector`);
-        return;
-      }
-
-      if (!radioGroup.hasOnly(FONT_SIZE_VALUES)) {
-        return;
-      }
-
-      if (radioGroup.hasDuplicateValues()) {
-        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
-        return;
-      }
-
-      this.fontSizeRadios.push(radioGroup);
-    });
-
-    this.colorSelectors.forEach((selector) => {
-      const radioGroup = new RadioGroup({selector: selector.trim(), controlName: 'Color', defaultValue: 'default', pluginName: 'Caption-Button-Plugin'});
-      if (radioGroup.length !== 2) {
-        this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption colors. Skipping selector`);
-        return;
-      }
-
-      if (!radioGroup.hasOnly(COLOR_VALUES)) {
-        return;
-      }
-
-      if (radioGroup.hasDuplicateValues()) {
-        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
-        return;
-      }
-
-      this.colorRadios.push(radioGroup);
-    });
-
-    this.alignmentSelectors.forEach((selector) => {
-      const radioGroup = new RadioGroup({selector: selector.trim(), controlName: 'Alignment', defaultValue: 'top', pluginName: 'Caption-Button-Plugin'});
-      if (radioGroup.length !== 2) {
-        this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption alignment. Skipping selector`);
-        return;
-      }
-
-      if (!radioGroup.hasOnly(ALIGN_VALUES)) {
-        return;
-      }
-
-      if (radioGroup.hasDuplicateValues()) {
-        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
-        return;
-      }
-
-      this.alignmentRadios.push(radioGroup);
-    });
+    this.fontSizeRadios = this.setUpFontSizeRadios(this.fontSizeSelectors);
+    this.colorRadios = this.setUpColorRadios(this.colorSelectors);
+    this.alignmentRadios = this.setUpAlignmentRadios(this.alignmentSelectors);
 
     this._captionsMuted = false;
 
@@ -160,6 +107,113 @@ export class CaptionsPlugin extends ButtonPlugin {
     for (let i = 0; i < this.fontSizeRadiosLength; i++) {
       this.fontSizeRadios[i].enableRadioEvents(this.onFontSizeChange.bind(this));
     }
+  }
+
+  /**
+   * @memberof CaptionsPlugin
+   * @param {string[]} selectors the separated selector strings used to target the radio button groups
+   * @returns {RadioGroup[]}
+   */
+  setUpFontSizeRadios(selectors) {
+    const radioGroups = [];
+
+    selectors.forEach((selector) => {
+      const radioGroup = new RadioGroup({
+        selector: selector.trim(),
+        controlName: 'Font Size',
+        defaultValue: 'md',
+        pluginName: 'Caption-Button-Plugin'
+      });
+
+      if (radioGroup.length !== 3) {
+        this.warn(`Selector "${selector}" did not find exactly three(3) radio buttons for caption font size. Skipping selector`);
+        return;
+      }
+
+      if (!radioGroup.hasOnly(FONT_SIZE_VALUES)) {
+        return;
+      }
+
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
+        return;
+      }
+
+      radioGroups.push(radioGroup);
+    });
+
+    return radioGroups;
+  }
+
+  /**
+   * @memberof CaptionsPlugin
+   * @param {string[]} selectors the separated selector strings used to target the radio button groups
+   * @returns {RadioGroup[]}
+   */
+  setUpColorRadios(selectors) {
+    const radioGroups = [];
+
+    selectors.forEach((selector) => {
+      const radioGroup = new RadioGroup({
+        selector: selector.trim(),
+        controlName: 'Color',
+        defaultValue: 'default',
+        pluginName: 'Caption-Button-Plugin'
+      });
+
+      if (radioGroup.length !== 2) {
+        this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption colors. Skipping selector`);
+        return;
+      }
+
+      if (!radioGroup.hasOnly(COLOR_VALUES)) {
+        return;
+      }
+
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
+        return;
+      }
+
+      radioGroups.push(radioGroup);
+    });
+
+    return radioGroups;
+  }
+
+  /**
+   * @memberof CaptionsPlugin
+   * @param {string[]} selectors the separated selector strings used to target the radio button groups
+   * @returns {RadioGroup[]}
+   */
+  setUpAlignmentRadios(selectors) {
+    const radioGroups = [];
+
+    selectors.forEach((selector) => {
+      const radioGroup = new RadioGroup({
+        selector: selector.trim(),
+        controlName: 'Alignment',
+        defaultValue: 'top',
+        pluginName: 'Caption-Button-Plugin'
+      });
+      if (radioGroup.length !== 2) {
+        this.warn(`Selector "${selector}" did not find exactly two(2) radio buttons for caption alignment. Skipping selector`);
+        return;
+      }
+
+      if (!radioGroup.hasOnly(ALIGN_VALUES)) {
+        return;
+      }
+
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
+        return;
+      }
+
+      radioGroups.push(radioGroup);
+    });
+
+    return radioGroups;
   }
 
   /**
