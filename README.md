@@ -56,9 +56,17 @@ import { CaptionsPlugin, Container } from 'springroll-container';
       new CaptionsPlugin({
         captionsButtons: '#caption-button-selector',
         //the three following options control caption styles, as radio buttons using the group name is ideal for selecting multiple radio buttons.
-        fontSizeRadios: 'input[name=font-size-radio-name]',  //expects exactly three(3) radio buttons for sm, md, and lg font sizes
-        colorRadios: 'input[name=color-radio-name]', //expects exactly two(2) radio buttons for default (black background, white text), and inverted (black text, white background) color schemes
-        alignmentRadios: 'input[name=alignment-radio-name]', //expects exactly two(2) radio buttons for the caption placement: top or bottom of the screen.
+
+        //expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
+        fontSizeRadios: 'input[name=font-size-radio-name]',
+
+        //expects exactly two(2) radio buttons with values "default" (black background, white text),
+        //and "inverted" (black text, white background) for caption color schemes
+        colorRadios: 'input[name=color-radio-name]',
+
+        //expects exactly two(2) radio buttons values "top" and "bottom".
+        //Indicating that captions should be placed at the top or bototm of the screen.
+        alignmentRadios: 'input[name=alignment-radio-name]',
       })
     ]
   });
@@ -243,7 +251,7 @@ For example the SoundPlugin can accept more than one volume slider or button if 
     soundButtons: '#soundButton, #soundButtonTwo',
     soundSliders: '#soundSlider',
     musicButtons: '#musicButton',
-    musicSliders: '#musicSlider, $musicSliderTwo',
+    musicSliders: '#musicSlider, #musicSliderTwo',
   });
 ```
 As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if neccessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
