@@ -13,6 +13,9 @@ const DEFAULT_CAPTIONS_STYLES = {
   font: 'arial',
   align: 'top'
 };
+
+const DEFAULT_COLOR_STYLE = {color: 'black', background: 'white'};
+const INVERTED_COLOR_STYLE = {color: 'white', background: 'black'};
 const FONT_SIZE_VALUES = ['sm', 'md', 'lg'];
 const COLOR_VALUES = ['default', 'inverted'];
 const ALIGN_VALUES = ['top', 'bottom'];
@@ -227,15 +230,11 @@ export class CaptionsPlugin extends ButtonPlugin {
         for (let i = 0; i < this.captionsButtonLength; i ++) {
           this._captionsButtons[i].displayButton($event.data);
         }
-        for (let i = 0; i < this.colorRadiosLength; i++) {
-          this.colorRadios[i].displayRadios($event.data);
+
+        for (const radio in this.radios) {
+          radio.displayRadios($event.data);
         }
-        for (let i = 0; i < this.alignmentRadiosLength; i++) {
-          this.alignmentRadios[i].displayRadios($event.data);
-        }
-        for (let i = 0; i < this.fontSizeRadiosLength; i++) {
-          this.fontSizeRadios[i].displayRadios($event.data);
-        }
+
         if (null === SavedData.read(CAPTIONS_MUTED)) {
           return;
         }
@@ -320,7 +319,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @memberof CaptionsPlugin
    */
   onColorChange(e) {
-    const styles = e.target.value === 'default' ? {color: 'white', background: 'black'} : {color: 'black', background: 'white'};
+    const styles = e.target.value === 'default' ? DEFAULT_COLOR_STYLE : INVERTED_COLOR_STYLE;
 
     this.setCaptionsStyles(styles);
 
@@ -337,15 +336,10 @@ export class CaptionsPlugin extends ButtonPlugin {
   clearCaptionsStyles() {
     this.captionsStyles = Object.assign({}, DEFAULT_CAPTIONS_STYLES);
     this.setCaptionsStyles();
-    this.colorRadios.forEach((group) => {
-      group.resetState();
-    });
-    this.alignmentRadios.forEach((group) => {
-      group.resetState();
-    });
-    this.fontSizeRadios.forEach((group) => {
-      group.resetState();
-    });
+
+    for (const radio in this.radios) {
+      radio.resetState();
+    }
   }
 
   /**
@@ -404,5 +398,16 @@ export class CaptionsPlugin extends ButtonPlugin {
       this.captionsButton,
       this._captionsMuted
     );
+  }
+
+  /**
+   * @readonly
+   * @returns {number}
+   * @memberof RadioGroup
+   */
+  get radios() {
+    return this.colorRadios
+      .concat(this.alignmentRadios)
+      .concat(this.fontSizeRadios);
   }
 }
