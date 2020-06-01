@@ -14,8 +14,8 @@ const DEFAULT_CAPTIONS_STYLES = {
   align: 'top'
 };
 
-const DEFAULT_COLOR_STYLE = {color: 'black', background: 'white'};
-const INVERTED_COLOR_STYLE = {color: 'white', background: 'black'};
+const DEFAULT_COLOR_STYLE = {color: 'white', background: 'black'};
+const INVERTED_COLOR_STYLE = {color: 'black', background: 'white'};
 const FONT_SIZE_VALUES = ['sm', 'md', 'lg'];
 const COLOR_VALUES = ['default', 'inverted'];
 const ALIGN_VALUES = ['top', 'bottom'];
@@ -231,7 +231,7 @@ export class CaptionsPlugin extends ButtonPlugin {
           this._captionsButtons[i].displayButton($event.data);
         }
 
-        for (const radio in this.radios) {
+        for (const radio of this.radios) {
           radio.displayRadios($event.data);
         }
 
@@ -337,7 +337,7 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.captionsStyles = Object.assign({}, DEFAULT_CAPTIONS_STYLES);
     this.setCaptionsStyles();
 
-    for (const radio in this.radios) {
+    for (const radio of this.radios) {
       radio.resetState();
     }
   }
