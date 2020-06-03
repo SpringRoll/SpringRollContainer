@@ -66,4 +66,13 @@ export class BasePlugin {
    * @memberof BasePlugin
    */
   sendAllProperties(_) {}
+
+  /**
+   *
+   * @param {string} warningText
+   * @memberof BasePlugin
+   */
+  warn(warningText) {
+    console.warn(`[SpringrollContainer] ${this.name}: ${warningText}`);
+  }
 }

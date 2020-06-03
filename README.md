@@ -22,83 +22,116 @@ Basic usage for opening a SpringRoll application via a local path. This can be u
 </script>
 ```
 
-### Plugins
+## Plugins
 
-The Container supports several built-in plugins that mirror the state features in the application/game. These are initialized with HTML elements like buttons or input sliders.
+The Container supports several built-in plugins that mirror the state features in the application/game. These are initialized with HTMLElements (or selector strings) like buttons or input sliders.
 
-Here are some examples of the syntax for declaring plugins when creating the container. Not all (or any) plugins need to be included, only the features supported by the game.
+Here are some examples of the syntax for declaring plugins when creating the container. Not all (or any) plugins need to be included, only the features supported by the game. All examples use selector strings but plugins will also accept an HTMLElement as a parameter as well.
 
-PausePlugin, CaptionsPlugin, HelpPlugin:
+All plugins also accept multiple controls in the form of a selector string (see [Multiple Controls](#multiple-plugin-controls))
+
+### PausePlugin, HelpPlugin:
 ```javascript
-import { PausePlugin, CaptionsPlugin, HelpPlugin, Container } from 'springroll-container';
+import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-      //all three plugins here expect an HTML Button Element and take a single selector string
-      new PausePlugin('#pause-button-selector'), //Pauses or unpauses the game
-      new CaptionsPlugin('#caption-button-selector'), //enables or disables captions
-      new HelpPlugin('#help-button-selector'), //requests a hint or help from the game
-    ]
-  });
-	container.openPath('game.html');
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    //all three plugins here expect an HTML Button Element and take a single selector string
+    new PausePlugin('#pause-button-selector'), //Pauses or unpauses the game
+    new HelpPlugin('#help-button-selector'), //requests a hint or help from the game
+  ]
+});
+container.openPath('game.html');
 ```
-SoundPlugin:
+PausePlugin sets a className of 'paused' or 'unpaused' on individual pause buttons.
+
+### CaptionsPlugin:
+```javascript
+import { CaptionsPlugin, Container } from 'springroll-container';
+
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    new CaptionsPlugin({
+      captionsButtons: '#caption-button-selector',
+      //the three following options control caption styles, as radio buttons using the group name is ideal for selecting multiple radio buttons.
+
+      //expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
+      fontSizeRadios: 'input[name=font-size-radio-name]',
+
+      //expects exactly two(2) radio buttons with values "default" (black background, white text),
+      //and "inverted" (black text, white background) for caption color schemes
+      colorRadios: 'input[name=color-radio-name]',
+
+       //expects exactly two(2) radio buttons values "top" and "bottom".
+      //Indicating that captions should be placed at the top or bototm of the screen.
+       alignmentRadios: 'input[name=alignment-radio-name]',
+    })
+  ]
+});
+container.openPath('game.html');
+```
+CaptionsPlugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
+
+### SoundPlugin:
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-      //The SoundPlugin has 4 different audio types and can take a button(for mute/unmute) and/or an input slider(for volume control)
-      new SoundPlugin({
-        //Sliders expect an HTML Input Element of type="range"
-        //Buttons in the SoundPlugin expect an HTML Button Element
-        soundButton: '#soundButton', //mutes or unmutes all game audio
-        soundSlider: '#soundSlider', //controls the game's audio volume
-        musicButton: '#musicButton', //mutes or unmutes the music
-        musicSlider: '#musicSlider', //controls the game's music volume
-        voButton: '#voButton', //mutes or unmutes the voice over
-        voSlider: '#voSlider', //controls the game's voice over volume
-        sfxButton: '#sfxButton', //mutes or unmutes the game's sound effects
-        sfxSlider: '#sfxSlider', //controls the game's sound effects volume
-      }),
-    ]
-  });
-	container.openPath('game.html');
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    //The SoundPlugin has 4 different audio types and can take a button(for mute/unmute) and/or an input slider(for volume control)
+    new SoundPlugin({
+      //Sliders expect an HTML Input Element of type="range"
+      //Buttons in the SoundPlugin expect an HTML Button Element
+      soundButtons: '#soundButton', //mutes or unmutes all game audio
+      soundSliders: '#soundSlider', //controls the game's audio volume
+      musicButtons: '#musicButton', //mutes or unmutes the music
+      musicSliders: '#musicSlider', //controls the game's music volume
+      voButtons: '#voButton', //mutes or unmutes the voice over
+      voSliders: '#voSlider', //controls the game's voice over volume
+      sfxButtons: '#sfxButton', //mutes or unmutes the game's sound effects
+      sfxSliders: '#sfxSlider', //controls the game's sound effects volume
+    }),
+  ]
+});
+container.openPath('game.html');
 ```
-MechanicsPlugin:
+SoundPlugin will set a class of `muted` or `unmuted` on each button as they are toggled
+
+### MechanicsPlugin:
 ```javascript
 import { MechanicsPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-      //The MechanicsPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
-      //MechanicsPlugin also accepts an [optional] initial value for its difficulty types
-      new MechanicsPlugin({
-        //Sliders expect an HTML Input Element of type="range"
-        hitAreaScaleSlider: '#hitAreaScaleSlider',
-        //All difficulty values run 0.0 to 1.0. Default = 0.5
-        defaultHitAreaScale = 0.5,
-        dragThresholdScaleSlider: '#dragThresholdScaleSlider',
-        defaultDragThresholdScale = 0.5,
-        healthSlider: '#healthSlider',
-        defaultHealth = 0.5,
-        objectCountSlider: '#objectCountSlider',
-        defaultObjectCount = 0.5,
-        completionPercentageSlider: '#completionPercentageSlider',
-        defaultCompletionPercentage = 0.5,
-        speedScaleSlider: '#speedScaleSlider',
-        defaultSpeedScale = 0.5,
-        timersScaleSlider: '#timersScaleSlider',
-        defaultTimersScale = 0.5,
-        inputCountSlider: '#inputCountSlider',
-        defaultInputCount = 0.5,
-      }),
-    ]
-  });
-	container.openPath('game.html');
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    //The MechanicsPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
+    //MechanicsPlugin also accepts an [optional] initial value for its difficulty types
+    new MechanicsPlugin({
+      //Sliders expect an HTML Input Element of type="range"
+      hitAreaScaleSliders: '#hitAreaScaleSlider',
+      //All difficulty values run 0.0 to 1.0. Default = 0.5
+      defaultHitAreaScale = 0.5,
+      dragThresholdScaleSliders: '#dragThresholdScaleSlider',
+      defaultDragThresholdScale = 0.5,
+      healthSliders: '#healthSlider',
+      defaultHealth = 0.5,
+      objectCountSliders: '#objectCountSlider',
+      defaultObjectCount = 0.5,
+      completionPercentageSliders: '#completionPercentageSlider',
+      defaultCompletionPercentage = 0.5,
+      speedScaleSliders: '#speedScaleSlider',
+      defaultSpeedScale = 0.5,
+      timersScaleSliders: '#timersScaleSlider',
+      defaultTimersScale = 0.5,
+      inputCountSliders: '#inputCountSlider',
+      defaultInputCount = 0.5,
+    }),
+  ]
+});
+container.openPath('game.html');
 ```
 MechanicsPlugin Options:
 
@@ -115,96 +148,105 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 | Input Count | inputCount | Allows the player to define how many clicks, taps, or keyboard inputs are required to complete objectives.  |
 
 
-UISizePlugin, LayersPlugin:
+### UISizePlugin, LayersPlugin:
 ```javascript
-import { UISizePlugin, LayersPlugin, MechanicsPlugin, Container } from 'springroll-container';
+import { UISizePlugin, LayersPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-
-      //UISizePlugin also accepts an [optional] initial value for its two options
-      new UISizePlugin({
-
-        //Expects an HTML Input Element of type="range"
-        pointerSlider: '#pointer-slider-selector', //controls the size of the pointer
-        pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
-
-        //Expects an HTML Input Element of type="range"
-        buttonSlider: '#button-slider-selector', //controls the size of UI buttons
-        buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
-      }),
-
-      //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
-      new LayersPlugin({
-
-        //Expects an HTML Input Element of type="range"
-        layersSlider: '#layers-slider-selector' // goes from 0.0 to 1.0
-      }),
-    ]
-  });
-	container.openPath('game.html');
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    //UISizePlugin also accepts an [optional] initial value for its two options
+    new UISizePlugin({
+      //Expects an HTML Input Element of type="range"
+      pointerSliders: '#pointer-slider-selector', //controls the size of the pointer
+      pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
+      //Expects an HTML Input Element of type="range"
+      buttonSliders: '#button-slider-selector', //controls the size of UI buttons
+      buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
+    }),
+    //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
+    new LayersPlugin({
+      //Expects an HTML Input Element of type="range"
+      layersSliders: '#layers-slider-selector' // goes from 0.0 to 1.0
+    }),
+  ]
+});
+container.openPath('game.html');
 ```
 The following plugins require an extra bit of configuration from the game application to function correctly:
 
-HUDPlugin
+### HUDPlugin
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-
-      //HUDPlugin expects a button element/selector string
-      new HUDPlugin({
-
-        hudSelectorButton: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
-      }),
-    ]
-  });
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    //HUDPlugin expects a button element/selector string
+    new HUDPlugin({
+      hudSelectorButtons: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
+    }),
+  ]
+});
 	container.openPath('game.html');
 ```
 *The HUDPlugin requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
 e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
-ControlsPlugin
+The HUDPlugin will display the current position as a data attribute on the button itself.
+
+### ControlsPlugin
 ```javascript
 import { ControlsPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-
-      //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
-      new ControlsPlugin({
-
-        //Expects an HTML Input Element of type="range"
-        sensitivitySlider: '#sensitivity-slider-selector',
-        defaultSensitivity: 0.5, //control sensitivity goes from 0.0 to 1.0. Default = 0.5
-
-        keyContainer: '#key-container', // container element that will contain the mappable key buttons.
-      }),
-    ]
-  });
-	container.openPath('game.html');
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
+    new ControlsPlugin({
+      //Expects an HTML Input Element of type="range"
+      sensitivitySliders: '#sensitivity-slider-selector',
+      defaultSensitivity: 0.5, //control sensitivity goes from 0.0 to 1.0. Default = 0.5
+      keyContainers: '#key-container', // container element that will contain the mappable key buttons.
+    }),
+  ]
+});
+container.openPath('game.html');
 ```
 *The Key Binding functionality of the ControlsPlugin works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
-ColorVisionPlugin
+Keybindings are tracked visually by setting the textContent of the buttons themselves.
+
+### ColorVisionPlugin
 ```javascript
 import { ColorVisionPlugin, Container } from 'springroll-container';
 
-  const container = new springroll.Container({
-    iframeSelector: "#game",
-    plugins: [
-      new ColorVisionPlugin({
-        colorSelect: '#color-vision-dropdown-selector' //the plugin expects a <select> element
-      }),
-    ]
-  });
-	container.openPath('game.html');
+const container = new springroll.Container({
+  iframeSelector: "#game",
+  plugins: [
+    new ColorVisionPlugin({
+      colorSelects: '#color-vision-dropdown-selector' //the plugin expects a <select> element
+    }),
+  ]
+});
+container.openPath('game.html');
 ```
 *The color vision dropdown builds out the options dynamically based on what the application reports back. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+
+### Multiple Plugin Controls
+All Plugins accept one or more HTML elements as controls in their constructor.
+For example the SoundPlugin can accept more than one volume slider or button if your set up requires it:
+```javascript
+  new SoundPlugin({
+    soundButtons: '#soundButton, #soundButtonTwo',
+    soundSliders: '#soundSlider',
+    musicButtons: '#musicButton',
+    musicSliders: '#musicSlider, #musicSliderTwo',
+  });
+```
+As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if neccessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
+
+*Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
 ### Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called

@@ -48,7 +48,7 @@ export class HUDPlugin extends ButtonPlugin {
 
     this.hudButtonsLength = this.hudButtons.length;
     if (this.hudButtonsLength <= 0) {
-      console.warn('SpringRollContainer: HUDPlugin was not provided any valid HTML elements');
+      this.warn('Plugin was not provided any valid HTML elements');
     }
 
   }
@@ -88,7 +88,7 @@ export class HUDPlugin extends ButtonPlugin {
             if (
               !this.supportedPositions.includes(result.data[i].toLowerCase())
             ) {
-              console.warn(`${result.data[i]} is an invalid position name`);
+              this.warn(`${result.data[i]} is an invalid position name`);
               continue;
             }
 

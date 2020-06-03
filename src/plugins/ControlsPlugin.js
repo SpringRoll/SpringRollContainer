@@ -60,7 +60,7 @@ export class ControlsPlugin extends BasePlugin {
     this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
 
     if (this.sensitivitySlidersLength <= 0 && this.keyContainersLength <= 0) {
-      console.warn('SpringRollContainer: ControlsPlugin was not provided any valid input elements, or key binding containers');
+      this.warn('SpringRollContainer: ControlsPlugin was not provided any valid input elements, or key binding containers');
       return;
     }
     if (this.sensitivitySliders[0].slider) {
@@ -121,7 +121,7 @@ export class ControlsPlugin extends BasePlugin {
 
     for (const actionName in this.keyBindings) {
       if (this.keyBindings[actionName].currentKey === key.key.toLowerCase()) {
-        console.warn(`${key.key} is already bound`);
+        this.warn(`${key.key} is already bound`);
         return;
       }
     }

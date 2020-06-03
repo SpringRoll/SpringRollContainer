@@ -43,7 +43,7 @@ export class HelpPlugin extends ButtonPlugin {
     this.helpButtonsLength = this._helpButtons.length;
 
     if (this.helpButtonsLength <= 0) {
-      console.warn('SpringRollContainer: HelpPlugin was not provided any valid button elements');
+      this.warn('Plugin was not provided any valid button elements');
     }
   }
   /**

@@ -36,9 +36,7 @@ export class ColorVisionPlugin extends BasePlugin {
     this.colorDropdownsLength = this.colorDropdowns.length;
 
     if (this.colorDropdowns.length <= 0) {
-      console.warn(
-        'SpringRollContainer: ColorVisionPlugin was not provided any valid select elements'
-      );
+      this.warn('Plugin was not provided any valid select elements');
       return;
     }
 
@@ -80,11 +78,7 @@ export class ColorVisionPlugin extends BasePlugin {
         for (let i = 0; i < this.colorDropdownsLength; i++) {
           if (this.colorDropdowns[i].tagName.toLowerCase() !== 'select') {
             this.colorDropdowns[i].style.display = 'none';
-            console.error(
-              `ColorVisionPlugin was given a ${
-                this.colorDropdown.tagName
-              } but expects an element of type: <select>`
-            );
+            this.warn(`Plugin recieved element of type: ${this.colorDropdown.tagName} but expects an element of type: <select>`);
             return;
           }
         }
@@ -94,7 +88,7 @@ export class ColorVisionPlugin extends BasePlugin {
           for (let i = 0; i < this.colorDropdownsLength; i++) {
             for (let j = 0, l = result.data.length; j < l; j++) {
               if (!COLOR_BLIND_TYPES.includes(result.data[j].toLowerCase())) {
-                console.warn(
+                this.warn(
                   `${result.data[j]} is not a supported color blindness filter. Skipping`
                 );
                 continue;

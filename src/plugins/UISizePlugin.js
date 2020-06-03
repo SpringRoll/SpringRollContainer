@@ -66,7 +66,7 @@ export class UISizePlugin extends BasePlugin {
     this.buttonSlidersLength = this.buttonSliders.length;
 
     if (0 >= this.pointerSlidersLength + this.buttonSlidersLength) {
-      console.warn('SpringrollContainer: UISizePlugin was not provided any valid HTML Elements');
+      this.warn('Plugin was not provided any valid HTML Elements');
       return;
     }
 
