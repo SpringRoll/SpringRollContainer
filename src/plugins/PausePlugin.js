@@ -24,7 +24,7 @@ export class PausePlugin extends ButtonPlugin {
     this.manageFocus = this.manageFocus.bind(this);
     this.onKeepFocus = this.onKeepFocus.bind(this);
     this.onPauseFocus = this.onPauseFocus.bind(this);
-    this.paused = false;
+    //this.paused = false;
     this.pauseDisabled = false;
     this._pauseButton = [];
 
@@ -66,11 +66,12 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   set pause(paused) {
+    console.log('paused', paused);
     paused = !!paused;
+
     if (this.pauseDisabled) {
       return;
     }
-
     this._paused = paused;
     this.client.send('pause', paused);
     this.client.trigger(paused ? 'paused' : 'resumed', {
@@ -117,6 +118,7 @@ export class PausePlugin extends ButtonPlugin {
     if (!this.hasDom) {
       return;
     }
+    console.log('focused');
 
     this.iframe.contentWindow.focus();
   }
@@ -134,9 +136,11 @@ export class PausePlugin extends ButtonPlugin {
   /**
    * @memberof FocusPlugin
    */
-  manageFocus() {
+  manageFocus(string = 'dunno') {
+    console.log('SOURCE: ', string);
     // Unfocus on the iframe
     if (this._keepFocus) {
+      console.log('keepFocus');
       this.blur();
     }
 
@@ -159,7 +163,7 @@ export class PausePlugin extends ButtonPlugin {
           return;
         }
 
-        this.paused = Boolean(this._containerBlurred && this._appBlurred);
+        this.pause = Boolean(this._containerBlurred && this._appBlurred);
 
         // Focus on the content window when blurring the app
         // but selecting the container
@@ -177,8 +181,9 @@ export class PausePlugin extends ButtonPlugin {
    * @private
    */
   onKeepFocus($event) {
+    console.log('keepfocus', $event.data);
     this._keepFocus = !!$event.data;
-    this.manageFocus();
+    this.manageFocus('keep focuys');
   }
 
   /**
@@ -187,8 +192,9 @@ export class PausePlugin extends ButtonPlugin {
    * @private
    */
   onFocus($event) {
+    console.log('app focused', $event.data);
     this._appBlurred = !$event.data;
-    this.manageFocus();
+    this.manageFocus('onFocus');
   }
 
   /**
@@ -196,9 +202,10 @@ export class PausePlugin extends ButtonPlugin {
    * @method onContainerFocus
    * @private
    */
-  onContainerFocus() {
+  onContainerFocus(e) {
+    console.log('onContainerFocus()', e.type);
     this._containerBlurred = false;
-    this.manageFocus();
+    this.manageFocus('focus');
   }
 
   /**
@@ -206,13 +213,14 @@ export class PausePlugin extends ButtonPlugin {
    * @method onContainerBlur
    * @private
    */
-  onContainerBlur() {
+  onContainerBlur(e) {
+    console.log('onContainerBlur()', e.type);
     //Set both container and application to blurred,
     //because some blur events are only happening on the container.
     //If container is blurred because application area was just focused,
     //the application's focus event will override the blur imminently.
     this._containerBlurred = this._appBlurred = true;
-    this.manageFocus();
+    this.manageFocus('blur');
   }
 
   /**
@@ -221,8 +229,9 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   onPauseToggle() {
+    //this._isManualPause = this.paused;
+    this._isManualPause = !this._isManualPause;
     this.pause = !this._paused;
-    this._isManualPause = this.paused;
   }
 
   /**
