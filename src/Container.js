@@ -35,6 +35,12 @@ export class Container extends PluginManager {
     this.loading = false;
     this.release = null;
 
+    this.onLoadingBound = this.onLoading.bind(this);
+    this.onLoadDoneBound = this.onLoadDone.bind(this);
+    this.onLoadDoneBound = this.onLoadDone.bind(this);
+    this.onEndGameBound = this.onEndGame.bind(this);
+    this.onLocalErrorBound = this.onLocalError.bind(this);
+
     this.initClient();
     this.setupPlugins();
   }
@@ -104,11 +110,11 @@ export class Container extends PluginManager {
    */
   initClient() {
     //Handle bellhop events coming from the application
-    this.client.on('loading', this.onLoading.bind(this));
-    this.client.on('loaded', this.onLoadDone.bind(this));
-    this.client.on('loadDone', this.onLoadDone.bind(this));
-    this.client.on('endGame', this.onEndGame.bind(this));
-    this.client.on('localError', this.onLocalError.bind(this));
+    this.client.on('loading', this.onLoadingBound);
+    this.client.on('loaded', this.onLoadDoneBound);
+    this.client.on('loadDone', this.onLoadDoneBound);
+    this.client.on('endGame', this.onEndGameBound);
+    this.client.on('localError', this.onLocalErrorBound);
     // @ts-ignore
     this.client.connect(this.iframe);
   }
