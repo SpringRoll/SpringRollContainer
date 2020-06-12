@@ -35,14 +35,14 @@ describe('PageVisibility', () => {
     document.dispatchEvent(initEvent('visibilitychange'));
     expect(wasCalled).to.be.true;
   });
-  it('on window.blur', () => {
+  it('on document.blur', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(initEvent('blur'));
+    document.dispatchEvent(initEvent('blur'));
     expect(wasCalled).to.be.true;
   });
-  it('on window.focus', () => {
+  it('on document.focus', () => {
     expect(wasCalled).to.be.false;
-    window.dispatchEvent(initEvent('focus'));
+    document.dispatchEvent(initEvent('focus'));
     expect(wasCalled).to.be.true;
   });
   it('on window.pageHide', () => {

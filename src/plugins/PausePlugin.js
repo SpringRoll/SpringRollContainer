@@ -227,6 +227,7 @@ export class PausePlugin extends ButtonPlugin {
 
     this.pause = this.pause;
 
+    //ensure app has focus after setting up plugin
     this.focusApp();
   }
 

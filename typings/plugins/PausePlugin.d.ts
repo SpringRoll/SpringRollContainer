@@ -2,7 +2,7 @@ import { ButtonPlugin } from '..';
 import { Button } from '../ui-elements';
 import { PageVisibility } from '..'
 export class PausePlugin extends ButtonPlugin {
-  constructor(pauseButton: string, selector?: string);
+  constructor(pauseButton: string);
 
   _appBlurred: boolean;
   _containerBlurred: boolean;
@@ -12,9 +12,7 @@ export class PausePlugin extends ButtonPlugin {
   _paused: boolean;
   iframe: null | HTMLIFrameElement;
   pageVisibility: PageVisibility;
-  paused: boolean;
   pauseDisabled: boolean;
-  pauseFocus: HTMLElement;
   private _pauseButton: Array<Button>;
   pauseButtons: NodeListOf<HTMLButtonElement>;
 
@@ -24,14 +22,12 @@ export class PausePlugin extends ButtonPlugin {
   get pauseButton(): Array<HTMLButtonElement>;
 
 
-  blur():void;
-  focus():void;
+  blurApp():void;
+  focusApp():void;
   manageFocus():void;
   onContainerBlur():void;
   onContainerFocus():void;
-  onDocClick():void;
   onFocus($event: {data:any}):void;
   onKeepFocus($event: {data:any}):void;
-  onPauseFocus():void;
   onPauseToggle(): void;
 }

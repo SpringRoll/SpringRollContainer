@@ -34,7 +34,9 @@ describe('PausePlugin', () => {
 
   it('.onPauseToggle()', () => {
     expect(pp.pause).to.be.true;
+    expect(pp.pauseButton[0].classList.contains('paused')).to.be.true;
     pp.onPauseToggle();
     expect(pp.pause).to.be.false;
+    expect(pp.pauseButton[0].classList.contains('unpaused')).to.be.true;
   });
 });
