@@ -35,12 +35,12 @@ describe('PageVisibility', () => {
     document.dispatchEvent(initEvent('visibilitychange'));
     expect(wasCalled).to.be.true;
   });
-  it('on document.blur', () => {
+  it('on window.blur', () => {
     expect(wasCalled).to.be.false;
     window.dispatchEvent(initEvent('blur'));
     expect(wasCalled).to.be.true;
   });
-  it('on document.focus', () => {
+  it('on window.focus', () => {
     expect(wasCalled).to.be.false;
     window.dispatchEvent(initEvent('focus'));
     expect(wasCalled).to.be.true;
