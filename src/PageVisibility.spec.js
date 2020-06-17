@@ -37,12 +37,12 @@ describe('PageVisibility', () => {
   });
   it('on document.blur', () => {
     expect(wasCalled).to.be.false;
-    document.dispatchEvent(initEvent('blur'));
+    window.dispatchEvent(initEvent('blur'));
     expect(wasCalled).to.be.true;
   });
   it('on document.focus', () => {
     expect(wasCalled).to.be.false;
-    document.dispatchEvent(initEvent('focus'));
+    window.dispatchEvent(initEvent('focus'));
     expect(wasCalled).to.be.true;
   });
   it('on window.pageHide', () => {

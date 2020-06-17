@@ -74,16 +74,16 @@ export class PageVisibility {
     this._enabled = enable;
 
     document.removeEventListener('visibilitychange', this.onToggle, false);
-    document.removeEventListener('blur', this.onBlur, false);
-    document.removeEventListener('focus', this.onFocus, false);
+    window.removeEventListener('blur', this.onBlur, false);
+    window.removeEventListener('focus', this.onFocus, false);
     window.removeEventListener('pagehide', this.onBlur, false);
     window.removeEventListener('pageshow', this.onFocus, false);
     window.removeEventListener('visibilitychange', this.onToggle, false);
 
     if (this._enabled) {
       document.addEventListener('visibilitychange', this.onToggle, false);
-      document.addEventListener('blur', this.onBlur, false);
-      document.addEventListener('focus', this.onFocus, false);
+      window.addEventListener('blur', this.onBlur, false);
+      window.addEventListener('focus', this.onFocus, false);
       window.addEventListener('pagehide', this.onBlur, false);
       window.addEventListener('pageshow', this.onFocus, false);
       window.addEventListener('visibilitychange', this.onToggle, false);
