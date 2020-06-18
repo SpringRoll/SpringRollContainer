@@ -19,18 +19,61 @@ Here's a handful of libraries and terms that we'll use throughout this document:
 
 ## Examples
 
-Basic usage for opening a SpringRoll application via a local path. This can be used to open a game with a relative or absolute (e.g. "http://...") path.
+The following examples assume that you've create an HTML page with a setup like this:
 
 ```html
 <script src="path/to/bellhop-iframe/dist/bellhop-umd.js"></script>
 <script src="path/to/springroll-container/dist/springroll-container.min.js"></script>
 <iframe id="game" scrolling="no"></iframe>
-<script>
-  const container = new springroll.Container({
-    iframeSelector: "#game"
-  });
-  container.openPath("game.html");
-</script>
+```
+
+That is,
+- You've included the [Bellhop](https://www.npmjs.com/package/bellhop-iframe) UMD build on the page
+- You've included the SpringRoll Container UMD build on the page.
+- You've added an `iframe` and given it an id (`game` in this case).
+
+### Opening a Local Game
+
+```javascript
+const container = new springroll.Container({
+    iframeSelector: '#game'
+});
+
+container.openPath('local/path/to/game.html');
+```
+
+### Opening a Game Hosted at Another Domain
+
+```javascript
+const container = new springroll.Container({
+  iframeSelector: '#game'
+});
+
+container.openLocal('https://example.com/path/to/game.html');
+```
+
+### Opening a Game Hosted on SpringRollConnect
+
+```javascript
+const container = new springroll.Container({
+  iframeSelector: '#game'
+});
+
+container.openRemote('https://springroll-connect.example.com/api/release/game-slug');
+```
+
+### Opening a Game with a Pause Button
+
+```javascript
+const container = new springroll.Container({
+  iframeSelector: '#game',
+  plugins: [
+    // Assuming that there is a <button id="pause-button" /> on the page somewhere
+    new springroll.PausePlugin('button#pause-button'), 
+  ]  
+});
+
+container.openPath('path/to/game.html');
 ```
 
 ## Plugins
