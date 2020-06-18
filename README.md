@@ -79,11 +79,9 @@ container.openPath('path/to/game.html');
 
 ## Plugins
 
-The Container supports several built-in plugins that mirror the state features in the application/game. These are initialized with HTMLElements (or selector strings) like buttons or input sliders.
-
-Here are some examples of the syntax for declaring plugins when creating the container. Not all (or any) plugins need to be included, only the features supported by the game. All examples use selector strings but plugins will also accept an HTMLElement as a parameter as well.
-
-All plugins also accept multiple controls in the form of a selector string (see [Multiple Controls](#multiple-plugin-controls))
+The Container has several built-in plugins that allow the user to control various aspects of a game/application.
+These are initialized with either a query selector string (ala [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
+or an `HTMLElement`.
 
 ### PausePlugin, HelpPlugin:
 ```javascript
