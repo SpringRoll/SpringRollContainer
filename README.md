@@ -277,6 +277,8 @@ container.openPath('game.html');
 ```
 
 ### HUDPlugin
+The HUD plugin allows users to position HUD elements within a game by docking to different sides of the screen.
+
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
@@ -285,16 +287,23 @@ const container = new springroll.Container({
   plugins: [
     //HUDPlugin expects a button element/selector string
     new HUDPlugin({
-      hudSelectorButtons: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
+      // clicking this button toggles through the available HUD positions supported by the game
+      hudSelectorButtons: '#hud-position-button-selector' 
     }),
   ]
 });
-	container.openPath('game.html');
-```
-*The HUDPlugin requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
-e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
-The HUDPlugin will display the current position as a data attribute on the button itself.
+container.openPath('game.html');
+```
+
+The HUDPlugin requests the supported positions directly from the game itself and builds out an internal list of positions dynamically,
+e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will toggle between those
+two options whenever the button is clicked.
+
+See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on 
+the request format and how game developers provide those values.
+
+The HUDPlugin will also display the current position as a data attribute on the button itself.
 
 ### ControlsPlugin
 ```javascript
