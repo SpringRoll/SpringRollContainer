@@ -1,6 +1,6 @@
 # SpringRoll Container
 
-The SpringRoll Container is `<iframe>` controller for interacting with SpringRoll applications hosted locally or in [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect).
+The SpringRoll Container is an `<iframe>` controller for interacting with SpringRoll applications hosted locally or in [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect).
 
 ## Installation
 
@@ -19,7 +19,7 @@ Here's a handful of libraries and terms that we'll use throughout this document:
 
 ## Examples
 
-The following examples assume that you've create an HTML page with an iframe on it:
+The following examples assume that you've created an HTML page with an iframe on it:
 
 ```html
 <iframe id="game" scrolling="no"></iframe>
@@ -80,7 +80,7 @@ container.openPath('path/to/game.html');
 ## Plugins
 
 The Container has several built-in plugins that allow the user to control various aspects of a game/application.
-These are initialized with either a query selector string (ala [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
+These are initialized with either a query selector string (similar to what you would pass to [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
 or an `HTMLElement`.
 
 Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
@@ -248,8 +248,10 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 ### UISizePlugin, LayersPlugin:
 The UI size plugin allows users to control the size of custom pointers and buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
 
-The Layers plugin allows users to hide distracting layers within a game. This is implemented as a slider as well, from 0 to 1. 0 indicates "show all layers"
-whereas 1 indicates "hide all distracting layers". By default, this value is 0. Note that each game may implement this differently. 
+The Layers plugin allows users to hide distracting layers within a game. This is a ranged value from 0 to 1. 0 indicates "show all layers"
+whereas 1 indicates "hide all distracting layers". By default, this value is 0.
+
+Note that each game may implement this differently. 
 
 Note that these plugins accept HTML range inputs, rather than buttons.
 
