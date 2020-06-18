@@ -158,24 +158,29 @@ Note that the captions plugin sets a class of `muted` or `unmuted` on the captio
 The sound plugin allows users to control the volume of individual audio channels within the game.
 SpringRoll supports three audio channels: VO, SFX, and Music and we encourage developers to use them as it empowers users to customize their game play to suite their needs.
 
+The sound plugin supports a total of eight controls:
+- A global sound mute
+- Mute buttons for each of the three audio channels mentioned above - VO, SFX, Music
+- A global sound volume slider
+- Volume sliders for each of the three audio channels mentioned above - VO, SFX, Music
+
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //The SoundPlugin has 4 different audio types and can take a button(for mute/unmute) and/or an input slider(for volume control)
     new SoundPlugin({
-      //Sliders expect an HTML Input Element of type="range"
-      //Buttons in the SoundPlugin expect an HTML Button Element
-      soundButtons: '#soundButton', //mutes or unmutes all game audio
-      soundSliders: '#soundSlider', //controls the game's audio volume
-      musicButtons: '#musicButton', //mutes or unmutes the music
-      musicSliders: '#musicSlider', //controls the game's music volume
-      voButtons: '#voButton', //mutes or unmutes the voice over
-      voSliders: '#voSlider', //controls the game's voice over volume
-      sfxButtons: '#sfxButton', //mutes or unmutes the game's sound effects
-      sfxSliders: '#sfxSlider', //controls the game's sound effects volume
+      soundButtons: '#soundButton', // mutes or unmutes all game audio
+      musicButtons: '#musicButton', // mutes or unmutes the music
+      voButtons: '#voButton', // mutes or unmutes the voice over
+      sfxButtons: '#sfxButton', // mutes or unmutes the game's sound effects
+
+      // The sound button expects these to be HTML range inputs
+      soundSliders: '#soundSlider', // controls the game's audio volume
+      musicSliders: '#musicSlider', // controls the game's music volume
+      voSliders: '#voSlider', // controls the game's voice-over volume
+      sfxSliders: '#sfxSlider', // controls the game's sound effects volume
     }),
   ]
 });
