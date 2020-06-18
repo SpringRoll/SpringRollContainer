@@ -15,10 +15,14 @@ npm install springroll-container
 Basic usage for opening a SpringRoll application via a local path. This can be used to open a game with a relative or absolute (e.g. "http://...") path.
 
 ```html
+<script src="path/to/bellhop-iframe/dist/bellhop-umd.js"></script>
+<script src="path/to/springroll-container/dist/springroll-container.min.js"></script>
 <iframe id="game" scrolling="no"></iframe>
 <script>
-    const container = new springroll.Container({iframeSelector: "#game"});
-    container.openPath("game.html");
+  const container = new springroll.Container({
+    iframeSelector: "#game"
+  });
+  container.openPath("game.html");
 </script>
 ```
 
