@@ -90,9 +90,8 @@ import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //all three plugins here expect an HTML Button Element and take a single selector string
-    new PausePlugin('#pause-button-selector'), //Pauses or unpauses the game
-    new HelpPlugin('#help-button-selector'), //requests a hint or help from the game
+    new PausePlugin('button#pause-button'), // Pauses or unpauses the game
+    new HelpPlugin('button#help'), // requests a hint or help from the game
   ]
 });
 container.openPath('game.html');
@@ -100,6 +99,8 @@ container.openPath('game.html');
 PausePlugin sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
 ### CaptionsPlugin:
+The captions plugin allows users to show or hide captions, and control the size and placement of captions.
+
 ```javascript
 import { CaptionsPlugin, Container } from 'springroll-container';
 
@@ -107,25 +108,47 @@ const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
     new CaptionsPlugin({
-      captionsButtons: '#caption-button-selector',
-      //the three following options control caption styles, as radio buttons using the group name is ideal for selecting multiple radio buttons.
+      captionsButtons: '#captions',
+      
+      // expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
+      fontSizeRadios: 'input[name=captions-font-size]',
 
-      //expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
-      fontSizeRadios: 'input[name=font-size-radio-name]',
+      // expects exactly two(2) radio buttons with values "default" (black background, white text),
+      // and "inverted" (black text, white background) for caption color schemes
+      colorRadios: 'input[name=captions-font-color]',
 
-      //expects exactly two(2) radio buttons with values "default" (black background, white text),
-      //and "inverted" (black text, white background) for caption color schemes
-      colorRadios: 'input[name=color-radio-name]',
-
-       //expects exactly two(2) radio buttons values "top" and "bottom".
-      //Indicating that captions should be placed at the top or bototm of the screen.
-       alignmentRadios: 'input[name=alignment-radio-name]',
+      // expects exactly two(2) radio buttons values "top" and "bottom".
+      // Indicating that captions should be placed at the top or bottom of the screen.
+      alignmentRadios: 'input[name=captions-alignment]',
     })
   ]
 });
 container.openPath('game.html');
 ```
-CaptionsPlugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
+
+Typical HTML for powering the captions plugin might look like this:
+
+```html
+<button id="captions">Toggle Captions</button>
+
+<div>
+  <label><input name="captions-font-size" value="sm" /> Small</label>
+  <label><input name="captions-font-size" value="md" /> Medium</label>
+  <label><input name="captions-font-size" value="lg" /> Large</label>
+</div>
+
+<div>
+  <label><input name="captions-font-color" value="default" /> Default</label>
+  <label><input name="captions-font-color" value="inverted" /> Inverted</label>
+</div>
+
+<div>
+  <label><input name="captions-alignment" value="top" /> Default</label>
+  <label><input name="captions-alignment" value="bottom" /> Inverted</label>
+</div>
+```
+
+Note that the captions plugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
 
 ### SoundPlugin:
 ```javascript
