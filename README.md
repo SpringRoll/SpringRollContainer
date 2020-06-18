@@ -246,31 +246,35 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 
 
 ### UISizePlugin, LayersPlugin:
+The UI size plugin allows users to control the size of custom pointers and buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
+
+The Layers plugin allows users to hide distracting layers within a game. This is implemented as a slider as well, from 0 to 1. 0 indicates "show all layers"
+whereas 1 indicates "hide all distracting layers". By default, this value is 0. Note that each game may implement this differently. 
+
+Note that these plugins accept HTML range inputs, rather than buttons.
+
 ```javascript
 import { UISizePlugin, LayersPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //UISizePlugin also accepts an [optional] initial value for its two options
     new UISizePlugin({
-      //Expects an HTML Input Element of type="range"
-      pointerSliders: '#pointer-slider-selector', //controls the size of the pointer
+      pointerSliders: '#pointer-slider-selector', // controls the size of the pointer
       pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
-      //Expects an HTML Input Element of type="range"
-      buttonSliders: '#button-slider-selector', //controls the size of UI buttons
+
+      buttonSliders: '#button-slider-selector', // controls the size of UI buttons
       buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
     }),
-    //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
+
     new LayersPlugin({
-      //Expects an HTML Input Element of type="range"
       layersSliders: '#layers-slider-selector' // goes from 0.0 to 1.0
     }),
   ]
 });
+
 container.openPath('game.html');
 ```
-The following plugins require an extra bit of configuration from the game application to function correctly:
 
 ### HUDPlugin
 ```javascript
