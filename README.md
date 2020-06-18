@@ -1,34 +1,91 @@
 # SpringRoll Container
 
-The `<iframe>` controller for interacting with SpringRoll applications either by [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect) or accessing locally. The Container works both in the context of a Cordova-based application or on a webserver.
+The SpringRoll Container is an `<iframe>` controller for interacting with SpringRoll applications hosted locally or in [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect).
 
 ## Installation
 
-Install with [NPM](https://www.npmjs.com/).
+The SpringRoll Container is [available on npm](https://www.npmjs.com/package/springroll-container). Install it with
 
 ```bash
-npm install springroll-container
+npm install --save springroll-container
 ```
 
-## Usage
+## Glossary
+Here's a handful of libraries and terms that we'll use throughout this document:
+- [SpringRoll](https://github.com/SpringRoll/SpringRoll) an JavaScript library for building portable and accessible HTML5 games
+- [Bellhop](https://github.com/SpringRoll/Bellhop) an event-based wrapper around the [`postMessage` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+- [SpringRollConnect](https://github.com/SpringRoll/SpringRollConnect) a content-management system for SpringRoll games.
+  The SpringRoll Container can interact with a SpringRollConnect server to embed a game that is hosted remotely.
 
-Basic usage for opening a SpringRoll application via a local path. This can be used to open a game with a relative or absolute (e.g. "http://...") path.
+## Examples
+
+The following examples assume that you've created an HTML page with an iframe on it:
 
 ```html
 <iframe id="game" scrolling="no"></iframe>
-<script>
-    const container = new springroll.Container({iframeSelector: "#game"});
-    container.openPath("game.html");
-</script>
+```
+
+and that you've imported this module:
+
+```javascript
+import { Container } from 'springroll-container';
+```
+
+### Opening a Local Game
+
+```javascript
+const container = new Container({
+    iframeSelector: '#game'
+});
+
+container.openPath('local/path/to/game.html');
+```
+
+### Opening a Game Hosted at Another Domain
+
+```javascript
+const container = new Container({
+  iframeSelector: '#game'
+});
+
+container.openLocal('https://example.com/path/to/game.html');
+```
+
+### Opening a Game Hosted on SpringRollConnect
+
+```javascript
+const container = new Container({
+  iframeSelector: '#game'
+});
+
+container.openRemote('https://springroll-connect.example.com/api/release/game-slug');
+```
+
+### Opening a Game with a Pause Button
+
+```javascript
+import { PausePlugin, Container } from 'springroll-container';
+
+const container = new Container({
+  iframeSelector: '#game',
+  plugins: [
+    // Assuming that there is a <button id="pause-button" /> on the page somewhere
+    new PausePlugin('button#pause-button'),
+  ]  
+});
+
+container.openPath('path/to/game.html');
 ```
 
 ## Plugins
 
-The Container supports several built-in plugins that mirror the state features in the application/game. These are initialized with HTMLElements (or selector strings) like buttons or input sliders.
+The Container has several built-in plugins that allow the user to control various aspects of a game/application.
+These are initialized with either a query selector string (similar to what you would pass to [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
+or an `HTMLElement`.
 
-Here are some examples of the syntax for declaring plugins when creating the container. Not all (or any) plugins need to be included, only the features supported by the game. All examples use selector strings but plugins will also accept an HTMLElement as a parameter as well.
-
-All plugins also accept multiple controls in the form of a selector string (see [Multiple Controls](#multiple-plugin-controls))
+Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
+If the container has a plugin enabled corresponding to a feature that the game doesn't contain, the container will automatically _hide the corresponding UI element_.
+For example, if the container has the `CaptionsPlugin` enabled with a corresponding button to toggle captions but the game doesn't actually _have_ captions, the container will hide the captions toggle button automatically.
 
 ### PausePlugin, HelpPlugin:
 ```javascript
@@ -37,9 +94,8 @@ import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //all three plugins here expect an HTML Button Element and take a single selector string
-    new PausePlugin('#pause-button-selector'), //Pauses or unpauses the game
-    new HelpPlugin('#help-button-selector'), //requests a hint or help from the game
+    new PausePlugin('button#pause-button'), // Pauses or unpauses the game
+    new HelpPlugin('button#help'), // requests a hint or help from the game
   ]
 });
 container.openPath('game.html');
@@ -47,6 +103,8 @@ container.openPath('game.html');
 PausePlugin sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
 ### CaptionsPlugin:
+The captions plugin allows users to show or hide captions, and control the size and placement of captions.
+
 ```javascript
 import { CaptionsPlugin, Container } from 'springroll-container';
 
@@ -54,45 +112,75 @@ const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
     new CaptionsPlugin({
-      captionsButtons: '#caption-button-selector',
-      //the three following options control caption styles, as radio buttons using the group name is ideal for selecting multiple radio buttons.
+      captionsButtons: '#captions',
+      
+      // expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
+      fontSizeRadios: 'input[name=captions-font-size]',
 
-      //expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
-      fontSizeRadios: 'input[name=font-size-radio-name]',
+      // expects exactly two(2) radio buttons with values "default" (black background, white text),
+      // and "inverted" (black text, white background) for caption color schemes
+      colorRadios: 'input[name=captions-font-color]',
 
-      //expects exactly two(2) radio buttons with values "default" (black background, white text),
-      //and "inverted" (black text, white background) for caption color schemes
-      colorRadios: 'input[name=color-radio-name]',
-
-       //expects exactly two(2) radio buttons values "top" and "bottom".
-      //Indicating that captions should be placed at the top or bototm of the screen.
-       alignmentRadios: 'input[name=alignment-radio-name]',
+      // expects exactly two(2) radio buttons values "top" and "bottom".
+      // Indicating that captions should be placed at the top or bottom of the screen.
+      alignmentRadios: 'input[name=captions-alignment]',
     })
   ]
 });
 container.openPath('game.html');
 ```
-CaptionsPlugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
+
+Typical HTML for powering the captions plugin might look like this:
+
+```html
+<button id="captions">Toggle Captions</button>
+
+<div>
+  <label><input name="captions-font-size" value="sm" /> Small</label>
+  <label><input name="captions-font-size" value="md" /> Medium</label>
+  <label><input name="captions-font-size" value="lg" /> Large</label>
+</div>
+
+<div>
+  <label><input name="captions-font-color" value="default" /> Default</label>
+  <label><input name="captions-font-color" value="inverted" /> Inverted</label>
+</div>
+
+<div>
+  <label><input name="captions-alignment" value="top" /> Default</label>
+  <label><input name="captions-alignment" value="bottom" /> Inverted</label>
+</div>
+```
+
+Note that the captions plugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
 
 ### SoundPlugin:
+The sound plugin allows users to control the volume of individual audio channels within the game.
+SpringRoll supports three audio channels: VO, SFX, and Music and we encourage developers to use them as it empowers users to customize their game play to suite their needs.
+
+The sound plugin supports a total of eight controls:
+- A global sound mute
+- Mute buttons for each of the three audio channels mentioned above - VO, SFX, Music
+- A global sound volume slider
+- Volume sliders for each of the three audio channels mentioned above - VO, SFX, Music
+
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //The SoundPlugin has 4 different audio types and can take a button(for mute/unmute) and/or an input slider(for volume control)
     new SoundPlugin({
-      //Sliders expect an HTML Input Element of type="range"
-      //Buttons in the SoundPlugin expect an HTML Button Element
-      soundButtons: '#soundButton', //mutes or unmutes all game audio
-      soundSliders: '#soundSlider', //controls the game's audio volume
-      musicButtons: '#musicButton', //mutes or unmutes the music
-      musicSliders: '#musicSlider', //controls the game's music volume
-      voButtons: '#voButton', //mutes or unmutes the voice over
-      voSliders: '#voSlider', //controls the game's voice over volume
-      sfxButtons: '#sfxButton', //mutes or unmutes the game's sound effects
-      sfxSliders: '#sfxSlider', //controls the game's sound effects volume
+      soundButtons: '#soundButton', // mutes or unmutes all game audio
+      musicButtons: '#musicButton', // mutes or unmutes the music
+      voButtons: '#voButton', // mutes or unmutes the voice over
+      sfxButtons: '#sfxButton', // mutes or unmutes the game's sound effects
+
+      // The sound button expects these to be HTML range inputs
+      soundSliders: '#soundSlider', // controls the game's audio volume
+      musicSliders: '#musicSlider', // controls the game's music volume
+      voSliders: '#voSlider', // controls the game's voice-over volume
+      sfxSliders: '#sfxSlider', // controls the game's sound effects volume
     }),
   ]
 });
@@ -101,31 +189,40 @@ container.openPath('game.html');
 SoundPlugin will set a class of `muted` or `unmuted` on each button as they are toggled
 
 ### MechanicsPlugin:
+The mechanics plugin allows integrators to provide users the ability to control various mechanical aspects of the game (see the table below for details).
+Some games will support many of these features, some none at all. We doubt one game will use all of them though.
+
+Each controllable mechanic should be provided a [HTML range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range),
+and an optional default value. Each mechanic's value will range between 0 to 1, and the default initial value is aways 0.5.
+
 ```javascript
 import { MechanicsPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //The MechanicsPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
-    //MechanicsPlugin also accepts an [optional] initial value for its difficulty types
     new MechanicsPlugin({
-      //Sliders expect an HTML Input Element of type="range"
       hitAreaScaleSliders: '#hitAreaScaleSlider',
-      //All difficulty values run 0.0 to 1.0. Default = 0.5
       defaultHitAreaScale = 0.5,
+
       dragThresholdScaleSliders: '#dragThresholdScaleSlider',
       defaultDragThresholdScale = 0.5,
+
       healthSliders: '#healthSlider',
       defaultHealth = 0.5,
+
       objectCountSliders: '#objectCountSlider',
       defaultObjectCount = 0.5,
+
       completionPercentageSliders: '#completionPercentageSlider',
       defaultCompletionPercentage = 0.5,
+
       speedScaleSliders: '#speedScaleSlider',
       defaultSpeedScale = 0.5,
+
       timersScaleSliders: '#timersScaleSlider',
       defaultTimersScale = 0.5,
+
       inputCountSliders: '#inputCountSlider',
       defaultInputCount = 0.5,
     }),
@@ -149,33 +246,41 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 
 
 ### UISizePlugin, LayersPlugin:
+The UI size plugin allows users to control the size of custom pointers and buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
+
+The Layers plugin allows users to hide distracting layers within a game. This is a ranged value from 0 to 1. 0 indicates "show all layers"
+whereas 1 indicates "hide all distracting layers". By default, this value is 0.
+
+Note that each game may implement this differently. 
+
+Note that these plugins accept HTML range inputs, rather than buttons.
+
 ```javascript
 import { UISizePlugin, LayersPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //UISizePlugin also accepts an [optional] initial value for its two options
     new UISizePlugin({
-      //Expects an HTML Input Element of type="range"
-      pointerSliders: '#pointer-slider-selector', //controls the size of the pointer
+      pointerSliders: '#pointer-slider-selector', // controls the size of the pointer
       pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
-      //Expects an HTML Input Element of type="range"
-      buttonSliders: '#button-slider-selector', //controls the size of UI buttons
+
+      buttonSliders: '#button-slider-selector', // controls the size of UI buttons
       buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
     }),
-    //LayersPlugin controls the progressive removal of distracting game layers. I.e. the higher the slider the more layers should be hidden from player view.
+
     new LayersPlugin({
-      //Expects an HTML Input Element of type="range"
       layersSliders: '#layers-slider-selector' // goes from 0.0 to 1.0
     }),
   ]
 });
+
 container.openPath('game.html');
 ```
-The following plugins require an extra bit of configuration from the game application to function correctly:
 
 ### HUDPlugin
+The HUD plugin allows users to position HUD elements within a game by docking to different sides of the screen.
+
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
@@ -184,16 +289,23 @@ const container = new springroll.Container({
   plugins: [
     //HUDPlugin expects a button element/selector string
     new HUDPlugin({
-      hudSelectorButtons: '#hud-position-button-selector' //toggles through the available HUD positions reported by the game
+      // clicking this button toggles through the available HUD positions supported by the game
+      hudSelectorButtons: '#hud-position-button-selector' 
     }),
   ]
 });
-	container.openPath('game.html');
-```
-*The HUDPlugin requests the supported positions directly from the game itself and builds out an internal array of positions dynamically
-e.g. if the game supports ['top', 'bottom'] then the Plugin will toggle between those two options whenever the button is clicked. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
-The HUDPlugin will display the current position as a data attribute on the button itself.
+container.openPath('game.html');
+```
+
+The HUDPlugin requests the supported positions directly from the game itself and builds out an internal list of positions dynamically,
+e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will toggle between those
+two options whenever the button is clicked.
+
+See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on 
+the request format and how game developers provide those values.
+
+The HUDPlugin will also display the current position as a data attribute on the button itself.
 
 ### ControlsPlugin
 ```javascript
