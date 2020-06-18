@@ -151,6 +151,9 @@ Typical HTML for powering the captions plugin might look like this:
 Note that the captions plugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
 
 ### SoundPlugin:
+The sound plugin allows users to control the volume of individual audio channels within the game.
+SpringRoll supports three audio channels: VO, SFX, and Music and we encourage developers to use them as it empowers users to customize their game play to suite their needs.
+
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
