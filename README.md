@@ -189,31 +189,40 @@ container.openPath('game.html');
 SoundPlugin will set a class of `muted` or `unmuted` on each button as they are toggled
 
 ### MechanicsPlugin:
+The mechanics plugin allows integrators to provide users the ability to control various mechanical aspects of the game (see the table below for details).
+Some games will support many of these features, some none at all. We doubt one game will use all of them though.
+
+Each controllable mechanic should be provided a [HTML range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range),
+and an optional default value. Each mechanic's value will range between 0 to 1, and the default initial value is aways 0.5.
+
 ```javascript
 import { MechanicsPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container({
   iframeSelector: "#game",
   plugins: [
-    //The MechanicsPlugin offers many different types of "difficulty" so your game can offer fine grained control over their experience to the user. Explanations of the options are below
-    //MechanicsPlugin also accepts an [optional] initial value for its difficulty types
     new MechanicsPlugin({
-      //Sliders expect an HTML Input Element of type="range"
       hitAreaScaleSliders: '#hitAreaScaleSlider',
-      //All difficulty values run 0.0 to 1.0. Default = 0.5
       defaultHitAreaScale = 0.5,
+
       dragThresholdScaleSliders: '#dragThresholdScaleSlider',
       defaultDragThresholdScale = 0.5,
+
       healthSliders: '#healthSlider',
       defaultHealth = 0.5,
+
       objectCountSliders: '#objectCountSlider',
       defaultObjectCount = 0.5,
+
       completionPercentageSliders: '#completionPercentageSlider',
       defaultCompletionPercentage = 0.5,
+
       speedScaleSliders: '#speedScaleSlider',
       defaultSpeedScale = 0.5,
+
       timersScaleSliders: '#timersScaleSlider',
       defaultTimersScale = 0.5,
+
       inputCountSliders: '#inputCountSlider',
       defaultInputCount = 0.5,
     }),
