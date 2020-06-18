@@ -1,16 +1,23 @@
 # SpringRoll Container
 
-The `<iframe>` controller for interacting with SpringRoll applications either by [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect) or accessing locally. The Container works both in the context of a Cordova-based application or on a webserver.
+The SpringRoll Container is `<iframe>` controller for interacting with SpringRoll applications hosted locally or in [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect).
 
 ## Installation
 
-Install with [NPM](https://www.npmjs.com/).
+The SpringRoll Container is [available on npm](https://www.npmjs.com/package/springroll-container). Install it with
 
 ```bash
-npm install springroll-container
+npm install --save springroll-container
 ```
 
-## Usage
+## Glossary
+Here's a handful of libraries and terms that we'll use throughout this document:
+- [SpringRoll](https://github.com/SpringRoll/SpringRoll) an JavaScript library for building portable and accessible HTML5 games
+- [Bellhop](https://github.com/SpringRoll/Bellhop) an event-based wrapper around the [`postMessage` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+- [SpringRollConnect](https://github.com/SpringRoll/SpringRollConnect) a content-management system for SpringRoll games.
+  The SpringRoll Container can interact with a SpringRollConnect server to embed a game that is hosted remotely.
+
+## Examples
 
 Basic usage for opening a SpringRoll application via a local path. This can be used to open a game with a relative or absolute (e.g. "http://...") path.
 
