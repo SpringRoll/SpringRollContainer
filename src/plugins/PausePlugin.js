@@ -22,6 +22,7 @@ export class PausePlugin extends ButtonPlugin {
     this.focusApp = this.focusApp.bind(this);
     this.manageFocus = this.manageFocus.bind(this);
     this.onKeepFocus = this.onKeepFocus.bind(this);
+    this.onFocus = this.onFocus.bind(this);
     const onPauseToggle = this.onPauseToggle.bind(this);
 
     this.pauseDisabled = false;
@@ -222,8 +223,8 @@ export class PausePlugin extends ButtonPlugin {
         }
       }.bind(this)
     );
-    this.client.on('focus', this.onFocus.bind(this));
-    this.client.on('keepFocus', this.onKeepFocus.bind(this));
+    this.client.on('focus', this.onFocus);
+    this.client.on('keepFocus', this.onKeepFocus);
 
     this.pause = this.pause;
 
