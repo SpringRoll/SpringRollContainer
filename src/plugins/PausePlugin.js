@@ -8,10 +8,9 @@ export class PausePlugin extends ButtonPlugin {
   /**
    *Creates an instance of PausePlugin.
    * @param {string} pauseButton
-   * @param {string} [selector='.pause-on-focus']
    * @memberof PausePlugin
    */
-  constructor(pauseButton, selector = '.pause-on-focus') {
+  constructor(pauseButton) {
     super('Pause-Button-plugin');
     this._appBlurred = false;
     this._containerBlurred = false;
@@ -20,11 +19,11 @@ export class PausePlugin extends ButtonPlugin {
     this._keepFocus = false;
     this._paused = false;
     this.iframe = null;
-    this.focus = this.focus.bind(this);
+    this.focusApp = this.focusApp.bind(this);
     this.manageFocus = this.manageFocus.bind(this);
     this.onKeepFocus = this.onKeepFocus.bind(this);
-    this.onPauseFocus = this.onPauseFocus.bind(this);
-    this.paused = false;
+    const onPauseToggle = this.onPauseToggle.bind(this);
+
     this.pauseDisabled = false;
     this._pauseButton = [];
 
@@ -33,11 +32,9 @@ export class PausePlugin extends ButtonPlugin {
       this.onContainerBlur.bind(this)
     );
 
-    document.addEventListener('focus', this.focus);
-
+    //Set up the pause buttons
     this.pauseButtons = document.querySelectorAll(pauseButton);
     if (0 < this.pauseButtons.length) {
-      const onPauseToggle = this.onPauseToggle.bind(this);
 
       for (let i = 0, l = this.pauseButtons.length; i < l; i++) {
         this._pauseButton.push(
@@ -49,32 +46,24 @@ export class PausePlugin extends ButtonPlugin {
         );
       }
     }
-
-    this.pauseFocus = document.querySelectorAll(selector);
-
-    if (!this.pauseFocus) {
-      return;
-    }
-    for (let i = 0, l = this.pauseFocus.length; i < l; i++) {
-      this.pauseFocus[i].addEventListener('focus', this.onPauseFocus);
-    }
   }
 
   /**
-   *
-   *
+   * updates _paused and also sends the pause event to the application
    * @memberof PausePlugin
+   * @param {Boolean} paused
    */
   set pause(paused) {
     paused = !!paused;
+
     if (this.pauseDisabled) {
       return;
     }
-
     this._paused = paused;
+
     this.client.send('pause', paused);
     this.client.trigger(paused ? 'paused' : 'resumed', {
-      paused: this._paused
+      paused: paused
     });
 
     for (let i = 0, l = this._pauseButton.length; i < l; i++) {
@@ -83,48 +72,33 @@ export class PausePlugin extends ButtonPlugin {
       this._pauseButton[i].button.classList.add(paused ? 'paused' : 'unpaused');
     }
   }
+
   /**
-   *
-   *
    * @memberof PausePlugin
+   * @returns {Boolean}
    */
   get pause() {
     return this._paused;
   }
 
   /**
-   * @param {Event} $event
-   * @memberof FocusPlugin
+   * forces focus onto the iframe application window
+   * @memberof PausePlugin
    */
-  onPauseFocus($event) {
-    this._isManualPause = this.paused = this.pause = true;
-    $event.srcElement.addEventListener(
-      'blur',
-      function() {
-        this._isManualPause = this.paused = this.pause = false;
-        this.focus();
-      }.bind(this),
-      {
-        once: true
-      }
-    );
-  }
-
-  /**
-   * @memberof FocusPlugin
-   */
-  focus() {
+  focusApp() {
     if (!this.hasDom) {
       return;
     }
 
+    this._containerBlurred = true;
     this.iframe.contentWindow.focus();
   }
 
   /**
-   * @memberof FocusPlugin
+   * blurs the application iframe window
+   * @memberof PausePlugin
    */
-  blur() {
+  blurApp() {
     if (!this.hasDom) {
       return;
     }
@@ -132,12 +106,14 @@ export class PausePlugin extends ButtonPlugin {
   }
 
   /**
-   * @memberof FocusPlugin
+   * Determines what pause state should be sent, if any, on focus or blur events.
+   * @method manageFocus
+   * @memberof PausePlugin
    */
   manageFocus() {
     // Unfocus on the iframe
     if (this._keepFocus) {
-      this.blur();
+      this.blurApp();
     }
 
     // we only need one delayed call, at the end of any
@@ -159,12 +135,12 @@ export class PausePlugin extends ButtonPlugin {
           return;
         }
 
-        this.paused = Boolean(this._containerBlurred && this._appBlurred);
+        this.pause = Boolean(this._containerBlurred && this._appBlurred);
 
         // Focus on the content window when blurring the app
         // but selecting the container
         if (this._keepFocus && !this._containerBlurred && this._appBlurred) {
-          this.focus();
+          this.focusApp();
         }
       }.bind(this),
       100
@@ -174,6 +150,7 @@ export class PausePlugin extends ButtonPlugin {
   /**
    * Handle the keep focus event for the window
    * @method onKeepFocus
+   * @memberof PausePlugin
    * @private
    */
   onKeepFocus($event) {
@@ -184,6 +161,7 @@ export class PausePlugin extends ButtonPlugin {
   /**
    * Handle focus events sent from iFrame children
    * @method onFocus
+   * @memberof PausePlugin
    * @private
    */
   onFocus($event) {
@@ -194,16 +172,19 @@ export class PausePlugin extends ButtonPlugin {
   /**
    * Handle focus events sent from container's window
    * @method onContainerFocus
+   * @memberof PausePlugin
    * @private
    */
   onContainerFocus() {
     this._containerBlurred = false;
+    this.focusApp();
     this.manageFocus();
   }
 
   /**
    * Handle blur events sent from container's window
    * @method onContainerBlur
+   * @memberof PausePlugin
    * @private
    */
   onContainerBlur() {
@@ -216,19 +197,16 @@ export class PausePlugin extends ButtonPlugin {
   }
 
   /**
-   *
-   *
    * @memberof PausePlugin
    */
   onPauseToggle() {
-    this.pause = !this._paused;
-    this._isManualPause = this.paused;
+    this._isManualPause = !this._isManualPause;
+    this.pause = !this.pause;
   }
 
   /**
-   *
    * @param {Container} container
-   * @memberof FocusPlugin
+   * @memberof PausePlugin
    */
   init({ iframe }) {
     this.iframe = iframe;
@@ -247,9 +225,10 @@ export class PausePlugin extends ButtonPlugin {
     this.client.on('focus', this.onFocus.bind(this));
     this.client.on('keepFocus', this.onKeepFocus.bind(this));
 
-    this.pause = this._paused;
+    this.pause = this.pause;
 
-    this.focus();
+    //ensure app has focus after setting up plugin
+    this.focusApp();
   }
 
   /**
@@ -265,6 +244,7 @@ export class PausePlugin extends ButtonPlugin {
   /**
    * @readonly
    * @memberof PausePlugin
+   * @returns {HTMLButtonElement[]}
    */
   get pauseButton() {
     const buttons = [];

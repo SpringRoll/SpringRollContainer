@@ -19,14 +19,14 @@ export class PageVisibility {
   constructor(onFocus = function() {}, onBlur = function() {}) {
     this._onFocus = onFocus;
     this._onBlur = onBlur;
-    this.onFocus = function() {
+    this.onFocus = function(e) {
       if (this.enabled) {
-        this._onFocus();
+        this._onFocus(e);
       }
     }.bind(this);
-    this.onBlur = function() {
+    this.onBlur = function(e) {
       if (this.enabled) {
-        this._onBlur();
+        this._onBlur(e);
       }
     }.bind(this);
     this._enabled = false;
@@ -74,18 +74,18 @@ export class PageVisibility {
     this._enabled = enable;
 
     document.removeEventListener('visibilitychange', this.onToggle, false);
-    window.removeEventListener('blur', this.onBlur);
-    window.removeEventListener('focus', this.onFocus);
-    window.removeEventListener('pagehide', this.onBlur);
-    window.removeEventListener('pageshow', this.onFocus);
+    window.removeEventListener('blur', this.onBlur, false);
+    window.removeEventListener('focus', this.onFocus, false);
+    window.removeEventListener('pagehide', this.onBlur, false);
+    window.removeEventListener('pageshow', this.onFocus, false);
     window.removeEventListener('visibilitychange', this.onToggle, false);
 
     if (this._enabled) {
       document.addEventListener('visibilitychange', this.onToggle, false);
-      window.addEventListener('blur', this.onBlur);
-      window.addEventListener('focus', this.onFocus);
-      window.addEventListener('pagehide', this.onBlur);
-      window.addEventListener('pageshow', this.onFocus);
+      window.addEventListener('blur', this.onBlur, false);
+      window.addEventListener('focus', this.onFocus, false);
+      window.addEventListener('pagehide', this.onBlur, false);
+      window.addEventListener('pageshow', this.onFocus, false);
       window.addEventListener('visibilitychange', this.onToggle, false);
     }
   }
