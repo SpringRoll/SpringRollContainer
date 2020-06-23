@@ -91,7 +91,7 @@ export class HelpPlugin extends ButtonPlugin {
    */
   init() {
     // Handle pause
-    this.client.on('paused', this.onPause.bind(this));
+    this.client.on('paused', this.onPause);
 
     // Handle features changed
     this.client.on(

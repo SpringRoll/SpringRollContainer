@@ -13,6 +13,9 @@ export class UserDataPlugin extends BasePlugin {
    */
   constructor() {
     super('UserData-Plugin');
+    this.onUserDataRemove = this.onUserDataRemove.bind(this);
+    this.onUserDataRead = this.onUserDataRead.bind(this);
+    this.onUserDataWrite = this.onUserDataWrite.bind(this);
   }
 
   /**
@@ -21,9 +24,9 @@ export class UserDataPlugin extends BasePlugin {
    * @memberof UserDataPlugin
    */
   init() {
-    this.client.on('userDataRemove', this.onUserDataRemove.bind(this));
-    this.client.on('userDataRead', this.onUserDataRead.bind(this));
-    this.client.on('userDataWrite', this.onUserDataWrite.bind(this));
+    this.client.on('userDataRemove', this.onUserDataRemove);
+    this.client.on('userDataRead', this.onUserDataRead);
+    this.client.on('userDataWrite', this.onUserDataWrite);
   }
 
   /**
