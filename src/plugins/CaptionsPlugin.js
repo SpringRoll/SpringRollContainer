@@ -6,7 +6,7 @@ import { Button, RadioGroup } from '../ui-elements';
 const CAPTIONS_STYLES = 'captionsStyles';
 const CAPTIONS_MUTED = 'captionsMuted';
 const DEFAULT_CAPTIONS_STYLES = {
-  size: 'md',
+  size: 'medium',
   background: 'black',
   color: 'white',
   edge: 'none',
@@ -16,7 +16,7 @@ const DEFAULT_CAPTIONS_STYLES = {
 
 const DEFAULT_COLOR_STYLE = {color: 'white', background: 'black'};
 const INVERTED_COLOR_STYLE = {color: 'black', background: 'white'};
-const FONT_SIZE_VALUES = ['sm', 'md', 'lg'];
+const FONT_SIZE_VALUES = ['small', 'medium', 'large'];
 const COLOR_VALUES = ['default', 'inverted'];
 const ALIGN_VALUES = ['top', 'bottom'];
 
@@ -124,7 +124,7 @@ export class CaptionsPlugin extends ButtonPlugin {
       const radioGroup = new RadioGroup({
         selector: selector.trim(),
         controlName: 'Font Size',
-        defaultValue: 'md',
+        defaultValue: 'medium',
         pluginName: 'Caption-Button-Plugin'
       });
 
