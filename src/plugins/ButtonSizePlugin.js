@@ -15,10 +15,7 @@ export class ButtonSizePlugin extends BasePlugin {
    * @param {number} [params.defaultButtonSize=0.5]
    * @memberof ButtonSizePlugin
    */
-  constructor({
-    buttonSliders,
-    defaultButtonSize = 0.5
-  } = {}) {
+  constructor(buttonSliders, { defaultButtonSize = 0.5 } = {}) {
     super('UISize-Button-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.buttonSize = defaultButtonSize;

@@ -1,5 +1,6 @@
 import { Container, PointerSizePlugin } from '../index';
 import { Bellhop } from 'bellhop-iframe';
+import { makeSlider } from '../../TestingUtils';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -13,18 +14,21 @@ describe('PointerSizePlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    const pointerSliderOne = document.createElement('input');
-    pointerSliderOne.type = 'range';
-    pointerSliderOne.id = 'psOne';
-    document.body.appendChild(pointerSliderOne);
-    const pointerSliderTwo = document.createElement('input');
-    pointerSliderTwo.type = 'range';
-    pointerSliderTwo.id = 'psTwo';
-    document.body.appendChild(pointerSliderTwo);
+    // const pointerSliderOne = document.createElement('input');
+    // pointerSliderOne.type = 'range';
+    // pointerSliderOne.id = 'psOne';
+    // document.body.appendChild(pointerSliderOne);
+    // const pointerSliderTwo = document.createElement('input');
+    // pointerSliderTwo.type = 'range';
+    // pointerSliderTwo.id = 'psTwo';
+    // document.body.appendChild(pointerSliderTwo);
 
-    psp = new PointerSizePlugin({
-      pointerSliders: '#psOne, #psTwo',
-    });
+    const pointerSliderOne = makeSlider('psOne');
+    const pointerSliderTwo = makeSlider('psTwo');
+
+    document.body.append(pointerSliderOne, pointerSliderTwo);
+
+    psp = new PointerSizePlugin('#psOne, #psTwo');
     psp.preload({ client: new Bellhop() });
   });
 
@@ -71,15 +75,10 @@ describe('PointerSizePlugin', () => {
 
     //plugin set psp
     document.body.innerHTML = '';
-    const pointerSliderOne = document.createElement('input');
-    pointerSliderOne.type = 'range';
-    pointerSliderOne.id = 'psOne';
+    const pointerSliderOne = makeSlider('psOne');
     document.body.appendChild(pointerSliderOne);
 
-
-    psp = new PointerSizePlugin({
-      pointerSliders: pointerSliderOne,
-    });
+    psp = new PointerSizePlugin(pointerSliderOne);
 
     psp.preload({ client: new Bellhop() });
 

@@ -15,10 +15,7 @@ export class PointerSizePlugin extends BasePlugin {
    * @param {number} [params.defaultPointerSize=0.5]
    * @memberof PointerSizePlugin
    */
-  constructor({
-    pointerSliders,
-    defaultPointerSize = 0.5,
-  } = {}) {
+  constructor(pointerSliders, { defaultPointerSize = 0.5 } = {}) {
     super('UISize-Button-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.pointerSize = defaultPointerSize;

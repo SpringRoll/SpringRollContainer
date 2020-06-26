@@ -78,7 +78,7 @@ export class HUDPlugin extends BasePlugin {
    * @memberof HUDPlugin
    */
   onHUDSelect(e) {
-    //retrun if a radio button is programattically clicked when it is hidden
+    //return if a radio button is programattically clicked when it is hidden
     if (this.positions.indexOf(e.target.value) === -1) {
       for (let i = 0; i < this.hudRadiosLength; i++) {
         this.hudRadios[i].radioGroup[this.currentValue].checked = true;
