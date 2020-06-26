@@ -1,69 +1,95 @@
-import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from '../ui-elements';
+import { BasePlugin } from './BasePlugin';
+import { RadioGroup } from '../ui-elements';
 import { SavedData } from '../SavedData';
+
+const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];
 
 /**
  * @export
  * @class HUDPlugin
  * @extends {BasePlugin}
  */
-export class HUDPlugin extends ButtonPlugin {
+export class HUDPlugin extends BasePlugin {
   /**
    * Creates an instance of HUDPlugin
    * @param {object} params
-   * @param {string | HTMLElement} [params.hudSelectorButtons] string or HTML Element that represents the HTML button that toggles through the HUD positions
+   * @param {string | HTMLElement} [params.hudSelectorRadios] string that represents the HTML Radio Buttons that select the HUD Position
    * @memberof HUDPlugin
    */
-  constructor({ hudSelectorButtons } = {}) {
+  constructor(hudSelectorRadios, { defaultValue = 'top' } = {}) {
     super('HUD-Layout-Plugin');
-
-    this.hudSelectorButtons = hudSelectorButtons;
     this.sendAllProperties = this.sendAllProperties.bind(this);
+
+    this.hudPositionSelectors = hudSelectorRadios ? hudSelectorRadios.split(',') : [];
+
     this.sendAfterFetch = false;
     this.canEmit = false;
-    this.hudButtons = [];
-    this.supportedPositions = ['top', 'bottom', 'left', 'right'];
-    this.positions = [];
-    this.currentPos = 0; //always start at beginning of array
-    this.hudButtonsLength = 0;
+    this.hudRadios = [];
 
-    //create button elements AFTER the fetch from the application has occured.
-    if (this.hudSelectorButtons instanceof HTMLElement) {
-      this.hudButtons[0] = new Button({
-        button: this.hudSelectorButtons,
-        onClick: this.onHUDToggle.bind(this),
-        channel: 'hudPosition'
-      });
-    } else {
-      document.querySelectorAll(this.hudSelectorButtons).forEach((button) => {
-        this.hudButtons.push(
-          new Button({
-            button: button,
-            onClick: this.onHUDToggle.bind(this),
-            channel: HUDPlugin.hudPositionKey
-          })
-        );
-      });
+    this.positions = [];
+    this.currentValue = defaultValue;
+    this.defaultValue = defaultValue;
+
+    this.hudRadios = this.setUpHUDRadios(this.hudPositionSelectors);
+
+    this.hudRadiosLength = this.hudRadios.length;
+    if (this.hudRadiosLength <= 0) {
+      this.warn('Plugin was not provided any valid HTML elements');
     }
 
-    this.hudButtonsLength = this.hudButtons.length;
-    if (this.hudButtonsLength <= 0) {
-      this.warn('Plugin was not provided any valid HTML elements');
+    for (let i = 0; i < this.hudRadiosLength; i++) {
+      this.hudRadios[i].enableRadioEvents(this.onHUDSelect.bind(this));
     }
 
   }
 
   /**
    * @memberof HUDPlugin
+   * @param {string[]} selectors the separated selector strings used to target the radio button groups
+   * @returns {RadioGroup[]}
    */
-  onHUDToggle() {
-    this.currentPos =
-      this.currentPos + 1 < this.positions.length
-        ? this.currentPos + 1
-        : (this.currentPos = 0);
+  setUpHUDRadios(selectors) {
+    const radioGroups = [];
 
-    for (let i = 0; i < this.hudButtonsLength; i++) {
-      this.hudButtons[i].button.dataset['hudPosition'] = this.positions[this.currentPos];
+    selectors.forEach((selector) => {
+      const radioGroup = new RadioGroup({
+        selector: selector.trim(),
+        controlName: 'Hud Selector',
+        defaultValue: 'top',
+        pluginName: 'HUD-Layout-Plugin'
+      });
+
+      if (!radioGroup.hasOnly(SUPPORTED_POSITIONS)) {
+        return;
+      }
+
+      if (radioGroup.hasDuplicateValues()) {
+        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
+        return;
+      }
+
+      radioGroups.push(radioGroup);
+    });
+
+    return radioGroups;
+  }
+
+  /**
+   * @memberof HUDPlugin
+   */
+  onHUDSelect(e) {
+    //retrun if a radio button is programattically clicked when it is hidden
+    if (this.positions.indexOf(e.target.value) === -1) {
+      for (let i = 0; i < this.hudRadiosLength; i++) {
+        this.hudRadios[i].radioGroup[this.currentValue].checked = true;
+      }
+      return;
+    }
+
+    this.currentValue = e.target.value;
+
+    for (let i = 0; i < this.hudRadiosLength; i++) {
+      this.hudRadios[i].radioGroup[e.target.value].checked = true;
     }
 
     this.sendProperty(
@@ -86,7 +112,7 @@ export class HUDPlugin extends ButtonPlugin {
         this.client.fetch('hudPositions', result => {
           for (let i = 0, l = result.data.length; i < l; i++) {
             if (
-              !this.supportedPositions.includes(result.data[i].toLowerCase())
+              !SUPPORTED_POSITIONS.includes(result.data[i].toLowerCase())
             ) {
               this.warn(`${result.data[i]} is an invalid position name`);
               continue;
@@ -95,15 +121,18 @@ export class HUDPlugin extends ButtonPlugin {
             this.positions.push(result.data[i]);
           }
 
+          for (let i = 0; i < this.hudRadiosLength; i++) {
+
+            for (const key in this.hudRadios[i].radioGroup) {
+              this.hudRadios[i].radioGroup[key].style.display = this.positions.indexOf(this.hudRadios[i].radioGroup[key].value) !== -1 ? '' : 'none';
+            }
+          }
+
           this.canEmit = true;
           if (this.sendAfterFetch) {
             this.sendAllProperties();
           }
         });
-
-        for (let i = 0; i < this.hudButtonsLength; i++) {
-          this.hudButtons[i].displayButton(features.data);
-        }
 
       }.bind(this)
     );

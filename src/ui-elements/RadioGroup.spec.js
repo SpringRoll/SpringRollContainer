@@ -27,7 +27,6 @@ describe('RadioGroup', () => {
   });
 
   it('construct', () => {
-    console.log(rg.radioGroup);
     expect(rg.radioGroup.testone).to.be.instanceOf(HTMLInputElement);
     expect(rg.radioGroup.testtwo).to.be.instanceOf(HTMLInputElement);
     expect(rg.radioGroup.testone.checked).to.be.false;
