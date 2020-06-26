@@ -1,23 +1,25 @@
-import { ButtonPlugin } from '../plugins';
-import { Button } from '../ui-elements';
+import { BasePlugin } from '../plugins';
+import { RadioButtonGroup } from '../ui-elements';
 
 type HUDPluginOptions = {
-  hudSelectorButtons: string | HTMLButtonElement
+  defaultValue: string
 };
 
-export class HUDPlugin extends ButtonPlugin {
-  constructor(options: HUDPluginOptions)
+export class HUDPlugin extends BasePlugin {
+  constructor(hudSelectorRadios: string, options: HUDPluginOptions)
 
-  hudSelectorButtons: string | HTMLButtonElement;
+  hudPositionSelectors: string[];
+  hudRadios: RadioButtonGroup[];
+  currentValue: string;
+  defaultValue: string;
+  hudRadiosLength: number;
   sendAfterFetch: boolean;
   canEmit: boolean;
   _hudButtons: Button[];
-  supportedPositions: string[];
   positions: string[];
-  currentPos: number;
-  hudButtonsLength: number;
 
-  onHUDToggle(): void;
+  onHUDSelect(e: Event): void;
+  setUpHUDRadios(selectors: string[]);
 
   sendAllProperties(): void;
   get hudPositionKey(): string;
