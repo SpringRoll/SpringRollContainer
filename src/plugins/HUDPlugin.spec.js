@@ -60,39 +60,39 @@ describe('HUDPlugin', () => {
     hp.client.trigger('hudPositions', ['top', 'bottom', 'invalid-position']);
 
     expect(hp.positions.length).to.equal(2); //should discard the 'invalid-position'
-    expect(hp.hudRadios[0].radioGroup.top).to.be.instanceof(HTMLElement);
-    expect(hp.hudRadios[1].radioGroup.top).to.be.instanceof(HTMLElement);
-    expect(hp.hudRadios[0].radioGroup.bottom).to.be.instanceof(HTMLElement);
-    expect(hp.hudRadios[1].radioGroup.bottom).to.be.instanceof(HTMLElement);
+    expect(hp.radioGroups[0].radioGroup.top).to.be.instanceof(HTMLElement);
+    expect(hp.radioGroups[1].radioGroup.top).to.be.instanceof(HTMLElement);
+    expect(hp.radioGroups[0].radioGroup.bottom).to.be.instanceof(HTMLElement);
+    expect(hp.radioGroups[1].radioGroup.bottom).to.be.instanceof(HTMLElement);
 
-    expect(hp.hudRadios[0].radioGroup.left.style.display).to.equal('none');
-    expect(hp.hudRadios[0].radioGroup.right.style.display).to.equal('none');
-    expect(hp.hudRadios[1].radioGroup.left.style.display).to.equal('none');
-    expect(hp.hudRadios[1].radioGroup.right.style.display).to.equal('none');
+    expect(hp.radioGroups[0].radioGroup.left.style.display).to.equal('none');
+    expect(hp.radioGroups[0].radioGroup.right.style.display).to.equal('none');
+    expect(hp.radioGroups[1].radioGroup.left.style.display).to.equal('none');
+    expect(hp.radioGroups[1].radioGroup.right.style.display).to.equal('none');
   });
 
   it('onHUDSelect()', () => {
     expect(hp.currentValue).to.equal('top');
-    expect(hp.hudRadios[0].radioGroup.top.checked).to.be.true;
-    expect(hp.hudRadios[1].radioGroup.top.checked).to.be.true;
+    expect(hp.radioGroups[0].radioGroup.top.checked).to.be.true;
+    expect(hp.radioGroups[1].radioGroup.top.checked).to.be.true;
 
-    hp.hudRadios[0].radioGroup.bottom.click();
+    hp.radioGroups[0].radioGroup.bottom.click();
 
     expect(hp.currentValue).to.equal('bottom');
-    expect(hp.hudRadios[0].radioGroup.bottom.checked).to.be.true;
-    expect(hp.hudRadios[1].radioGroup.bottom.checked).to.be.true;
+    expect(hp.radioGroups[0].radioGroup.bottom.checked).to.be.true;
+    expect(hp.radioGroups[1].radioGroup.bottom.checked).to.be.true;
 
-    hp.hudRadios[1].radioGroup.top.click();
+    hp.radioGroups[1].radioGroup.top.click();
 
     expect(hp.currentValue).to.equal('top');
-    expect(hp.hudRadios[0].radioGroup.top.checked).to.be.true;
-    expect(hp.hudRadios[1].radioGroup.top.checked).to.be.true;
+    expect(hp.radioGroups[0].radioGroup.top.checked).to.be.true;
+    expect(hp.radioGroups[1].radioGroup.top.checked).to.be.true;
 
     //if a hidden control is clicked it shouldn't update the current value
-    hp.hudRadios[1].radioGroup.left.click();
+    hp.radioGroups[1].radioGroup.left.click();
     expect(hp.currentValue).to.equal('top');
-    expect(hp.hudRadios[0].radioGroup.top.checked).to.be.true;
-    expect(hp.hudRadios[1].radioGroup.top.checked).to.be.true;
+    expect(hp.radioGroups[0].radioGroup.top.checked).to.be.true;
+    expect(hp.radioGroups[1].radioGroup.top.checked).to.be.true;
 
   });
 

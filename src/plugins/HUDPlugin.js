@@ -1,5 +1,5 @@
-import { BasePlugin } from './BasePlugin';
-import { RadioGroup } from '../ui-elements';
+import { RadioGroupPlugin } from './BasePlugins/RadioGroupPlugin';
+//import { RadioGroup } from '../ui-elements';
 import { SavedData } from '../SavedData';
 
 const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];
@@ -9,79 +9,42 @@ const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];
  * @class HUDPlugin
  * @extends {BasePlugin}
  */
-export class HUDPlugin extends BasePlugin {
+export class HUDPlugin extends RadioGroupPlugin {
   /**
    * Creates an instance of HUDPlugin
+   * @param {string} hudSelectorRadios css selector for the radio buttons
    * @param {object} params
-   * @param {string | HTMLElement} [params.hudSelectorRadios] string that represents the HTML Radio Buttons that select the HUD Position
+   * @param {string[]} [params.defaultValue='top'] default value for the HUD position. Top will usually be the default in most cases.
    * @memberof HUDPlugin
    */
   constructor(hudSelectorRadios, { defaultValue = 'top' } = {}) {
-    super('HUD-Layout-Plugin');
+    super(hudSelectorRadios, 'HUD-Layout-Plugin', {supportedValues: SUPPORTED_POSITIONS, initialValue: defaultValue, controlName: 'Hud Selector', featureName: HUDPlugin.hudPositionKey, radioCount: 4});
+
     this.sendAllProperties = this.sendAllProperties.bind(this);
-
-    this.hudPositionSelectors = hudSelectorRadios ? hudSelectorRadios.split(',') : [];
-
     this.sendAfterFetch = false;
     this.canEmit = false;
-    this.hudRadios = [];
-
     this.positions = [];
-    this.currentValue = defaultValue;
-    this.defaultValue = defaultValue;
+    this.hudRadiosLength = this.radioGroups.length;
 
-    this.hudRadios = this.setUpHUDRadios(this.hudPositionSelectors);
-
-    this.hudRadiosLength = this.hudRadios.length;
     if (this.hudRadiosLength <= 0) {
       this.warn('Plugin was not provided any valid HTML elements');
     }
 
     for (let i = 0; i < this.hudRadiosLength; i++) {
-      this.hudRadios[i].enableRadioEvents(this.onHUDSelect.bind(this));
+      this.radioGroups[i].enableRadioEvents(this.onHUDSelect.bind(this));
     }
 
   }
 
   /**
    * @memberof HUDPlugin
-   * @param {string[]} selectors the separated selector strings used to target the radio button groups
-   * @returns {RadioGroup[]}
-   */
-  setUpHUDRadios(selectors) {
-    const radioGroups = [];
-
-    selectors.forEach((selector) => {
-      const radioGroup = new RadioGroup({
-        selector: selector.trim(),
-        controlName: 'Hud Selector',
-        defaultValue: 'top',
-        pluginName: 'HUD-Layout-Plugin'
-      });
-
-      if (!radioGroup.hasOnly(SUPPORTED_POSITIONS)) {
-        return;
-      }
-
-      if (radioGroup.hasDuplicateValues()) {
-        this.warn(`Duplicate radio button values detected (values: ${radioGroup.values} ). Skipping radio group`);
-        return;
-      }
-
-      radioGroups.push(radioGroup);
-    });
-
-    return radioGroups;
-  }
-
-  /**
-   * @memberof HUDPlugin
+   * @param {Event} e
    */
   onHUDSelect(e) {
     //retrun if a radio button is programattically clicked when it is hidden
     if (this.positions.indexOf(e.target.value) === -1) {
       for (let i = 0; i < this.hudRadiosLength; i++) {
-        this.hudRadios[i].radioGroup[this.currentValue].checked = true;
+        this.radioGroups[i].radioGroup[this.currentValue].checked = true;
       }
       return;
     }
@@ -89,12 +52,12 @@ export class HUDPlugin extends BasePlugin {
     this.currentValue = e.target.value;
 
     for (let i = 0; i < this.hudRadiosLength; i++) {
-      this.hudRadios[i].radioGroup[e.target.value].checked = true;
+      this.radioGroups[i].radioGroup[e.target.value].checked = true;
     }
 
     this.sendProperty(
       HUDPlugin.hudPositionKey,
-      this.positions[this.currentPos]
+      this.currentValue
     );
   }
 
@@ -122,9 +85,9 @@ export class HUDPlugin extends BasePlugin {
           }
 
           for (let i = 0; i < this.hudRadiosLength; i++) {
-
-            for (const key in this.hudRadios[i].radioGroup) {
-              this.hudRadios[i].radioGroup[key].style.display = this.positions.indexOf(this.hudRadios[i].radioGroup[key].value) !== -1 ? '' : 'none';
+            //Hide any radio buttons that aren't in the game's position list.
+            for (const key in this.radioGroups[i].radioGroup) {
+              this.radioGroups[i].radioGroup[key].style.display = this.positions.indexOf(this.radioGroups[i].radioGroup[key].value) !== -1 ? '' : 'none';
             }
           }
 
@@ -151,13 +114,13 @@ export class HUDPlugin extends BasePlugin {
   }
 
   /**
-*
-* Sends initial HUD position properties to the application
-* @memberof HUDPlugin
-*/
+  *
+  * Sends initial HUD position properties to the application
+  * @memberof HUDPlugin
+  */
   sendAllProperties() {
     if (this.canEmit) {
-      this.sendProperty(HUDPlugin.hudPositionKey, this.positions[this.currentPos]);
+      this.sendProperty(HUDPlugin.hudPositionKey, this.currentValue);
     } else {
       this.sendAfterFetch = true;
     }
