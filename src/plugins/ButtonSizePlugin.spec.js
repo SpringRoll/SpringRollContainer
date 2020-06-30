@@ -1,5 +1,6 @@
 import { Container, ButtonSizePlugin } from '../index';
 import { Bellhop } from 'bellhop-iframe';
+import { makeSlider } from '../../TestingUtils';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -22,9 +23,7 @@ describe('ButtonSizePlugin', () => {
     buttonSliderTwo.id = 'bsTwo';
     document.body.appendChild(buttonSliderTwo);
 
-    bsp = new ButtonSizePlugin({
-      buttonSliders: '#bsOne, #bsTwo' //worlds worst console name
-    });
+    bsp = new ButtonSizePlugin('#bsOne, #bsTwo');
     bsp.preload({ client: new Bellhop() });
   });
 
@@ -77,16 +76,11 @@ describe('ButtonSizePlugin', () => {
 
   it('should work with HTML Elements as paramters', () => {
 
-    //plugin set bsp
-
-    const buttonSliderOne = document.createElement('input');
-    buttonSliderOne.type = 'range';
-    buttonSliderOne.id = 'bsOne';
+    //plugin set up
+    const buttonSliderOne = makeSlider('bsOne');
     document.body.appendChild(buttonSliderOne);
 
-    bsp = new ButtonSizePlugin({
-      buttonSliders: buttonSliderOne
-    });
+    bsp = new ButtonSizePlugin(buttonSliderOne);
     bsp.preload({ client: new Bellhop() });
 
     const iframe = document.createElement('iframe');
