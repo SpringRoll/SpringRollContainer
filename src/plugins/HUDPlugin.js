@@ -1,5 +1,4 @@
-import { RadioGroupPlugin } from './BasePlugins/RadioGroupPlugin';
-//import { RadioGroup } from '../ui-elements';
+import { RadioGroupPlugin } from '../base-plugins/RadioGroupPlugin';
 import { SavedData } from '../SavedData';
 
 const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];

@@ -1,4 +1,4 @@
-import { BasePlugin } from './BasePlugin';
+import { BasePlugin } from '../base-plugins';
 import { Container } from '../Container';
 /*eslint-enable */
 /*eslint-disable */

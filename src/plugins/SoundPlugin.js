@@ -1,5 +1,5 @@
 import { SavedData } from '../SavedData';
-import { ButtonPlugin } from './ButtonPlugin';
+import { ButtonPlugin } from '../base-plugins';
 import { Slider, Button } from '../ui-elements';
 
 /**

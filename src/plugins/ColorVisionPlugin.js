@@ -1,4 +1,4 @@
-import { BasePlugin } from './BasePlugin';
+import { BasePlugin } from '../base-plugins/BasePlugin';
 import { SavedData } from '../SavedData';
 
 const COLOR_BLIND_TYPES = [

@@ -9,3 +9,4 @@ export * from './plugins';
 export * from './SavedData';
 export * from './SavedDataHandler';
 export * from './ui-elements';
+export * from './base-plugins';

@@ -1,4 +1,4 @@
-import { ButtonPlugin } from './ButtonPlugin';
+import { ButtonPlugin } from '../base-plugins/ButtonPlugin';
 import { PageVisibility } from '../PageVisibility';
 import { Button } from '../ui-elements';
 /**

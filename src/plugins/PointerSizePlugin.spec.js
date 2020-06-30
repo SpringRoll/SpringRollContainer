@@ -14,15 +14,6 @@ describe('PointerSizePlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    // const pointerSliderOne = document.createElement('input');
-    // pointerSliderOne.type = 'range';
-    // pointerSliderOne.id = 'psOne';
-    // document.body.appendChild(pointerSliderOne);
-    // const pointerSliderTwo = document.createElement('input');
-    // pointerSliderTwo.type = 'range';
-    // pointerSliderTwo.id = 'psTwo';
-    // document.body.appendChild(pointerSliderTwo);
-
     const pointerSliderOne = makeSlider('psOne');
     const pointerSliderTwo = makeSlider('psTwo');
 

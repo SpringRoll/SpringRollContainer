@@ -1,4 +1,4 @@
-import { ButtonPlugin } from '../index';
+import { ButtonPlugin } from './index';
 import { Bellhop } from 'bellhop-iframe';
 
 const clearClassList = element => {

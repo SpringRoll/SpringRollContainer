@@ -1,5 +1,5 @@
 import { SavedDataHandler } from '../SavedDataHandler';
-import { BasePlugin } from './BasePlugin';
+import { BasePlugin } from '../base-plugins/BasePlugin';
 
 /**
  * @export

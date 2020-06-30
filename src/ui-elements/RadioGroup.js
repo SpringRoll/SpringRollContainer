@@ -1,4 +1,4 @@
-import { BasePlugin } from '../plugins/BasePlugin';
+import { BasePlugin } from '../base-plugins/BasePlugin';
 
 /**
  * @export

@@ -1,5 +1,5 @@
 import { BasePlugin } from './BasePlugin';
-import { RadioGroup } from '../../ui-elements/RadioGroup';
+import { RadioGroup } from '../ui-elements/RadioGroup';
 
 /**
  *
@@ -35,7 +35,6 @@ export class RadioGroupPlugin extends BasePlugin {
    * @returns {RadioGroup[]}
    */
   setUpRadios(selectors) {
-    console.log('hello!');
     const radioGroups = [];
 
     selectors.forEach((selector) => {
