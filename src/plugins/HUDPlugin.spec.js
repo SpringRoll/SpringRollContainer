@@ -7,14 +7,43 @@ describe('HUDPlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    const buttonOne = document.createElement('button');
-    buttonOne.id = 'buttonOne';
-    document.body.appendChild(buttonOne);
-    const buttonTwo = document.createElement('button');
-    buttonTwo.id = 'buttonTwo';
-    document.body.appendChild(buttonTwo);
+    const topOne = document.createElement('input');
+    topOne.type = 'radio';
+    topOne.name = 'hud-position-one';
+    topOne.value = 'top';
+    const bottomOne = document.createElement('input');
+    bottomOne.type = 'radio';
+    bottomOne.name = 'hud-position-one';
+    bottomOne.value = 'bottom';
+    const rightOne = document.createElement('input');
+    rightOne.type = 'radio';
+    rightOne.name = 'hud-position-one';
+    rightOne.value = 'right';
+    const leftOne = document.createElement('input');
+    leftOne.type = 'radio';
+    leftOne.name = 'hud-position-one';
+    leftOne.value = 'left';
 
-    hp = new HUDPlugin({ hudSelectorButtons: '#buttonOne, #buttonTwo' });
+    const topTwo = document.createElement('input');
+    topTwo.type = 'radio';
+    topTwo.name = 'hud-position-two';
+    topTwo.value = 'top';
+    const bottomTwo = document.createElement('input');
+    bottomTwo.type = 'radio';
+    bottomTwo.name = 'hud-position-two';
+    bottomTwo.value = 'bottom';
+    const rightTwo = document.createElement('input');
+    rightTwo.type = 'radio';
+    rightTwo.name = 'hud-position-two';
+    rightTwo.value = 'right';
+    const leftTwo = document.createElement('input');
+    leftTwo.type = 'radio';
+    leftTwo.name = 'hud-position-two';
+    leftTwo.value = 'left';
+
+    document.body.append(topOne, bottomOne, rightOne, leftOne, topTwo, bottomTwo, rightTwo, leftTwo);
+
+    hp = new HUDPlugin('input[name=hud-position-one], input[name=hud-position-two]');
     hp.preload({ client: new Bellhop() });
   });
 
@@ -31,22 +60,40 @@ describe('HUDPlugin', () => {
     hp.client.trigger('hudPositions', ['top', 'bottom', 'invalid-position']);
 
     expect(hp.positions.length).to.equal(2); //should discard the 'invalid-position'
-    expect(hp.hudButtons[0].button).to.be.instanceof(HTMLElement);
-    expect(hp.hudButtons[1].button).to.be.instanceof(HTMLElement);
+    expect(hp.hudRadios[0].radioGroup.top).to.be.instanceof(HTMLElement);
+    expect(hp.hudRadios[1].radioGroup.top).to.be.instanceof(HTMLElement);
+    expect(hp.hudRadios[0].radioGroup.bottom).to.be.instanceof(HTMLElement);
+    expect(hp.hudRadios[1].radioGroup.bottom).to.be.instanceof(HTMLElement);
+
+    expect(hp.hudRadios[0].radioGroup.left.style.display).to.equal('none');
+    expect(hp.hudRadios[0].radioGroup.right.style.display).to.equal('none');
+    expect(hp.hudRadios[1].radioGroup.left.style.display).to.equal('none');
+    expect(hp.hudRadios[1].radioGroup.right.style.display).to.equal('none');
   });
 
-  it('onHUDToggle()', () => {
-    expect(hp.positions[hp.currentPos]).to.equal('top');
+  it('onHUDSelect()', () => {
+    expect(hp.currentValue).to.equal('top');
+    expect(hp.hudRadios[0].radioGroup.top.checked).to.be.true;
+    expect(hp.hudRadios[1].radioGroup.top.checked).to.be.true;
 
-    hp.hudButtons[0].button.click();
-    expect(hp.positions[hp.currentPos]).to.equal('bottom');
-    expect(hp.hudButtons[0].button.dataset['hudPosition']).to.equal('bottom');
-    expect(hp.hudButtons[1].button.dataset['hudPosition']).to.equal('bottom');
+    hp.hudRadios[0].radioGroup.bottom.click();
 
-    hp.hudButtons[1].button.click();
-    expect(hp.positions[hp.currentPos]).to.equal('top');
-    expect(hp.hudButtons[0].button.dataset['hudPosition']).to.equal('top');
-    expect(hp.hudButtons[1].button.dataset['hudPosition']).to.equal('top');
+    expect(hp.currentValue).to.equal('bottom');
+    expect(hp.hudRadios[0].radioGroup.bottom.checked).to.be.true;
+    expect(hp.hudRadios[1].radioGroup.bottom.checked).to.be.true;
+
+    hp.hudRadios[1].radioGroup.top.click();
+
+    expect(hp.currentValue).to.equal('top');
+    expect(hp.hudRadios[0].radioGroup.top.checked).to.be.true;
+    expect(hp.hudRadios[1].radioGroup.top.checked).to.be.true;
+
+    //if a hidden control is clicked it shouldn't update the current value
+    hp.hudRadios[1].radioGroup.left.click();
+    expect(hp.currentValue).to.equal('top');
+    expect(hp.hudRadios[0].radioGroup.top.checked).to.be.true;
+    expect(hp.hudRadios[1].radioGroup.top.checked).to.be.true;
+
   });
 
   it('Plugin should work without any controls', () => {
@@ -57,29 +104,4 @@ describe('HUDPlugin', () => {
     hp.client.trigger('features', {});
   });
 
-  it('should work with HTMLElement as parameter', () => {
-    const button = document.createElement('button');
-    button.id = 'button';
-    document.body.appendChild(button);
-
-    hp = new HUDPlugin({ hudSelectorButtons: button });
-    hp.preload({ client: new Bellhop() });
-
-    const iframe = document.createElement('iframe');
-    iframe.id = 'hud-plugin-iframe';
-    document.body.appendChild(iframe);
-    new Container({
-      iframeSelector: '#hud-plugin-iframe',
-      plugins: [hp]
-    });
-    hp.init();
-    hp.client.trigger('features', { hudPosition: true });
-    hp.client.trigger('hudPositions', ['top', 'bottom', 'invalid-position']);
-
-    expect(hp.positions[hp.currentPos]).to.equal('top');
-
-    hp.hudButtons[0].button.click();
-    expect(hp.positions[hp.currentPos]).to.equal('bottom');
-    expect(hp.hudButtons[0].button.dataset['hudPosition']).to.equal('bottom');
-  });
 });

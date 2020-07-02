@@ -67,28 +67,28 @@ describe('CaptionsPlugin', () => {
     const fontSizeRadioOne = document.createElement('input');
     fontSizeRadioOne.type = 'radio';
     fontSizeRadioOne.name = 'caption-fontSize';
-    fontSizeRadioOne.value = 'sm';
+    fontSizeRadioOne.value = 'small';
     const fontSizeRadioTwo = document.createElement('input');
     fontSizeRadioTwo.type = 'radio';
     fontSizeRadioTwo.name = 'caption-fontSize';
-    fontSizeRadioTwo.value = 'md';
+    fontSizeRadioTwo.value = 'medium';
     const fontSizeRadioThree = document.createElement('input');
     fontSizeRadioThree.type = 'radio';
     fontSizeRadioThree.name = 'caption-fontSize';
-    fontSizeRadioThree.value = 'lg';
+    fontSizeRadioThree.value = 'large';
 
     const fontSizeRadioFour = document.createElement('input');
     fontSizeRadioFour.type = 'radio';
     fontSizeRadioFour.name = 'caption-fontSizeTwo';
-    fontSizeRadioFour.value = 'MD';
+    fontSizeRadioFour.value = 'MEDIUM';
     const fontSizeRadioFive = document.createElement('input');
     fontSizeRadioFive.type = 'radio';
     fontSizeRadioFive.name = 'caption-fontSizeTwo';
-    fontSizeRadioFive.value = 'lG';
+    fontSizeRadioFive.value = 'lArGe';
     const fontSizeRadioSix = document.createElement('input');
     fontSizeRadioSix.type = 'radio';
     fontSizeRadioSix.name = 'caption-fontSizeTwo';
-    fontSizeRadioSix.value = 'Sm';
+    fontSizeRadioSix.value = 'Small';
 
     document.body.appendChild(buttonOne);
     document.body.appendChild(buttonTwo);
@@ -150,21 +150,21 @@ describe('CaptionsPlugin', () => {
   });
 
   it('.onFontSizeChange()', () => {
-    expect(cp.fontSizeRadios[0].radioGroup.md.checked).to.be.true;
-    expect(cp.fontSizeRadios[1].radioGroup.md.checked).to.be.true;
-    expect(cp.getCaptionsStyles('size')).to.equal('md');
+    expect(cp.fontSizeRadios[0].radioGroup.medium.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.medium.checked).to.be.true;
+    expect(cp.getCaptionsStyles('size')).to.equal('medium');
 
-    cp.fontSizeRadios[0].radioGroup.sm.click();
+    cp.fontSizeRadios[0].radioGroup.small.click();
 
-    expect(cp.fontSizeRadios[0].radioGroup.sm.checked).to.be.true;
-    expect(cp.fontSizeRadios[1].radioGroup.sm.checked).to.be.true;
-    expect(cp.getCaptionsStyles('size')).to.equal('sm');
+    expect(cp.fontSizeRadios[0].radioGroup.small.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.small.checked).to.be.true;
+    expect(cp.getCaptionsStyles('size')).to.equal('small');
 
-    cp.fontSizeRadios[1].radioGroup.lg.click();
+    cp.fontSizeRadios[1].radioGroup.large.click();
 
-    expect(cp.fontSizeRadios[0].radioGroup.lg.checked).to.be.true;
-    expect(cp.fontSizeRadios[1].radioGroup.lg.checked).to.be.true;
-    expect(cp.getCaptionsStyles('size')).to.equal('lg');
+    expect(cp.fontSizeRadios[0].radioGroup.large.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.large.checked).to.be.true;
+    expect(cp.getCaptionsStyles('size')).to.equal('large');
   });
 
   it('.onAlignmentChange()', () => {
