@@ -16,8 +16,8 @@ export class HUDPlugin extends RadioGroupPlugin {
    * @param {string[]} [params.defaultValue='top'] default value for the HUD position. Top will usually be the default in most cases.
    * @memberof HUDPlugin
    */
-  constructor(hudSelectorRadios, { defaultValue = 'top' } = {}) {
-    super(hudSelectorRadios, 'HUD-Layout-Plugin', {supportedValues: SUPPORTED_POSITIONS, initialValue: defaultValue, controlName: 'Hud Selector', featureName: HUDPlugin.hudPositionKey, radioCount: 4});
+  constructor(hudSelectorRadios, { defaultValue = SUPPORTED_POSITIONS[0] } = {}) {
+    super(hudSelectorRadios, 'HUD-Layout-Plugin', {supportedValues: SUPPORTED_POSITIONS, initialValue: defaultValue, controlName: 'Hud Selector', featureName: HUDPlugin.hudPositionKey, radioCount: SUPPORTED_POSITIONS.length});
 
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.sendAfterFetch = false;
@@ -50,10 +50,6 @@ export class HUDPlugin extends RadioGroupPlugin {
 
     this.currentValue = e.target.value;
 
-    for (let i = 0; i < this.hudRadiosLength; i++) {
-      this.radioGroups[i].radioGroup[e.target.value].checked = true;
-    }
-
     this.sendProperty(
       HUDPlugin.hudPositionKey,
       this.currentValue
@@ -68,6 +64,10 @@ export class HUDPlugin extends RadioGroupPlugin {
       'features',
       function(features) {
         if (!features.data || !features.data.hudPosition) {
+          return;
+        }
+
+        if (this.hudRadiosLength <= 0) {
           return;
         }
         //get the game's reported HUD positions to build out positions array
@@ -105,8 +105,8 @@ export class HUDPlugin extends RadioGroupPlugin {
   */
   start() {
     const data = this.positions.indexOf(SavedData.read(this.hudPositionKey));
-    if (data >= 0) {
-      this.currentPos = data;
+    if (SUPPORTED_POSITIONS.includes(data)) {
+      this.currentValue = data;
     }
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);

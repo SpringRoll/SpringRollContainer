@@ -24,7 +24,7 @@ export class RadioGroupPlugin extends BasePlugin {
     this.featureName = featureName;
     this.radioCount = radioCount;
 
-    this.currentValue = initialValue ? initialValue : this.supportedValues[0];
+    this._currentValue = initialValue ? initialValue : this.supportedValues[0];
 
     this.radioGroups = this.setUpRadios(this.selectors);
   }
@@ -76,9 +76,30 @@ export class RadioGroupPlugin extends BasePlugin {
   /**
   *
   * Sends initial caption properties to the application
-  * @memberof CaptionsPlugin
+  * @memberof RadioGroupPlugin
   */
   sendAllProperties() {
     this.sendProperty(this.featureName, this.property);
   }
+
+  /**
+   * @memberof RadioGroupPlugin
+   * @param {string} newValue
+   */
+  set currentValue(newValue) {
+    this._currentValue = newValue;
+
+    for (let i = 0, l = this.radioGroups.length; i < l; i++) {
+      this.radioGroups[i].radioGroup[newValue].checked = true;
+    }
+  }
+
+  /**
+   * @memberof RadioGroupPlugin
+   * @return {string}
+   */
+  get currentValue() {
+    return this._currentValue;
+  }
+
 }

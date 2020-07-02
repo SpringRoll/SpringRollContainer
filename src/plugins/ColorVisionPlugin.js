@@ -1,4 +1,4 @@
-import { BasePlugin } from '../base-plugins/BasePlugin';
+import { RadioGroupPlugin } from '../base-plugins/RadioGroupPlugin';
 import { SavedData } from '../SavedData';
 
 const COLOR_BLIND_TYPES = [
@@ -12,53 +12,52 @@ const COLOR_BLIND_TYPES = [
 /**
  * @export
  * @class ColorVisionPlugin
- * @extends {BasePlugin}
+ * @extends {RadioGroupPlugin}
  */
-export class ColorVisionPlugin extends BasePlugin {
+export class ColorVisionPlugin extends RadioGroupPlugin {
   /**
    *Creates an instance of ColorVisionPlugin.
    * @param {object} params
    * @param {string | HTMLElement} params.colorSelects
    * @memberof ColorVision
    */
-  constructor({ colorSelects } = {}) {
-    super('Color-Filter-Plugin');
-    this.sendAllProperties = this.sendAllProperties.bind(this);
-    this.colorDropdowns =
-      colorSelects instanceof HTMLSelectElement
-        ? [colorSelects]
-        : document.querySelectorAll(colorSelects);
+  constructor(colorVisionRadios, { defaultValue = COLOR_BLIND_TYPES[0] } = {}) {
+    super(colorVisionRadios, 'Color-Filter-Plugin', {supportedValues: COLOR_BLIND_TYPES, initialValue: defaultValue, controlName: 'Color Vision Selector', featureName: ColorVisionPlugin.colorVisionKey, radioCount: COLOR_BLIND_TYPES.length});
 
+    this.sendAllProperties = this.sendAllProperties.bind(this);
     this.sendAfterFetch = false;
     this.canEmit = false;
-    this.colorVisionValue = '';
+    this.colors = [];
 
-    this.colorDropdownsLength = this.colorDropdowns.length;
+    this.colorRadiosLength = this.colorDropdowns.length;
 
-    if (this.colorDropdowns.length <= 0) {
-      this.warn('Plugin was not provided any valid select elements');
+    if (this.colorRadiosLength <= 0) {
+      this.warn('Plugin was not provided any valid HTML elements');
       return;
     }
 
-    for (let i = 0; i < this.colorDropdownsLength; i++) {
-      this.colorDropdowns[i].innerHTML = '';
+    for (let i = 0; i < this.colorRadiosLength; i++) {
+      this.radioGroups[i].enableRadioEvents(this.onColorChange.bind(this));
     }
   }
 
   /**
    * @memberof ColorVisionPlugin
-   * @param {MouseEvent} e
+   * @param {Event} e
    */
   onColorChange(e) {
-    this.colorVisionValue = e.target.value;
-
-    for (let i = 0; i < this.colorDropdownsLength; i ++) {
-      this.colorDropdowns[i].value = this.colorVisionValue;
+    //return if a radio button is programmatically clicked when it is hidden from the user
+    if (this.positions.indexOf(e.target.value) === -1) {
+      for (let i = 0; i < this.colorRadiosLength; i++) {
+        this.radioGroups[i].radioGroup[this.currentValue].checked = true;
+      }
+      return;
     }
+    this.currentValue = e.target.value;
 
     this.sendProperty(
       ColorVisionPlugin.colorVisionKey,
-      this.colorVisionValue
+      this.currentValue
     );
   }
 
@@ -69,48 +68,31 @@ export class ColorVisionPlugin extends BasePlugin {
     this.client.on(
       'features',
       function(features) {
-        if (!features.data) {
+        if (!features.data || !features.data.colorVision) {
           return;
         }
         if (this.colorDropdownsLength <= 0) {
           return;
         }
-        for (let i = 0; i < this.colorDropdownsLength; i++) {
-          if (this.colorDropdowns[i].tagName.toLowerCase() !== 'select') {
-            this.colorDropdowns[i].style.display = 'none';
-            this.warn(`Plugin recieved element of type: ${this.colorDropdown.tagName} but expects an element of type: <select>`);
-            return;
-          }
-        }
 
-        //get the game's reported colors to build out positions array
+        //get the game's reported colors to build out accepted filters array
         this.client.fetch('colorFilters', result => {
-          for (let i = 0; i < this.colorDropdownsLength; i++) {
-            for (let j = 0, l = result.data.length; j < l; j++) {
-              if (!COLOR_BLIND_TYPES.includes(result.data[j].toLowerCase())) {
-                this.warn(
-                  `${result.data[j]} is not a supported color blindness filter. Skipping`
-                );
-                continue;
-              }
-              const option = document.createElement('option');
-              option.textContent = result.data[j];
-              option.value = result.data[j].toLowerCase();
-
-              this.colorDropdowns[i].appendChild(option);
+          for (let i = 0, l = result.data.length; i < l; i++) {
+            if (
+              !COLOR_BLIND_TYPES.includes(result.data[i].toLowerCase())
+            ) {
+              this.warn(`${result.data[i]} is an invalid color vision name`);
+              continue;
             }
-
-            this.colorDropdowns[i].addEventListener(
-              'change',
-              this.onColorChange.bind(this)
-            );
-
-            this.colorDropdowns[i].style.display = features.data['colorVision']
-              ? ''
-              : 'none';
+            this.colors.push(result.data[i]);
           }
-          //use the first select to set the default value since they should all be the same
-          this.colorVisionValue = this.colorDropdowns[0].value;
+
+          for (let i = 0; i < this.colorRadiosLength; i++) {
+            //Hide any radio buttons that aren't in the game's filter list.
+            for (const key in this.radioGroups[i].radioGroup) {
+              this.radioGroups[i].radioGroup[key].style.display = this.colors.indexOf(this.radioGroups[i].radioGroup[key].value) !== -1 ? '' : 'none';
+            }
+          }
 
           this.canEmit = true;
 
@@ -130,11 +112,7 @@ export class ColorVisionPlugin extends BasePlugin {
     const data = SavedData.read(this.colorVisionKey);
 
     if (COLOR_BLIND_TYPES.includes(data)) {
-      this.colorVisionValue = data;
-
-      for (let i = 0; i < this.colorDropdownsLength; i++) {
-        this.colorDropdowns[i].value = this.colorVisionValue;
-      }
+      this.currentValue = data;
     }
 
     this.client.on('loaded', this.sendAllProperties);
@@ -148,7 +126,7 @@ export class ColorVisionPlugin extends BasePlugin {
 */
   sendAllProperties() {
     if (this.canEmit) {
-      this.sendProperty(ColorVisionPlugin.colorVisionKey, this.colorVisionValue);
+      this.sendProperty(ColorVisionPlugin.colorVisionKey, this.currentValue);
     } else {
       this.sendAfterFetch = true;
     }
