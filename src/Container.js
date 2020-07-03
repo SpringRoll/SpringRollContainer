@@ -26,8 +26,6 @@ export class Container extends PluginManager {
   constructor({ iframeSelector, plugins = [] }) {
     super({ plugins: plugins });
 
-    console.log('**********************************', document.querySelector(iframeSelector));
-
     this.iframe = document.querySelector(iframeSelector);
 
     if (null === this.iframe) {

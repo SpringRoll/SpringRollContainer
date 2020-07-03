@@ -27,6 +27,8 @@ export class RadioGroupPlugin extends BasePlugin {
     this._currentValue = initialValue ? initialValue : this.supportedValues[0];
 
     this.radioGroups = this.setUpRadios(this.selectors);
+
+    this.radioGroupsLength = this.radioGroups.length;
   }
 
   /**
@@ -43,6 +45,7 @@ export class RadioGroupPlugin extends BasePlugin {
         controlName: this.controlName,
         defaultValue: this.initialValue,
         pluginName: this.name,
+        featureName: this.featureName
       });
 
       if (radioGroup.length !== this.radioCount) {
@@ -87,6 +90,10 @@ export class RadioGroupPlugin extends BasePlugin {
    * @param {string} newValue
    */
   set currentValue(newValue) {
+    if (!this.supportedValues.includes(newValue)) {
+      return;
+    }
+
     this._currentValue = newValue;
 
     for (let i = 0, l = this.radioGroups.length; i < l; i++) {

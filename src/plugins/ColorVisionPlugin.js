@@ -29,14 +29,12 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
     this.canEmit = false;
     this.colors = [];
 
-    this.colorRadiosLength = this.colorDropdowns.length;
-
-    if (this.colorRadiosLength <= 0) {
+    if (this.radioGroupsLength <= 0) {
       this.warn('Plugin was not provided any valid HTML elements');
       return;
     }
 
-    for (let i = 0; i < this.colorRadiosLength; i++) {
+    for (let i = 0; i < this.radioGroupsLength; i++) {
       this.radioGroups[i].enableRadioEvents(this.onColorChange.bind(this));
     }
   }
@@ -47,8 +45,8 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
    */
   onColorChange(e) {
     //return if a radio button is programmatically clicked when it is hidden from the user
-    if (this.positions.indexOf(e.target.value) === -1) {
-      for (let i = 0; i < this.colorRadiosLength; i++) {
+    if (this.colors.indexOf(e.target.value) === -1) {
+      for (let i = 0; i < this.radioGroupsLength; i++) {
         this.radioGroups[i].radioGroup[this.currentValue].checked = true;
       }
       return;
@@ -84,13 +82,13 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
               this.warn(`${result.data[i]} is an invalid color vision name`);
               continue;
             }
-            this.colors.push(result.data[i]);
+            this.colors.push(result.data[i].toLowerCase());
           }
 
-          for (let i = 0; i < this.colorRadiosLength; i++) {
+          for (let i = 0; i < this.radioGroupsLength; i++) {
             //Hide any radio buttons that aren't in the game's filter list.
             for (const key in this.radioGroups[i].radioGroup) {
-              this.radioGroups[i].radioGroup[key].style.display = this.colors.indexOf(this.radioGroups[i].radioGroup[key].value) !== -1 ? '' : 'none';
+              this.radioGroups[i].radioGroup[key].style.display = this.colors.indexOf(this.radioGroups[i].radioGroup[key].value.toLowerCase()) !== -1 ? '' : 'none';
             }
           }
 

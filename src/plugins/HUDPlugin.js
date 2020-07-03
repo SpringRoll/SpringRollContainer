@@ -23,13 +23,12 @@ export class HUDPlugin extends RadioGroupPlugin {
     this.sendAfterFetch = false;
     this.canEmit = false;
     this.positions = [];
-    this.hudRadiosLength = this.radioGroups.length;
 
-    if (this.hudRadiosLength <= 0) {
+    if (this.radioGroupsLength <= 0) {
       this.warn('Plugin was not provided any valid HTML elements');
     }
 
-    for (let i = 0; i < this.hudRadiosLength; i++) {
+    for (let i = 0; i < this.radioGroupsLength; i++) {
       this.radioGroups[i].enableRadioEvents(this.onHUDSelect.bind(this));
     }
 
@@ -42,7 +41,7 @@ export class HUDPlugin extends RadioGroupPlugin {
   onHUDSelect(e) {
     //return if a radio button is programattically clicked when it is hidden
     if (this.positions.indexOf(e.target.value) === -1) {
-      for (let i = 0; i < this.hudRadiosLength; i++) {
+      for (let i = 0; i < this.radioGroupsLength; i++) {
         this.radioGroups[i].radioGroup[this.currentValue].checked = true;
       }
       return;
@@ -67,7 +66,7 @@ export class HUDPlugin extends RadioGroupPlugin {
           return;
         }
 
-        if (this.hudRadiosLength <= 0) {
+        if (this.radioGroupsLength <= 0) {
           return;
         }
         //get the game's reported HUD positions to build out positions array
@@ -80,10 +79,10 @@ export class HUDPlugin extends RadioGroupPlugin {
               continue;
             }
 
-            this.positions.push(result.data[i]);
+            this.positions.push(result.data[i].toLowerCase());
           }
 
-          for (let i = 0; i < this.hudRadiosLength; i++) {
+          for (let i = 0; i < this.radioGroupsLength; i++) {
             //Hide any radio buttons that aren't in the game's position list.
             for (const key in this.radioGroups[i].radioGroup) {
               this.radioGroups[i].radioGroup[key].style.display = this.positions.indexOf(this.radioGroups[i].radioGroup[key].value) !== -1 ? '' : 'none';

@@ -1,5 +1,6 @@
 import { Container, HUDPlugin } from '../index';
 import { Bellhop } from 'bellhop-iframe';
+import { makeRadio } from '../../TestingUtils';
 
 describe('HUDPlugin', () => {
   let hp;
@@ -7,39 +8,15 @@ describe('HUDPlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    const topOne = document.createElement('input');
-    topOne.type = 'radio';
-    topOne.name = 'hud-position-one';
-    topOne.value = 'top';
-    const bottomOne = document.createElement('input');
-    bottomOne.type = 'radio';
-    bottomOne.name = 'hud-position-one';
-    bottomOne.value = 'bottom';
-    const rightOne = document.createElement('input');
-    rightOne.type = 'radio';
-    rightOne.name = 'hud-position-one';
-    rightOne.value = 'right';
-    const leftOne = document.createElement('input');
-    leftOne.type = 'radio';
-    leftOne.name = 'hud-position-one';
-    leftOne.value = 'left';
+    const topOne = makeRadio('hud-position-one', 'top');
+    const bottomOne = makeRadio('hud-position-one', 'bottom');
+    const rightOne = makeRadio('hud-position-one', 'right');
+    const leftOne = makeRadio('hud-position-one', 'left');
 
-    const topTwo = document.createElement('input');
-    topTwo.type = 'radio';
-    topTwo.name = 'hud-position-two';
-    topTwo.value = 'top';
-    const bottomTwo = document.createElement('input');
-    bottomTwo.type = 'radio';
-    bottomTwo.name = 'hud-position-two';
-    bottomTwo.value = 'bottom';
-    const rightTwo = document.createElement('input');
-    rightTwo.type = 'radio';
-    rightTwo.name = 'hud-position-two';
-    rightTwo.value = 'right';
-    const leftTwo = document.createElement('input');
-    leftTwo.type = 'radio';
-    leftTwo.name = 'hud-position-two';
-    leftTwo.value = 'left';
+    const topTwo = makeRadio('hud-position-two', 'top');
+    const bottomTwo = makeRadio('hud-position-two', 'bottom');
+    const rightTwo = makeRadio('hud-position-two', 'right');
+    const leftTwo = makeRadio('hud-position-two', 'left');
 
     document.body.append(topOne, bottomOne, rightOne, leftOne, topTwo, bottomTwo, rightTwo, leftTwo);
 
