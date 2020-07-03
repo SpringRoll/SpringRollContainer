@@ -1,5 +1,5 @@
 
-import { ButtonPlugin } from '../base-plugins/ButtonPlugin';
+import { ButtonPlugin } from '../base-plugins';
 import { Button, RadioGroup } from'../ui-elements';
 
 declare const CAPTIONS_STYLES: string;
