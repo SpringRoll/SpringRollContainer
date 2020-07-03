@@ -1,5 +1,5 @@
-import { RadioGroupPlugin } from '../base-plugins/RadioGroupPlugin';
-import { SavedData } from '../SavedData';
+import { RadioGroupPlugin } from '../base-plugins';
+import { SavedData } from '..';
 
 const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];
 
@@ -40,7 +40,7 @@ export class HUDPlugin extends RadioGroupPlugin {
    */
   onHUDSelect(e) {
     //return if a radio button is programattically clicked when it is hidden
-    if (this.positions.indexOf(e.target.value) === -1) {
+    if (!this.positions.includes(e.target.value)) {
       for (let i = 0; i < this.radioGroupsLength; i++) {
         this.radioGroups[i].radioGroup[this.currentValue].checked = true;
       }
@@ -85,7 +85,7 @@ export class HUDPlugin extends RadioGroupPlugin {
           for (let i = 0; i < this.radioGroupsLength; i++) {
             //Hide any radio buttons that aren't in the game's position list.
             for (const key in this.radioGroups[i].radioGroup) {
-              this.radioGroups[i].radioGroup[key].style.display = this.positions.indexOf(this.radioGroups[i].radioGroup[key].value) !== -1 ? '' : 'none';
+              this.radioGroups[i].radioGroup[key].style.display = this.positions.includes(this.radioGroups[i].radioGroup[key].value) ? '' : 'none';
             }
           }
 
@@ -103,7 +103,8 @@ export class HUDPlugin extends RadioGroupPlugin {
   * @memberof HUDPlugin
   */
   start() {
-    const data = this.positions.indexOf(SavedData.read(this.hudPositionKey));
+    const data = SavedData.read(this.hudPositionKey);
+
     if (SUPPORTED_POSITIONS.includes(data)) {
       this.currentValue = data;
     }

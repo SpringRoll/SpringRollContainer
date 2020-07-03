@@ -1,4 +1,4 @@
-import { ButtonPlugin } from './ButtonPlugin';
+import { ButtonPlugin } from '../base-plugins/ButtonPlugin';
 import { Button } from '../ui-elements/Button';
 
 export class HelpPlugin extends ButtonPlugin {

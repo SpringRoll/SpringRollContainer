@@ -1,4 +1,4 @@
-import { SavedData } from '../SavedData';
+import { SavedData } from '..';
 import { ButtonPlugin } from '../base-plugins';
 import { Slider, Button } from '../ui-elements';
 

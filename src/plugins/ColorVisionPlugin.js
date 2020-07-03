@@ -1,5 +1,5 @@
-import { RadioGroupPlugin } from '../base-plugins/RadioGroupPlugin';
-import { SavedData } from '../SavedData';
+import { RadioGroupPlugin } from '../base-plugins';
+import { SavedData } from '..';
 
 const COLOR_BLIND_TYPES = [
   'none',
@@ -45,7 +45,7 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
    */
   onColorChange(e) {
     //return if a radio button is programmatically clicked when it is hidden from the user
-    if (this.colors.indexOf(e.target.value) === -1) {
+    if (!this.colors.includes(e.target.value) ) {
       for (let i = 0; i < this.radioGroupsLength; i++) {
         this.radioGroups[i].radioGroup[this.currentValue].checked = true;
       }
@@ -88,7 +88,7 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
           for (let i = 0; i < this.radioGroupsLength; i++) {
             //Hide any radio buttons that aren't in the game's filter list.
             for (const key in this.radioGroups[i].radioGroup) {
-              this.radioGroups[i].radioGroup[key].style.display = this.colors.indexOf(this.radioGroups[i].radioGroup[key].value.toLowerCase()) !== -1 ? '' : 'none';
+              this.radioGroups[i].radioGroup[key].style.display = this.colors.includes(this.radioGroups[i].radioGroup[key].value.toLowerCase()) ? '' : 'none';
             }
           }
 

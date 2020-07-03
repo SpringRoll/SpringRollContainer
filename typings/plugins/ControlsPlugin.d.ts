@@ -1,4 +1,4 @@
-import { BasePlugin } from './BasePlugin';
+import { BasePlugin } from '../base-plugins/BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
 type ControlsPluginOptions = {

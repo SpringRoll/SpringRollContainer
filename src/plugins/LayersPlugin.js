@@ -1,5 +1,5 @@
-import { Slider } from '../ui-elements/Slider';
-import { BasePlugin } from '../base-plugins/BasePlugin';
+import { Slider } from '../ui-elements';
+import { BasePlugin } from '../base-plugins';
 
 /**
  * @export

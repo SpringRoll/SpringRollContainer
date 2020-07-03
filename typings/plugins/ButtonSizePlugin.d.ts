@@ -1,4 +1,4 @@
-import { BasePlugin } from '..';
+import { BasePlugin } from '../base-plugins/BasePlugin';
 import { Slider } from '../ui-elements/Slider';
 
 type ButtonSizePluginOptions = {

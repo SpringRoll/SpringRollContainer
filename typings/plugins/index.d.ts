@@ -1,5 +1,5 @@
-export * from './BasePlugin';
-export * from './ButtonPlugin';
+export * from '../base-plugins/BasePlugin';
+export * from '../base-plugins/ButtonPlugin';
 export * from './CaptionsPlugin';
 export * from './HelpPlugin';
 export * from './PausePlugin';
