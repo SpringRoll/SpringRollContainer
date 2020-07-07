@@ -1,6 +1,5 @@
-import { ButtonPlugin } from '..';
-import { Slider } from '../ui-elements';
-import { Button } from '../ui-elements';
+import { ButtonPlugin } from '../base-plugins';
+import { Slider, Button } from '../ui-elements';
 
 type SoundPluginOptions = {
   soundButtons?: string,

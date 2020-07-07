@@ -1,4 +1,4 @@
-import { ButtonPlugin } from '..';
+import { ButtonPlugin } from '../base-plugins';
 import { Button } from '../ui-elements';
 import { PageVisibility } from '..'
 export class PausePlugin extends ButtonPlugin {

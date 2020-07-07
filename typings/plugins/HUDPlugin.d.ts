@@ -1,25 +1,23 @@
-import { BasePlugin } from '../plugins';
-import { RadioButtonGroup } from '../ui-elements';
+import { RadioGroupPlugin } from '../base-plugins';
+import { SavedData } from '..';
+
+export const SUPPORTED_POSITIONS: string[];
 
 type HUDPluginOptions = {
-  defaultValue: string
+  defaultValue?: string
 };
 
-export class HUDPlugin extends BasePlugin {
+export class HUDPlugin extends RadioGroupPlugin {
   constructor(hudSelectorRadios: string, options: HUDPluginOptions)
 
-  hudPositionSelectors: string[];
-  hudRadios: RadioButtonGroup[];
-  currentValue: string;
-  defaultValue: string;
   hudRadiosLength: number;
   sendAfterFetch: boolean;
   canEmit: boolean;
-  _hudButtons: Button[];
   positions: string[];
 
   onHUDSelect(e: Event): void;
-  setUpHUDRadios(selectors: string[]);
+  init(): void;
+  start(): void;
 
   sendAllProperties(): void;
   get hudPositionKey(): string;
