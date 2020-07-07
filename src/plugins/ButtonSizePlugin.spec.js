@@ -14,14 +14,10 @@ describe('ButtonSizePlugin', () => {
   before(() => {
     document.body.innerHTML = '';
 
-    const buttonSliderOne = document.createElement('input');
-    buttonSliderOne.type = 'range';
-    buttonSliderOne.id = 'bsOne';
-    document.body.appendChild(buttonSliderOne);
-    const buttonSliderTwo = document.createElement('input');
-    buttonSliderTwo.type = 'range';
-    buttonSliderTwo.id = 'bsTwo';
-    document.body.appendChild(buttonSliderTwo);
+    const buttonSliderOne = makeSlider('bsOne');
+    const buttonSliderTwo = makeSlider('bsTwo');
+
+    document.body.append(buttonSliderOne, buttonSliderTwo);
 
     bsp = new ButtonSizePlugin('#bsOne, #bsTwo');
     bsp.preload({ client: new Bellhop() });

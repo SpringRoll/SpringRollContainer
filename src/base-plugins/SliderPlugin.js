@@ -13,7 +13,13 @@ export class SliderPlugin extends BasePlugin {
    *Creates an instance of SliderPlugin.
    * @constructor
    * @memberof SliderPlugin
+   * @param {string} cssSelector
    * @param {string} name
+   * @param {object} options
+   * @param {string | number} [options.defaultValue='0.5']
+   * @param {string | number} [options.minValue='0']
+   * @param {string | number} [options.maxValue='1']
+   * @param {string} [options.featureName] Springroll Core feature name that the plugin is supporting
    */
   constructor(cssSelector, name, {defaultValue = '0.5', minValue = '0', maxValue = '1', featureName }) {
     super(name);
@@ -30,6 +36,7 @@ export class SliderPlugin extends BasePlugin {
       this.warn('Plugin was not provided any valid HTML Elements');
       return;
     }
+
   }
 
   /**
@@ -67,6 +74,7 @@ export class SliderPlugin extends BasePlugin {
    * @memberof SliderPlugin
    */
   start() {
+
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
   }

@@ -1,5 +1,6 @@
 import { Container, LayersPlugin } from '../index';
 import { Bellhop } from 'bellhop-iframe';
+import { makeSlider } from '../../TestingUtils';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -11,19 +12,12 @@ describe('LayersPlugin', () => {
   let lsp;
 
   before(() => {
-    const sliderOne = document.createElement('input');
-    sliderOne.type = 'range';
-    sliderOne.id = 'lssOne';
-    document.body.appendChild(sliderOne);
+    const sliderOne = makeSlider('lssOne');
+    const sliderTwo = makeSlider('lssTwo');
 
-    const sliderTwo = document.createElement('input');
-    sliderTwo.type = 'range';
-    sliderTwo.id = 'lssTwo';
-    document.body.appendChild(sliderTwo);
+    document.body.append(sliderOne, sliderTwo);
 
-    lsp = new LayersPlugin({
-      layersSliders: '#lssOne, #lssTwo'
-    });
+    lsp = new LayersPlugin('#lssOne, #lssTwo');
     lsp.preload({ client: new Bellhop() });
   });
 
@@ -36,41 +30,41 @@ describe('LayersPlugin', () => {
       iframeSelector: '#layers-plugin-iframe'
     }).client.trigger('features');
 
-    expect(lsp.layersSliders[0].slider).to.be.instanceof(HTMLInputElement);
-    expect(lsp.layersSliders[1].slider).to.be.instanceof(HTMLInputElement);
+    expect(lsp.sliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(lsp.sliders[1].slider).to.be.instanceof(HTMLInputElement);
   });
 
   it('.onLayerValueChange()', () => {
-    expect(lsp.layersSliders[0].value).to.equal('0');
-    expect(lsp.layersSliders[1].value).to.equal('0');
+    expect(lsp.sliders[0].value).to.equal('0');
+    expect(lsp.sliders[1].value).to.equal('0');
 
-    lsp.layersSliders[0].value = 1;
-    lsp.layersSliders[0].dispatchEvent(initEvent('change'));
+    lsp.sliders[0].value = 1;
+    lsp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(lsp.layersSliders[0].value).to.equal('1');
-    expect(lsp.layersSliders[1].value).to.equal('1');
-    expect(lsp.layerValue).to.equal(1);
+    expect(lsp.sliders[0].value).to.equal('1');
+    expect(lsp.sliders[1].value).to.equal('1');
+    expect(lsp.currentValue).to.equal(1);
 
-    lsp.layersSliders[0].value = 1.5;
-    lsp.layersSliders[0].dispatchEvent(initEvent('change'));
+    lsp.sliders[0].value = 1.5;
+    lsp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(lsp.layersSliders[0].value).to.equal('1');
-    expect(lsp.layersSliders[1].value).to.equal('1');
-    expect(lsp.layerValue).to.equal(1);
+    expect(lsp.sliders[0].value).to.equal('1');
+    expect(lsp.sliders[1].value).to.equal('1');
+    expect(lsp.currentValue).to.equal(1);
 
-    lsp.layersSliders[1].value = 0;
-    lsp.layersSliders[1].dispatchEvent(initEvent('change'));
+    lsp.sliders[1].value = 0;
+    lsp.sliders[1].dispatchEvent(initEvent('change'));
 
-    expect(lsp.layersSliders[0].value).to.equal('0');
-    expect(lsp.layersSliders[1].value).to.equal('0');
-    expect(lsp.layerValue).to.equal(0);
+    expect(lsp.sliders[0].value).to.equal('0');
+    expect(lsp.sliders[1].value).to.equal('0');
+    expect(lsp.currentValue).to.equal(0);
 
-    lsp.layersSliders[1].value = -1;
-    lsp.layersSliders[1].dispatchEvent(initEvent('change'));
+    lsp.sliders[1].value = -1;
+    lsp.sliders[1].dispatchEvent(initEvent('change'));
 
-    expect(lsp.layersSliders[0].value).to.equal('0');
-    expect(lsp.layersSliders[1].value).to.equal('0');
-    expect(lsp.layerValue).to.equal(0);
+    expect(lsp.sliders[0].value).to.equal('0');
+    expect(lsp.sliders[1].value).to.equal('0');
+    expect(lsp.currentValue).to.equal(0);
   });
 
   it('should work without any controls', () => {
@@ -82,14 +76,10 @@ describe('LayersPlugin', () => {
   });
 
   it('should work with an HTMLElement as parameter', () => {
-    const slider = document.createElement('input');
-    slider.type = 'range';
-    slider.id = 'lssTwo';
+    const slider = makeSlider('lssTwo');
     document.body.appendChild(slider);
 
-    lsp = new LayersPlugin({
-      layersSliders: slider
-    });
+    lsp = new LayersPlugin(slider);
     lsp.preload({ client: new Bellhop() });
 
     const iframe = document.createElement('iframe');
@@ -100,13 +90,13 @@ describe('LayersPlugin', () => {
       iframeSelector: '#layers-plugin-iframe'
     }).client.trigger('features');
 
-    expect(lsp.layersSliders[0].slider).to.be.instanceof(HTMLInputElement);
-    expect(lsp.layersSliders[0].value).to.equal('0');
+    expect(lsp.sliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(lsp.sliders[0].value).to.equal('0');
 
-    lsp.layersSliders[0].value = 1;
-    lsp.layersSliders[0].dispatchEvent(initEvent('change'));
+    lsp.sliders[0].value = 1;
+    lsp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(lsp.layersSliders[0].value).to.equal('1');
+    expect(lsp.sliders[0].value).to.equal('1');
   });
 
 });

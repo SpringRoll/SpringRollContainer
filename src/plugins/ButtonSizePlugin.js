@@ -9,18 +9,13 @@ import { SliderPlugin } from '../base-plugins';
 export class ButtonSizePlugin extends SliderPlugin {
   /**
    *Creates an instance of ButtonSizePlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} [params.buttonSliders]
-   * @param {number} [params.defaultButtonSize=0.5]
+   * @param {string | HTMLElement} buttonSliders selector string for the inputs
+   * @param {object} options
+   * @param {number} [options.defaultButtonSize=0.5]
    * @memberof ButtonSizePlugin
    */
   constructor(buttonSliders, { defaultButtonSize = 0.5 } = {}) {
-    super(buttonSliders, 'UISize-Button-Plugin', {defaultValue: defaultButtonSize, featureName: ButtonSizePlugin.buttonSizeKey });
-
-    if (this.sliders[0] && this.sliders[0].slider) {
-      //in case there's saved data
-      this.currentValue = this.sliders[0].value;
-    }
+    super(buttonSliders, 'UISize-Button-Plugin', { defaultValue: defaultButtonSize, featureName: ButtonSizePlugin.buttonSizeKey });
 
     for (let i = 0; i < this.slidersLength; i++) {
       this.sliders[i].enableSliderEvents(this.onButtonSizeChange.bind(this));
