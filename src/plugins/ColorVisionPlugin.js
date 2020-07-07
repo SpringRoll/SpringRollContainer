@@ -85,6 +85,8 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
             this.colors.push(result.data[i].toLowerCase());
           }
 
+          this.defaultValue = this.colors[0];
+
           for (let i = 0; i < this.radioGroupsLength; i++) {
             //Hide any radio buttons that aren't in the game's filter list.
             for (const key in this.radioGroups[i].radioGroup) {

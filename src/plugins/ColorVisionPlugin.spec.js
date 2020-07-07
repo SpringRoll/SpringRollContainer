@@ -46,7 +46,6 @@ describe('ColorVisionPlugin', () => {
     ]);
 
     expect(cvp.colors.length).to.equal(3); //discard the 'invalid'
-    console.log(cvp.radioGroups[0].radioGroup);
     expect(cvp.radioGroups[0].radioGroup.achromatopsia.style.display).to.equal('none');
     expect(cvp.radioGroups[0].radioGroup.protanopia.style.display).to.equal('none');
     expect(cvp.radioGroups[1].radioGroup.achromatopsia.style.display).to.equal('none');

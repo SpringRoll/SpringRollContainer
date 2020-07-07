@@ -23,6 +23,7 @@ export class RadioGroupPlugin extends BasePlugin {
     this.controlName = controlName;
     this.featureName = featureName;
     this.radioCount = radioCount;
+    this.sendAllProperties = this.sendAllProperties.bind(this);
 
     this._currentValue = initialValue ? initialValue : this.supportedValues[0];
 

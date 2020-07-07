@@ -37,33 +37,37 @@ describe('ButtonSizePlugin', () => {
   });
 
   it('.onButtonSizeChange()', () => {
-    bsp.buttonSliders[0].value = 1;
-    bsp.buttonSliders[0].dispatchEvent(initEvent('change'));
 
-    expect(bsp.buttonSliders[0].value).to.equal('1');
-    expect(bsp.buttonSliders[1].value).to.equal('1');
-    expect(bsp.buttonSize).to.equal(1);
+    expect(bsp.sliders[0].value).to.equal('0.5');
+    expect(bsp.sliders[1].value).to.equal('0.5');
 
-    bsp.buttonSliders[0].value = 0;
-    bsp.buttonSliders[0].dispatchEvent(initEvent('change'));
+    bsp.sliders[0].value = 1;
+    bsp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(bsp.buttonSliders[0].value).to.equal('0');
-    expect(bsp.buttonSliders[1].value).to.equal('0');
-    expect(bsp.buttonSize).to.equal(0);
+    expect(bsp.sliders[0].value).to.equal('1');
+    expect(bsp.sliders[1].value).to.equal('1');
+    expect(bsp.currentValue).to.equal(1);
 
-    bsp.buttonSliders[1].value = 1.1;
-    bsp.buttonSliders[1].dispatchEvent(initEvent('change'));
+    bsp.sliders[0].value = 0;
+    bsp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(bsp.buttonSliders[0].value).to.equal('1');
-    expect(bsp.buttonSliders[1].value).to.equal('1');
-    expect(bsp.buttonSize).to.equal(1);
+    expect(bsp.sliders[0].value).to.equal('0');
+    expect(bsp.sliders[1].value).to.equal('0');
+    expect(bsp.currentValue).to.equal(0);
 
-    bsp.buttonSliders[1].value = -1;
-    bsp.buttonSliders[1].dispatchEvent(initEvent('change'));
+    bsp.sliders[1].value = 1.1;
+    bsp.sliders[1].dispatchEvent(initEvent('change'));
 
-    expect(bsp.buttonSliders[0].value).to.equal('0');
-    expect(bsp.buttonSliders[1].value).to.equal('0');
-    expect(bsp.buttonSize).to.equal(0);
+    expect(bsp.sliders[0].value).to.equal('1');
+    expect(bsp.sliders[1].value).to.equal('1');
+    expect(bsp.currentValue).to.equal(1);
+
+    bsp.sliders[1].value = -1;
+    bsp.sliders[1].dispatchEvent(initEvent('change'));
+
+    expect(bsp.sliders[0].value).to.equal('0');
+    expect(bsp.sliders[1].value).to.equal('0');
+    expect(bsp.currentValue).to.equal(0);
   });
 
   it('should work without any controls', () => {
@@ -77,7 +81,7 @@ describe('ButtonSizePlugin', () => {
   it('should work with HTML Elements as paramters', () => {
 
     //plugin set up
-    const buttonSliderOne = makeSlider('bsOne');
+    const buttonSliderOne = makeSlider('bsOneOneOne');
     document.body.appendChild(buttonSliderOne);
 
     bsp = new ButtonSizePlugin(buttonSliderOne);
@@ -90,12 +94,12 @@ describe('ButtonSizePlugin', () => {
       'features'
     );
 
-    expect(bsp.buttonSliders[0].slider).to.be.instanceof(HTMLInputElement);
-    expect(bsp.buttonSliders[0].value).to.equal('0.5');
+    expect(bsp.sliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(bsp.sliders[0].value).to.equal('0.5');
 
-    bsp.buttonSliders[0].value = 1;
-    bsp.buttonSliders[0].dispatchEvent(initEvent('change'));
+    bsp.sliders[0].value = 1;
+    bsp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(bsp.buttonSliders[0].value).to.equal('1');
+    expect(bsp.sliders[0].value).to.equal('1');
   });
 });
