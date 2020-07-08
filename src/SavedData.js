@@ -24,6 +24,7 @@ export class SavedData {
    * @param {Boolean} [tempOnly=false] If the value should be saved only in the current browser session.
    */
   static write(name, value, tempOnly = false) {
+
     return tempOnly
       ? sessionStorage.setItem(
         name,
@@ -44,6 +45,9 @@ export class SavedData {
    */
   static read(name) {
     const value = localStorage.getItem(name) || sessionStorage.getItem(name);
+    if (name === 'hudPosition') {
+      console.log(name, value, 'hello!');
+    }
 
     if ('string' === typeof value) {
       try {

@@ -1,5 +1,6 @@
 import { BasePlugin } from '.';
 import { Slider } from '../ui-elements';
+import { SavedData } from '../SavedData';
 
 /**
  *
@@ -36,7 +37,6 @@ export class SliderPlugin extends BasePlugin {
       this.warn('Plugin was not provided any valid HTML Elements');
       return;
     }
-
   }
 
   /**
@@ -74,7 +74,7 @@ export class SliderPlugin extends BasePlugin {
    * @memberof SliderPlugin
    */
   start() {
-
+    this._currentValue = this.sliders[0].value; //update current value to the saved data value set in Slider.
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
   }
@@ -85,7 +85,7 @@ export class SliderPlugin extends BasePlugin {
   * @memberof SliderPlugin
   */
   sendAllProperties() {
-    this.sendProperty(this.featureName, this.property);
+    this.sendProperty(this.featureName, this.currentValue);
   }
 
   /**

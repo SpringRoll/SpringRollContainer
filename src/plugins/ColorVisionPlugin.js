@@ -109,7 +109,7 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
   * @memberof ColorVisionPlugin
   */
   start() {
-    const data = SavedData.read(this.colorVisionKey);
+    const data = SavedData.read(ColorVisionPlugin.colorVisionKey);
 
     if (COLOR_BLIND_TYPES.includes(data)) {
       this.currentValue = data;

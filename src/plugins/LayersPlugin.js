@@ -12,7 +12,7 @@ export class LayersPlugin extends SliderPlugin {
    * @param {string | HTMLInputElement} layersSliders selector string or HTML Element for the input(s)
    */
   constructor(layersSliders, { defaultValue = 0 } = {}) {
-    super(layersSliders, 'Layer-Plugin', { defaultValue: defaultValue, featureName: LayersPlugin.currentValueKey });
+    super(layersSliders, 'Layer-Plugin', { defaultValue: defaultValue, featureName: LayersPlugin.layersSliderKey });
 
     for (let i = 0; i < this.slidersLength; i++) {
       this.sliders[i].enableSliderEvents(this.onLayerValueChange.bind(this));
@@ -25,6 +25,7 @@ export class LayersPlugin extends SliderPlugin {
    */
   onLayerValueChange(e) {
     this.currentValue = e.target.value;
+    console.log('changed yo', e.target.value, 'removableLayers');
     this.sendProperty(LayersPlugin.layersSliderKey, this.currentValue);
   }
 
