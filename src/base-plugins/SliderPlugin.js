@@ -1,6 +1,5 @@
 import { BasePlugin } from '.';
 import { Slider } from '../ui-elements';
-import { SavedData } from '../SavedData';
 
 /**
  *

@@ -45,9 +45,6 @@ export class SavedData {
    */
   static read(name) {
     const value = localStorage.getItem(name) || sessionStorage.getItem(name);
-    if (name === 'hudPosition') {
-      console.log(name, value, 'hello!');
-    }
 
     if ('string' === typeof value) {
       try {

@@ -25,7 +25,6 @@ export class LayersPlugin extends SliderPlugin {
    */
   onLayerValueChange(e) {
     this.currentValue = e.target.value;
-    console.log('changed yo', e.target.value, 'removableLayers');
     this.sendProperty(LayersPlugin.layersSliderKey, this.currentValue);
   }
 
