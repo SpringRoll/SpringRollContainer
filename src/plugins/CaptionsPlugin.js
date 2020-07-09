@@ -1,5 +1,5 @@
-import { SavedData } from '../SavedData';
-import { ButtonPlugin } from './ButtonPlugin';
+import { SavedData } from '..';
+import { ButtonPlugin } from '../base-plugins';
 import { Button, RadioGroup } from '../ui-elements';
 
 // Private Variables

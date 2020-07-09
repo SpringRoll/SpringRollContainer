@@ -1,4 +1,4 @@
-import { BasePlugin } from "..";
+import { BasePlugin } from '../base-plugins';
 
 type DataFormat = {data: { name:any, value: any, type:string }, type: string};
 
