@@ -107,7 +107,7 @@ const container = new springroll.Container('#game', {
     new CaptionsPlugin({
       captionsButtons: '#captions',
 
-      // expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
+      // expects exactly three(3) radio buttons with values "small", "medium", and "large" indicating caption font sizes.
       fontSizeRadios: 'input[name=captions-font-size]',
 
       // expects exactly two(2) radio buttons with values "default" (black background, white text),
@@ -237,7 +237,9 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 
 
 ### UISizePlugin, LayersPlugin:
-The UI size plugin allows users to control the size of custom pointers and buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
+The Button Size plugin allows users to control the size of buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
+
+The Poiinter Size plugin allows users to control the size of custom pointers within the game. The size value ranges from 0 to 1, defaulting to 0.5.
 
 The Layers plugin allows users to hide distracting layers within a game. This is a ranged value from 0 to 1. 0 indicates "show all layers"
 whereas 1 indicates "hide all distracting layers". By default, this value is 0.
@@ -247,21 +249,21 @@ Note that each game may implement this differently.
 Note that these plugins accept HTML range inputs, rather than buttons.
 
 ```javascript
-import { UISizePlugin, LayersPlugin, Container } from 'springroll-container';
+import { ButtonSizePlugin, PointerSizePlugin, LayersPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container('#game', {
   plugins: [
-    new UISizePlugin({
-      pointerSliders: '#pointer-slider-selector', // controls the size of the pointer
-      pointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
-
-      buttonSliders: '#button-slider-selector', // controls the size of UI buttons
-      buttonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
+    new ButtonSizePlugin('#button-slider-selector', {
+      defaultButtonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
     }),
 
-    new LayersPlugin({
-      layersSliders: '#layers-slider-selector' // goes from 0.0 to 1.0
+    new UISizePlugin('#pointer-slider-selector', {
+      defaultPointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
     }),
+
+    new LayersPlugin('#layers-slider-selector', {
+      defaultValue = 0 // goes from 0.0 to 1.0
+    })
   ]
 });
 
@@ -276,10 +278,9 @@ import { HUDPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container('#game', {
   plugins: [
-    //HUDPlugin expects a button element/selector string
-    new HUDPlugin({
-      // clicking this button toggles through the available HUD positions supported by the game
-      hudSelectorButtons: '#hud-position-button-selector'
+    // expects exactly four(4) radio buttons with values "top", "bottom", "left", "right,
+    new HUDPlugin('#hud-position-button-selector', {
+      defaultValue: "top" //the initial starting value, defaults to "top"
     }),
   ]
 });
@@ -288,13 +289,11 @@ container.openPath('game.html');
 ```
 
 The HUDPlugin requests the supported positions directly from the game itself and builds out an internal list of positions dynamically,
-e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will toggle between those
-two options whenever the button is clicked.
+e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will hide the "left" and "right"
+radio buttons so only the valid ones are displayed to users.
 
 See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on
 the request format and how game developers provide those values.
-
-The HUDPlugin will also display the current position as a data attribute on the button itself.
 
 ### ControlsPlugin
 ```javascript
@@ -323,14 +322,18 @@ import { ColorVisionPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container('#game', {
   plugins: [
-    new ColorVisionPlugin({
-      colorSelects: '#color-vision-dropdown-selector' //the plugin expects a <select> element
+    // expects exactly five(5) radio buttons with values "none", "achromatopsia", "tritanopia", "deuteranopia",
+    // and "protanopia" indicating the types of color visions supported.
+    new ColorVisionPlugin('input[name=color-vision-radios]'{
+      defaultValue: 'none' // initial checked radio box, defaults to "none"
     }),
   ]
 });
 container.openPath('game.html');
 ```
-*The color vision dropdown builds out the options dynamically based on what the application reports back. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+*The color vision dropdown builds out the supported values dynamically based on what the application reports back and hides
+any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
+for more information on the request format.
 
 ### Multiple Plugin Controls
 All Plugins accept one or more HTML elements as controls in their constructor.
