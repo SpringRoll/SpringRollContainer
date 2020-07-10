@@ -34,9 +34,7 @@ import { Container } from 'springroll-container';
 ### Opening a Local Game
 
 ```javascript
-const container = new Container({
-    iframeSelector: '#game'
-});
+const container = new Container('#game');
 
 container.openPath('local/path/to/game.html');
 ```
@@ -54,9 +52,7 @@ container.openLocal('https://example.com/path/to/game.html');
 ### Opening a Game Hosted on SpringRollConnect
 
 ```javascript
-const container = new Container({
-  iframeSelector: '#game'
-});
+const container = new Container('#game');
 
 container.openRemote('https://springroll-connect.example.com/api/release/game-slug');
 ```
@@ -66,12 +62,11 @@ container.openRemote('https://springroll-connect.example.com/api/release/game-sl
 ```javascript
 import { PausePlugin, Container } from 'springroll-container';
 
-const container = new Container({
-  iframeSelector: '#game',
+const container = new Container('#game', {
   plugins: [
     // Assuming that there is a <button id="pause-button" /> on the page somewhere
     new PausePlugin('button#pause-button'),
-  ]  
+  ]
 });
 
 container.openPath('path/to/game.html');
@@ -91,8 +86,7 @@ For example, if the container has the `CaptionsPlugin` enabled with a correspond
 ```javascript
 import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container("#game", {
   plugins: [
     new PausePlugin('button#pause-button'), // Pauses or unpauses the game
     new HelpPlugin('button#help'), // requests a hint or help from the game
@@ -108,12 +102,11 @@ The captions plugin allows users to show or hide captions, and control the size 
 ```javascript
 import { CaptionsPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     new CaptionsPlugin({
       captionsButtons: '#captions',
-      
+
       // expects exactly three(3) radio buttons with values "sm", "md", and "lg" indicating caption font sizes.
       fontSizeRadios: 'input[name=captions-font-size]',
 
@@ -167,8 +160,7 @@ The sound plugin supports a total of eight controls:
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     new SoundPlugin({
       soundButtons: '#soundButton', // mutes or unmutes all game audio
@@ -198,8 +190,7 @@ and an optional default value. Each mechanic's value will range between 0 to 1, 
 ```javascript
 import { MechanicsPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     new MechanicsPlugin({
       hitAreaScaleSliders: '#hitAreaScaleSlider',
@@ -251,15 +242,14 @@ The UI size plugin allows users to control the size of custom pointers and butto
 The Layers plugin allows users to hide distracting layers within a game. This is a ranged value from 0 to 1. 0 indicates "show all layers"
 whereas 1 indicates "hide all distracting layers". By default, this value is 0.
 
-Note that each game may implement this differently. 
+Note that each game may implement this differently.
 
 Note that these plugins accept HTML range inputs, rather than buttons.
 
 ```javascript
 import { UISizePlugin, LayersPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     new UISizePlugin({
       pointerSliders: '#pointer-slider-selector', // controls the size of the pointer
@@ -284,13 +274,12 @@ The HUD plugin allows users to position HUD elements within a game by docking to
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     //HUDPlugin expects a button element/selector string
     new HUDPlugin({
       // clicking this button toggles through the available HUD positions supported by the game
-      hudSelectorButtons: '#hud-position-button-selector' 
+      hudSelectorButtons: '#hud-position-button-selector'
     }),
   ]
 });
@@ -302,7 +291,7 @@ The HUDPlugin requests the supported positions directly from the game itself and
 e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will toggle between those
 two options whenever the button is clicked.
 
-See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on 
+See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on
 the request format and how game developers provide those values.
 
 The HUDPlugin will also display the current position as a data attribute on the button itself.
@@ -311,8 +300,7 @@ The HUDPlugin will also display the current position as a data attribute on the 
 ```javascript
 import { ControlsPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
     new ControlsPlugin({
@@ -333,8 +321,7 @@ Keybindings are tracked visually by setting the textContent of the buttons thems
 ```javascript
 import { ColorVisionPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container({
-  iframeSelector: "#game",
+const container = new springroll.Container('#game', {
   plugins: [
     new ColorVisionPlugin({
       colorSelects: '#color-vision-dropdown-selector' //the plugin expects a <select> element
