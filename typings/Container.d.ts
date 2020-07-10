@@ -14,13 +14,17 @@ export class PluginManager {
   getPlugin(name:string): IPlugin | undefined;
 }
 
+type containerOptions = {
+  plugins?: Array<IPlugin>
+};
+
 export class Container extends PluginManager {
   client: Bellhop;
   loaded: boolean;
   loading: boolean;
   iFrame: HTMLIFrameElement;
   release?: any;
-  constructor(iframeSelector: string, plugins?: Array<IPlugin>);
+  constructor(iframeSelector: string, options: containerOptions);
   close(): void;
   destroy():void;
   initClient(): void;
