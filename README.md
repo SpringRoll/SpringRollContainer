@@ -236,10 +236,10 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 | Input Count | inputCount | Allows the player to define how many clicks, taps, or keyboard inputs are required to complete objectives.  |
 
 
-### UISizePlugin, LayersPlugin:
+### PointerSizePlugin, ButtonSizePlugin, LayersPlugin:
 The Button Size plugin allows users to control the size of buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
 
-The Poiinter Size plugin allows users to control the size of custom pointers within the game. The size value ranges from 0 to 1, defaulting to 0.5.
+The Pointer Size plugin allows users to control the size of custom pointers within the game. The size value ranges from 0 to 1, defaulting to 0.5.
 
 The Layers plugin allows users to hide distracting layers within a game. This is a ranged value from 0 to 1. 0 indicates "show all layers"
 whereas 1 indicates "hide all distracting layers". By default, this value is 0.
@@ -257,7 +257,7 @@ const container = new springroll.Container('#game', {
       defaultButtonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
     }),
 
-    new UISizePlugin('#pointer-slider-selector', {
+    new PointerSizePlugin('#pointer-slider-selector', {
       defaultPointerSize: 0.5, //pointer size goes from 0.0 to 1.0. Default = 0.5
     }),
 
