@@ -1,4 +1,4 @@
-import { BasePlugin } from '..';
+import { BasePlugin } from '../base-plugins';
 import { Slider } from '../ui-elements';
 
 type MechanicsPluginOptions = {

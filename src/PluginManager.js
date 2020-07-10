@@ -1,5 +1,5 @@
 /**
- * @typedef {import('./plugins/BasePlugin').BasePlugin} BasePlugin
+ * @typedef {import('./base-plugins/BasePlugin').BasePlugin} BasePlugin
  */
 import { Bellhop } from 'bellhop-iframe';
 /**

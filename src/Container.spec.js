@@ -1,5 +1,6 @@
 import sinon from 'sinon';
-import { Container, BasePlugin, Features } from './index';
+import { Container, Features } from './index';
+import { BasePlugin } from './base-plugins';
 
 document.body.innerHTML = '';
 const iframe = document.createElement('iframe');

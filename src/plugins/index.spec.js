@@ -1,6 +1,4 @@
 import './index';
-import './BasePlugin.spec';
-import './ButtonPlugin.spec';
 import './CaptionsPlugin.spec';
 import './HelpPlugin.spec';
 import './PausePlugin.spec';

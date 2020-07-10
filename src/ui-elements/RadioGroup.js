@@ -1,4 +1,4 @@
-import { BasePlugin } from '../plugins/BasePlugin';
+import { BasePlugin } from '../base-plugins';
 
 /**
  * @export
@@ -55,7 +55,7 @@ export class RadioGroup extends BasePlugin {
   hasOnly(valuesArray) {
 
     for (const key in this.radioGroup) {
-      if (valuesArray.indexOf(this.radioGroup[key].value) === -1) {
+      if (!valuesArray.includes(this.radioGroup[key].value)) {
         this.warn(`${this.controlName} radio button value: ${this.radioGroup[key].value} is not an accepted value. Skipping radio group`);
         return false;
       }

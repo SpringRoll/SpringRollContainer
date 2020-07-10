@@ -1,5 +1,5 @@
-import { ButtonPlugin } from './ButtonPlugin';
-import { Button } from '../ui-elements/Button';
+import { ButtonPlugin } from '../base-plugins';
+import { Button } from '../ui-elements';
 
 export class HelpPlugin extends ButtonPlugin {
   constructor(helpButton: string);

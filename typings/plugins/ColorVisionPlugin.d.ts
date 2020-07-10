@@ -1,21 +1,20 @@
-import { BasePlugin } from '..';
+import { RadioGroupPlugin } from '../base-plugins';
 
 export const COLOR_BLIND_TYPES: string[];
 
 type ColorVisionPluginOptions = {
-  colorSelects?: string | HTMLElement,
+  defaultValue?: string
 };
 
-export class ColorVisionPlugin extends BasePlugin {
-  constructor(options: ColorVisionPluginOptions)
+export class ColorVisionPlugin extends RadioGroupPlugin {
+  constructor(colorVisionRadios?: string, options: ColorVisionPluginOptions)
 
-  colorDropdowns: HTMLSelectElement[] | NodeListOf<HTMLSelectElement>;
   sendAfterFetch: boolean;
   canEmit: boolean;
-  colorVisionValue: string;
-  colorDropdownsLength: number;
 
-  onColorChange(e: MouseEvent): void;
+  onColorChange(e: Event): void;
+  init(): void;
+  start(): void;
   sendAllProperties(): void;
 
   static get ColorVisionKey(): string;

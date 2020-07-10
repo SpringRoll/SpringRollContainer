@@ -1,28 +1,28 @@
 import { Container, ColorVisionPlugin } from '../index';
 import { Bellhop } from 'bellhop-iframe';
-
-const initEvent = eventName => {
-  const event = document.createEvent('Event');
-  event.initEvent(eventName, false, true);
-  return event;
-};
+import { makeRadio } from '../../TestingUtils';
 
 describe('ColorVisionPlugin', () => {
   let cvp;
 
   before(() => {
     document.body.innerHTML = '';
-    const dropdownOne = document.createElement('select');
-    dropdownOne.id = 'ddOne';
-    const dropdownTwo = document.createElement('select');
-    dropdownTwo.id = 'ddTwo';
 
-    document.body.appendChild(dropdownOne);
-    document.body.appendChild(dropdownTwo);
+    const deuteranopiaOne = makeRadio('color-vision-one', 'deuteranopia');
+    const tritanopiaOne = makeRadio('color-vision-one', 'tritanopia');
+    const protanopiaOne = makeRadio('color-vision-one', 'protanopia');
+    const achromatopsiaOne = makeRadio('color-vision-one', 'achromatopsia');
+    const noneOne = makeRadio('color-vision-one', 'none');
 
-    cvp = new ColorVisionPlugin({
-      colorSelects: '#ddOne, #ddTwo'
-    });
+    const deuteranopiaTwo = makeRadio('color-vision-two', 'deuteranopia');
+    const tritanopiaTwo = makeRadio('color-vision-two', 'tritanopia');
+    const protanopiaTwo = makeRadio('color-vision-two', 'protanopia');
+    const achromatopsiaTwo = makeRadio('color-vision-two', 'achromatopsia');
+    const noneTwo = makeRadio('color-vision-two', 'none');
+
+    document.body.append(deuteranopiaOne, tritanopiaOne, protanopiaOne, achromatopsiaOne, noneOne, deuteranopiaTwo, tritanopiaTwo, protanopiaTwo, achromatopsiaTwo, noneTwo);
+
+    cvp = new ColorVisionPlugin('input[name=color-vision-one], input[name=color-vision-two]');
     cvp.preload({ client: new Bellhop() });
   });
 
@@ -44,24 +44,36 @@ describe('ColorVisionPlugin', () => {
       'invalid'
     ]);
 
-    expect(cvp.colorDropdowns[0].options.length).to.equal(3); //discard the 'invalid'
+    expect(cvp.colors.length).to.equal(3); //discard the 'invalid'
+    console.log(cvp.radioGroups[0].radioGroup);
+    expect(cvp.radioGroups[0].radioGroup.achromatopsia.style.display).to.equal('none');
+    expect(cvp.radioGroups[0].radioGroup.protanopia.style.display).to.equal('none');
+    expect(cvp.radioGroups[1].radioGroup.achromatopsia.style.display).to.equal('none');
+    expect(cvp.radioGroups[1].radioGroup.protanopia.style.display).to.equal('none');
   });
 
   it('.onColorChange()', () => {
-    expect(cvp.colorDropdowns[0].value).to.equal('none');
-    expect(cvp.colorDropdowns[1].value).to.equal('none');
+    expect(cvp.currentValue).to.equal('none');
+    expect(cvp.radioGroups[0].radioGroup.none.checked).to.be.true;
+    expect(cvp.radioGroups[1].radioGroup.none.checked).to.be.true;
 
-    cvp.colorDropdowns[0].value = 'tritanopia';
-    cvp.colorDropdowns[0].dispatchEvent(initEvent('change'));
+    cvp.radioGroups[0].radioGroup.tritanopia.click();
 
-    expect(cvp.colorDropdowns[0].value).to.equal('tritanopia');
-    expect(cvp.colorDropdowns[1].value).to.equal('tritanopia');
+    expect(cvp.currentValue).to.equal('tritanopia');
+    expect(cvp.radioGroups[0].radioGroup.tritanopia.checked).to.be.true;
+    expect(cvp.radioGroups[1].radioGroup.tritanopia.checked).to.be.true;
 
-    cvp.colorDropdowns[1].value = 'deuteranopia';
-    cvp.colorDropdowns[1].dispatchEvent(initEvent('change'));
+    cvp.radioGroups[1].radioGroup.deuteranopia.click();
 
-    expect(cvp.colorDropdowns[0].value).to.equal('deuteranopia');
-    expect(cvp.colorDropdowns[1].value).to.equal('deuteranopia');
+    expect(cvp.currentValue).to.equal('deuteranopia');
+    expect(cvp.radioGroups[0].radioGroup.deuteranopia.checked).to.be.true;
+    expect(cvp.radioGroups[1].radioGroup.deuteranopia.checked).to.be.true;
+
+    //if a hidden control is clicked it shouldn't update the current value
+    cvp.radioGroups[1].radioGroup.achromatopsia.click();
+    expect(cvp.currentValue).to.equal('deuteranopia');
+    expect(cvp.radioGroups[0].radioGroup.deuteranopia.checked).to.be.true;
+    expect(cvp.radioGroups[1].radioGroup.deuteranopia.checked).to.be.true;
   });
 
   it('should work without any controls', () => {
@@ -73,45 +85,5 @@ describe('ColorVisionPlugin', () => {
     });
     cvp.init();
     cvp.client.trigger('features', {});
-  });
-
-
-  it('should work with HTMLElement as parameter', () => {
-
-    //Plugin re-setup
-    const dropdownOne = document.createElement('select');
-    dropdownOne.id = 'ddOne';
-    document.body.appendChild(dropdownOne);
-
-    cvp = new ColorVisionPlugin({colorSelects: dropdownOne});
-    cvp.preload({ client: new Bellhop() });
-
-    const iframe = document.createElement('iframe');
-    iframe.id = 'color-filter-plugin-iframe';
-    document.body.appendChild(iframe);
-
-    new Container('#color-filter-plugin-iframe', {
-      plugins: [cvp]
-    });
-
-    cvp.init();
-
-    cvp.client.trigger('features', {
-      colorVision: true
-    });
-
-    cvp.client.trigger('colorFilters', [
-      'None',
-      'Deuteranopia',
-      'Tritanopia',
-    ]);
-
-    //Actual tests
-    expect(cvp.colorDropdowns[0].value).to.equal('none');
-
-    cvp.colorDropdowns[0].value = 'tritanopia';
-    cvp.colorDropdowns[0].dispatchEvent(initEvent('change'));
-
-    expect(cvp.colorDropdowns[0].value).to.equal('tritanopia');
   });
 });

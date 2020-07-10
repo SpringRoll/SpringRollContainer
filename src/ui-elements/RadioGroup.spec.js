@@ -33,25 +33,6 @@ describe('RadioGroup', () => {
     expect(rg.radioGroup.testtwo.checked).to.be.true;
   });
 
-  it('.hasOnly()', () => {
-    expect(rg.hasOnly(['testone', 'testtwo'])).to.be.true;
-    expect(rg.hasOnly(['testone', 'testtwo', 'testThree'])).to.be.true; //should still work even if there is a value that is unused
-    expect(rg.hasOnly(['testone'])).to.be.false;
-  });
-
-  it('.hasDuplicateValues()', () => {
-    const radioThree = document.createElement('input');
-    radioThree.name = 'test-radios';
-    radioThree.value = 'testtwo';
-
-    expect(rg.hasDuplicateValues()).to.be.false;
-    rg.radioGroup.testThree = radioThree;
-    expect(rg.hasDuplicateValues()).to.be.true;
-
-    delete rg.radioGroup.testThree;
-  });
-
-
   it('.enableRadioEvents()', done => {
     rg.enableRadioEvents(() => {
       done();

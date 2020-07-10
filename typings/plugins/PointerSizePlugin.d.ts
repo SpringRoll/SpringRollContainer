@@ -1,5 +1,5 @@
-import { BasePlugin } from '..';
-import { Slider } from '../ui-elements/Slider';
+import { BasePlugin } from '../base-plugins';
+import { Slider } from '../ui-elements';
 
 type PointerSizePluginOptions = {
   pointerSliders?:string,
