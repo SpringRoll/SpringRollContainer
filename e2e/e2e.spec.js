@@ -168,8 +168,7 @@ describe('End to End Test', () => {
       inputCountSlider: '#inputCountSlider',
     });
 
-    container = new Container({
-      iframeSelector: '.karma-html',
+    container = new Container('.karma-html', {
       plugins: [
         captionsPlugin,
         pausePlugin,

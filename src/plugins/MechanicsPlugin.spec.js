@@ -44,7 +44,7 @@ describe('MechanicsPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'difficulty-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#difficulty-plugin-iframe' }).client.trigger(
+    new Container('#difficulty-plugin-iframe').client.trigger(
       'features'
     );
   });

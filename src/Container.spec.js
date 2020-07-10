@@ -5,7 +5,8 @@ document.body.innerHTML = '';
 const iframe = document.createElement('iframe');
 iframe.id = 'test';
 document.body.appendChild(iframe);
-const container = new Container({ iframeSelector: '#test' });
+const container = new Container('#test');
+
 
 describe('Container', () => {
   it('Should Construct', () => {
@@ -62,7 +63,7 @@ describe('Container', () => {
     };
 
     it('should reject with the raw response if the server fails to respond', async () => {
-      setFetchResponse(500, { success: false, error: 'some message' }); 
+      setFetchResponse(500, { success: false, error: 'some message' });
 
       try {
         await container.openRemote(`${API}`);
@@ -73,7 +74,7 @@ describe('Container', () => {
     });
 
     it('should reject with the raw response if there is a client error', async () => {
-      setFetchResponse(400, { success: false, error: 'a message' }); 
+      setFetchResponse(400, { success: false, error: 'a message' });
 
       try {
         await container.openRemote(`${API}`);
@@ -82,9 +83,9 @@ describe('Container', () => {
         expect(e.message).to.equal('a message');
       }
     });
-    
+
     it('should reject with the raw response if the release does not exist', async () => {
-      setFetchResponse(404, { success: false, error: 'not found' }); 
+      setFetchResponse(404, { success: false, error: 'not found' });
 
       try {
         await container.openRemote(`${API}`);
@@ -111,7 +112,7 @@ describe('Container', () => {
           data: {
             features: {}
           }
-        }); 
+        });
 
         featuresStub.returns('oops');
 

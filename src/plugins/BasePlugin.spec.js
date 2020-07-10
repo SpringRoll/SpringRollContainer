@@ -6,8 +6,7 @@ document.body.appendChild(iframe);
 let container;
 describe('BasePlugin', () => {
   it('constructor()', () => {
-    container = new Container({
-      iframeSelector: '#test',
+    container = new Container('#test', {
       plugins: [new BasePlugin('test-plugin')]
     });
     expect(container.plugins.length).to.equal(1);

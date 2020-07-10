@@ -36,7 +36,7 @@ describe('PointerSizePlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'uisize-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#uisize-plugin-iframe' }).client.trigger(
+    new Container('#uisize-plugin-iframe').client.trigger(
       'features'
     );
   });
@@ -85,7 +85,7 @@ describe('PointerSizePlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'pointersize-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#pointersize-plugin-iframe' }).client.trigger(
+    new Container('#pointersize-plugin-iframe').client.trigger(
       'features'
     );
 
