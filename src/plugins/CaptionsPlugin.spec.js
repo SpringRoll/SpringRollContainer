@@ -1,5 +1,6 @@
 import { CaptionsPlugin } from './CaptionsPlugin';
 import { Bellhop } from 'bellhop-iframe';
+import { makeRadio } from '../../TestingUtils';
 
 describe('CaptionsPlugin', () => {
   const idOne = 'button_test_one';
@@ -13,115 +14,44 @@ describe('CaptionsPlugin', () => {
     const buttonTwo = document.createElement('button');
     buttonTwo.id = idTwo;
 
-    const colorRadioOne = document.createElement('input');
-    colorRadioOne.type = 'radio';
-    colorRadioOne.name = 'caption-color';
-    colorRadioOne.value = 'default';
+    const colorRadioOne = makeRadio('caption-color', 'default');
+    const colorRadioTwo = makeRadio('caption-color', 'inverted');
 
-    const colorRadioTwo = document.createElement('input');
-    colorRadioTwo.type = 'radio';
-    colorRadioTwo.name = 'caption-color';
-    colorRadioTwo.value = 'inverted';
-
-    const colorRadioThree = document.createElement('input');
-    colorRadioThree.type = 'radio';
-    colorRadioThree.name = 'caption-colorTwo';
-    colorRadioThree.value = 'inverted';
-    const colorRadioFour = document.createElement('input');
-    colorRadioFour.type = 'radio';
-    colorRadioFour.name = 'caption-colorTwo';
-    colorRadioFour.value = 'default';
-
-    const colorRadioFive = document.createElement('input');
-    colorRadioFive.type = 'radio';
-    colorRadioFive.name = 'not-tubular-colors';
-    colorRadioFive.value = 'default';
-    const colorRadioSix = document.createElement('input');
-    colorRadioSix.type = 'radio';
-    colorRadioSix.name = 'not-tubular-colors';
-    colorRadioSix.value = 'not-tubular';
+    const colorRadioThree = makeRadio('caption-colorTwo', 'inverted');
+    const colorRadioFour = makeRadio('caption-colorTwo', 'default');
 
 
-    const alignRadioOne = document.createElement('input');
-    alignRadioOne.type = 'radio';
-    alignRadioOne.name = 'caption-align';
-    alignRadioOne.value = 'top';
-    const alignRadioTwo = document.createElement('input');
-    alignRadioTwo.type = 'radio';
-    alignRadioTwo.name = 'caption-align';
-    alignRadioTwo.value = 'bottom';
+    const colorRadioFive = makeRadio('not-tubular-colors', 'default');
+    const colorRadioSix = makeRadio('not-tubular-colors', 'not-tubular');
 
-    const alignRadioThree = document.createElement('input');
-    alignRadioThree.type = 'radio';
-    alignRadioThree.name = 'caption-alignTwo';
-    alignRadioThree.value = 'bottom';
-    const alignRadioFour = document.createElement('input');
-    alignRadioFour.type = 'radio';
-    alignRadioFour.name = 'caption-alignTwo';
-    alignRadioFour.value = 'top';
 
-    const alignRadioFive = document.createElement('input');
-    alignRadioFive.type = 'radio';
-    alignRadioFive.name = 'bogus-align';
 
-    const fontSizeRadioOne = document.createElement('input');
-    fontSizeRadioOne.type = 'radio';
-    fontSizeRadioOne.name = 'caption-fontSize';
-    fontSizeRadioOne.value = 'small';
-    const fontSizeRadioTwo = document.createElement('input');
-    fontSizeRadioTwo.type = 'radio';
-    fontSizeRadioTwo.name = 'caption-fontSize';
-    fontSizeRadioTwo.value = 'medium';
-    const fontSizeRadioThree = document.createElement('input');
-    fontSizeRadioThree.type = 'radio';
-    fontSizeRadioThree.name = 'caption-fontSize';
-    fontSizeRadioThree.value = 'large';
+    const alignRadioOne = makeRadio('caption-align', 'top');
+    const alignRadioTwo = makeRadio('caption-align', 'bottom');
 
-    const fontSizeRadioFour = document.createElement('input');
-    fontSizeRadioFour.type = 'radio';
-    fontSizeRadioFour.name = 'caption-fontSizeTwo';
-    fontSizeRadioFour.value = 'MEDIUM';
-    const fontSizeRadioFive = document.createElement('input');
-    fontSizeRadioFive.type = 'radio';
-    fontSizeRadioFive.name = 'caption-fontSizeTwo';
-    fontSizeRadioFive.value = 'lArGe';
-    const fontSizeRadioSix = document.createElement('input');
-    fontSizeRadioSix.type = 'radio';
-    fontSizeRadioSix.name = 'caption-fontSizeTwo';
-    fontSizeRadioSix.value = 'Small';
+    const alignRadioThree = makeRadio('caption-alignTwo', 'bottom');
+    const alignRadioFour = makeRadio('caption-alignTwo', 'top');
 
-    document.body.appendChild(buttonOne);
-    document.body.appendChild(buttonTwo);
+    const alignRadioFive = makeRadio('bogus-align', 'bogus-align');
 
-    document.body.appendChild(colorRadioOne);
-    document.body.appendChild(colorRadioTwo);
+    const fontSizeRadioOne = makeRadio('caption-fontSize', 'small');
+    const fontSizeRadioTwo = makeRadio('caption-fontSize', 'medium');
+    const fontSizeRadioThree = makeRadio('caption-fontSize', 'large');
 
-    document.body.appendChild(colorRadioThree);
-    document.body.appendChild(colorRadioFour);
+    const fontSizeRadioFour = makeRadio('caption-fontSizeTwo', 'MEDIUM');
+    const fontSizeRadioFive = makeRadio('caption-fontSizeTwo', 'lArGe');
+    const fontSizeRadioSix = makeRadio('caption-fontSizeTwo', 'Small');
 
-    document.body.appendChild(colorRadioFive);
-    document.body.appendChild(colorRadioSix);
+    document.body.append(buttonOne, buttonTwo, colorRadioOne, colorRadioTwo, colorRadioThree, colorRadioFour, colorRadioFive,
+      colorRadioSix, alignRadioOne, alignRadioTwo, alignRadioThree, alignRadioFour, alignRadioFive, fontSizeRadioOne, fontSizeRadioTwo,
+      fontSizeRadioThree, fontSizeRadioFour, fontSizeRadioFive, fontSizeRadioSix);
 
-    document.body.appendChild(alignRadioOne);
-    document.body.appendChild(alignRadioTwo);
-    document.body.appendChild(alignRadioThree);
-    document.body.appendChild(alignRadioFour);
-    document.body.appendChild(alignRadioFive);
-
-    document.body.appendChild(fontSizeRadioOne);
-    document.body.appendChild(fontSizeRadioTwo);
-    document.body.appendChild(fontSizeRadioThree);
-
-    document.body.appendChild(fontSizeRadioFour);
-    document.body.appendChild(fontSizeRadioFive);
-    document.body.appendChild(fontSizeRadioSix);
-
-    cp = new CaptionsPlugin({
-      captionsButtons: `#${idOne}, #${idTwo}`,
-      fontSizeRadios: 'input[name=caption-fontSize], input[name=caption-fontSizeTwo]',
-      colorRadios: 'input[name=caption-color], input[name=caption-colorTwo], input[name=not-tubular-colors]',
-      alignmentRadios: 'input[name=caption-align], input[name=caption-alignTwo], input[name=bogus-align]',
-    });
+    cp = new CaptionsPlugin(
+      `#${idOne}, #${idTwo}`,
+      'input[name=caption-fontSize], input[name=caption-fontSizeTwo]',
+      'input[name=caption-color], input[name=caption-colorTwo], input[name=not-tubular-colors]',
+      'input[name=caption-align], input[name=caption-alignTwo], input[name=bogus-align]',
+    );
     cp.preload({ client: new Bellhop() });
 
 
@@ -235,7 +165,7 @@ describe('CaptionsPlugin', () => {
     buttonOne.id = idOne;
     document.body.appendChild(buttonOne);
 
-    cp = new CaptionsPlugin({captionsButtons: buttonOne});
+    cp = new CaptionsPlugin(buttonOne);
     cp.preload({ client: new Bellhop() });
 
     expect(cp.captionsMuted).to.equal(false);

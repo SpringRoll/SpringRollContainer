@@ -46,7 +46,9 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @param {string } alignmentRadios selector string for one or more radio groups for caption position
    * @memberof CaptionsPlugin
    */
-  constructor({ captionsButtons, fontSizeRadios, colorRadios, alignmentRadios } = {}) {
+  constructor(captionsButtons, fontSizeRadios, colorRadios, alignmentRadios,
+    { defaultFontSize = 'medium', defaultColor = 'default', defaultAlignment = 'top' } = {}
+  ) {
     super('Caption-Button-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.captionsStyles = Object.assign(
@@ -60,6 +62,10 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.fontSizeSelectors = fontSizeRadios ? fontSizeRadios.split(',') : [];
     this.colorSelectors = colorRadios ? colorRadios.split(',') : [];
     this.alignmentSelectors = alignmentRadios ? alignmentRadios.split(',') : [];
+
+    this.defaultFontSize = FONT_SIZE_VALUES.includes(defaultFontSize) ? defaultFontSize : FONT_SIZE_VALUES[0];
+    this.defaultColor = COLOR_VALUES.includes(defaultColor) ? defaultColor : COLOR_VALUES[0];
+    this.defaultAlignment = ALIGN_VALUES.includes(defaultAlignment) ? defaultAlignment : ALIGN_VALUES[0];
 
     this._captionsButtons = [];
     this.fontSizeRadios = [];
@@ -124,7 +130,7 @@ export class CaptionsPlugin extends ButtonPlugin {
       const radioGroup = new RadioGroup({
         selector: selector.trim(),
         controlName: 'Font Size',
-        defaultValue: 'medium',
+        defaultValue: this.defaultFontSize,
         pluginName: 'Caption-Button-Plugin'
       });
 
@@ -160,7 +166,7 @@ export class CaptionsPlugin extends ButtonPlugin {
       const radioGroup = new RadioGroup({
         selector: selector.trim(),
         controlName: 'Color',
-        defaultValue: 'default',
+        defaultValue: this.defaultColor,
         pluginName: 'Caption-Button-Plugin'
       });
 
@@ -196,7 +202,7 @@ export class CaptionsPlugin extends ButtonPlugin {
       const radioGroup = new RadioGroup({
         selector: selector.trim(),
         controlName: 'Alignment',
-        defaultValue: 'top',
+        defaultValue: this.defaultAlignment,
         pluginName: 'Caption-Button-Plugin'
       });
       if (radioGroup.length !== 2) {

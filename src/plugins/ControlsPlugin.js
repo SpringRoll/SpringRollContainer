@@ -15,7 +15,7 @@ export class ControlsPlugin extends BasePlugin {
    * @param {number} [params.defaultSensitivity=0.5]
    * @memberof ControlsPlugin
    */
-  constructor({ sensitivitySliders, defaultSensitivity = 0.5, keyContainers } = {}) {
+  constructor(sensitivitySliders, keyContainers, { defaultSensitivity = 0.5 } = {}) {
     super('Control-Button-Plugin');
 
     this.controlSensitivity = defaultSensitivity;
