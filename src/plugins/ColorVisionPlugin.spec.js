@@ -30,8 +30,7 @@ describe('ColorVisionPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'color-filter-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({
-      iframeSelector: '#color-filter-plugin-iframe',
+    new Container('#color-filter-plugin-iframe', {
       plugins: [cvp]
     });
     cvp.init();
@@ -81,8 +80,7 @@ describe('ColorVisionPlugin', () => {
     //set up empty plugin
     cvp = new ColorVisionPlugin();
     cvp.preload({ client: new Bellhop() });
-    new Container({
-      iframeSelector: '#color-filter-plugin-iframe',
+    new Container('#color-filter-plugin-iframe', {
       plugins: [cvp]
     });
     cvp.init();
