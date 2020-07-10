@@ -24,7 +24,7 @@ export class Container extends PluginManager {
    * @memberof Container
    */
   constructor(iframeSelector, { plugins } = {}) {
-    super({ plugins: plugins });
+    super({ plugins });
 
     this.iframe = document.querySelector(iframeSelector);
 
