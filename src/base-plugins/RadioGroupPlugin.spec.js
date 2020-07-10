@@ -41,7 +41,7 @@ describe('RadioGroupPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'radio-group-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#radio-group-plugin-iframe' }).client.trigger(
+    new Container('#radio-group-plugin-iframe').client.trigger(
       'features'
     );
 

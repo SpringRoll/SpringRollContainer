@@ -28,8 +28,7 @@ describe('HUDPlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'hud-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({
-      iframeSelector: '#hud-plugin-iframe',
+    new Container('#hud-plugin-iframe', {
       plugins: [hp]
     });
     hp.init();

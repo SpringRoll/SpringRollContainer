@@ -87,7 +87,7 @@ describe('SoundPlugin', () => {
     expect(sp.voButtons[1].button.style.display).to.equal('');
     expect(sp.voButtons[1].button.classList.contains('disabled')).to.be.false;
 
-    new Container({ iframeSelector: '#sound-plugin-iframe' }).client.trigger(
+    new Container('#sound-plugin-iframe').client.trigger(
       'features'
     );
   });
@@ -251,7 +251,7 @@ describe('SoundPlugin', () => {
     iframe.id = 'sound-plugin-iframe';
     document.body.appendChild(iframe);
 
-    new Container({ iframeSelector: '#sound-plugin-iframe' }).client.trigger(
+    new Container('#sound-plugin-iframe').client.trigger(
       'features'
     );
 

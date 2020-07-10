@@ -27,7 +27,7 @@ describe('ButtonSizePlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'buttonsize-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#buttonsize-plugin-iframe' }).client.trigger(
+    new Container('#buttonsize-plugin-iframe').client.trigger(
       'features'
     );
   });
@@ -86,7 +86,7 @@ describe('ButtonSizePlugin', () => {
     const iframe = document.createElement('iframe');
     iframe.id = 'buttonsize-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container({ iframeSelector: '#buttonsize-plugin-iframe' }).client.trigger(
+    new Container('#buttonsize-plugin-iframe').client.trigger(
       'features'
     );
 

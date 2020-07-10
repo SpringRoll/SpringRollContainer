@@ -26,9 +26,7 @@ describe('LayersPlugin', () => {
     iframe.id = 'layers-plugin-iframe';
     document.body.appendChild(iframe);
 
-    new Container({
-      iframeSelector: '#layers-plugin-iframe'
-    }).client.trigger('features');
+    new Container('#layers-plugin-iframe').client.trigger('features');
 
     expect(lsp.sliders[0].slider).to.be.instanceof(HTMLInputElement);
     expect(lsp.sliders[1].slider).to.be.instanceof(HTMLInputElement);
@@ -86,9 +84,7 @@ describe('LayersPlugin', () => {
     iframe.id = 'layers-plugin-iframe';
     document.body.appendChild(iframe);
 
-    new Container({
-      iframeSelector: '#layers-plugin-iframe'
-    }).client.trigger('features');
+    new Container('#layers-plugin-iframe').client.trigger('features');
 
     expect(lsp.sliders[0].slider).to.be.instanceof(HTMLInputElement);
     expect(lsp.sliders[0].value).to.equal('0');
