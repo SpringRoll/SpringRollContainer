@@ -1,56 +1,26 @@
-import { BasePlugin } from '../base-plugins';
-import { Slider } from '../ui-elements';
+import { SliderPlugin } from '../base-plugins';
 
 /**
  * @export
  * @class PointerSizePlugin
- * @extends {BasePlugin}
+ * @extends {SliderPlugin}
  *
  */
-export class PointerSizePlugin extends BasePlugin {
+export class PointerSizePlugin extends SliderPlugin {
   /**
    *Creates an instance of PointerSizePlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} [params.pointerSliders]
-   * @param {number} [params.defaultPointerSize=0.5]
+   * @param {object} options
+   * @param {string | HTMLElement} [pointerSliders]
+   * @param {number} [options.defaultPointerSize=0.5]
    * @memberof PointerSizePlugin
    */
   constructor(pointerSliders, { defaultPointerSize = 0.5 } = {}) {
-    super('UISize-Button-Plugin');
-    this.sendAllProperties = this.sendAllProperties.bind(this);
-    this.pointerSize = defaultPointerSize;
-    this.pointerSliders = [];
+    super(pointerSliders, 'UISize-Pointer-Plugin', { defaultValue: defaultPointerSize, featureName: PointerSizePlugin.pointerSizeKey });
 
-    if (pointerSliders instanceof HTMLElement) {
-      this.pointerSliders[0] = new Slider({
-        slider: pointerSliders,
-        control: PointerSizePlugin.pointerSizeKey,
-        defaultValue: this.pointerSize
-      });
-    } else {
-      document.querySelectorAll(pointerSliders).forEach((slider) => {
-        this.pointerSliders.push( new Slider({
-          slider: slider,
-          control: PointerSizePlugin.pointerSizeKey,
-          defaultValue: this.pointerSize
-        }));
-      });
+    for (let i = 0; i < this.slidersLength; i++) {
+      this.sliders[i].enableSliderEvents(this.onPointerSizeChange.bind(this));
     }
 
-    this.pointerSlidersLength = this.pointerSliders.length;
-
-    if (0 >= this.pointerSlidersLength) {
-      this.warn('Plugin was not provided any valid HTML Elements');
-      return;
-    }
-
-    if (this.pointerSliders[0].slider) {
-      this.pointerSize = this.pointerSliders[0].value;
-    }
-
-    for (let i = 0; i < this.pointerSlidersLength; i++) {
-      this.pointerSliders[i].enableSliderEvents(this.onPointerSizeChange.bind(this));
-    }
   }
 
   /**
@@ -58,14 +28,8 @@ export class PointerSizePlugin extends BasePlugin {
    * @param {Event} e
    */
   onPointerSizeChange(e) {
-    this.pointerSize = this.pointerSliders[0].sliderRange(
-      Number(e.target.value)
-    );
-    this.sendProperty(PointerSizePlugin.pointerSizeKey, this.pointerSize);
-
-    for (let i = 0; i < this.pointerSlidersLength; i++) {
-      this.pointerSliders[i].value = this.pointerSize;
-    }
+    this.currentValue = e.target.value;
+    this.sendProperty(PointerSizePlugin.pointerSizeKey, this.currentValue);
   }
 
   /**
@@ -79,20 +43,11 @@ export class PointerSizePlugin extends BasePlugin {
           return;
         }
 
-        for (let i = 0; i < this.pointerSlidersLength; i++) {
-          this.pointerSliders[i].displaySlider(features.data);
+        for (let i = 0; i < this.slidersLength; i++) {
+          this.sliders[i].displaySlider(features.data);
         }
       }.bind(this)
     );
-  }
-
-  /**
-   *
-   * Saves the current state of all volume properties, and then sends them to the game
-   * @memberof PointerSizePlugin
-   */
-  sendAllProperties() {
-    this.sendProperty(PointerSizePlugin.pointerSizeKey, this.pointerSize);
   }
 
   /**

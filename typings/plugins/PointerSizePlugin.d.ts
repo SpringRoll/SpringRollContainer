@@ -1,20 +1,14 @@
-import { BasePlugin } from '../base-plugins';
-import { Slider } from '../ui-elements';
+import { SliderPlugin } from '../base-plugins';
 
 type PointerSizePluginOptions = {
-  pointerSliders?:string,
   defaultPointerSize?: number,
 };
 
-export class PointerSizePlugin extends BasePlugin {
-  constructor(options: PointerSizePluginOptions)
-
-  pointerSize: number;
-
-  pointerSliders: Slider[];
-  pointerSlidersLength: number;
+export class PointerSizePlugin extends SliderPlugin {
+  constructor(pointerSliders?: string | HTMLElement, options: PointerSizePluginOptions)
 
   onPointerSizeChange(e: Event): void;
+  init(): void;
 
   get pointerSizeKey(): string;
 

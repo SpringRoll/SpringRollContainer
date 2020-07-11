@@ -33,33 +33,33 @@ describe('PointerSizePlugin', () => {
   });
 
   it('.onPointerSizeChange()', () => {
-    psp.pointerSliders[0].value = 1;
-    psp.pointerSliders[0].dispatchEvent(initEvent('change'));
+    psp.sliders[0].value = 1;
+    psp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(psp.pointerSliders[0].value).to.equal('1');
-    expect(psp.pointerSliders[1].value).to.equal('1');
-    expect(psp.pointerSize).to.equal(1);
+    expect(psp.sliders[0].value).to.equal('1');
+    expect(psp.sliders[1].value).to.equal('1');
+    expect(psp.currentValue).to.equal(1);
 
-    psp.pointerSliders[0].value = 0;
-    psp.pointerSliders[0].dispatchEvent(initEvent('change'));
+    psp.sliders[0].value = 0;
+    psp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(psp.pointerSliders[0].value).to.equal('0');
-    expect(psp.pointerSliders[1].value).to.equal('0');
-    expect(psp.pointerSize).to.equal(0);
+    expect(psp.sliders[0].value).to.equal('0');
+    expect(psp.sliders[1].value).to.equal('0');
+    expect(psp.currentValue).to.equal(0);
 
-    psp.pointerSliders[1].value = 1.1;
-    psp.pointerSliders[1].dispatchEvent(initEvent('change'));
+    psp.sliders[1].value = 1.1;
+    psp.sliders[1].dispatchEvent(initEvent('change'));
 
-    expect(psp.pointerSliders[0].value).to.equal('1');
-    expect(psp.pointerSliders[1].value).to.equal('1');
-    expect(psp.pointerSize).to.equal(1);
+    expect(psp.sliders[0].value).to.equal('1');
+    expect(psp.sliders[1].value).to.equal('1');
+    expect(psp.currentValue).to.equal(1);
 
-    psp.pointerSliders[1].value = -1;
-    psp.pointerSliders[1].dispatchEvent(initEvent('change'));
+    psp.sliders[1].value = -1;
+    psp.sliders[1].dispatchEvent(initEvent('change'));
 
-    expect(psp.pointerSliders[0].value).to.equal('0');
-    expect(psp.pointerSliders[1].value).to.equal('0');
-    expect(psp.pointerSize).to.equal(0);
+    expect(psp.sliders[0].value).to.equal('0');
+    expect(psp.sliders[1].value).to.equal('0');
+    expect(psp.currentValue).to.equal(0);
   });
 
   it('should work with HTML Elements as paramters', () => {
@@ -81,12 +81,12 @@ describe('PointerSizePlugin', () => {
     );
 
     //pointer sliders
-    expect(psp.pointerSliders[0].slider).to.be.instanceof(HTMLInputElement);
-    expect(psp.pointerSliders[0].value).to.equal('0.5');
+    expect(psp.sliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(psp.sliders[0].value).to.equal('0.5');
 
-    psp.pointerSliders[0].value = 1;
-    psp.pointerSliders[0].dispatchEvent(initEvent('change'));
+    psp.sliders[0].value = 1;
+    psp.sliders[0].dispatchEvent(initEvent('change'));
 
-    expect(psp.pointerSliders[0].value).to.equal('1');
+    expect(psp.sliders[0].value).to.equal('1');
   });
 });

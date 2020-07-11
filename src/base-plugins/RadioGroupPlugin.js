@@ -19,12 +19,13 @@ export class RadioGroupPlugin extends BasePlugin {
     super(name);
     this.selectors = cssSelector ? cssSelector.split(',') : [];
     this.supportedValues = supportedValues;
-    this.initialValue = initialValue;
+    this.initialValue = supportedValues.includes(initialValue) ? initialValue : supportedValues[0];
     this.controlName = controlName;
     this.featureName = featureName;
     this.radioCount = radioCount;
+    this.sendAllProperties = this.sendAllProperties.bind(this);
 
-    this._currentValue = initialValue ? initialValue : this.supportedValues[0];
+    this._currentValue = this.initialValue;
 
     this.radioGroups = this.setUpRadios(this.selectors);
 

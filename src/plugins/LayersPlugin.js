@@ -1,53 +1,21 @@
-import { Slider } from '../ui-elements';
-import { BasePlugin } from '../base-plugins';
+import { SliderPlugin } from '../base-plugins';
 
 /**
  * @export
  * @class LayersPlugin
  */
-export class LayersPlugin extends BasePlugin {
+export class LayersPlugin extends SliderPlugin {
   /**
    *
-   * @param {Object} param
-   * @param {string | HTMLInputElement} param.layersSlider the slider that represents the layers of the game
+   * @param {Object} options
+   * @param {number} [options.defaultValue=0]
+   * @param {string | HTMLInputElement} layersSliders selector string or HTML Element for the input(s)
    */
-  constructor({ layersSliders } = {}) {
-    super('layer-plugin');
-    this.sendAllProperties = this.sendAllProperties.bind(this);
-    this.layersSliders = [];
+  constructor(layersSliders, { defaultValue = 0 } = {}) {
+    super(layersSliders, 'Layer-Plugin', { defaultValue: defaultValue, featureName: LayersPlugin.layersSliderKey });
 
-    if (layersSliders instanceof HTMLElement) {
-      this.layersSliders[0] = new Slider({
-        slider: layersSliders,
-        control: LayersPlugin.layerValueKey,
-        defaultValue: 0
-      });
-    } else {
-      document.querySelectorAll(layersSliders).forEach((slider) => {
-        const newSlider = new Slider({
-          slider: slider,
-          control: LayersPlugin.layerValueKey,
-          defaultValue: 0
-        });
-        if (newSlider.slider) {
-          this.layersSliders.push(newSlider);
-        }
-      });
-    }
-
-    this.layersSlidersLength = this.layersSliders.length;
-
-    if (this.layersSlidersLength <= 0) {
-      this.warn('Plugin was not provided any valid input elements, or key binding containers');
-      return;
-    }
-
-    if (this.layersSliders[0].slider) {
-      this.layerValue = this.layersSliders[0].value;
-    }
-
-    for (let i = 0; i < this.layersSlidersLength; i++) {
-      this.layersSliders[i].enableSliderEvents(this.onLayerValueChange.bind(this));
+    for (let i = 0; i < this.slidersLength; i++) {
+      this.sliders[i].enableSliderEvents(this.onLayerValueChange.bind(this));
     }
   }
 
@@ -56,15 +24,8 @@ export class LayersPlugin extends BasePlugin {
    * @param {Event} e
    */
   onLayerValueChange(e) {
-    this.layerValue = this.layersSliders[0].sliderRange(
-      Number(e.target.value)
-    );
-
-    this.sendProperty(LayersPlugin.layerValueKey, this.layerValue);
-
-    for (let i = 0; i < this.layersSlidersLength; i++) {
-      this.layersSliders[i].value = this.layerValue;
-    }
+    this.currentValue = e.target.value;
+    this.sendProperty(LayersPlugin.layersSliderKey, this.currentValue);
   }
 
   /**
@@ -78,8 +39,8 @@ export class LayersPlugin extends BasePlugin {
           return;
         }
 
-        for (let i = 0; i < this.layersSlidersLength; i++) {
-          this.layersSliders[i].displaySlider(features.data);
+        for (let i = 0; i < this.slidersLength; i++) {
+          this.sliders[i].displaySlider(features.data);
         }
 
       }.bind(this)
@@ -87,20 +48,11 @@ export class LayersPlugin extends BasePlugin {
   }
 
   /**
-  *
-  * Sends initial layers properties to the application
-  * @memberof LayersPlugin
-  */
-  sendAllProperties() {
-    this.sendProperty(LayersPlugin.layerValueKey, this.layerValue);
-  }
-
-  /**
    * @readonly
    * @static
    * @memberof LayersPlugin
    */
-  static get layerValueKey() {
+  static get layersSliderKey() {
     return 'removableLayers';
   }
 }
