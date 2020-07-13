@@ -1,6 +1,6 @@
 import { BasePlugin } from '../base-plugins';
 import { Slider } from '../ui-elements';
-import { SavedData } from '..';
+import { SavedData } from '../SavedData';
 
 /**
  * @export

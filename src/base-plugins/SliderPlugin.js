@@ -1,4 +1,4 @@
-import { BasePlugin } from '.';
+import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements';
 
 /**
