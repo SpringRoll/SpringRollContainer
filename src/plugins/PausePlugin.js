@@ -1,5 +1,5 @@
 import { ButtonPlugin } from '../base-plugins';
-import { PageVisibility } from '..';
+import { PageVisibility } from '../PageVisibility';
 import { Button } from '../ui-elements';
 /**
  * @class Container

@@ -1,4 +1,4 @@
-import { SavedData } from '..';
+import { SavedData } from '../SavedData';
 import { ButtonPlugin } from '../base-plugins';
 import { Button, RadioGroup } from '../ui-elements';
 
