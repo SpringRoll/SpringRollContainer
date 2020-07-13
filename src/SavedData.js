@@ -24,6 +24,7 @@ export class SavedData {
    * @param {Boolean} [tempOnly=false] If the value should be saved only in the current browser session.
    */
   static write(name, value, tempOnly = false) {
+
     return tempOnly
       ? sessionStorage.setItem(
         name,

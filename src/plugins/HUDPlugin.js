@@ -103,7 +103,7 @@ export class HUDPlugin extends RadioGroupPlugin {
   * @memberof HUDPlugin
   */
   start() {
-    const data = SavedData.read(this.hudPositionKey);
+    const data = SavedData.read(HUDPlugin.hudPositionKey);
 
     if (SUPPORTED_POSITIONS.includes(data)) {
       this.currentValue = data;

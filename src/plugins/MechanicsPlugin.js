@@ -1,5 +1,6 @@
 import { BasePlugin } from '../base-plugins';
 import { Slider } from '../ui-elements';
+import { SavedData } from '..';
 
 /**
  * @export
@@ -164,6 +165,30 @@ export class MechanicsPlugin extends BasePlugin {
         }
       }.bind(this)
     );
+  }
+
+  /**
+  * @memberof ColorVisionPlugin
+  */
+  start() {
+    const data = {};
+    data[MechanicsPlugin.hitAreaScaleKey]= SavedData.read(MechanicsPlugin.hitAreaScaleKey);
+    data[MechanicsPlugin.dragThresholdScaleKey] = SavedData.read(MechanicsPlugin.dragThresholdScaleKey);
+    data[MechanicsPlugin.healthKey]= SavedData.read(MechanicsPlugin.healthKey);
+    data[MechanicsPlugin.objectCountKey]= SavedData.read(MechanicsPlugin.objectCountKey);
+    data[MechanicsPlugin.completionPercentageKey]= SavedData.read(MechanicsPlugin.completionPercentageKey);
+    data[MechanicsPlugin.speedScaleKey]= SavedData.read(MechanicsPlugin.speedScaleKey);
+    data[MechanicsPlugin.timersScaleKey]= SavedData.read(MechanicsPlugin.timersScaleKey);
+    data[MechanicsPlugin.inputCountKey]= SavedData.read(MechanicsPlugin.inputCountKey);
+
+    for (const key in data) {
+      this.values[key] = this.sliders[`${key}Sliders`][0].sliderRange(
+        Number(data[key])
+      );
+    }
+
+    this.client.on('loaded', this.sendAllProperties);
+    this.client.on('loadDone', this.sendAllProperties);
   }
 
   /**

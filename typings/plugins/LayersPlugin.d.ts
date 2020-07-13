@@ -1,18 +1,14 @@
-import { BasePlugin } from '../base-plugins';
-import { Slider } from '../ui-elements';
+import { SliderPlugin } from '../base-plugins';
 
 type LayersPluginOptions = {
-  layersSliders?: string | HTMLInputElement,
+  defaultValue?: number | string;
 };
 
-export class LayersPlugin extends BasePlugin {
-  constructor(options: LayersPluginOptions)
-
-  layersSliders: Slider[];
-  layersSlidersLength: number;
+export class LayersPlugin extends SliderPlugin {
+  constructor(layersSliders?: string| HTMLElement, options: LayersPluginOptions)
 
   onLayerValueChange(e: Event): void;
-  sendAllProperties(): void;
+  init(): void;
 
   get getLayerValueKey(): string;
 
