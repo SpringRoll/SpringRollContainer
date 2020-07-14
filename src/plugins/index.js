@@ -1,4 +1,5 @@
-export * from './CaptionsPlugin';
+export * from './CaptionsStylePlugin';
+export * from './CaptionsTogglePlugin';
 export * from './HelpPlugin';
 export * from './PausePlugin';
 export * from './SoundPlugin';

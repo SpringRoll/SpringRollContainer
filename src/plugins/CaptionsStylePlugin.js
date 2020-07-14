@@ -1,10 +1,9 @@
 import { SavedData } from '../SavedData';
 import { ButtonPlugin } from '../base-plugins';
-import { Button, RadioGroup } from '../ui-elements';
+import { RadioGroup } from '../ui-elements';
 
 // Private Variables
 const CAPTIONS_STYLES = 'captionsStyles';
-const CAPTIONS_MUTED = 'captionsMuted';
 const DEFAULT_CAPTIONS_STYLES = {
   size: 'medium',
   background: 'black',
@@ -22,31 +21,28 @@ const ALIGN_VALUES = ['top', 'bottom'];
 
 /**
  * @export
- * @class CaptionsPlugin
+ * @class CaptionsStylePlugin
  * @property {object} captionsStyles The collection of captions styles
  * @property {string[]} fontSizeSelectors selector strings for the radio button groups
  * @property {string[]} colorSelectors selector strings for the radio button groups
  * @property {string[]} alignmentSelectors selector strings for the radio button groups
- * @property {Button[]} _captionsButtons array of caption mute buttons
  * @property {Object[]} fontSizeRadios array that contains each radio group
  * @property {Object[]} colorRadios array that contains each radio group
  * @property {Object[]} alignmentRadios array that contains each radio group
- * @property {number} captionsButtonsLength
  * @property {number} fontSizeRadiosLength
  * @property {number} colorRadiosLength
  * @property {number} alignmentRadiosLength
  * @extends {ButtonPlugin}
  */
-export class CaptionsPlugin extends ButtonPlugin {
+export class CaptionsStylePlugin extends ButtonPlugin {
   /**
-   *Creates an instance of CaptionsPlugin.
-   * @param {string | HTMLElement} captionsButtons selector string for one or more captions mute buttons
+   *Creates an instance of CaptionsStylePlugin.
    * @param {string } fontSizeRadios selector string for one or more radio groups for caption font size
    * @param {string } colorRadios selector string for one or more radio groups for caption font/background colors
    * @param {string } alignmentRadios selector string for one or more radio groups for caption position
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
-  constructor(captionsButtons, fontSizeRadios, colorRadios, alignmentRadios,
+  constructor(fontSizeRadios, colorRadios, alignmentRadios,
     { defaultFontSize = 'medium', defaultColor = 'default', defaultAlignment = 'top' } = {}
   ) {
     super('Caption-Button-Plugin');
@@ -67,26 +63,9 @@ export class CaptionsPlugin extends ButtonPlugin {
     this.defaultColor = COLOR_VALUES.includes(defaultColor) ? defaultColor : COLOR_VALUES[0];
     this.defaultAlignment = ALIGN_VALUES.includes(defaultAlignment) ? defaultAlignment : ALIGN_VALUES[0];
 
-    this._captionsButtons = [];
     this.fontSizeRadios = [];
     this.colorRadios = [];
     this.alignmentRadios = [];
-
-    if ( captionsButtons instanceof HTMLElement ) {
-      this._captionsButtons[0] = new Button({
-        button: captionsButtons,
-        onClick: this.captionsButtonClick.bind(this),
-        channel: 'captions'
-      });
-    } else {
-      document.querySelectorAll(captionsButtons).forEach((button) => {
-        this._captionsButtons.push(new Button({
-          button: button,
-          onClick: this.captionsButtonClick.bind(this),
-          channel: 'captions'
-        }));
-      });
-    }
 
     this.fontSizeRadios = this.setUpFontSizeRadios(this.fontSizeSelectors);
     this.colorRadios = this.setUpColorRadios(this.colorSelectors);
@@ -94,14 +73,13 @@ export class CaptionsPlugin extends ButtonPlugin {
 
     this._captionsMuted = false;
 
-    this.captionsButtonLength = this._captionsButtons.length;
     this.alignmentRadiosLength = this.alignmentRadios.length;
     this.fontSizeRadiosLength = this.fontSizeRadios.length;
     this.colorRadiosLength = this.colorRadios.length;
 
-    if (0 >= (this.captionsButtonLength + this.alignmentRadiosLength + this.fontSizeRadiosLength + this.colorRadiosLength)) {
+    if (0 >= (this.alignmentRadiosLength + this.fontSizeRadiosLength + this.colorRadiosLength)) {
       this.warn(
-        'Plugin was not provided any valid button or input elements'
+        'Plugin was not provided any input elements'
       );
       return;
     }
@@ -119,7 +97,7 @@ export class CaptionsPlugin extends ButtonPlugin {
   }
 
   /**
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    * @param {string[]} selectors the separated selector strings used to target the radio button groups
    * @returns {RadioGroup[]}
    */
@@ -155,7 +133,7 @@ export class CaptionsPlugin extends ButtonPlugin {
   }
 
   /**
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    * @param {string[]} selectors the separated selector strings used to target the radio button groups
    * @returns {RadioGroup[]}
    */
@@ -191,7 +169,7 @@ export class CaptionsPlugin extends ButtonPlugin {
   }
 
   /**
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    * @param {string[]} selectors the separated selector strings used to target the radio button groups
    * @returns {RadioGroup[]}
    */
@@ -226,26 +204,17 @@ export class CaptionsPlugin extends ButtonPlugin {
   }
 
   /**
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   init() {
     // Handle the features request
     this.client.on(
       'features',
       function($event) {
-        for (let i = 0; i < this.captionsButtonLength; i ++) {
-          this._captionsButtons[i].displayButton($event.data);
-        }
 
         for (const radio of this.radios) {
           radio.displayRadios($event.data);
         }
-
-        if (null === SavedData.read(CAPTIONS_MUTED)) {
-          return;
-        }
-
-        this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
 
       }.bind(this)
     );
@@ -256,16 +225,11 @@ export class CaptionsPlugin extends ButtonPlugin {
         this.setCaptionsStyles($event.data || {});
       }.bind(this)
     );
-
-    for (let i = 0; i < this.captionsButtonLength; i ++) {
-      this._captionsButtons[i].enableButton();
-    }
   }
   /**
-  * @memberof CaptionsPlugin
+  * @memberof CaptionsStylePlugin
   */
   start() {
-    this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
     this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
 
     this.client.on('loaded', this.sendAllProperties);
@@ -275,28 +239,15 @@ export class CaptionsPlugin extends ButtonPlugin {
   /**
   *
   * Sends initial caption properties to the application
-  * @memberof CaptionsPlugin
+  * @memberof CaptionsStylePlugin
   */
   sendAllProperties() {
-    this.sendProperty(CAPTIONS_MUTED, this.captionsMuted);
     this.sendProperty(CAPTIONS_STYLES, this.captionsStyles);
   }
-
-  /**
-   * @memberof CaptionsPlugin
-   */
-  captionsButtonClick() {
-    this.captionsMuted = !this.captionsMuted;
-
-    for (let i = 0; i < this.captionsButtonLength; i ++) {
-      this._captionsButtons[i].button.classList.add(this.captionsMuted ? 'muted' : 'unmuted');
-    }
-  }
-
   /**
    * Fired whenever the font size radios are updated
    * @param {Event} e
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   onFontSizeChange(e) {
     this.setCaptionsStyles('size', e.target.value);
@@ -309,7 +260,7 @@ export class CaptionsPlugin extends ButtonPlugin {
   /**
    * Fired whenever the alignment radios are updated
    * @param {Event} e
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   onAlignmentChange(e) {
     this.setCaptionsStyles('align', e.target.value);
@@ -322,7 +273,7 @@ export class CaptionsPlugin extends ButtonPlugin {
   /**
    * Fired whenever the color radios are updated
    * @param {Event} e
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   onColorChange(e) {
     const styles = e.target.value === 'default' ? DEFAULT_COLOR_STYLE : INVERTED_COLOR_STYLE;
@@ -337,7 +288,7 @@ export class CaptionsPlugin extends ButtonPlugin {
   /**
    * Reset the captions styles
    * @param {Event} e
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   clearCaptionsStyles() {
     this.captionsStyles = Object.assign({}, DEFAULT_CAPTIONS_STYLES);
@@ -352,7 +303,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    * Get the captions styles
    * @param {string} [prop] The optional property, values are "size", "edge", "font", "background", "color"
    * @return {object | string} The collection of styles, see setCaptionsStyles for more info.
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   getCaptionsStyles(prop) {
     return prop ? this.captionsStyles[prop] : this.captionsStyles;
@@ -370,7 +321,7 @@ export class CaptionsPlugin extends ButtonPlugin {
    * @param {string} [styles.size='md'] The font style default is medium
    * @param {string} [styles.align='top'] The align style default is top of the window
    * @param {string} [value=''] If setting styles parameter as a string, this is the value of the property.
-   * @memberof CaptionsPlugin
+   * @memberof CaptionsStylePlugin
    */
   setCaptionsStyles(styles = DEFAULT_CAPTIONS_STYLES, value = '') {
     if (typeof styles === 'object') {
@@ -383,27 +334,6 @@ export class CaptionsPlugin extends ButtonPlugin {
     if (this.client) {
       this.client.send(CAPTIONS_STYLES, this.captionsStyles);
     }
-  }
-
-  /**
-   * @readonly
-   * @memberof CaptionsPlugin
-   */
-  get captionsMuted() {
-    return this._captionsMuted;
-  }
-
-  /**
-   * @param {boolean} muted
-   * @memberof CaptionsPlugin
-   */
-  set captionsMuted(muted) {
-    this._captionsMuted = muted;
-    this._setMuteProp(
-      'captionsMuted',
-      this.captionsButton,
-      this._captionsMuted
-    );
   }
 
   /**

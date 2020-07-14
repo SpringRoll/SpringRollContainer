@@ -1,5 +1,6 @@
 import './index';
-import './CaptionsPlugin.spec';
+import './CaptionsStylePlugin.spec';
+import './CaptionsTogglePlugin.spec';
 import './HelpPlugin.spec';
 import './PausePlugin.spec';
 import './Plugin.spec';
