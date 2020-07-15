@@ -331,7 +331,7 @@ const container = new springroll.Container('#game', {
 });
 container.openPath('game.html');
 ```
-*The color vision dropdown builds out the supported values dynamically based on what the application reports back and hides
+*The color vision radio group builds out the supported values dynamically based on what the application reports back and hides
 any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
 for more information on the request format.
 
