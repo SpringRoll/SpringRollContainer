@@ -1,4 +1,4 @@
-import { SavedData } from '..';
+import { SavedData } from '../SavedData';
 
 /**
  * @export

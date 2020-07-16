@@ -1,4 +1,4 @@
-import { SavedDataHandler } from '..';
+import { SavedDataHandler } from '../SavedDataHandler';
 import { BasePlugin } from '../base-plugins';
 
 /**

@@ -1,5 +1,6 @@
 import { Container, ControlsPlugin } from '../index';
 import { Bellhop } from 'bellhop-iframe';
+import { makeSlider } from '../../TestingUtils';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -12,13 +13,9 @@ describe('ControlsPlugin', () => {
 
   before(() => {
     document.body.innerHTML = '';
-    const sliderOne = document.createElement('input');
-    sliderOne.type = 'range';
-    sliderOne.id = 'ssOne';
+    const sliderOne = makeSlider('ssOne');
 
-    const sliderTwo = document.createElement('input');
-    sliderTwo.type = 'range';
-    sliderTwo.id = 'ssTwo';
+    const sliderTwo = makeSlider('ssTwo');
 
     const keyContainerOne = document.createElement('div');
     keyContainerOne.id = 'keyContainerOne';
@@ -30,10 +27,10 @@ describe('ControlsPlugin', () => {
     document.body.appendChild(keyContainerOne);
     document.body.appendChild(keyContainerTwo);
 
-    cp = new ControlsPlugin({
-      sensitivitySliders: '#ssOne, #ssTwo',
-      keyContainers: '#keyContainerOne, #keyContainerTwo'
-    });
+    cp = new ControlsPlugin(
+      '#ssOne, #ssTwo',
+      '#keyContainerOne, #keyContainerTwo'
+    );
     cp.preload({ client: new Bellhop() });
   });
 
@@ -121,9 +118,7 @@ describe('ControlsPlugin', () => {
   it('should work with an HTMLElement as parameters', () => {
     //Plugin re-setup
     document.body.innerHTML = '';
-    const sliderOne = document.createElement('input');
-    sliderOne.type = 'range';
-    sliderOne.id = 'ssOne';
+    const sliderOne = makeSlider('ssOne');
 
     const keyContainerOne = document.createElement('div');
     keyContainerOne.id = 'keyContainerOne';
@@ -131,10 +126,7 @@ describe('ControlsPlugin', () => {
     document.body.appendChild(sliderOne);
     document.body.appendChild(keyContainerOne);
 
-    cp = new ControlsPlugin({
-      sensitivitySliders: sliderOne,
-      keyContainers: keyContainerOne
-    });
+    cp = new ControlsPlugin(sliderOne,keyContainerOne);
     cp.preload({ client: new Bellhop() });
 
     const iframe = document.createElement('iframe');

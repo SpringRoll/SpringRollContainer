@@ -1,5 +1,5 @@
 import { RadioGroupPlugin } from '../base-plugins';
-import { SavedData } from '..';
+import { SavedData } from '../SavedData';
 
 const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];
 

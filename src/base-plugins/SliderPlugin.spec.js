@@ -20,9 +20,9 @@ describe('SliderPlugin', () => {
 
   it('construct', () => {
     const iframe = document.createElement('iframe');
-    iframe.id = 'radio-group-plugin-iframe';
+    iframe.id = 'slider-plugin-iframe';
     document.body.appendChild(iframe);
-    new Container('#radio-group-plugin-iframe').client.trigger(
+    new Container('#slider-plugin-iframe').client.trigger(
       'features'
     );
 

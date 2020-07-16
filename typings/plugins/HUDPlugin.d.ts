@@ -1,5 +1,4 @@
 import { RadioGroupPlugin } from '../base-plugins';
-import { SavedData } from '..';
 
 export const SUPPORTED_POSITIONS: string[];
 
@@ -10,7 +9,6 @@ type HUDPluginOptions = {
 export class HUDPlugin extends RadioGroupPlugin {
   constructor(hudSelectorRadios: string, options: HUDPluginOptions)
 
-  hudRadiosLength: number;
   sendAfterFetch: boolean;
   canEmit: boolean;
   positions: string[];
@@ -18,6 +16,7 @@ export class HUDPlugin extends RadioGroupPlugin {
   onHUDSelect(e: Event): void;
   init(): void;
   start(): void;
+  sendAllProperties(): void;
 
   sendAllProperties(): void;
   get hudPositionKey(): string;
