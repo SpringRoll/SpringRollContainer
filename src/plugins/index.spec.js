@@ -15,3 +15,8 @@ import './ColorVisionPlugin.spec';
 import './HitAreaScalePlugin.spec';
 import './DragThresholdScalePlugin.spec';
 import './HealthPlugin.spec';
+import './ObjectCountPlugin.spec';
+import './CompletionPercentagePlugin.spec';
+import './SpeedScalePlugin.spec';
+import './TimersScalePlugin.spec';
+import './InputCountPlugin.spec';

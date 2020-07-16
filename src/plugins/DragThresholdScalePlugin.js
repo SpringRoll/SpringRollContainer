@@ -10,7 +10,7 @@ export class DragThresholdScalePlugin extends SliderPlugin {
    *Creates an instance of DragThresholdScalePlugin.
    * @param {object} params
    * @param {string | HTMLElement} params.dragThresholdScaleSliders
-   * @param {number} [params.defaultHitAreaScale=0.5]
+   * @param {number} [params.defaultDragThresholdScale=0.5]
    * @memberof DragThresholdScalePlugin
    */
   constructor(dragThresholdScaleSliders, { defaultDragThresholdScale = 0.5 } = {}) {
