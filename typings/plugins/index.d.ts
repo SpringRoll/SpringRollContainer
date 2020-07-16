@@ -1,5 +1,3 @@
-export * from '../base-plugins/BasePlugin';
-export * from '../base-plugins/ButtonPlugin';
 export * from './CaptionsStylePlugin';
 export * from './CaptionsTogglePlugin';
 export * from './HelpPlugin';
@@ -10,5 +8,14 @@ export * from './PointerSizePlugin';
 export * from './ButtonSizePlugin';
 export * from './ControlsPlugin';
 export * from './LayersPlugin';
-export * from './MechanicsPlugin';
+export * from './HUDPlugin';
 export * from './ColorVisionPlugin';
+export * from './HitAreaScalePlugin';
+export * from './DragThresholdScalePlugin';
+export * from './HealthPlugin';
+export * from './ObjectCountPlugin';
+export * from './CompletionPercentagePlugin';
+export * from './SpeedScalePlugin';
+export * from './TimersScalePlugin';
+export * from './InputCountPlugin';
+
