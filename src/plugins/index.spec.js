@@ -11,5 +11,7 @@ import './ButtonSizePlugin.spec';
 import './ControlsPlugin.spec';
 import './LayersPlugin.spec';
 import './HUDPlugin.spec';
-import './MechanicsPlugin.spec';
 import './ColorVisionPlugin.spec';
+import './HitAreaScalePlugin.spec';
+import './DragThresholdScalePlugin.spec';
+import './HealthPlugin.spec';

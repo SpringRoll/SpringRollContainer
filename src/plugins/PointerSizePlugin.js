@@ -32,23 +32,6 @@ export class PointerSizePlugin extends SliderPlugin {
     this.sendProperty(PointerSizePlugin.pointerSizeKey, this.currentValue);
   }
 
-  /**
-   * @memberof PointerSizePlugin
-   */
-  init() {
-    this.client.on(
-      'features',
-      function(features) {
-        if (!features.data) {
-          return;
-        }
-
-        for (let i = 0; i < this.slidersLength; i++) {
-          this.sliders[i].displaySlider(features.data);
-        }
-      }.bind(this)
-    );
-  }
 
   /**
    * @readonly

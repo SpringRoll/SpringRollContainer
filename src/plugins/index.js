@@ -9,6 +9,8 @@ export * from './ButtonSizePlugin';
 export * from './ControlsPlugin';
 export * from './LayersPlugin';
 export * from './HUDPlugin';
-export * from './MechanicsPlugin';
 export * from './ColorVisionPlugin';
+export * from './HitAreaScalePlugin';
+export * from './DragThresholdScalePlugin';
+export * from './HealthPlugin';
 
