@@ -106,21 +106,19 @@ import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll
 
 const container = new springroll.Container('#game', {
   plugins: [
-    new CaptionsTogglePlugin({
-      captionsButtons: '#captions',
-    }),
-    new CaptionsStylePlugin({
+    new CaptionsTogglePlugin('#captions'),
+    new CaptionsStylePlugin(
       // expects exactly three(3) radio buttons with values "small", "medium", and "large" indicating caption font sizes.
-      fontSizeRadios: 'input[name=captions-font-size]',
+      'input[name=captions-font-size]',
 
       // expects exactly two(2) radio buttons with values "default" (black background, white text),
       // and "inverted" (black text, white background) for caption color schemes
-      colorRadios: 'input[name=captions-font-color]',
+      'input[name=captions-font-color]',
 
       // expects exactly two(2) radio buttons values "top" and "bottom".
       // Indicating that captions should be placed at the top or bottom of the screen.
-      alignmentRadios: 'input[name=captions-alignment]',
-    }),
+      'input[name=captions-alignment]',
+    ),
   ]
 });
 container.openPath('game.html');
