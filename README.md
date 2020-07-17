@@ -368,6 +368,59 @@ app.on('init', function() {
 
 Any JSON-serializable object can be set as a `playOption`.
 
+## SavedData
+The SavedData API is made up of three classes: SavedData, SavedDataHandler, and the UserDataPlugin.
+It allows the container (or the Springroll Application) to store key-value pairs in local or session storage. It is primarily
+used to store user data for use across the Springroll environment. Examples are listed below for each class.
+
+### SavedData
+The SavedData class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
+be used wherever necessary.
+
+```javascript
+import { SavedData } from 'springroll-container';
+
+//the last argument, tempOnly, is optional (defaults to false) and decides whether the value should be saved in session (temporary),
+//or local (not temporary) storage.
+const tempOnly = false;
+SavedData.write('user-value-key', 'user-value', tempOnly);
+
+//SavedData.read() checks localStorage first and then sessionStorage. If the key exists in both only the localStorage will be returned.
+let data = SavedData.read('user-value-key'); //data will be either the value in storage, if it exists, or null if it does not.
+
+SavedData.remove('user-value-key'); //removes the value from both local and session storage.
+```
+
+### SavedDataHandler
+The SavedDataHandle class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
+if you require a callback when reading or writing from `SavedData`. Like `SavedData` all of the methods are static.
+```javascript
+import { SavedDataHandler } from 'springroll-container';
+
+SavedDataHandler.write('user-value-name', 'value-to-be-stored', () => console.log('user-value-name written to storage'));
+
+SavedDataHandler.read('user-value-name', value => console.log('Returned value: ' + value));
+
+SavedDataHandler.remove('user-value-name', () => console.log('user-value-name removed from storage'));
+
+```
+We don't expect this handler to be used very often, but it is available if required.
+
+### UserDataPlugin
+This plugin allows the container to respond to requests from the Springroll Application's [User Data Class](https://github.com/SpringRoll/SpringRoll/tree/develop/src/state).
+It is included in the container constructor like any other plugin:
+```javascript
+import { UserDataPlugin, Container } from 'springroll-container';
+
+const container = new springroll.Container('#game', {
+  plugins: [
+    new UserDataPlugin(),
+  ]
+});
+container.openPath('game.html');
+```
+There is no configuration required for the UserDataPlugin as it just handles requests from the Application.
+
 ## Documentation
 
 [API Documentation](http://springroll.github.io/SpringRollContainer/) has full documentation for the Container.
