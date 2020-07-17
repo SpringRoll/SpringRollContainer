@@ -96,28 +96,29 @@ container.openPath('game.html');
 ```
 PausePlugin sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
-### CaptionsPlugin:
-The captions plugin allows users to show or hide captions, and control the size and placement of captions.
+### Captions:
+There are two plugins that interact with captions: CaptionsTogglePlugin, and CaptionsStylePlugin.
+CaptionsTogglePlugin allows the user to hide or show the captions in the game.
+CaptionsStylePlugin allows the user to control the size, placement, and color of the captions.
 
 ```javascript
-import { CaptionsPlugin, Container } from 'springroll-container';
+import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
 
 const container = new springroll.Container('#game', {
   plugins: [
-    new CaptionsPlugin({
-      captionsButtons: '#captions',
-
+    new CaptionsTogglePlugin('#captions'),
+    new CaptionsStylePlugin(
       // expects exactly three(3) radio buttons with values "small", "medium", and "large" indicating caption font sizes.
-      fontSizeRadios: 'input[name=captions-font-size]',
+      'input[name=captions-font-size]',
 
       // expects exactly two(2) radio buttons with values "default" (black background, white text),
       // and "inverted" (black text, white background) for caption color schemes
-      colorRadios: 'input[name=captions-font-color]',
+      'input[name=captions-font-color]',
 
       // expects exactly two(2) radio buttons values "top" and "bottom".
       // Indicating that captions should be placed at the top or bottom of the screen.
-      alignmentRadios: 'input[name=captions-alignment]',
-    })
+      'input[name=captions-alignment]',
+    ),
   ]
 });
 container.openPath('game.html');
@@ -180,43 +181,31 @@ container.openPath('game.html');
 ```
 SoundPlugin will set a class of `muted` or `unmuted` on each button as they are toggled
 
-### MechanicsPlugin:
-The mechanics plugin allows integrators to provide users the ability to control various mechanical aspects of the game (see the table below for details).
+### Mechanics:
+Mechanics are various aspects of the game that the determine how a user plays the game (see table below for details).
 Some games will support many of these features, some none at all. We doubt one game will use all of them though.
 
-Each controllable mechanic should be provided a [HTML range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range),
-and an optional default value. Each mechanic's value will range between 0 to 1, and the default initial value is aways 0.5.
+Each plugin is responsible for one of the listed mechanics and should be provided a
+[HTML range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range), and an optional default value.
+Each mechanic's value will range between 0 to 1, and the default initial value is aways 0.5.
 
 ```javascript
-import { MechanicsPlugin, Container } from 'springroll-container';
+import {
+  HitAreaScalePlugin, DragThresholdScalePlugin, HealtPlugin, ObjectCountPlugin,
+  CompletionPercentagePlugin, SpeedScalePlugin, TimersScalePlugin, InputCountPlugin,
+  Container
+  } from 'springroll-container';
 
 const container = new springroll.Container('#game', {
   plugins: [
-    new MechanicsPlugin({
-      hitAreaScaleSliders: '#hitAreaScaleSlider',
-      defaultHitAreaScale = 0.5,
-
-      dragThresholdScaleSliders: '#dragThresholdScaleSlider',
-      defaultDragThresholdScale = 0.5,
-
-      healthSliders: '#healthSlider',
-      defaultHealth = 0.5,
-
-      objectCountSliders: '#objectCountSlider',
-      defaultObjectCount = 0.5,
-
-      completionPercentageSliders: '#completionPercentageSlider',
-      defaultCompletionPercentage = 0.5,
-
-      speedScaleSliders: '#speedScaleSlider',
-      defaultSpeedScale = 0.5,
-
-      timersScaleSliders: '#timersScaleSlider',
-      defaultTimersScale = 0.5,
-
-      inputCountSliders: '#inputCountSlider',
-      defaultInputCount = 0.5,
-    }),
+      new HitAreaScalePlugin('#hitAreaScaleSlider', {defaultHitAreaScale = 0.5}),
+      new DragThresholdScalePlugin('#dragThresholdScaleSlider', {defaultDragThresholdScale = 0.5}),
+      new HealthPlugin('#healthSlider', {defaultHealth = 0.5}),
+      new ObjectCountPlugin('#objectCountSlider', {defaultObjectCount = 0.5}),
+      new CompletionPercentagePlugin('#completionPercentageSlider', {defaultCompletionPercentage = 0.5}),
+      new SpeedScalePlugin('#speedScaleSlider', {defaultSpeedScale = 0.5}),
+      new TimersScalePlugin('#timersScaleSlider', {defaultTimersScale = 0.5}),
+      new InputCountPlugin('#inputCountSlider', {defaultInputCount = 0.5}),
   ]
 });
 container.openPath('game.html');

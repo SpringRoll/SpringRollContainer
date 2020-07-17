@@ -1,4 +1,4 @@
-import { BasePlugin } from '.';
+import { BasePlugin } from './BasePlugin';
 import { Slider } from '../ui-elements';
 
 /**
@@ -32,7 +32,7 @@ export class SliderPlugin extends BasePlugin {
     this.slidersLength = this.sliders.length;
     this.sendAllProperties = this.sendAllProperties.bind(this);
 
-    if (0 >= this.buttonSlidersLength) {
+    if (0 >= this.slidersLength) {
       this.warn('Plugin was not provided any valid HTML Elements');
       return;
     }
@@ -67,6 +67,24 @@ export class SliderPlugin extends BasePlugin {
     }
 
     return sliders;
+  }
+
+  /**
+   * @memberof SliderPlugin
+   */
+  init() {
+    this.client.on(
+      'features',
+      function(features) {
+        if (!features.data) {
+          return;
+        }
+
+        for (let i = 0; i < this.slidersLength; i++) {
+          this.sliders[i].displaySlider(features.data);
+        }
+      }.bind(this)
+    );
   }
 
   /**

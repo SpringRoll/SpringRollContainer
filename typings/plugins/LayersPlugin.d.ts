@@ -10,6 +10,6 @@ export class LayersPlugin extends SliderPlugin {
   onLayerValueChange(e: Event): void;
   init(): void;
 
-  get getLayerValueKey(): string;
+  get LayerValueKey(): string;
 
 }

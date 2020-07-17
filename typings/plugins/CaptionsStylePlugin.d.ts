@@ -1,9 +1,8 @@
 
 import { ButtonPlugin } from '../base-plugins';
-import { Button, RadioGroup } from'../ui-elements';
+import { RadioGroup } from'../ui-elements';
 
 declare const CAPTIONS_STYLES: string;
-declare const CAPTIONS_MUTED: string;
 declare const DEFAULT_CAPTIONS_STYLES: object;
 
 type CaptionStyles = {
@@ -15,32 +14,44 @@ type CaptionStyles = {
   align: string
 };
 
-export class CaptionsPlugin extends ButtonPlugin {
-  constructor(captionsButtons: string | HTMLElement);
+type ColorStyleOptions = {
+  color: string,
+  background: string,
+};
+
+type CaptionsStylePluginOptions = {
+  defaultFontSize?: string,
+  defaultColor?: string,
+  defaultAlignment?: string
+}
+
+declare const DEFAULT_COLOR_STYLE: ColorStyleOptions;
+declare const INVERTED_COLOR_STYLE: ColorStyleOptions;
+declare const FONT_SIZE_VALUES: string[];
+declare const COLOR_VALUES: string[];
+declare const ALIGN_VALUES: string[];
+
+export class CaptionsStylePlugin extends ButtonPlugin {
+  constructor(fontSizeRadios: string, colorRadios: string, alignmentRadios: string, options: CaptionsStylePluginOptions);
   captionsStyle: CaptionStyles;
-  _captionsButtons: Button[];
   fontSizeSelectors: string[];
   colorSelectors: string[];
   alignmentSelectors: string[];
   fontSizeRadios: RadioGroup[];
   colorRadios: RadioGroup[];
   alignmentRadios: RadioGroup[];
-  _captionsMuted: boolean;
-  captionsButtonsLength: number;
   fontSizeRadiosLength: number;
   colorRadiosLength: number;
   alignmentRadiosLength: number;
-
-  get captionsMuted(): boolean;
-  set captionsMuted(muted: boolean);
-  get captionsButton(): HTMLButtonElement;
 
   setUpFontSizeRadios(selectors: string[]): RadioGroup[];
   setUpColorRadios(selectors: string[]): RadioGroup[];
   setUpAlignmentRadios(selectors: string[]): RadioGroup[];
 
+  init(): void;
+  start(): void;
+
   sendAllProperties(): void;
-  captionButtonClick():void;
   onFontSizeChange(e: Event): void;
   onColorChange(e: Event): void;
   onAlignmentChange(e: Event): void;

@@ -1,6 +1,6 @@
 import { BasePlugin } from '../base-plugins';
 import { Slider } from '../ui-elements';
-import { SavedData } from '..';
+import { SavedData } from '../SavedData';
 
 /**
  * @export
@@ -15,7 +15,7 @@ export class ControlsPlugin extends BasePlugin {
    * @param {number} [params.defaultSensitivity=0.5]
    * @memberof ControlsPlugin
    */
-  constructor({ sensitivitySliders, defaultSensitivity = 0.5, keyContainers } = {}) {
+  constructor(sensitivitySliders, keyContainers, { defaultSensitivity = 0.5 } = {}) {
     super('Control-Button-Plugin');
 
     this.controlSensitivity = defaultSensitivity;
