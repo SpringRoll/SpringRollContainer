@@ -310,7 +310,7 @@ container.openPath('game.html');
 ```
 *The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
-The HTML output within the key container will be, largely, standard and is shown below for reference:
+The HTML output within the key container will be look like the following:
 The className shown is the default, but can be overridden through the `customClassName` option. The IDs are generated based on the action name.
 
 ```html
