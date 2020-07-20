@@ -374,7 +374,7 @@ It allows the container (or the Springroll Application) to store key-value pairs
 used to store user data for use across the Springroll environment. Examples are listed below for each class.
 
 ### SavedData
-The SavedData class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
+The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
 be used wherever necessary.
 
 ```javascript
