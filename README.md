@@ -392,7 +392,7 @@ SavedData.remove('user-value-key'); //removes the value from both local and sess
 ```
 
 ### SavedDataHandler
-The SavedDataHandle class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
+The SavedDataHandler class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
 if you require a callback when reading or writing from `SavedData`. Like `SavedData` all of the methods are static.
 ```javascript
 import { SavedDataHandler } from 'springroll-container';
