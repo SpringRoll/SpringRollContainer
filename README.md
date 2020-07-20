@@ -180,7 +180,7 @@ const container = new springroll.Container('#game', {
 });
 container.openPath('game.html');
 ```
-SoundPlugin will set a class of `muted` or `unmuted` on each button as they are toggled
+`SoundPlugin` will set a class of `muted` or `unmuted` on each button as they are toggled
 
 ### Mechanics:
 Mechanics are various aspects of the game that the determine how a user plays the game (see table below for details).
