@@ -442,10 +442,6 @@ container.openPath('game.html');
 ```
 There is no configuration required for the UserDataPlugin as it just handles requests from the Application.
 
-## Documentation
-
-[API Documentation](http://springroll.github.io/SpringRollContainer/) has full documentation for the Container.
-
 ## License
 
 Copyright (c) 2018 [SpringRoll](http://github.com/SpringRoll)
