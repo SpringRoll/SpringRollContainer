@@ -94,12 +94,13 @@ const container = new springroll.Container("#game", {
 });
 container.openPath('game.html');
 ```
-PausePlugin sets a className of 'paused' or 'unpaused' on individual pause buttons.
+
+`PausePlugin` sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
 ### Captions:
-There are two plugins that interact with captions: CaptionsTogglePlugin, and CaptionsStylePlugin.
-CaptionsTogglePlugin allows the user to hide or show the captions in the game.
-CaptionsStylePlugin allows the user to control the size, placement, and color of the captions.
+There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `CaptionsStylePlugin`.
+`CaptionsTogglePlugin` allows the user to hide or show the captions in the game.
+`CaptionsStylePlugin` allows the user to control the size, placement, and color of the captions.
 
 ```javascript
 import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
