@@ -360,7 +360,7 @@ As long as the string you pass to the constructor is a valid selector string the
 
 *Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
-### Play Options
+## Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
 `playOptions`:
 
