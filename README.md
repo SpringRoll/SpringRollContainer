@@ -80,7 +80,7 @@ or an `HTMLElement`.
 
 Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
 If the container has a plugin enabled corresponding to a feature that the game doesn't contain, the container will automatically _hide the corresponding UI element_.
-For example, if the container has the `CaptionsPlugin` enabled with a corresponding button to toggle captions but the game doesn't actually _have_ captions, the container will hide the captions toggle button automatically.
+For example, if the container has the `CaptionsTogglePlugin` enabled with a corresponding button to toggle captions but the game doesn't actually _have_ captions, the container will hide the captions toggle button automatically.
 
 ### PausePlugin, HelpPlugin:
 ```javascript
