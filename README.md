@@ -389,8 +389,8 @@ app.on('init', function() {
 
 Any JSON-serializable object can be set as a `playOption`.
 
-## SavedData
-The SavedData API is made up of three classes: SavedData, SavedDataHandler, and the UserDataPlugin.
+## Saved Data API
+The SavedData API is made up of three classes: `SavedData`, `SavedDataHandler`, and the `UserDataPlugin`.
 It allows the container (or the Springroll Application) to store key-value pairs in local or session storage. It is primarily
 used to store user data for use across the Springroll environment. Examples are listed below for each class.
 
