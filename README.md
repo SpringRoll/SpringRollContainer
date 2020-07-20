@@ -407,7 +407,7 @@ SavedDataHandler.remove('user-value-name', () => console.log('user-value-name re
 We don't expect this handler to be used very often, but it is available if required.
 
 ### UserDataPlugin
-This plugin allows the container to respond to requests from the Springroll Application's [User Data Class](https://github.com/SpringRoll/SpringRoll/tree/develop/src/state).
+This plugin allows the container to respond to requests from the Springroll Application's [User Data Class](https://github.com/SpringRoll/SpringRoll/tree/master/src/state).
 It is included in the container constructor like any other plugin:
 ```javascript
 import { UserDataPlugin, Container } from 'springroll-container';
