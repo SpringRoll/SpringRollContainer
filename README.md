@@ -299,13 +299,29 @@ const container = new springroll.Container('#game', {
       defaultSensitivity: 0.5, //control sensitivity goes from 0.0 to 1.0. Default = 0.5
     }),
     //The KeyboardMapPlugin expects a div or similar container element as it's selector. It will automatically build out the
-    //buttons to use for re-mapping controls based on what the application returns.
-    new KeyboardMapPlugin('#key-container')
+    //buttons to use for re-mapping controls based on what the application returns. See note below for HTML structure.
+    new KeyboardMapPlugin('#key-container', {
+      //you can provide a custom classname that will be attached to each key button that is generated
+      customClassName: 'custom-button-class' //default='springrollContainerKeyBinding__button'.
+    })
   ]
 });
 container.openPath('game.html');
 ```
 *The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+
+The HTML output within the key container will be, largely, standard and is shown below for reference:
+The className shown is the default, but can be overwritten through the `customClassName` option. The IDs are generated based on the action name.
+
+```html
+<div id="keyContainer">
+  <label for="keyBoardMapPlugin-Up">Up</label>
+  <button class="springrollContainerKeyBinding__button" value="Up" id="keyBoardMapPlugin-Up">w</button>
+  <label for="keyBoardMapPlugin-Down">Down</label>
+  <button class="springrollContainerKeyBinding__button" value="Down"id="keyBoardMapPlugin-Down">s</button>
+</div>
+```
+
 
 Keybindings are tracked visually by setting the textContent of the buttons themselves.
 

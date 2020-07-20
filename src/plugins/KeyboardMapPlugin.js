@@ -10,15 +10,19 @@ export class KeyboardMapPlugin extends BasePlugin {
   /**
    *Creates an instance of KeyboardMapPlugin.
    * @param {string | HTMLElement} keyContainers //div or similar container element that will contain the remappable keys
+   * @param {object} [options]
+   * @param {string} [options.customClassName='springrollContainerKeyBinding__button']
    * @memberof KeyboardMapPlugin
    */
-  constructor(keyContainers) {
+  constructor(keyContainers, {customClassName = 'springrollContainerKeyBinding__button'} = {}) {
     super('Keyboard-Map-Plugin');
 
     this.sendAllProperties = this.sendAllProperties.bind(this);
     //Allows for removing and readding event listeners
     this.bindKey = this.bindKey.bind(this);
     this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
+
+    this.className = customClassName;
 
     this.keyContainers =
       keyContainers instanceof HTMLElement
@@ -130,13 +134,15 @@ export class KeyboardMapPlugin extends BasePlugin {
                 };
               }
 
-              this.buttons[j][i] =  document.createElement('button');
-              this.buttons[j][i].classList.add('key-binding__button');
+              this.buttons[j][i] = document.createElement('button');
+              this.buttons[j][i].classList.add(this.customClassName);
+              this.buttons[j][i].id = `keyBoardMapPlugin-${result.data[i].actionName}`;
               this.buttons[j][i].value = result.data[i].actionName;
               this.buttons[j][i].textContent = result.data[i].defaultKey;
               this.buttons[j][i].addEventListener('click', this.onKeyButtonClick);
 
               this.label = document.createElement('label');
+              this.label.htmlFor = `keyBoardMapPlugin-${result.data[i].actionName}`;
               this.label.textContent = result.data[i].actionName;
 
               this.keyContainers[j].appendChild(this.label);
