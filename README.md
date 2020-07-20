@@ -284,24 +284,44 @@ radio buttons so only the valid ones are displayed to users.
 See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on
 the request format and how game developers provide those values.
 
-### ControlsPlugin
+### Controls
+There are two plugins associated with in-game controls: `ControlSensitivityPlugin` and `KeyboardMapPlugin`.
+The Control Sensitivity Plugin allows the user to determine the sensitivity of custom pointers in game. This plugin expects an HTML Input
+The Keyboard Map Plugin allows users to re-map the keys/controls used in-game to something they are more comfortable with.
+
 ```javascript
-import { ControlsPlugin, Container } from 'springroll-container';
+import { ControlSensitivityPlugin, KeyboardMapPlugin, Container } from 'springroll-container';
 
 const container = new springroll.Container('#game', {
   plugins: [
-    //ControlsPlugin also accepts an [optional] initial value for its control sensitivity
-    new ControlsPlugin({
-      //Expects an HTML Input Element of type="range"
-      sensitivitySliders: '#sensitivity-slider-selector',
+    //ControlSensitivityPlugin expects an input of type=range for it's input.
+    new ControlSensitivityPlugin('#sensitivity-slider-selector', {
       defaultSensitivity: 0.5, //control sensitivity goes from 0.0 to 1.0. Default = 0.5
-      keyContainers: '#key-container', // container element that will contain the mappable key buttons.
     }),
+    //The KeyboardMapPlugin expects a div or similar container element as it's selector. It will automatically build out the
+    //buttons to use for re-mapping controls based on what the application returns. See note below for HTML structure.
+    new KeyboardMapPlugin('#key-container', {
+      //you can provide a custom classname that will be attached to each key button that is generated
+      customClassName: 'custom-button-class' //default='springrollContainerKeyBinding__button'.
+    })
   ]
 });
 container.openPath('game.html');
 ```
-*The Key Binding functionality of the ControlsPlugin works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+*The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+
+The HTML output within the key container will be look like the following:
+The className shown is the default, but can be overridden through the `customClassName` option. The IDs are generated based on the action name.
+
+```html
+<div id="keyContainer">
+  <label for="keyBoardMapPlugin-Up">Up</label>
+  <button class="springrollContainerKeyBinding__button" value="Up" id="keyBoardMapPlugin-Up">w</button>
+  <label for="keyBoardMapPlugin-Down">Down</label>
+  <button class="springrollContainerKeyBinding__button" value="Down"id="keyBoardMapPlugin-Down">s</button>
+</div>
+```
+
 
 Keybindings are tracked visually by setting the textContent of the buttons themselves.
 

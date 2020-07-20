@@ -1,26 +1,29 @@
 import { BasePlugin } from '../base-plugins';
-import { Slider } from '../ui-elements';
 import { SavedData } from '../SavedData';
 
 /**
  * @export
- * @class ControlsPlugin
+ * @class KeyboardMapPlugin
  * @extends {BasePlugin}
  */
-export class ControlsPlugin extends BasePlugin {
+export class KeyboardMapPlugin extends BasePlugin {
   /**
-   *Creates an instance of ControlsPlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.sensitivitySlider
-   * @param {number} [params.defaultSensitivity=0.5]
-   * @memberof ControlsPlugin
+   *Creates an instance of KeyboardMapPlugin.
+   * @param {string | HTMLElement} keyContainers //div or similar container element that will contain the remappable keys
+   * @param {object} [options]
+   * @param {string} [options.customClassName='springrollContainerKeyBinding__button']
+   * @memberof KeyboardMapPlugin
    */
-  constructor(sensitivitySliders, keyContainers, { defaultSensitivity = 0.5 } = {}) {
-    super('Control-Button-Plugin');
+  constructor(keyContainers, {customClassName = 'springrollContainerKeyBinding__button'} = {}) {
+    super('Keyboard-Map-Plugin');
 
-    this.controlSensitivity = defaultSensitivity;
-    this.sensitivitySliders = [];
     this.sendAllProperties = this.sendAllProperties.bind(this);
+    //Allows for removing and readding event listeners
+    this.bindKey = this.bindKey.bind(this);
+    this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
+
+    this.className = customClassName;
+
     this.keyContainers =
       keyContainers instanceof HTMLElement
         ? [keyContainers]
@@ -33,68 +36,16 @@ export class ControlsPlugin extends BasePlugin {
     this.sendAfterFetch = false;
     this.canEmit = false;
 
-    if (sensitivitySliders instanceof HTMLElement) {
-      this.sensitivitySliders[0] = new Slider({
-        slider: sensitivitySliders,
-        control: ControlsPlugin.controlSensitivityKey,
-        defaultValue: this.controlSensitivity
-      });
-    } else {
-      document.querySelectorAll(sensitivitySliders).forEach((slider) => {
-        const newSlider = new Slider({
-          slider: slider,
-          control: ControlsPlugin.controlSensitivityKey,
-          defaultValue: this.controlSensitivity
-        });
-        if (newSlider.slider) {
-          this.sensitivitySliders.push(newSlider);
-        }
-      });
-    }
-
-    this.sensitivitySlidersLength = this.sensitivitySliders.length;
     this.keyContainersLength = this.keyContainers.length;
 
-    //Allows for removing and readding event listeners
-    this.bindKey = this.bindKey.bind(this);
-    this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
-
-    if (this.sensitivitySlidersLength <= 0 && this.keyContainersLength <= 0) {
-      this.warn('SpringRollContainer: ControlsPlugin was not provided any valid input elements, or key binding containers');
+    if (this.keyContainersLength <= 0) {
+      this.warn('plugin was not provided any valid key binding container elements');
       return;
     }
-    if (this.sensitivitySliders[0].slider) {
-      this.controlSensitivity = this.sensitivitySliders[0].value;
-    }
-    for (let i = 0; i < this.sensitivitySlidersLength; i++) {
-      this.sensitivitySliders[i].enableSliderEvents(
-        this.onControlSensitivityChange.bind(this)
-      );
-    }
   }
 
   /**
-   * @memberof ControlsPlugin
-   * @param {Event} e
-   * Sets the new controlSensitivity value, and replicates that value across the other sliders
-   */
-  onControlSensitivityChange(e) {
-    this.controlSensitivity = this.sensitivitySliders[0].sliderRange(
-      Number(e.target.value)
-    );
-
-    this.sendProperty(
-      ControlsPlugin.controlSensitivityKey,
-      this.controlSensitivity
-    );
-
-    for (let i = 0; i < this.sensitivitySlidersLength; i++) {
-      this.sensitivitySliders[i].value = this.controlSensitivity;
-    }
-  }
-
-  /**
-   * @memberof ControlsPlugin
+   * @memberof KeyboardMapPlugin
    * @param {MouseEvent} e
    * Sets up a rebinding of a key once a key button is clicked.
    */
@@ -111,7 +62,7 @@ export class ControlsPlugin extends BasePlugin {
   }
 
   /**
-   * @memberof ControlsPlugin
+   * @memberof KeyboardMapPlugin
    * @param {KeyboardEvent} key
    * Actually updates the key binding and sends the value. Also
    * replicates the new key across the other keycontainers
@@ -144,11 +95,11 @@ export class ControlsPlugin extends BasePlugin {
       }
     }
 
-    this.sendProperty(ControlsPlugin.keyBindingKey, this.keyBindings);
+    this.sendProperty(KeyboardMapPlugin.keyBindingKey, this.keyBindings);
   }
 
   /**
-   * @memberof ControlsPlugin
+   * @memberof KeyboardMapPlugin
    */
   init() {
     this.client.on(
@@ -157,15 +108,12 @@ export class ControlsPlugin extends BasePlugin {
         if (!features.data) {
           return;
         }
-        for (let i = 0; i < this.sensitivitySlidersLength; i++) {
-          this.sensitivitySliders[i].displaySlider(features.data);
-        }
 
         if (!features.data.keyBinding) {
           return;
         }
 
-        const data = SavedData.read(ControlsPlugin.keyBindingKey);
+        const data = SavedData.read(KeyboardMapPlugin.keyBindingKey);
 
         this.client.fetch('keyBindings', result => {
           for (let j = 0; j < this.keyContainersLength; j++) {
@@ -186,13 +134,15 @@ export class ControlsPlugin extends BasePlugin {
                 };
               }
 
-              this.buttons[j][i] =  document.createElement('button');
-              this.buttons[j][i].classList.add('key-binding__button');
+              this.buttons[j][i] = document.createElement('button');
+              this.buttons[j][i].classList.add(this.customClassName);
+              this.buttons[j][i].id = `keyBoardMapPlugin-${result.data[i].actionName}`;
               this.buttons[j][i].value = result.data[i].actionName;
               this.buttons[j][i].textContent = result.data[i].defaultKey;
               this.buttons[j][i].addEventListener('click', this.onKeyButtonClick);
 
               this.label = document.createElement('label');
+              this.label.htmlFor = `keyBoardMapPlugin-${result.data[i].actionName}`;
               this.label.textContent = result.data[i].actionName;
 
               this.keyContainers[j].appendChild(this.label);
@@ -212,12 +162,11 @@ export class ControlsPlugin extends BasePlugin {
   /**
 *
 * Sends initial caption properties to the application
-* @memberof ControlsPlugin
+* @memberof KeyboardMapPlugin
 */
   sendAllProperties() {
     if (this.canEmit) {
-      this.sendProperty(ControlsPlugin.controlSensitivityKey, this.controlSensitivity);
-      this.sendProperty(ControlsPlugin.keyBindingKey, this.keyBindings);
+      this.sendProperty(KeyboardMapPlugin.keyBindingKey, this.keyBindings);
     } else {
       this.sendAfterFetch = true;
     }
@@ -226,16 +175,7 @@ export class ControlsPlugin extends BasePlugin {
   /**
    * @readonly
    * @static
-   * @memberof ControlsPlugin
-   */
-  static get controlSensitivityKey() {
-    return 'controlSensitivity';
-  }
-
-  /**
-   * @readonly
-   * @static
-   * @memberof ControlsPlugin
+   * @memberof KeyboardMapPlugin
    */
   static get keyBindingKey() {
     return 'keyBinding';

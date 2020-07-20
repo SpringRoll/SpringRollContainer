@@ -3,6 +3,7 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class LayersPlugin
+ * @extends {SliderPlugin}
  */
 export class LayersPlugin extends SliderPlugin {
   /**
