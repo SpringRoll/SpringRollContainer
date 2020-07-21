@@ -80,7 +80,7 @@ or an `HTMLElement`.
 
 Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
 If the container has a plugin enabled corresponding to a feature that the game doesn't contain, the container will automatically _hide the corresponding UI element_.
-For example, if the container has the `CaptionsPlugin` enabled with a corresponding button to toggle captions but the game doesn't actually _have_ captions, the container will hide the captions toggle button automatically.
+For example, if the container has the `CaptionsTogglePlugin` enabled with a corresponding button to toggle captions but the game doesn't actually _have_ captions, the container will hide the captions toggle button automatically.
 
 ### PausePlugin, HelpPlugin:
 ```javascript
@@ -94,12 +94,13 @@ const container = new springroll.Container("#game", {
 });
 container.openPath('game.html');
 ```
-PausePlugin sets a className of 'paused' or 'unpaused' on individual pause buttons.
+
+`PausePlugin` sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
 ### Captions:
-There are two plugins that interact with captions: CaptionsTogglePlugin, and CaptionsStylePlugin.
-CaptionsTogglePlugin allows the user to hide or show the captions in the game.
-CaptionsStylePlugin allows the user to control the size, placement, and color of the captions.
+There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `CaptionsStylePlugin`.
+`CaptionsTogglePlugin` allows the user to hide or show the captions in the game.
+`CaptionsStylePlugin` allows the user to control the size, placement, and color of the captions.
 
 ```javascript
 import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
@@ -179,10 +180,10 @@ const container = new springroll.Container('#game', {
 });
 container.openPath('game.html');
 ```
-SoundPlugin will set a class of `muted` or `unmuted` on each button as they are toggled
+`SoundPlugin` will set a class of `muted` or `unmuted` on each button as they are toggled
 
 ### Mechanics:
-Mechanics are various aspects of the game that the determine how a user plays the game (see table below for details).
+Mechanics are various configurable aspects of the game that can determine how a user plays the game (see table below for details).
 Some games will support many of these features, some none at all. We doubt one game will use all of them though.
 
 Each plugin is responsible for one of the listed mechanics and should be provided a
@@ -277,7 +278,7 @@ const container = new springroll.Container('#game', {
 container.openPath('game.html');
 ```
 
-The HUDPlugin requests the supported positions directly from the game itself and builds out an internal list of positions dynamically,
+The HUD Plugin requests the supported positions directly from the game itself and builds out an internal list of positions dynamically,
 e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will hide the "left" and "right"
 radio buttons so only the valid ones are displayed to users.
 
@@ -310,7 +311,7 @@ container.openPath('game.html');
 ```
 *The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
-The HTML output within the key container will be look like the following:
+The HTML output within the key container will look like the following:
 The className shown is the default, but can be overridden through the `customClassName` option. The IDs are generated based on the action name.
 
 ```html
@@ -359,7 +360,7 @@ As long as the string you pass to the constructor is a valid selector string the
 
 *Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
-### Play Options
+## Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
 `playOptions`:
 
@@ -388,8 +389,8 @@ app.on('init', function() {
 
 Any JSON-serializable object can be set as a `playOption`.
 
-## SavedData
-The SavedData API is made up of three classes: SavedData, SavedDataHandler, and the UserDataPlugin.
+## Saved Data API
+The SavedData API is made up of three classes: `SavedData`, `SavedDataHandler`, and the `UserDataPlugin`.
 It allows the container (or the Springroll Application) to store key-value pairs in local or session storage. It is primarily
 used to store user data for use across the Springroll environment. Examples are listed below for each class.
 
@@ -441,12 +442,8 @@ container.openPath('game.html');
 ```
 There is no configuration required for the UserDataPlugin as it just handles requests from the Application.
 
-## Documentation
-
-[API Documentation](http://springroll.github.io/SpringRollContainer/) has full documentation for the Container.
-
 ## License
 
-Copyright (c) 2018 [SpringRoll](http://github.com/SpringRoll)
+Copyright (c) 2020 [SpringRoll](http://github.com/SpringRoll)
 
 Released under the MIT License.
