@@ -2,3 +2,9 @@ components
 node_modules
 docs
 .grunt
+.env
+e2e/client.js
+local.log
+.DS_Store
+index.html
+frame.html

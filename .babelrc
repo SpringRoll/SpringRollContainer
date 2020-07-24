@@ -1,0 +1,18 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "useBuiltIns": "usage",
+        "corejs": 2,
+        "targets": {
+          "android": "5",
+          "ios": "10",
+          "edge": "16",
+          "firefox": "68",
+          "chrome": "75"
+        }
+      }
+    ]
+  ]
+}
