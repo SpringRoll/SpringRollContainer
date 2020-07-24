@@ -12,14 +12,14 @@ export class SoundPlugin extends ButtonPlugin {
   /**
    *Creates an instance of SoundPlugin.
    * @param {object} params
-   * @param {string | HTMLElement} [params.soundButton]
-   * @param {string | HTMLElement} [params.musicButton]
-   * @param {string | HTMLElement} [params.voButton]
-   * @param {string | HTMLElement} [params.sfxButton]
-   * @param {string | HTMLElement} [params.soundSlider]
-   * @param {string | HTMLElement} [params.musicSlider]
-   * @param {string | HTMLElement} [params.sfxSlider]
-   * @param {string | HTMLElement} [params.voSlider]
+   * @param {string | HTMLElement} [params.soundButtons]
+   * @param {string | HTMLElement} [params.musicButtons]
+   * @param {string | HTMLElement} [params.voButtons]
+   * @param {string | HTMLElement} [params.sfxButtons]
+   * @param {string | HTMLElement} [params.soundSliders]
+   * @param {string | HTMLElement} [params.musicSliders]
+   * @param {string | HTMLElement} [params.sfxSliders]
+   * @param {string | HTMLElement} [params.voSliders]
    * @memberof SoundPlugin
    */
   constructor({

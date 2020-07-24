@@ -1,17 +1,29 @@
 import {
-  CaptionsPlugin,
+  CaptionsTogglePlugin,
+  CaptionsStylePlugin,
   Container,
+  ControlSensitivityPlugin,
   HelpPlugin,
   PausePlugin,
   SoundPlugin,
   UserDataPlugin,
-  ControlsPlugin,
-  UISizePlugin,
+  PointerSizePlugin,
+  ButtonSizePlugin,
   LayersPlugin,
   HUDPlugin,
-  MechanicsPlugin,
+  HitAreaScalePlugin,
+  DragThresholdScalePlugin,
+  HealthPlugin,
+  ObjectCountPlugin,
+  CompletionPercentagePlugin,
+  SpeedScalePlugin,
+  TimersScalePlugin,
+  InputCountPlugin,
   ColorVisionPlugin,
+  KeyboardMapPlugin,
 } from '../src';
+
+import { makeRadio, makeSlider, makeButton } from '../TestingUtils';
 
 const initEvent = eventName => {
   const event = document.createEvent('Event');
@@ -21,173 +33,167 @@ const initEvent = eventName => {
 
 describe('End to End Test', () => {
   let container;
-  const voButton = document.createElement('button');
-  const helpButton = document.createElement('button');
-  const captionsButton = document.createElement('button');
-  const musicButton = document.createElement('button');
-  const pauseButton = document.createElement('button');
-  const sfxButton = document.createElement('button');
-  const soundButton = document.createElement('button');
-  const hudButton = document.createElement('button');
+  const soundButton = makeButton('soundButton');
+  const voButton = makeButton('voButton');
+  const helpButton = makeButton('helpButton');
+  const sfxButton = makeButton('sfxButton');
+  const musicButton = makeButton('musicButton');
+  const captionsButton = makeButton('captionsButton');
+  const pauseButton = makeButton('pauseButton');
 
-  const soundSlider = document.createElement('input');
-  const voSlider = document.createElement('input');
-  const sfxSlider = document.createElement('input');
-  const musicSlider = document.createElement('input');
+  const soundSlider = makeSlider('soundSlider');
+  const voSlider = makeSlider('voSlider');
+  const sfxSlider = makeSlider('sfxSlider');
+  const musicSlider = makeSlider('musicSlider');
 
-  const sensitivitySlider = document.createElement('input');
-  const pointerSlider = document.createElement('input');
-  const buttonSlider = document.createElement('input');
-  const layersSlider = document.createElement('input');
+  const sensitivitySlider = makeSlider('sensitivitySlider');
+  const pointerSlider = makeSlider('pointerSlider');
+  const buttonSlider = makeSlider('buttonSlider');
+  const layersSlider = makeSlider('layersSlider');
 
-  const hitAreaScaleSlider = document.createElement('input');
-  const dragThresholdScaleSlider = document.createElement('input');
-  const healthSlider = document.createElement('input');
-  const objectCountSlider = document.createElement('input');
-  const completionPercentageSlider = document.createElement('input');
-  const speedScaleSlider = document.createElement('input');
-  const timersScaleSlider = document.createElement('input');
-  const inputCountSlider = document.createElement('input');
+  const hitAreaScaleSlider = makeSlider('hitAreaScaleSlider');
+  const dragThresholdScaleSlider = makeSlider('dragThresholdScaleSlider');
+  const healthSlider = makeSlider('healthSlider');
+  const objectCountSlider = makeSlider('objectCountSlider');
+  const completionPercentageSlider = makeSlider('completionPercentageSlider');
+  const speedScaleSlider = makeSlider('speedScaleSlider');
+  const timersScaleSlider = makeSlider('timersScaleSlider');
+  const inputCountSlider = makeSlider('inputCountSlider');
 
-  const colorSelect = document.createElement('select');
+  const colorRadioOne = makeRadio('caption-color', 'default');
+  const colorRadioTwo = makeRadio('caption-color', 'inverted');
+  const alignRadioOne = makeRadio('caption-align', 'top');
+  const alignRadioTwo = makeRadio('caption-align', 'bottom');
+  const fontSizeRadioOne = makeRadio('caption-fontSize', 'small');
+  const fontSizeRadioTwo = makeRadio('caption-fontSize', 'medium');
+  const fontSizeRadioThree = makeRadio('caption-fontSize', 'large');
+
+  const deuteranopia = makeRadio('color-vision-one', 'deuteranopia');
+  const tritanopia = makeRadio('color-vision-one', 'tritanopia');
+  const protanopia = makeRadio('color-vision-one', 'protanopia');
+  const achromatopsia = makeRadio('color-vision-one', 'achromatopsia');
+  const none = makeRadio('color-vision-one', 'none');
+
+  const topOne = makeRadio('hud-position-one', 'top');
+  const bottomOne = makeRadio('hud-position-one', 'bottom');
+  const rightOne = makeRadio('hud-position-one', 'right');
+  const leftOne = makeRadio('hud-position-one', 'left');
+
   const keyContainer = document.createElement('div');
+  keyContainer.id = 'keyContainer';
+
+  let keyboardMapPlugin;
 
   before(() => {
-    voButton.id = 'voButton';
-    helpButton.id = 'helpButton';
-    captionsButton.id = 'captionsButton';
-    musicButton.id = 'musicButton';
-    pauseButton.id = 'pauseButton';
-    sfxButton.id = 'sfxButton';
-    soundButton.id = 'soundButton';
-    hudButton.id = 'hudButton';
 
-    soundSlider.id = 'soundSlider';
-    soundSlider.type = 'range';
-    voSlider.id = 'voSlider';
-    voSlider.type = 'range';
-    sfxSlider.id = 'sfxSlider';
-    sfxSlider.type = 'range';
-    musicSlider.id = 'musicSlider';
-    musicSlider.type = 'range';
+    document.body.append(
+      voButton,
+      helpButton,
+      captionsButton,
+      musicButton,
+      pauseButton,
+      sfxButton,
+      soundButton,
+      soundSlider,
+      voSlider,
+      musicSlider,
+      sfxSlider,
+      sensitivitySlider,
+      pointerSlider,
+      buttonSlider,
+      layersSlider,
+      hitAreaScaleSlider,
+      dragThresholdScaleSlider,
+      healthSlider,
+      objectCountSlider,
+      completionPercentageSlider,
+      speedScaleSlider,
+      timersScaleSlider,
+      inputCountSlider,
+      keyContainer,
+      colorRadioOne,
+      colorRadioTwo,
+      alignRadioOne,
+      alignRadioTwo,
+      fontSizeRadioOne,
+      fontSizeRadioTwo,
+      fontSizeRadioThree,
+      deuteranopia,
+      tritanopia,
+      protanopia,
+      achromatopsia,
+      none,
+      topOne,
+      bottomOne,
+      rightOne,
+      leftOne,
+    );
 
-    sensitivitySlider.id = 'sensitivitySlider';
-    sensitivitySlider.type = 'range';
-    pointerSlider.id = 'pointerSlider';
-    pointerSlider.type = 'range';
-    buttonSlider.id = 'buttonSlider';
-    buttonSlider.type = 'range';
-    layersSlider.id = 'layersSlider';
-    layersSlider.type = 'range';
-
-    hitAreaScaleSlider.id = 'hitAreaScaleSlider';
-    dragThresholdScaleSlider.id = 'dragThresholdScaleSlider';
-    healthSlider.id = 'healthSlider';
-    objectCountSlider.id = 'objectCountSlider';
-    completionPercentageSlider.id = 'completionPercentageSlider';
-    speedScaleSlider.id = 'speedScaleSlider';
-    timersScaleSlider.id = 'timersScaleSlider';
-    inputCountSlider.id = 'inputCountSlider';
-    hitAreaScaleSlider.type = 'range';
-    dragThresholdScaleSlider.type = 'range';
-    healthSlider.type = 'range';
-    objectCountSlider.type = 'range';
-    completionPercentageSlider.type = 'range';
-    speedScaleSlider.type = 'range';
-    timersScaleSlider.type = 'range';
-    inputCountSlider.type = 'range';
-
-    colorSelect.id = 'colorSelect';
-    keyContainer.id = 'keyContainer';
-
-    document.body.appendChild(voButton);
-    document.body.appendChild(helpButton);
-    document.body.appendChild(captionsButton);
-    document.body.appendChild(musicButton);
-    document.body.appendChild(pauseButton);
-    document.body.appendChild(sfxButton);
-    document.body.appendChild(soundButton);
-    document.body.appendChild(hudButton);
-
-    document.body.appendChild(soundSlider);
-    document.body.appendChild(voSlider);
-    document.body.appendChild(musicSlider);
-    document.body.appendChild(sfxSlider);
-    document.body.appendChild(sensitivitySlider);
-    document.body.appendChild(pointerSlider);
-    document.body.appendChild(buttonSlider);
-    document.body.appendChild(layersSlider);
-
-    document.body.appendChild(hitAreaScaleSlider);
-    document.body.appendChild(dragThresholdScaleSlider);
-    document.body.appendChild(healthSlider);
-    document.body.appendChild(objectCountSlider);
-    document.body.appendChild(completionPercentageSlider);
-    document.body.appendChild(speedScaleSlider);
-    document.body.appendChild(timersScaleSlider);
-    document.body.appendChild(inputCountSlider);
-
-    document.body.appendChild(colorSelect);
-    document.body.appendChild(keyContainer);
-
-    const colorVisionPlugin = new ColorVisionPlugin({
-      colorSelect: '#colorSelect'
-    });
-    const captionsPlugin = new CaptionsPlugin('#captionsButton');
+    const colorVisionPlugin = new ColorVisionPlugin('input[name=color-vision-one]');
+    const captionsTogglePlugin = new CaptionsTogglePlugin('#captionsButton');
+    const captionsStylePlugin = new CaptionsStylePlugin('input[name=caption-fontSize]', 'input[name=caption-color]', 'input[name=caption-align]');
     const pausePlugin = new PausePlugin('#pauseButton');
+
     const soundPlugin = new SoundPlugin({
-      voButton: '#voButton',
-      musicButton: '#musicButton',
-      sfxButton: '#sfxButton',
-      soundButton: '#soundButton',
-      soundSlider: '#soundSlider',
-      musicSlider: '#musicSlider',
-      voSlider: '#voSlider',
-      sfxSlider: '#sfxSlider'
+      voButtons: '#voButton',
+      musicButtons: '#musicButton',
+      sfxButtons: '#sfxButton',
+      soundButtons: '#soundButton',
+      soundSliders: '#soundSlider',
+      musicSliders: '#musicSlider',
+      voSliders: '#voSlider',
+      sfxSliders: '#sfxSlider'
     });
     const userDataPlugin = new UserDataPlugin();
     const helpPlugin = new HelpPlugin('#helpButton');
-    const controlsPlugin = new ControlsPlugin({
-      sensitivitySlider: '#sensitivitySlider',
-      keyContainer: '#keyContainer'
-    });
-    const uiSizePlugin = new UISizePlugin({
-      pointerSlider: '#pointerSlider',
-      buttonSlider: '#buttonSlider'
-    });
-    const layersPlugin = new LayersPlugin({ layersSlider: '#layersSlider' });
-    const hudPlugin = new HUDPlugin({ hudSelectorButton: '#hudButton' });
-    const mechanicsPlugin = new MechanicsPlugin({
-      hitAreaScaleSlider: '#hitAreaScaleSlider',
-      dragThresholdScaleSlider: '#dragThresholdScaleSlider',
-      healthSlider: '#healthSlider',
-      objectCountSlider: '#objectCountSlider',
-      completionPercentageSlider: '#completionPercentageSlider',
-      speedScaleSlider: '#speedScaleSlider',
-      timersScaleSlider: '#timersScaleSlider',
-      inputCountSlider: '#inputCountSlider',
-    });
+    const controlSensitivityPlugin = new ControlSensitivityPlugin('#sensitivitySlider');
+    keyboardMapPlugin = new KeyboardMapPlugin('#keyContainer');
+
+    const pointerSizePlugin = new PointerSizePlugin('#pointerSlider');
+    const buttonSizePlugin = new ButtonSizePlugin('#buttonSlider');
+    const layersPlugin = new LayersPlugin('#layersSlider');
+    const hudPlugin = new HUDPlugin('input[name=hud-position-one]');
+
+    const hitAreaScalePlugin = new HitAreaScalePlugin('#hitAreaScaleSlider');
+    const dragThresholdScalePlugin = new DragThresholdScalePlugin('#dragThresholdScaleSlider');
+    const healthPlugin = new HealthPlugin('#healthSlider');
+    const objectCountPlugin = new ObjectCountPlugin('#objectCountSlider');
+    const completionPercentagePlugin = new CompletionPercentagePlugin('#completionPercentageSlider');
+    const speedScalePlugin = new SpeedScalePlugin('#speedScaleSlider');
+    const timersScalePlugin = new TimersScalePlugin('#timersScaleSlider');
+    const inputCountPlugin = new InputCountPlugin('#inputCountSlider');
+
 
     container = new Container('.karma-html', {
       plugins: [
-        captionsPlugin,
+        captionsTogglePlugin,
+        captionsStylePlugin,
         pausePlugin,
         soundPlugin,
         userDataPlugin,
         helpPlugin,
-        controlsPlugin,
-        uiSizePlugin,
+        controlSensitivityPlugin,
+        keyboardMapPlugin,
+        pointerSizePlugin,
+        buttonSizePlugin,
         layersPlugin,
         hudPlugin,
-        mechanicsPlugin,
-        colorVisionPlugin
+        hitAreaScalePlugin,
+        dragThresholdScalePlugin,
+        healthPlugin,
+        objectCountPlugin,
+        completionPercentagePlugin,
+        speedScalePlugin,
+        timersScalePlugin,
+        inputCountPlugin,
+        colorVisionPlugin,
       ]
     });
 
     //triggering the respond calls for plugins that require them
     colorVisionPlugin.init();
     hudPlugin.init();
-    controlsPlugin.init();
+    keyboardMapPlugin.init();
 
     container.client.trigger('features', {
       colorVision: true,
@@ -195,19 +201,17 @@ describe('End to End Test', () => {
       keyBinding: true
     });
 
-    controlsPlugin.client.trigger('keyBindings', [
+    keyboardMapPlugin.client.trigger('keyBindings', [
       { actionName: 'Up', defaultKey: 'w' }
     ]);
     hudPlugin.client.trigger('hudPositions', [
       'top',
       'bottom',
-      'invalid-position'
     ]);
     colorVisionPlugin.client.trigger('colorFilters', [
       'None',
       'Deuteranopia',
       'Tritanopia',
-      'invalid'
     ]);
   });
 
@@ -219,7 +223,6 @@ describe('End to End Test', () => {
     soundButton.click();
     musicButton.click();
     sfxButton.click();
-    hudButton.click();
   });
 
   it('Check the sound slider events', () => {
@@ -264,17 +267,31 @@ describe('End to End Test', () => {
     inputCountSlider.dispatchEvent(initEvent('change'));
   });
 
-  it('check the color vision dropdown event', () => {
-    colorSelect.value = 'tritanopia';
-    colorSelect.dispatchEvent(initEvent('change'));
-  });
-
   it('check the key binding change event', () => {
     const event = document.createEvent('Event');
-    event.key = 'a';
+    event.key = 'c';
+    keyContainer.querySelector('#keyBoardMapPlugin-Up').click();
     event.initEvent('keyup');
-    keyContainer.firstChild.click();
     document.dispatchEvent(event);
+  });
+
+  it('Check radio button click events', () => {
+    colorRadioOne.click();
+    colorRadioTwo.click();
+    alignRadioOne.click();
+    alignRadioTwo.click();
+    fontSizeRadioOne.click();
+    fontSizeRadioTwo.click();
+    fontSizeRadioThree.click();
+    deuteranopia.click();
+    tritanopia.click();
+    protanopia.click();
+    achromatopsia.click();
+    none.click();
+    topOne.click();
+    bottomOne.click();
+    rightOne.click();
+    leftOne.click();
   });
 
   it('Should open the path to the game', () => {
