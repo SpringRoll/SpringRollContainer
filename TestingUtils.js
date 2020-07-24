@@ -13,8 +13,7 @@ export function makeRadio(name, value) {
 
 /**
  *
- * @param {string} name
- * @param {string} value
+ * @param {string} id
  */
 export function makeSlider(id) {
   const slider = document.createElement('input');
@@ -25,8 +24,7 @@ export function makeSlider(id) {
 
 /**
  *
- * @param {string} name
- * @param {string} value
+ * @param {string} id
  */
 export function makeButton(id) {
   const button = document.createElement('button');
