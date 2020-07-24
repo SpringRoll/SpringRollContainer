@@ -135,7 +135,7 @@ export class KeyboardMapPlugin extends BasePlugin {
               }
 
               this.buttons[j][i] = document.createElement('button');
-              this.buttons[j][i].classList.add(this.customClassName);
+              this.buttons[j][i].classList.add(this.className);
               this.buttons[j][i].id = `keyBoardMapPlugin-${result.data[i].actionName}`;
               this.buttons[j][i].value = result.data[i].actionName;
               this.buttons[j][i].textContent = result.data[i].defaultKey;
