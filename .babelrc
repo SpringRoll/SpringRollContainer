@@ -1,10 +1,11 @@
 {
+  "exclude": [ "node_modules/@babel/**", "node_modules/core-js/**" ],
   "presets": [
     [
       "@babel/preset-env",
       {
         "useBuiltIns": "usage",
-        "corejs": 2,
+        "corejs": 3,
         "targets": {
           "android": "5",
           "ios": "10",
