@@ -5,7 +5,7 @@
       "@babel/preset-env",
       {
         "useBuiltIns": "usage",
-        "corejs": 2,
+        "corejs": 3,
         "targets": {
           "android": "5",
           "ios": "10",
