@@ -360,6 +360,80 @@ As long as the string you pass to the constructor is a valid selector string the
 
 *Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
+## Authoring Plugins
+
+Writing a plugin for Container is relatively simple but there are some differences based on whether it is going to be a built-in plugin, or external.
+
+Plugins for Container should take the form of an ES6 module, preferably with a named export. E.g.:
+```javascript
+export class ContainerPlugin() {...}
+```
+
+When developing a plugin for Container v2.x there are 3 main lifecycle hooks to keep in mind: `preload`, `init`, and `start`.
+
+`preload()`: Preload expects an async method or at least a returned promise. The method is passed the entire [PluginManager](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/PluginManager.js) object. In general all plugins need to access is the [Bellhop client](https://github.com/SpringRoll/Bellhop), but the entire object is available should you require it.
+Note: if this method is missing or fails to resolve, Container will automatically discard your plugin and it will not be loaded in properly.
+
+Example:
+```javascript
+export class ContainerPlugin() {
+  constructor() {...}
+
+  async preload({ client }) {
+    this.client = client;
+  }
+}
+```
+
+`init()`: the init method is called once the preload promises have all resolved. This method would be where you do most of your plugins setup that involves interacting with the Springroll Application. Any event listeners (bellhop or otherwise), or additional data fetching should go here. Similarly to `preload()` init is also passed the `PluginManager` class object if required.
+
+`start()`: Generally all that your plugin will require is an `init()` method. But, if the case arises where your plugin depends on another plugin the start method exists. This is called after all preloaded plugins have finished their init calls and serves a similar purpose. This can help ease race conditions between plugins, as they are not guarenteed to call `init` in a consistent order. Similarly to `preload()` init is also passed the `PluginManager` class object if required.
+
+In general every plugin will follow a similar blueprint and will look something like this:
+```javascript
+export class ContainerPlugin() {
+  constructor() {...}
+
+  async preload({ client }) {
+    this.client = client;
+  }
+
+  init() {...}
+
+  start() {...}
+
+  //Any other helper functions required
+}
+```
+
+But depending on whether the plugin is intended to be external to Container (i.e. application specific), one of the built-in plugins, or even a port from a previous version of Container (pre v2.x) there may be some additional considerations detailed below.
+
+### External Plugin
+External Plugins are generally specific to an application or organization and follow the above blueprint. They don't tend to follow a Springroll Application feature, and may just be something additional you need to slot into your page. There are no real extra considerations to take into account.
+
+### Internal a.k.a. Built-In Plugins
+If you're developing for SpringrollContainer directly the process is still the same but there are base plugin classes available to keep your plugins DRY and help with consistency.
+
+#### [BasePlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/BasePlugin.js)
+The most barebones plugin class avaialable. Should be used if none of the other plugins match your needs.
+Provides very basic implementations of `preload()`, `init()`, and `start()`.
+
+| It also provides a few useful helper functions: | |
+| --- | --- |
+| `SendProperty(prop, value)` | Sends a single property and it's value through Bellhop to the application. `prop` should match the springroll feature name. Also [saves the property](https://github.com/SpringRoll/SpringRollContainer#saved-data-api) for re-use |
+| `warn(warningText)` | prints out an informative console warning |
+
+#### [ButtonPlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/ButtonPlugin.js)
+The `ButtonPlugin` is useful for any plugin that requires a `mute` state (i.e. on or off). It extends the `BasePlugin` and has access to all of the methods above.
+| It also includes: | |
+| --- | --- |
+| `_setMuteProp(prop, button, muted)` | Sets the current state of the property, and sends it to the application. This also handles applying styles to the button or buttons to match. `button` can be a single instance of a button or an array of matching buttons.
+
+#### [SliderPlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/SliderPlugin.js)
+If your plugin requires a range input to control volume or similar setting this plugin will handle most of it. It can only accept one setting to control however so if you require more than one setting (e.g. `MusicVolume` and `VoiceOverVolume`) consider breaking it out into multiple plugins or just using `BasePlugin`. If your plugin extends this base class all you have to do is pass the configuration options through the `super()` call and the `SliderPlugin` handles the rest.
+
+
+
 ## Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
 `playOptions`:
