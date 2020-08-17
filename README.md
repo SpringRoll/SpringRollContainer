@@ -371,8 +371,8 @@ export class ContainerPlugin() {...}
 
 When developing a plugin for Container v2.x there are 3 main lifecycle hooks to keep in mind: `preload`, `init`, and `start`.
 
-`preload()`: Preload expects an async method or at least a returned promise. The method is passed the entire [PluginManager](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/PluginManager.js) object. In general all plugins need to access is the [Bellhop client](https://github.com/SpringRoll/Bellhop), but the entire object is available should you require it.
-Note: if this method is missing or fails to resolve, Container will automatically discard your plugin and it will not be loaded in properly.
+`preload()`: Preload must return a `Promise`. It can be async. The method is passed the entire [PluginManager](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/PluginManager.js) object. In general, most plugins will only need to access the [Bellhop client](https://github.com/SpringRoll/Bellhop). However, the entire `PluginManager` object is available should you require it.
+*Note: if this method is missing or the returned promise is rejected, Container will automatically discard your plugin and it will not be loaded in properly.*
 
 Example:
 ```javascript
@@ -385,9 +385,9 @@ export class ContainerPlugin() {
 }
 ```
 
-`init()`: the init method is called once the preload promises have all resolved. This method would be where you do most of your plugins setup that involves interacting with the Springroll Application. Any event listeners (bellhop or otherwise), or additional data fetching should go here. Similarly to `preload()` init is also passed the `PluginManager` class object if required.
+`init()`: The init method is called once all plugin `preload` promises have resolved. Most setup that involves interacting with the Springroll Application via Bellhop would happen here. Any event listeners (bellhop or otherwise), or additional data fetching should go here. `init()` is also passed the `PluginManager` class object if required.
 
-`start()`: Generally all that your plugin will require is an `init()` method. But, if the case arises where your plugin depends on another plugin the start method exists. This is called after all preloaded plugins have finished their init calls and serves a similar purpose. This can help ease race conditions between plugins, as they are not guarenteed to call `init` in a consistent order. Similarly to `preload()` init is also passed the `PluginManager` class object if required.
+`start()`: The `start()` method is called after all preloaded plugins have finished their `init()` calls. This method allows plugins to depend on others by allowing a second plugin to `start()` after a first plugin has ran `init()`. This can help ease race conditions between plugins, as they are not guarenteed to call `init()` in a consistent order. Similarly to `preload()`, `init()` is also passed the `PluginManager` class object if required.
 
 In general every plugin will follow a similar blueprint and will look something like this:
 ```javascript
@@ -406,16 +406,16 @@ export class ContainerPlugin() {
 }
 ```
 
-But depending on whether the plugin is intended to be external to Container (i.e. application specific), one of the built-in plugins, or even a port from a previous version of Container (pre v2.x) there may be some additional considerations detailed below.
+However, some more customized plugins plugins may have additional concerns. These are detailed below.```
 
 ### External Plugin
-External Plugins are generally specific to an application or organization and follow the above blueprint. They don't tend to follow a Springroll Application feature, and may just be something additional you need to slot into your page. There are no real extra considerations to take into account.
+External Plugins are generally specific to an application or organization and follow the above blueprint. They don't tend to follow a Springroll Application feature like `sound` or `captions`, and may just be additional custom functionality for your particular page. In this case, you can implement the methods you need for your plugin with no additional considerations.
 
 ### Porting Container v1.x plugins to v2.x
-Exactly how you go about porting your plugin from the 1.x version to the newer 2.x versions will depend on how the old plugin was written. The new plugins are based around the `init()`, `start()`, and `preload()` hooks. The main similarity is that `init()` will loosely correspond to the older `setup()` function from 1.x. Everything else should be able to proceed as outlined in the [general plugin overview](##Authoring-Plugins) above
+Exactly how you go about porting your plugin from the SpringRollContainer 1 to 2 will depend on how the original plugin was written. The `init()` function for Container 2.0 plugins will loosely correspond to the older `setup()` from Container 1.0. The older hook methods `open` and `opened` should now be implemented as event listeners in the main plugin.
 
 ### Internal a.k.a. Built-In Plugins
-If you're developing for SpringrollContainer directly the process is still the same but there are base plugin classes available to keep your plugins DRY and help with consistency.
+If you're developing for SpringrollContainer directly the process is still the same but there are base plugin classes available to keep your plugins DRY and more consistent.
 
 #### [BasePlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/BasePlugin.js)
 [Example Plugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/plugins/KeyboardMapPlugin.js)
