@@ -411,10 +411,14 @@ But depending on whether the plugin is intended to be external to Container (i.e
 ### External Plugin
 External Plugins are generally specific to an application or organization and follow the above blueprint. They don't tend to follow a Springroll Application feature, and may just be something additional you need to slot into your page. There are no real extra considerations to take into account.
 
+### Porting Container v1.x plugins to v2.x
+Exactly how you go about porting your plugin from the 1.x version to the newer 2.x versions will depend on how the old plugin was written. The new plugins are based around the `init()`, `start()`, and `preload()` hooks. The main similarity is that `init()` will loosely correspond to the older `setup()` function from 1.x. Everything else should be able to proceed as outlined in the [general plugin overview](##Authoring-Plugins) above
+
 ### Internal a.k.a. Built-In Plugins
 If you're developing for SpringrollContainer directly the process is still the same but there are base plugin classes available to keep your plugins DRY and help with consistency.
 
 #### [BasePlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/BasePlugin.js)
+[Example Plugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/plugins/KeyboardMapPlugin.js)
 The most barebones plugin class avaialable. Should be used if none of the other plugins match your needs.
 Provides very basic implementations of `preload()`, `init()`, and `start()`.
 
@@ -422,17 +426,31 @@ Provides very basic implementations of `preload()`, `init()`, and `start()`.
 | --- | --- |
 | `SendProperty(prop, value)` | Sends a single property and it's value through Bellhop to the application. `prop` should match the springroll feature name. Also [saves the property](https://github.com/SpringRoll/SpringRollContainer#saved-data-api) for re-use |
 | `warn(warningText)` | prints out an informative console warning |
+---
 
 #### [ButtonPlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/ButtonPlugin.js)
+[Example Plugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/plugins/CaptionsTogglePlugin.js)
 The `ButtonPlugin` is useful for any plugin that requires a `mute` state (i.e. on or off). It extends the `BasePlugin` and has access to all of the methods above.
 | It also includes: | |
 | --- | --- |
 | `_setMuteProp(prop, button, muted)` | Sets the current state of the property, and sends it to the application. This also handles applying styles to the button or buttons to match. `button` can be a single instance of a button or an array of matching buttons.
+---
 
 #### [SliderPlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/SliderPlugin.js)
-If your plugin requires a range input to control volume or similar setting this plugin will handle most of it. It can only accept one setting to control however so if you require more than one setting (e.g. `MusicVolume` and `VoiceOverVolume`) consider breaking it out into multiple plugins or just using `BasePlugin`. If your plugin extends this base class all you have to do is pass the configuration options through the `super()` call and the `SliderPlugin` handles the rest.
+[Example Plugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/plugins/LayersPlugin.js)
+If your plugin requires a range input to control volume or a similar setting this plugin will handle most of it. It can only accept one setting to control however so if you require more than one setting (e.g. `MusicVolume` and `VoiceOverVolume`) consider breaking it out into multiple plugins or just using `BasePlugin`. If your plugin extends this base class all you have to do is pass the configuration options through the `super()` call and the `SliderPlugin` handles the rest.
 
+#### [RadioGroupPlugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/base-plugins/RadioGroupPlugin.js)
+[Example Plugin](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/plugins/ColorVisionPlugin.js)
+The RadioGroupPlugin is used for any plugin that uses groups of radio buttons to allow selection between pre-determined options. Similarly to the SliderPlugin above, the RadioGroupPlugin handles most of the set up behind the scenes and you won't have to interact directly with any of its methods.
 
+#### UI-Elements
+Container also provides a few base ui-element classes to help set up any HTML controls you have. These are:
+- [Slider](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/ui-elements/Slider.js)
+- [Button](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/ui-elements/Button.js)
+- [RadioGroup](https://github.com/SpringRoll/SpringRollContainer/blob/main/src/ui-elements/RadioGroup.js)
+
+Note: these are used automatically by the `RadioGroupPlugin` and `SliderPlugin`. So these should only be required if you're not using one of those two as your base.
 
 ## Play Options
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
