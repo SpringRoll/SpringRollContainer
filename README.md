@@ -73,10 +73,12 @@ container.openPath('path/to/game.html');
 ```
 
 ## Plugins
+This section is for how to use the built in plugins for writing, or updating older plugins, see [Plugin Authoring Guide](https://github.com/SpringRoll/SpringRollContainer/tree/main/src/plugins).
 
 The Container has several built-in plugins that allow the user to control various aspects of a game/application.
 These are initialized with either a query selector string (similar to what you would pass to [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
 or an `HTMLElement`.
+
 
 Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
 If the container has a plugin enabled corresponding to a feature that the game doesn't contain, the container will automatically _hide the corresponding UI element_.
