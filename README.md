@@ -385,9 +385,9 @@ export class ContainerPlugin() {
 }
 ```
 
-`init()`: The init method is called once all plugin `preload` promises have resolved. Most setup that involves interacting with the Springroll Application via Bellhop would happen here. Any event listeners (bellhop or otherwise), or additional data fetching should go here. `init()` is also passed the `PluginManager` class object if required.
+`init()`: The init method is called once all plugin `preload` promises have resolved. Most setup that involves interacting with the Springroll Application via Bellhop would happen here. Any event listeners (bellhop or otherwise) should go here. `init()` is also passed the `PluginManager` class object if required.
 
-`start()`: The `start()` method is called after all preloaded plugins have finished their `init()` calls. This method allows plugins to depend on others by allowing a second plugin to `start()` after a first plugin has ran `init()`. This can help ease race conditions between plugins, as they are not guarenteed to call `init()` in a consistent order. Similarly to `preload()`, `init()` is also passed the `PluginManager` class object if required.
+`start()`: The `start()` method is called after all preloaded plugins have finished their `init()` calls. This method allows plugins to depend on others by allowing a second plugin to `start()` after a first plugin has ran `init()`. This can help ease race conditions between plugins, as they are not guarenteed to call `init()` in a consistent order. Similarly to `preload()`, `start()` is also passed the `PluginManager` class object if required.
 
 In general every plugin will follow a similar blueprint and will look something like this:
 ```javascript
