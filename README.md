@@ -73,10 +73,12 @@ container.openPath('path/to/game.html');
 ```
 
 ## Plugins
+This section provides instructions on how to use the built-in plugins for SpringRoll Container. For writing or updating older plugins, see the [Plugin Authoring Guide](https://github.com/SpringRoll/SpringRollContainer/tree/main/src/plugins).
 
 The Container has several built-in plugins that allow the user to control various aspects of a game/application.
 These are initialized with either a query selector string (similar to what you would pass to [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
 or an `HTMLElement`.
+
 
 Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
 If the container has a plugin enabled corresponding to a feature that the game doesn't contain, the container will automatically _hide the corresponding UI element_.
@@ -86,7 +88,7 @@ For example, if the container has the `CaptionsTogglePlugin` enabled with a corr
 ```javascript
 import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container("#game", {
+const container = new Container("#game", {
   plugins: [
     new PausePlugin('button#pause-button'), // Pauses or unpauses the game
     new HelpPlugin('button#help'), // requests a hint or help from the game
@@ -105,7 +107,7 @@ There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `
 ```javascript
 import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     new CaptionsTogglePlugin('#captions'),
     new CaptionsStylePlugin(
@@ -162,7 +164,7 @@ The sound plugin supports a total of eight controls:
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     new SoundPlugin({
       soundButtons: '#soundButton', // mutes or unmutes all game audio
@@ -197,7 +199,7 @@ import {
   Container
   } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
       new HitAreaScalePlugin('#hitAreaScaleSlider', {defaultHitAreaScale = 0.5}),
       new DragThresholdScalePlugin('#dragThresholdScaleSlider', {defaultDragThresholdScale = 0.5}),
@@ -241,7 +243,7 @@ Note that these plugins accept HTML range inputs, rather than buttons.
 ```javascript
 import { ButtonSizePlugin, PointerSizePlugin, LayersPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     new ButtonSizePlugin('#button-slider-selector', {
       defaultButtonSize: 0.5, // button size goes from 0.0 to 1.0. Default = 0.5
@@ -266,7 +268,7 @@ The HUD plugin allows users to position HUD elements within a game by docking to
 ```javascript
 import { HUDPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     // expects exactly four(4) radio buttons with values "top", "bottom", "left", "right,
     new HUDPlugin('#hud-position-button-selector', {
@@ -293,7 +295,7 @@ The Keyboard Map Plugin allows users to re-map the keys/controls used in-game to
 ```javascript
 import { ControlSensitivityPlugin, KeyboardMapPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     //ControlSensitivityPlugin expects an input of type=range for it's input.
     new ControlSensitivityPlugin('#sensitivity-slider-selector', {
@@ -330,7 +332,7 @@ Keybindings are tracked visually by setting the textContent of the buttons thems
 ```javascript
 import { ColorVisionPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     // expects exactly five(5) radio buttons with values "none", "achromatopsia", "tritanopia", "deuteranopia",
     // and "protanopia" indicating the types of color visions supported.
@@ -365,7 +367,7 @@ The `openPath` method of the Container provides a mechanism for providing option
 `playOptions`:
 
 ```javascript
-var container = new springroll.Container('#game');
+var container = new Container('#game');
 container.openPath('game.html', {
     playOptions: {
         difficulty: 7,
@@ -433,7 +435,7 @@ It is included in the container constructor like any other plugin:
 ```javascript
 import { UserDataPlugin, Container } from 'springroll-container';
 
-const container = new springroll.Container('#game', {
+const container = new Container('#game', {
   plugins: [
     new UserDataPlugin(),
   ]
