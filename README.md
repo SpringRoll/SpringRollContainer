@@ -73,7 +73,7 @@ container.openPath('path/to/game.html');
 ```
 
 ## Plugins
-This section is for how to use the built in plugins for writing, or updating older plugins, see [Plugin Authoring Guide](https://github.com/SpringRoll/SpringRollContainer/tree/main/src/plugins).
+This section provides instructions on how to use the built-in plugins for SpringRoll Container. For writing or updating older plugins, see the [Plugin Authoring Guide](https://github.com/SpringRoll/SpringRollContainer/tree/main/src/plugins).
 
 The Container has several built-in plugins that allow the user to control various aspects of a game/application.
 These are initialized with either a query selector string (similar to what you would pass to [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
