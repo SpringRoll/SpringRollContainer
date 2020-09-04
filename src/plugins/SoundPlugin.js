@@ -391,7 +391,6 @@ export class SoundPlugin extends ButtonPlugin {
   start() {
 
     for (let i = 0; i < this.soundButtonsLength; i++) {
-      console.log(this.soundButtons[i].enableButton);
       this.soundButtons[i].enableButton();
     }
     for (let i = 0; i < this.musicButtonsLength; i++) {
