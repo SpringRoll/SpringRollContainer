@@ -223,6 +223,116 @@ describe('SoundPlugin', () => {
     sp.client.trigger('features', {});
   });
 
+  it('should work with only button elements', () => {
+    document.body.innerHTML = '';
+
+    const buttonOptions = {
+      soundButtons: 'sb',
+      musicButtons: 'mb',
+      sfxButtons: 'sfxb',
+      voButtons: 'vb',
+    };
+
+    Object.keys(buttonOptions).forEach(key => {
+      if (/Button/.test(key)) {
+
+        const button = document.createElement('button');
+        button.id = buttonOptions[key];
+        document.body.appendChild(button);
+        buttonOptions[key] = button;
+      }
+    });
+
+    sp = new SoundPlugin(buttonOptions);
+    sp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
+
+    new Container('#sound-plugin-iframe').client.trigger(
+      'features'
+    );
+
+    expect(sp.soundSlidersLength).to.equal(0);
+    expect(sp.musicSlidersLength).to.equal(0);
+    expect(sp.sfxSlidersLength).to.equal(0);
+    expect(sp.voSlidersLength).to.equal(0);
+
+    //buttons
+    expect(sp.soundButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.soundButtons[0].button.style.display).to.equal('');
+    expect(sp.soundButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    expect(sp.musicButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.musicButtons[0].button.style.display).to.equal('');
+    expect(sp.musicButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    expect(sp.sfxButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.sfxButtons[0].button.style.display).to.equal('');
+    expect(sp.sfxButtons[0].button.classList.contains('disabled')).to.be.false;
+
+    expect(sp.voButtons[0].button).to.be.instanceof(HTMLButtonElement);
+    expect(sp.voButtons[0].button.style.display).to.equal('');
+    expect(sp.voButtons[0].button.classList.contains('disabled')).to.be.false;
+  });
+
+  it('should work with only slider elements', () => {
+    document.body.innerHTML = '';
+    const sliderOptions = {
+      soundSliders: 'ss',
+      musicSliders: 'ms',
+      sfxSliders: 'sfxs',
+      voSliders: 'vs'
+    };
+
+    Object.keys(sliderOptions).forEach(key => {
+      if (/Slider/.test(key)) {
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = sliderOptions[key];
+        sliderOptions[key] = slider;
+        document.body.appendChild(slider);
+      }
+    });
+
+    sp = new SoundPlugin(sliderOptions);
+    sp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
+
+    new Container('#sound-plugin-iframe').client.trigger(
+      'features'
+    );
+
+    expect(sp.soundButtonsLength).to.equal(0);
+    expect(sp.musicButtonsLength).to.equal(0);
+    expect(sp.sfxButtonsLength).to.equal(0);
+    expect(sp.voButtonsLength).to.equal(0);
+
+    //sliders
+    expect(sp.soundSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.soundSliders[0].slider.style.display).to.equal('');
+
+    expect(sp.musicSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.musicSliders[0].slider.style.display).to.equal('');
+
+    expect(sp.sfxSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.sfxSliders[0].slider.style.display).to.equal('');
+
+    expect(sp.voSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.voSliders[0].slider.style.display).to.equal('');
+  });
+
+  it('should work without any controls', () => {
+    sp = new SoundPlugin();
+    sp.preload({ client: new Bellhop() });
+    sp.init();
+    sp.client.trigger('features', {});
+  });
+
   it('should work with HTML elements as parameters', () => {
     document.body.innerHTML = '';
 
