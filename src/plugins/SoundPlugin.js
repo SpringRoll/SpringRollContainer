@@ -216,16 +216,16 @@ export class SoundPlugin extends ButtonPlugin {
       this.voSliders[i].enableSliderEvents(this.onVOVolumeChange.bind(this));
     }
 
-    if (this.soundSliders[0].slider) {
+    if (this.soundSliders[0] && this.soundSliders[0].slider) {
       this.soundVolume = this.soundSliders[0].value;
     }
-    if (this.musicSliders[0].slider) {
+    if (this.musicSliders[0] && this.musicSliders[0].slider) {
       this.musicVolume = this.musicSliders[0].value;
     }
-    if (this.sfxSliders[0].slider) {
+    if (this.sfxSliders[0] && this.sfxSliders[0].slider) {
       this.sfxVolume = this.sfxSliders[0].value;
     }
-    if (this.voSliders[0].slider) {
+    if (this.voSliders[0] && this.voSliders[0].slider) {
       this.voVolume = this.voSliders[0].value;
     }
   }
@@ -391,16 +391,16 @@ export class SoundPlugin extends ButtonPlugin {
   start() {
 
     for (let i = 0; i < this.soundButtonsLength; i++) {
-      this.soundButtons[i].enableButtons();
+      this.soundButtons[i].enableButton();
     }
     for (let i = 0; i < this.musicButtonsLength; i++) {
-      this.musicButtons[i].enableButtons();
+      this.musicButtons[i].enableButton();
     }
     for (let i = 0; i < this.sfxButtonsLength; i++) {
-      this.sfxButtons[i].enableButtons();
+      this.sfxButtons[i].enableButton();
     }
     for (let i = 0; i < this.voButtonsLength; i++) {
-      this.voButtons[i].enableButtons();
+      this.voButtons[i].enableButton();
     }
 
     this.soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
