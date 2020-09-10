@@ -35,6 +35,12 @@ describe('ButtonPlugin', () => {
   it('.changeMutedState', () => {
     bp.changeMutedState(button);
     expect(button.classList.contains('muted')).to.be.false;
+
+    bp.changeMutedState(button, true);
+    expect(button.classList.contains('muted')).to.be.true;
+
+    bp.changeMutedState({button: button}, false);
+    expect(button.classList.contains('muted')).to.be.false;
   });
 
   it('._setMuteProp', () => {

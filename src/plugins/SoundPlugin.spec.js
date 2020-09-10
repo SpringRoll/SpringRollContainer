@@ -101,26 +101,34 @@ describe('SoundPlugin', () => {
 
   it('.soundMuted()', () => {
     expect(sp.soundMuted).to.be.false;
+    expect(sp.soundButtons[0].button.classList.contains('muted')).to.be.false;
     sp.soundMuted = true;
     expect(sp.soundMuted).to.be.true;
+    expect(sp.soundButtons[0].button.classList.contains('muted')).to.be.true;
   });
 
   it('.voMuted()', () => {
     expect(sp.voMuted).to.be.false;
+    expect(sp.voButtons[0].button.classList.contains('muted')).to.be.false;
     sp.voMuted = true;
     expect(sp.voMuted).to.be.true;
+    expect(sp.voButtons[0].button.classList.contains('muted')).to.be.true;
   });
 
   it('.musicMuted()', () => {
     expect(sp.musicMuted).to.be.false;
+    expect(sp.musicButtons[0].button.classList.contains('muted')).to.be.false;
     sp.musicMuted = true;
     expect(sp.musicMuted).to.be.true;
+    expect(sp.musicButtons[0].button.classList.contains('muted')).to.be.true;
   });
 
   it('.sfxMuted()', () => {
     expect(sp.sfxMuted).to.be.false;
+    expect(sp.sfxButtons[0].button.classList.contains('muted')).to.be.false;
     sp.sfxMuted = true;
     expect(sp.sfxMuted).to.be.true;
+    expect(sp.sfxButtons[0].button.classList.contains('muted')).to.be.true;
   });
 
   it('.onSoundVolumeChange()', () => {
