@@ -79,12 +79,16 @@ export class ButtonPlugin extends BasePlugin {
    * @memberof ButtonPlugin
    */
   changeMutedState(button, muted = false) {
-    if (!(button instanceof HTMLElement)) {
+    //most times button will be a Button class rather than an HTMLElement
+    //But just in case the Button ui-element is not being used
+    const htmlButton = button.button ? button.button : button;
+
+    if (!(htmlButton instanceof HTMLElement)) {
       return;
     }
 
-    button.classList.remove('unmuted');
-    button.classList.remove('muted');
-    button.classList.add(muted ? 'muted' : 'unmuted');
+    htmlButton.classList.remove('unmuted');
+    htmlButton.classList.remove('muted');
+    htmlButton.classList.add(muted ? 'muted' : 'unmuted');
   }
 }

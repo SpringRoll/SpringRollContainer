@@ -96,10 +96,6 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
    */
   captionsButtonClick() {
     this.captionsMuted = !this.captionsMuted;
-
-    for (let i = 0; i < this.captionsButtonLength; i ++) {
-      this._captionsButtons[i].button.classList.add(this.captionsMuted ? 'muted' : 'unmuted');
-    }
   }
 
   /**
@@ -118,7 +114,7 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
     this._captionsMuted = muted;
     this._setMuteProp(
       'captionsMuted',
-      this.captionsButton,
+      this._captionsButtons,
       this._captionsMuted
     );
   }
