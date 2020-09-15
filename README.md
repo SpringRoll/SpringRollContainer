@@ -42,9 +42,8 @@ container.openPath('local/path/to/game.html');
 ### Opening a Game Hosted at Another Domain
 
 ```javascript
-const container = new Container({
-  iframeSelector: '#game'
-});
+const iframe = document.querySelector('iframe');
+const container = new Container(iframe);
 
 container.openLocal('https://example.com/path/to/game.html');
 ```
