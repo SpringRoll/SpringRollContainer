@@ -14,6 +14,10 @@ describe('Container', () => {
     expect(container).to.be.instanceof(Container);
   });
 
+  it('should contruct with a Iframe DOM element', () => {                                                                  
+    new Container(iframe);
+  });
+
   it('.onLoadDone()', () => {
     container.onLoadDone();
     expect(container.loading).to.be.false;
