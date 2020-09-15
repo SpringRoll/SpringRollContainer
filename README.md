@@ -42,8 +42,7 @@ container.openPath('local/path/to/game.html');
 ### Opening a Game Hosted at Another Domain
 
 ```javascript
-const iframe = document.querySelector('iframe');
-const container = new Container(iframe);
+const container = new Container('#game');
 
 container.openLocal('https://example.com/path/to/game.html');
 ```
@@ -69,6 +68,20 @@ const container = new Container('#game', {
 });
 
 container.openPath('path/to/game.html');
+```
+
+### Opening a Game with a Dynamically Created Iframe
+In some cases, you may have an existing [HTMLIframeElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement) rather than a CSS selector.
+You can also instantiate a container from the DOM element as well:
+
+```javascript
+import { Container } from 'springroll-container';
+
+const iframe = document.createElement('iframe');
+document.body.appendChild(iframe);
+
+const container = new Container(iframe);
+container.openPath('/path/to/game.html');
 ```
 
 ## Plugins
