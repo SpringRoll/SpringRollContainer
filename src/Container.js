@@ -19,18 +19,19 @@ export class Container extends PluginManager {
   /**
    *Creates an instance of Container.
    * @param {object} config
-   * @param {string} iframeSelector
+   * @param {string | HTMLIFrameElement} iframeOrSelector
    * @param {Array<BasePlugin> | null} [config.plugins=[]]
    * @memberof Container
    */
-  constructor(iframeSelector, { plugins } = {}) {
+  constructor(iframeOrSelector, { plugins } = {}) {
     super({ plugins });
 
-    this.iframe = document.querySelector(iframeSelector);
+    this.iframe = iframeOrSelector instanceof HTMLIFrameElement ? iframeOrSelector : document.querySelector(iframeOrSelector);
 
     if (null === this.iframe) {
       throw new Error('No iframe was found with the provided selector');
     }
+
     this.loaded = false;
     this.loading = false;
     this.release = null;
