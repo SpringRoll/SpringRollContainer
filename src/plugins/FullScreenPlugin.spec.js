@@ -56,13 +56,8 @@ describe('FullScreenPlugin', () => {
     fs = new FullScreenPlugin('#fullscreen-plugin-iframe', buttonOne);
     fs.preload({ client: new Bellhop() });
 
-    try {
-      buttonOne.click();
-      
-    } catch (error) {
-      console.log(error);
-      console.log('broke\n\n\n\n');
-    }
+    buttonOne.click();
+
 
   });
 });

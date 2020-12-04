@@ -42,7 +42,7 @@ export class FullScreenPlugin extends ButtonPlugin {
       this.targetElement.requestFullscreen().then(() => {
         this.sendProperty('fullscreen', document.fullscreenElement != null ? 'true' : 'false');
       }).catch((err) => {
-        throw err;
+        console.log(err);
       });
     } else {
       document.exitFullscreen();
