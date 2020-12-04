@@ -18,7 +18,7 @@ export class FullScreenPlugin extends ButtonPlugin {
   constructor(targetElementSelector, buttonSelector) {
     super({
       name: 'fullscreen'
-    });
+    }); 
 
     if (buttonSelector instanceof HTMLElement) {
       this.toggleButton = buttonSelector;
