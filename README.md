@@ -359,6 +359,61 @@ container.openPath('game.html');
 any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
 for more information on the request format.
 
+### Controls
+The full screen plugin hooks up a button to set an element to full screen then communicate this through Bellhop
+
+```javascript
+
+import { FullScreenPlugin, Container } from  'springroll-container';
+
+  
+
+const  container = new  Container('#game', {
+
+plugins: [
+	// FullScreenPlugin expects the 	selector for the element to be 	made fullscreen 
+	// along with the selector for 	the button to hook onto
+	new  FullScreenPlugin('#fullScreenDiv', '#fullScreenButton'),
+]
+
+
+});
+
+container.openPath('game.html');
+
+```
+
+The plugin will also accept a button object for the second parameter
+
+```javascript
+//The plugin will also accept a button object for the second parameter
+let btn = document.getElementById('#fullscreenButton');
+new  FullScreenPlugin('#fullScreenDiv', '#fullScreenButton'),
+]
+
+```
+The button should commonly be inside the element to be made full screen though it can occur anywhere as long as it's not nested inside an iframe. This is to allow the button to be shown once full screen 
+
+  
+
+```html
+
+<div  id="fullScreenDiv">
+	<nav>
+		
+		<button id='fullScreenButton'>Fullscreen</button>
+	</nav>
+	<!-- The button cannot be inside the source file -->
+	<iframe id="game" scrolling="no"></iframe>
+</div>
+
+```
+isFullScreen() returns true if there is a fullscreen element
+`` FullScreenPlugin.isFullScreen() ``
+
+
+---
+
 ### Multiple Plugin Controls
 All Plugins accept one or more HTML elements as controls in their constructor.
 For example the SoundPlugin can accept more than one volume slider or button if your set up requires it:
