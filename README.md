@@ -359,7 +359,7 @@ container.openPath('game.html');
 any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
 for more information on the request format.
 
-### Controls
+### Fullscreen Plugin
 The full screen plugin hooks up a button to set an element to full screen then communicate this through Bellhop
 
 ```javascript
