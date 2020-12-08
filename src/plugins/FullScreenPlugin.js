@@ -1,7 +1,5 @@
-import {
-  ButtonPlugin
-} from '../base-plugins/ButtonPlugin';
-// import { bellhop } from 'bellhop-iframe';
+import { ButtonPlugin } from '../base-plugins/ButtonPlugin';
+
 
 /**
  * A Springroll plugin to easily set up togglable fullscreen

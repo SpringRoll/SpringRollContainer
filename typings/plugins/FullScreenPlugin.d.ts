@@ -2,7 +2,7 @@
 import { ButtonPlugin } from '../base-plugins';
 import { Button } from'../ui-elements';
 
-export class CaptionsTogglePlugin extends ButtonPlugin {
+export class FullScreenPlugin extends ButtonPlugin {
   constructor(targetElementSelector: string, buttonSelector: string | HTMLElement);
   toggleButton: ButHTMLButtonElementton;
   targetElement: HTMLElement;

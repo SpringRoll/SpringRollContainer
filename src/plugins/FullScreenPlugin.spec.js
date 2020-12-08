@@ -29,10 +29,6 @@ describe('FullScreenPlugin', () => {
 
   });
 
-  it('.toggleFullScreen()', () => {
-  });
-
-
   it('Plugin should work without any controls', () => {
     //set up empty plugin
     fs = new FullScreenPlugin();
@@ -57,7 +53,6 @@ describe('FullScreenPlugin', () => {
     fs.preload({ client: new Bellhop() });
 
     buttonOne.click();
-
 
   });
 });
