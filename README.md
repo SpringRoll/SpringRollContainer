@@ -400,7 +400,6 @@ The button should commonly be inside the element to be made full screen though i
 
 <div  id="fullScreenDiv">
 	<nav>
-		
 		<button id='fullScreenButton'>Fullscreen</button>
 	</nav>
 	<!-- The button cannot be inside the source file -->
