@@ -6,17 +6,19 @@ describe('FullScreenPlugin', () => {
   
   let fs;
 
+  let iframe;
+
   before(() => {
     document.body.innerHTML = '';
     const toggleButton = makeButton('toggleButton');
     document.body.append(toggleButton);
     
-    fs = new FullScreenPlugin('#fullscreen-plugin-iframe', '#toggleButton');
+    fs = new FullScreenPlugin('#toggleButton');
     fs.preload({ client: new Bellhop() });
   });
 
   it('construct', () => {
-    const iframe = document.createElement('iframe');
+    iframe = document.createElement('iframe');
 
     iframe.id = 'fullscreen-plugin-iframe';
     iframe.setAttribute('allow', 'fullscreen');
@@ -41,7 +43,7 @@ describe('FullScreenPlugin', () => {
     const buttonOne = makeButton('toggleButton');
     document.body.appendChild(buttonOne);
 
-    fs = new FullScreenPlugin('#fullscreen-plugin-iframe', buttonOne);
+    fs = new FullScreenPlugin(buttonOne);
     fs.preload({ client: new Bellhop() });
 
   });
@@ -49,7 +51,7 @@ describe('FullScreenPlugin', () => {
     const buttonOne = makeButton('toggleButton');
     document.body.appendChild(buttonOne);
 
-    fs = new FullScreenPlugin('#fullscreen-plugin-iframe', buttonOne);
+    fs = new FullScreenPlugin(buttonOne);
     fs.preload({ client: new Bellhop() });
 
     buttonOne.click();
