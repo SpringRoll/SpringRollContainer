@@ -16,7 +16,7 @@ describe('FullScreenPlugin', () => {
   });
 
   it('construct', () => {
-    const iframe = document.createElement('div');
+    const iframe = document.createElement('iframe');
 
     iframe.id = 'fullscreen-plugin-iframe';
     iframe.setAttribute('allow', 'fullscreen');
