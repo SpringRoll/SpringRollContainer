@@ -360,24 +360,18 @@ any unsupported values. See [the SpringRoll Application Class docs](https://gith
 for more information on the request format.
 
 ### Fullscreen Plugin
-The full screen plugin hooks up a button to set an element to full screen then communicate this through Bellhop
+The full screen plugin hooks up a button to set an element to full screen then communicate this through Bellhop. The plugin will also add the class ```'--fullScreen'``` to the button given
 
 ```javascript
-
 import { FullScreenPlugin, Container } from  'springroll-container';
-
-  
 
 const  container = new  Container('#game', {
 
-plugins: [
-	// FullScreenPlugin expects the 	selector for the element to be 	made fullscreen 
-	// along with the selector for 	the button to hook onto
-	new  FullScreenPlugin('#fullScreenDiv', '#fullScreenButton'),
-]
-
-
-});
+  plugins: [
+    // FullScreenPlugin expects the selector for the button to hook onto
+    new  FullScreenPlugin(#fullScreenButton'),
+  ]
+  });
 
 container.openPath('game.html');
 
@@ -392,19 +386,18 @@ new  FullScreenPlugin('#fullScreenDiv', '#fullScreenButton'),
 ]
 
 ```
-The button should commonly be inside the element to be made full screen though it can occur anywhere as long as it's not nested inside an iframe. This is to allow the button to be shown once full screen 
 
+The typical html can look something like this however the button may be positioned anywhere in the html as long ass it is not inside the iframe
   
 
 ```html
 
-<div  id="fullScreenDiv">
-	<nav>
-		<button id='fullScreenButton'>Fullscreen</button>
-	</nav>
-	<!-- The button cannot be inside the source file -->
-	<iframe id="game" scrolling="no"></iframe>
-</div>
+<nav>
+  <button id='fullScreenButton'>Fullscreen</button>
+</nav>
+<!-- The button cannot be inside the source file -->
+<iframe id="game" scrolling="no"></iframe>
+
 
 ```
 isFullScreen() returns true if there is a fullscreen element

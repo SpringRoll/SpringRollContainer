@@ -8,9 +8,6 @@ const FULL_SCREEN = 'fullScreen';
  */
 export class FullScreenPlugin extends ButtonPlugin {
   
-  
-  
-  
   /**
    *  Creates an instance of FullscreenPlugin
    * 
@@ -34,7 +31,7 @@ export class FullScreenPlugin extends ButtonPlugin {
         this._toggleButtons.push(new Button({
           button: button,
           onClick: this.toggleFullScreen.bind(this),
-          channel: 'captions'
+          channel: 'fullScreen'
         }));
       });
     }
@@ -47,7 +44,6 @@ export class FullScreenPlugin extends ButtonPlugin {
         console.log(button.button);
         
         if (this.isFullScreen() ) {
-          console.log('hello');
           button.button.className = button.button.className ? button.button.className + ' --fullScreen' : ' --fullScreen';
         } else {
           button.button.className = button.button.className.replace(' --fullScreen', '');
@@ -56,9 +52,6 @@ export class FullScreenPlugin extends ButtonPlugin {
       });
 
     };
-
-    // this.iFrame = document.querySelector(targetElementSelector);
-
   }
 
   /**
@@ -88,8 +81,8 @@ export class FullScreenPlugin extends ButtonPlugin {
 
   /**
   *
-  * Sends initial caption properties to the application
-  * @memberof CaptionsTogglePlugin
+  * Sends initial fullScreen properties to the application
+  * @memberof FullScreenTogglePlugin
   */
   sendAllProperties() {
     this.sendProperty(FULL_SCREEN, this.isFullscreen());
