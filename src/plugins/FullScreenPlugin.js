@@ -20,6 +20,7 @@ export class FullScreenPlugin extends ButtonPlugin {
     }); 
 
     this._toggleButtons = [];
+    this.iFrame = null;
 
     if (buttonSelector instanceof HTMLElement) {
       this.toggleButton = buttonSelector;
@@ -37,18 +38,14 @@ export class FullScreenPlugin extends ButtonPlugin {
     }
 
     document.onfullscreenchange =  () => {
-      console.log(this.isFullScreen());
       this.sendProperty('fullScreen', this.isFullScreen());
       
       this._toggleButtons.forEach((button) => {
-        console.log(button.button);
-        
         if (this.isFullScreen() ) {
           button.button.className = button.button.className ? button.button.className + ' --fullScreen' : ' --fullScreen';
         } else {
           button.button.className = button.button.className.replace(' --fullScreen', '');
         }
-        console.log(button.button);
       });
 
     };
