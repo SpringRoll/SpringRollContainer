@@ -459,6 +459,7 @@ used to store user data for use across the Springroll environment. Examples are 
 The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
 be used wherever necessary.
 
+Following is an example of interacting with Local Storage
 ```javascript
 import { SavedData } from 'springroll-container';
 
@@ -472,6 +473,63 @@ let data = SavedData.read('user-value-key'); //data will be either the value in 
 
 SavedData.remove('user-value-key'); //removes the value from both local and session storage.
 ```
+
+Following is an example of interacting with IndexedDB
+``` javascript
+import { SavedData } from 'springroll-container';
+
+// Firstly, open a connection to the database. All changes to the structure of the database should be passed in here
+
+// Additions is an optional parameter expection a JSON object with any additions to the databases structure namely new stores and indexes. These are placed inside of an array 
+let additions = {
+  stores: [{
+    storeName: 'storeOne',
+    // optionally define a keyPath and/or set autoIncrement to true or false
+    options: { keyPath: "taskTitle" }
+  },
+  {
+    storeName: 'storeTwo'
+  }],
+  indexes: [{
+    indexName: 'newIndex',
+    keyPath: 'key',
+    // Any objectParameters for the Index
+    options: {
+      unique: false
+    }
+  }]
+};
+
+// Deletions is an optional parameter used to delete any indexes or stores
+let deletions = {
+  stores: ['storeOne', 'storeTwo'],
+  indexes: ['newIndex']
+};
+
+// Optionally pass in the new database version. Set to true to increment the database version.
+// Leave this parameter out or pass in false to connect without making any changes to the structure of the database
+let dbVersion = 1 
+
+// The name of the database to connect to
+let dbName = 'dbName';
+SavedData.onOpenDb( dbName, dbVersion, additions, deletions)
+
+//Delete a record by the key in a specific store
+SavedData.deleteRecord('storeName', 'key');
+
+// add a record to a store. The record can be any type of object accepted by indexedDB
+SavedData.onIDBAdd('storeName', 'record');
+
+// returns the record with the given key from the store with the given storeName
+SavedData.onIDBRead('storeName', 'key');
+
+// Finally, close the connection to the database
+SavedData.closeDb();
+
+
+
+```
+
 
 ### SavedDataHandler
 The SavedDataHandler class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly

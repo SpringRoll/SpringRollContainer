@@ -16,6 +16,11 @@ export class UserDataPlugin extends BasePlugin {
     this.onUserDataRemove = this.onUserDataRemove.bind(this);
     this.onUserDataRead = this.onUserDataRead.bind(this);
     this.onUserDataWrite = this.onUserDataWrite.bind(this);
+
+    this.onAdd = this.onAdd.bind(this);
+    this.onOpenDb = this.onOpenDb.bind(this);
+
+    this.db = null;
   }
 
   /**
@@ -27,6 +32,9 @@ export class UserDataPlugin extends BasePlugin {
     this.client.on('userDataRemove', this.onUserDataRemove);
     this.client.on('userDataRead', this.onUserDataRead);
     this.client.on('userDataWrite', this.onUserDataWrite);
+
+    this.client.on('addNote', this.onAddNote);
+    this.client.on('openDb', this.onOpenDb);
   }
 
   /**
@@ -56,5 +64,86 @@ export class UserDataPlugin extends BasePlugin {
    */
   onUserDataWrite({ type, data: { name, value } }) {
     SavedDataHandler.write(name, value, () => this.client.send(type));
+  }
+
+  /**
+   *  
+   */
+  onIDBAdd(storeName, record) {
+    SavedDataHandler.IDBAdd(storeName, record);
+  }
+
+  /**
+   * Closes the connection to the database
+   */
+  onCloseDb() {
+    SavedDataHandler.closeDb();
+  }
+
+  /**
+   * 
+   * @param {*} storeName 
+   * @param {*} note 
+   */
+  onDeleteRecord(storeName, key) {
+    SavedDataHandler(storeName, key);
+  }
+
+  /**
+   * 
+   * @param {string} dbName The name of your IndexedDB database
+   * @param {string} dbVersion The version number of the database
+   * @param {JSON} additions Any additions to the structure of the database
+   * @param {array} additions.stores Any stores to be added into the database syntax: {storename: '[name]', options: {[optionally add options]}}
+   * @param {array} additions.indexes Any Indexes to be added to the database syntax: {storename: '[name]', options: {[optionally add options]}}
+   */
+  onOpenDb( dbName, dbVersion = null, additions = {}, deletions = {}) {
+    SavedDataHandler.openDb( dbName, dbVersion, additions, deletions);
+  }
+
+  /**
+   * 
+   * @param {string} storeName 
+   */
+  getStoreCursor(storeName) {
+
+    const tx = this.db.transaction(storeName ,'readonly');
+    const pNotes = tx.objectStore(storeName);
+    const request = pNotes.openCursor();
+    request.onsuccess = e => {
+
+      const cursor = e.target.result;
+
+      // const respond = async () {
+        
+      // }
+
+
+
+      if (cursor) {
+        this.client.send('IDBCursor', {key: cursor.key, value: cursor.value.text});
+
+        // await this.client.send('IDBReadResponce', {key: cursor.key, value: cursor.value.text})
+        //do something with the cursor
+        cursor.continue();
+      }
+    };
+
+  }
+
+  /**
+   * 
+   */
+  onIDBRead(storeName, key) {
+    const tx = this.db.transaction(storeName, 'readonly');
+    const store = tx.objectStore(storeName);
+    
+    const readRequest = store.get(key);
+
+    readRequest.onsuccess = (e) => {
+      // receive the event and dispatch custom event with information
+      this.client.send('IDBRead', {e});
+    };
+
   }
 }
