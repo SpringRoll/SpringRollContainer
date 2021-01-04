@@ -161,40 +161,26 @@ export class SavedData {
 
     request.onerror = e => {
       console.log(e);
+      throw (e);
     };
-
-
-    
   }
-
-
-  
-
 
   /**
    * 
    * @param {string} storeName 
    */
-  getStoreCursor(storeName) {
+  getStoreCursor(storeName, keyRange = null) {
 
     const tx = this.db.transaction(storeName,'readonly');
     const pNotes = tx.objectStore(storeName);
-    const request = pNotes.openCursor();
-    request.onsuccess = e => {
 
+    
+    const request = keyRange == null ? pNotes.openCursor(): pNotes.openCursor(keyRange);
+    request.onsuccess = e => {
       const cursor = e.target.result;
 
-      // const respond = async () {
-        
-      // }
-
-
-
       if (cursor) {
-        this.client.send('IDBCursor', {key: cursor.key, value: cursor.value.text});
-
-        // await this.client.send('IDBReadResponce', {key: cursor.key, value: cursor.value.text})
-        //do something with the cursor
+        this.client.send('IDBCursorRead', {key: cursor.key, value: cursor.value.text});
         cursor.continue();
       }
     };

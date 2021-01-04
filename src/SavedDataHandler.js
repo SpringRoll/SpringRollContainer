@@ -51,7 +51,7 @@ export class SavedDataHandler {
   /**
    * Closes the connection to the database
    */
-  closeDb() {
+  IDBCloseDb() {
     SavedData.closeDb();
   }
 
@@ -60,7 +60,7 @@ export class SavedDataHandler {
    * @param {*} storeName 
    * @param {*} note 
    */
-  deleteRecord(storeName, key) {
+  IDBDeleteRecord(storeName, key) {
     SavedData(storeName, key);
   }
 
@@ -72,8 +72,17 @@ export class SavedDataHandler {
    * @param {array} additions.stores Any stores to be added into the database syntax: {storename: '[name]', options: {[optionally add options]}}
    * @param {array} additions.indexes Any Indexes to be added to the database syntax: {storename: '[name]', options: {[optionally add options]}}
    */
-  openDb( dbName, dbVersion = null, additions = {}, deletions = {}) {
+  IDBOpen( dbName, dbVersion = null, additions = {}, deletions = {}) {
     SavedData.openDb( dbName, dbVersion, additions, deletions);
+  }
+
+  /**
+   * 
+   * @param {string} storeName 
+   * @param {String | idbKeyRange} keyRange 
+   */
+  IDBGetCursor(storeName, keyRange = '') {
+    SavedData.IDBGetCursor(storeName, keyRange);
   }
 
 }

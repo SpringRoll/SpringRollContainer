@@ -3,6 +3,7 @@
  * @class Button
  */
 export class Button {
+  // TODO: Shouldn't there be a way in this method to add a class?
   /**
    *Creates an instance of Button
    * @param {object} params
@@ -47,5 +48,13 @@ export class Button {
       return;
     }
     this.button.classList.remove('disabled');
+  }
+
+  /**
+   * 
+   * @param {string} className The classname to be appended to the end of the class property
+   */
+  addClass(className) {
+    this.button.className = this.button.className ? this.button.className + ` ${ className }` : ` ${ className }`;
   }
 }

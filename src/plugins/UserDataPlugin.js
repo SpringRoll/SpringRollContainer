@@ -17,7 +17,7 @@ export class UserDataPlugin extends BasePlugin {
     this.onUserDataRead = this.onUserDataRead.bind(this);
     this.onUserDataWrite = this.onUserDataWrite.bind(this);
 
-    this.onAdd = this.onAdd.bind(this);
+    this.onAdd = this.onIDBAdd.bind(this);
     this.onOpenDb = this.onOpenDb.bind(this);
 
     this.db = null;
@@ -38,7 +38,7 @@ export class UserDataPlugin extends BasePlugin {
   }
 
   /**
-   * Handler for the userDataRemove event
+   * Handler for the userDataRemove event 
    * @method onUserDataRemove
    * @private
    */
@@ -105,29 +105,9 @@ export class UserDataPlugin extends BasePlugin {
    * 
    * @param {string} storeName 
    */
-  getStoreCursor(storeName) {
+  getStoreCursor(storeName, keyRange) {
 
-    const tx = this.db.transaction(storeName ,'readonly');
-    const pNotes = tx.objectStore(storeName);
-    const request = pNotes.openCursor();
-    request.onsuccess = e => {
-
-      const cursor = e.target.result;
-
-      // const respond = async () {
-        
-      // }
-
-
-
-      if (cursor) {
-        this.client.send('IDBCursor', {key: cursor.key, value: cursor.value.text});
-
-        // await this.client.send('IDBReadResponce', {key: cursor.key, value: cursor.value.text})
-        //do something with the cursor
-        cursor.continue();
-      }
-    };
+    SavedDataHandler.getStoreCursor(storeName, keyRange);
 
   }
 
@@ -135,15 +115,7 @@ export class UserDataPlugin extends BasePlugin {
    * 
    */
   onIDBRead(storeName, key) {
-    const tx = this.db.transaction(storeName, 'readonly');
-    const store = tx.objectStore(storeName);
-    
-    const readRequest = store.get(key);
-
-    readRequest.onsuccess = (e) => {
-      // receive the event and dispatch custom event with information
-      this.client.send('IDBRead', {e});
-    };
+    SavedDataHandler.IDBRead(storeName, key);
 
   }
 }
