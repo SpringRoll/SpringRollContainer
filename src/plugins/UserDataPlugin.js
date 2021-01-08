@@ -18,7 +18,10 @@ export class UserDataPlugin extends BasePlugin {
     this.onUserDataWrite = this.onUserDataWrite.bind(this);
 
     this.onAdd = this.onIDBAdd.bind(this);
-    this.onOpenDb = this.onOpenDb.bind(this);
+    this.onIDBOpen = this.onIDBOpen.bind(this);
+    this.onIDBRead = this.onIDBRead.bind(this);
+    this.onIDBRead = this.onIDBRead.bind(this);
+    this.onIDBRemove = this.onIDBRemove.bind(this);
 
     this.db = null;
   }
@@ -33,8 +36,11 @@ export class UserDataPlugin extends BasePlugin {
     this.client.on('userDataRead', this.onUserDataRead);
     this.client.on('userDataWrite', this.onUserDataWrite);
 
-    this.client.on('addNote', this.onAddNote);
-    this.client.on('openDb', this.onOpenDb);
+    this.client.on('IDBOpen', this.onIDBOpen);
+    this.client.on('IDBRead', this.onIDBRead);
+    this.client.on('IDBAdd', this.onIDBAdd);
+    this.client.on('IDBRemove', this.onIDBRemove);
+
   }
 
   /**
@@ -85,7 +91,7 @@ export class UserDataPlugin extends BasePlugin {
    * @param {*} storeName 
    * @param {*} note 
    */
-  onDeleteRecord(storeName, key) {
+  onIDBRemove({storeName, key}) {
     SavedDataHandler(storeName, key);
   }
 
@@ -97,15 +103,15 @@ export class UserDataPlugin extends BasePlugin {
    * @param {array} additions.stores Any stores to be added into the database syntax: {storename: '[name]', options: {[optionally add options]}}
    * @param {array} additions.indexes Any Indexes to be added to the database syntax: {storename: '[name]', options: {[optionally add options]}}
    */
-  onOpenDb( dbName, dbVersion = null, additions = {}, deletions = {}) {
-    SavedDataHandler.openDb( dbName, dbVersion, additions, deletions);
+  onIDBOpen( {dbName, dbVersion = null, additions = {}, deletions = {}}) {
+    SavedDataHandler.IDBOpen( dbName, dbVersion, additions, deletions);
   }
 
   /**
    * 
    * @param {string} storeName 
    */
-  getStoreCursor(storeName, keyRange) {
+  getStoreCursor({storeName, keyRange}) {
 
     SavedDataHandler.getStoreCursor(storeName, keyRange);
 
@@ -114,7 +120,7 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * 
    */
-  onIDBRead(storeName, key) {
+  onIDBRead({storeName, key}) {
     SavedDataHandler.IDBRead(storeName, key);
 
   }

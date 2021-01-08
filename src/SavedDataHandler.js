@@ -73,7 +73,8 @@ export class SavedDataHandler {
    * @param {array} additions.indexes Any Indexes to be added to the database syntax: {storename: '[name]', options: {[optionally add options]}}
    */
   IDBOpen( dbName, dbVersion = null, additions = {}, deletions = {}) {
-    SavedData.openDb( dbName, dbVersion, additions, deletions);
+    console.log('here');
+    SavedData.IDBOpen( dbName, dbVersion, additions, deletions);
   }
 
   /**
