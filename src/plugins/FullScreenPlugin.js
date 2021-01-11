@@ -1,8 +1,6 @@
 import { ButtonPlugin } from '../base-plugins/ButtonPlugin';
 import { Button } from '../ui-elements';
 
-const FULL_SCREEN = 'fullScreen';
-
 /**
  * A Springroll plugin to easily set up togglable fullscreen
  */
@@ -11,44 +9,39 @@ export class FullScreenPlugin extends ButtonPlugin {
   /**
    *  Creates an instance of FullscreenPlugin
    * 
-   * @param {string} targetElementSelector -The selector for the element to be made fullscreen
-   * @param {string || HTMLElement } buttonSelector -The selector for the button or the HTMLElement Button to be used to toggle fullscreen on the targetElement
+   * @param {string} targetElementSelector The selector for the element to be made fullscreen
+   * @param {string || HTMLElement } buttonSelector The selector for the button or the HTMLElement Button to be used to toggle fullscreen on the targetElement
    */
   constructor(buttonSelector) {
     super({
-      name: 'fullscreen'
+      name: 'fullScreen'
     }); 
 
+    console.log(FullScreenPlugin.fullscreenKey);
     this._toggleButtons = [];
     this.iFrame = null;
 
-    if (buttonSelector instanceof HTMLElement) {
-      this.toggleButton = buttonSelector;
-      this.toggleButton.addEventListener('click', () => this.toggleFullScreen());
-    } else {
-      this.toggleButton = document.querySelectorAll(buttonSelector);
-      this.toggleButton.forEach((button) => {
-        // button.addEventListener('click', () => this.toggleFullScreen());
-        this._toggleButtons.push(new Button({
-          button: button,
-          onClick: this.toggleFullScreen.bind(this),
-          channel: 'fullScreen'
-        }));
-      });
-    }
+    this.sendAllProperties = this.sendAllProperties.bind(this);
 
-    document.onfullscreenchange =  () => {
-      this.sendProperty('fullScreen', this.isFullScreen());
+    
+    this.toggleButton = document.querySelectorAll(buttonSelector);
+    this.toggleButton.forEach((button) => {
+      this._toggleButtons.push(new Button({
+        button: button,
+        onClick: this.toggleFullScreen.bind(this),
+        channel: 'fullScreen'
+      }));
+    });
+    
+
+    document.addEventListener('fullscreenchange',  () => {
+      this.sendProperty('fullScreen', this.isFullScreen);
       
       this._toggleButtons.forEach((button) => {
-        if (this.isFullScreen() ) {
-          button.button.className = button.button.className ? button.button.className + ' --fullScreen' : ' --fullScreen';
-        } else {
-          button.button.className = button.button.className.replace(' --fullScreen', '');
-        }
+        button.button.classList.toggle('--fullScreen');
       });
 
-    };
+    });
   }
 
   /**
@@ -71,7 +64,6 @@ export class FullScreenPlugin extends ButtonPlugin {
   * @memberof FullScreenPlugin
   */
   start() {
-
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
   }
@@ -82,7 +74,7 @@ export class FullScreenPlugin extends ButtonPlugin {
   * @memberof FullScreenTogglePlugin
   */
   sendAllProperties() {
-    this.sendProperty(FULL_SCREEN, this.isFullscreen());
+    this.sendProperty(FullScreenPlugin.fullscreenKey, document.fullscreenElement != null ? 'true' : 'false');
   }
 
   /**
@@ -91,13 +83,13 @@ export class FullScreenPlugin extends ButtonPlugin {
   toggleFullScreen() {
     if (!document.fullscreenElement) {
       this.iFrame.requestFullscreen().then(() => {
-        this.sendProperty('fullscreen', document.fullscreenElement != null ? 'true' : 'false');
+        this.sendProperty(FullScreenPlugin.fullscreenKey, document.fullscreenElement != null ? 'true' : 'false');
       }).catch((err) => {
         console.log(err);
       });
     } else {
       document.exitFullscreen();
-      this.sendProperty('fullscreen', !document.fullscreenElement ? 'true' : 'false');
+      this.sendProperty(FullScreenPlugin.fullscreenKey, !document.fullscreenElement ? 'true' : 'false');
     }
   }
 
@@ -105,11 +97,10 @@ export class FullScreenPlugin extends ButtonPlugin {
    * Returns true if there is a fullscreen element and false if not
    * @returns { boolean } 
    */
-  isFullScreen() {
+  get isFullScreen() {
     return (document.fullscreenElement || // basic
       document.webkitIsFullscreen || //Webkit browsers
-      document.mozFullScreen || // Firefox
-      document.msFullscreenElement !== undefined) && true; // IE
+      document.mozFullScreen ); // Firefox
   }
 
   /** 
@@ -118,6 +109,6 @@ export class FullScreenPlugin extends ButtonPlugin {
    * @memberof FullscreenPlugin
    */
   static get fullscreenKey() {
-    return 'fullscreen';
+    return 'fullScreen';
   }
 }
