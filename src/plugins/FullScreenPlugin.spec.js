@@ -39,7 +39,7 @@ describe('FullScreenPlugin', () => {
     fs.client.trigger('features', {});
   });
 
-  });
+ 
   it('Plugin should respond to the click event', () => {
     
     document.body.appendChild(iframe);
