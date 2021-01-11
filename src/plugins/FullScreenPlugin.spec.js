@@ -39,15 +39,6 @@ describe('FullScreenPlugin', () => {
     fs.client.trigger('features', {});
   });
 
-  it('Plugin should work with HTMLElement as parameter', () => {
-    const buttonOne = makeButton('toggleButton');
-    document.body.appendChild(buttonOne);
-
-    fs = new FullScreenPlugin(buttonOne);
-    fs.preload({ client: new Bellhop() });
-    fs.init(document.getElementById('fullscreen-plugin-iframe'));
-
-
   });
   it('Plugin should respond to the click event', () => {
     

@@ -17,7 +17,6 @@ export class FullScreenPlugin extends ButtonPlugin {
       name: 'fullScreen'
     }); 
 
-    console.log(FullScreenPlugin.fullscreenKey);
     this._toggleButtons = [];
     this.iFrame = null;
 
