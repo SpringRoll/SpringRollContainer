@@ -34,7 +34,7 @@ export class FullScreenPlugin extends ButtonPlugin {
     
 
     document.addEventListener('fullscreenchange',  () => {
-      this.sendProperty('fullScreen', this.isFullScreen);
+      this.sendAllProperties('fullScreen', this.isFullScreen);
       
       this._toggleButtons.forEach((button) => {
         button.button.classList.toggle('--fullScreen');
@@ -82,13 +82,13 @@ export class FullScreenPlugin extends ButtonPlugin {
   toggleFullScreen() {
     if (!document.fullscreenElement) {
       this.iFrame.requestFullscreen().then(() => {
-        this.sendProperty(FullScreenPlugin.fullscreenKey, document.fullscreenElement != null ? 'true' : 'false');
+        this.sendAllProperties(FullScreenPlugin.fullscreenKey, document.fullscreenElement != null ? 'true' : 'false');
       }).catch((err) => {
         console.log(err);
       });
     } else {
       document.exitFullscreen();
-      this.sendProperty(FullScreenPlugin.fullscreenKey, !document.fullscreenElement ? 'true' : 'false');
+      this.sendAllProperties(FullScreenPlugin.fullscreenKey, !document.fullscreenElement ? 'true' : 'false');
     }
   }
 
@@ -99,7 +99,8 @@ export class FullScreenPlugin extends ButtonPlugin {
   get isFullScreen() {
     return (document.fullscreenElement || // basic
       document.webkitIsFullscreen || //Webkit browsers
-      document.mozFullScreen ); // Firefox
+      document.mozFullScreen ) // Firefox
+      != true; // Ensure boolean output
   }
 
   /** 
