@@ -385,7 +385,7 @@ new  FullScreenPlugin('#fullScreenButton'),
 
 ```
 
-The typical html can look something like this however the button may be positioned anywhere in the html as long ass it is not inside the iframe
+The typical html can look something like this however the button may be positioned anywhere in the html as long as it is not inside the iframe
   
 
 ```html
