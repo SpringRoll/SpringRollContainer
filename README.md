@@ -377,12 +377,10 @@ container.openPath('game.html');
 
 ```
 
-The plugin will also accept a button object for the second parameter
+The plugin will accept either a selector or an array of selectors as a parameter
 
 ```javascript
-//The plugin will also accept a button object for the second parameter
-let btn = document.getElementById('#fullscreenButton');
-new  FullScreenPlugin('#fullScreenDiv', '#fullScreenButton'),
+new  FullScreenPlugin('#fullScreenButton'),
 ]
 
 ```
@@ -400,8 +398,8 @@ The typical html can look something like this however the button may be position
 
 
 ```
-isFullScreen() returns true if there is a fullscreen element
-`` FullScreenPlugin.isFullScreen() ``
+isFullScreen returns true if there is a fullscreen element
+`` FullScreenPlugin.isFullScreen ``
 
 
 ---
