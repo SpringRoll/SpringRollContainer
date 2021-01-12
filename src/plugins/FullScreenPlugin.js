@@ -14,7 +14,7 @@ export class FullScreenPlugin extends ButtonPlugin {
    */
   constructor(buttonSelector) {
     super({
-      name: 'fullScreen'
+      name: FullScreenPlugin.fullscreenKey
     }); 
 
     this._toggleButtons = [];
@@ -28,13 +28,13 @@ export class FullScreenPlugin extends ButtonPlugin {
       this._toggleButtons.push(new Button({
         button: button,
         onClick: this.toggleFullScreen.bind(this),
-        channel: 'fullScreen'
+        channel: FullScreenPlugin.fullscreenKey
       }));
     });
     
 
     document.addEventListener('fullscreenchange',  () => {
-      this.sendAllProperties('fullScreen', this.isFullScreen);
+      this.sendAllProperties(FullScreenPlugin.fullscreenKey, this.isFullScreen);
       
       this._toggleButtons.forEach((button) => {
         button.button.classList.toggle('--fullScreen');
