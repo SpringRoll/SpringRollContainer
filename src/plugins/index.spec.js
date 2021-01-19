@@ -21,4 +21,3 @@ import './CompletionPercentagePlugin.spec';
 import './SpeedScalePlugin.spec';
 import './TimersScalePlugin.spec';
 import './InputCountPlugin.spec';
-import './FullScreenPlugin.spec';
