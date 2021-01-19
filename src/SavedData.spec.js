@@ -3,6 +3,19 @@ beforeEach(() => {
   localStorage.clear();
   document.cookie = '';
 });
+
+/**
+ * 
+ */
+async function indexed() {
+  const request =  window.indexedDB.open('MyTestDatabase', 3);
+
+  request.onsuccess = () => {
+    console.log('this will work');
+    return 'here';
+  };
+}
+
 describe('SavedData', () => {
   const test = { foo: 'bar' };
   const arrayTest = [5, 4, 3, 2, 1, 0];
@@ -87,26 +100,29 @@ describe('SavedData', () => {
 
   it('The database should be able to create a store and an index then create a record then read it, update it, and delete it', async () => {
     
-    window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+    // window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-    const request = window.indexedDB.open("MyTestDatabase", 3);
-
-    console.log('\n\n\n\n\n\n\n\n\n');
-    console.log(request.version);
-    console.log('\n\n\n\n\n\n\n\n\n');
-
-    // const savedData = new SavedData('dbName');
-    // const version = await savedData.IDBGetVersion('testing');
-    // await savedData.IDBOpen('testing',  1, {
-    //   stores: [{storeName: 'storeOne'}],
-    //   indexes: [{storeName: 'storeOne', indexName: 'indexName'}]
-    // }
-    // );
-
-    
-    // console.log(savedData.dbname);
+    console.log(await indexed());
 
     // console.log('\n\n\n\n\n\n\n\n\n');
+    // console.log(request.version);
+    // console.log('\n\n\n\n\n\n\n\n\n');
+
+    const savedData = new SavedData('dbName');
+    // const version = await savedData.IDBGetVersion('testing');
+    const returnOpen = await savedData.IDBOpen('testing',  1, {
+      stores: [{storeName: 'storeOne'}],
+      indexes: [{storeName: 'storeOne', indexName: 'indexName'}]
+    }, (value) => {
+      return 'value';
+    }
+    );
+
+    console.log('\n\n\n\n\n\n\n\n\n');
+    
+    console.log(returnOpen);
+
+    console.log('\n\n\n\n\n\n\n\n\n');
 
     // await savedData.IDBAdd('storeOne', 'valuable', 'key' + Math.random().toString(36).substring(7));
     
@@ -121,4 +137,5 @@ describe('SavedData', () => {
     // await savedData.IDBClose();
 
   });
+
 });

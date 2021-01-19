@@ -77,13 +77,11 @@ export class SavedData {
    * @param {array} additions.indexes Any Indexes to be added to the database syntax: {storeName: '[name]', options: {[optionally add options]}}
    */
   IDBOpen( dbName, dbVersion = null, additions = {}, deletions = {}, callback ) {
-    const request = dbVersion ? indexedDB.open(dbName,dbVersion): indexedDB.open(dbName);
+    const request = dbVersion ? indexedDB.open(dbName, dbVersion): indexedDB.open(dbName);
 
     request.onsuccess = e => {
 
       this.db = e.target.result;
-
-      console.log(this.db);
 
       if (this.db.version == dbVersion) {
         callback('Success: IDBOpen');
