@@ -84,13 +84,13 @@ export class SavedData {
       this.db = e.target.result;
 
       if (this.db.version == dbVersion) {
-        callback('Success: IDBOpen');
+        // console.log('Got Here Bud \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
+        callback({result: 'Success: IDBOpen', success: true});
       }
     };
 
     request.onerror = () => {
-      callback({result: this.db.error.toString(), success: false});
-
+      callback({result: request.error.toString(), success: false});
     };
 
     // on upgrade needed fires only if the dbVersion is higher than the current version number
@@ -127,7 +127,7 @@ export class SavedData {
           });
         }
       }
-      callback({result: 'Success: IDBOpen', success: true});
+      callback({result: 'Success: IDBOpen onupgradeneeded ran', success: true});
 
 
     };
@@ -215,7 +215,7 @@ export class SavedData {
     const readRequest = store.get(key);
 
     readRequest.onsuccess = () => {
-      callback({data: readRequest.result});
+      callback({result: readRequest.result, success: true});
     };
 
   }
@@ -263,7 +263,7 @@ export class SavedData {
     
     const readRequest = count != null ? store.getAll(storeName) : store.getAll(storeName, count);
 
-    tx.onerror = () => callback({result: this.db.error.toString(), success: false});
+    tx.onerror = () => callback({result: tx.error.toString(), success: false});
 
 
     readRequest.onsuccess = () => {

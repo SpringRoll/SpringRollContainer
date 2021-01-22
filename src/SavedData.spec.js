@@ -8,12 +8,53 @@ beforeEach(() => {
  * 
  */
 async function indexed() {
-  const request =  window.indexedDB.open('MyTestDatabase', 3);
+  const request = window.indexedDB.open('testing123');
 
-  request.onsuccess = () => {
-    console.log('this will work');
-    return 'here';
+  request.onsuccess = e => {
+
+    // this.db = e.target.result;
+
+    console.log('Here: \n\n\n\n\n\n\n\n');
+
+    console.log(e.target.result);
+
+    console.log('there: \n\n\n\n\n\n\n\n');
+    
   };
+
+  request.onerror = () => {
+
+  };
+}
+
+onReturn(METHOD, data, attempts = 3) {
+  return new Promise((resolve, reject) => {
+    let success = false;
+    let count = 0;
+
+    const onReturn = event => {
+      BellhopSingleton.off(METHOD, onReturn);
+      success = true;
+      resolve(event);
+    };
+    BellhopSingleton.on(METHOD, onReturn);
+
+    BellhopSingleton.send(METHOD, data);
+
+    const interval = setInterval(() => {
+      if (success) {
+        clearInterval(interval);
+        return;
+      }
+
+      if (count >= attempts) {
+        clearInterval(interval);
+        BellhopSingleton.off(METHOD, onReturn);
+        reject('No Response');
+      }
+      count++;
+    }, 100);
+  });
 }
 
 describe('SavedData', () => {
@@ -102,7 +143,7 @@ describe('SavedData', () => {
     
     // window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-    console.log(await indexed());
+    // console.log(await indexed());
 
     // console.log('\n\n\n\n\n\n\n\n\n');
     // console.log(request.version);
@@ -110,19 +151,30 @@ describe('SavedData', () => {
 
     const savedData = new SavedData('dbName');
     // const version = await savedData.IDBGetVersion('testing');
-    const returnOpen = await savedData.IDBOpen('testing',  1, {
-      stores: [{storeName: 'storeOne'}],
-      indexes: [{storeName: 'storeOne', indexName: 'indexName'}]
-    }, (value) => {
-      return 'value';
+    // const userData = new UserData('dbName');
+    const openResult = await savedData.IDBOpen('testing', 19, null, null, async (val) => {
+      console.log('Inside Callback');
+      return new Promise((resolve) =>{
+        // console.log('Here: \n\n\n\n\n\n\n\n');
+        console.log(val);
+
+        // console.log(val);
+        resolve(val);
+      });
     }
     );
 
-    console.log('\n\n\n\n\n\n\n\n\n');
-    
-    console.log(returnOpen);
+    console.log('Here: \n\n\n\n\n\n\n\n');
+    console.log(openResult);
+    console.log('There \n\n\n\n\n\n\n\n');
 
-    console.log('\n\n\n\n\n\n\n\n\n');
+    // indexed();
+
+    // console.log('There: \n\n\n\n\n\n\n\n\n');
+    
+    // console.log(returnOpen);
+
+    // console.log('\n\n\n\n\n\n\n\n\n');
 
     // await savedData.IDBAdd('storeOne', 'valuable', 'key' + Math.random().toString(36).substring(7));
     
