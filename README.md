@@ -360,16 +360,16 @@ any unsupported values. See [the SpringRoll Application Class docs](https://gith
 for more information on the request format.
 
 ### Fullscreen Plugin
-The full screen plugin hooks up a button to set an element to full screen then communicate this through Bellhop. The plugin will also add the class ```'--fullScreen'``` to the button given
+The fullscreen plugin hooks up an element or elements to set the iframe to full screen then communicates this through Bellhop. The plugin will also add the class ```'--fullScreen'``` to the element(s) given
 
 ```javascript
 import { FullScreenPlugin, Container } from  'springroll-container';
 
-const  container = new  Container('#game', {
+const container = new Container('#game', {
 
   plugins: [
-    // FullScreenPlugin expects the selector for the button to hook onto
-    new  FullScreenPlugin(#fullScreenButton'),
+    // FullScreenPlugin expects the selector for the element(s) to hook onto
+    new FullScreenPlugin('#fullScreenButton'),
   ]
   });
 
@@ -380,20 +380,25 @@ container.openPath('game.html');
 The plugin will accept either a selector or an array of selectors as a parameter
 
 ```javascript
-new  FullScreenPlugin('#fullScreenButton'),
-]
+new FullScreenPlugin('#fullScreenButton');
+new FullScreenPlugin(['#fullScreenButton', '.fullScreenButtonSideNav']);
+
+// It will also accept one string with all selectors each seperated by a comma
+new FullScreenPlugin('#fullScreenButton, .fullScreenButtonSideNav');
+
 
 ```
 
-The typical html can look something like this however the button may be positioned anywhere in the html as long as it is not inside the iframe
+The typical html can look something like this however, the element may be positioned anywhere in the html as long as it is not inside the iframe
   
 
 ```html
 
 <nav>
+  <!-- May be a button or any other element that can create an onclick event -->
   <button id='fullScreenButton'>Fullscreen</button>
 </nav>
-<!-- The button cannot be inside the source file -->
+<!-- The element cannot be inside the source file -->
 <iframe id="game" scrolling="no"></iframe>
 
 

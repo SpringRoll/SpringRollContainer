@@ -3,8 +3,8 @@ import { ButtonPlugin } from '../base-plugins';
 import { Button } from'../ui-elements';
 
 export class FullScreenPlugin extends ButtonPlugin {
-  constructor(targetElementSelector: string, buttonSelector: string | string[]);
-  toggleButton: ButHTMLButtonElementton;
+  constructor(buttonSelector: string | string[]);
+  toggleButton: HTMLButtonElement | HTMLButtonElement[];
   targetElement: HTMLElement;
 
   get toggleButton(): HTMLButtonElement;

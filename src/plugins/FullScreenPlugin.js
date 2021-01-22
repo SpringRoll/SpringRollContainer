@@ -9,8 +9,7 @@ export class FullScreenPlugin extends ButtonPlugin {
   /**
    *  Creates an instance of FullscreenPlugin
    * 
-   * @param {string} targetElementSelector The selector for the element to be made fullscreen
-   * @param {string || HTMLElement } buttonSelector The selector for the button or the HTMLElement Button to be used to toggle fullscreen on the targetElement
+   * @param {string | string[]} buttonSelector The selector for the element to be made fullscreen
    */
   constructor(buttonSelector) {
     super({
@@ -22,8 +21,16 @@ export class FullScreenPlugin extends ButtonPlugin {
 
     this.sendAllProperties = this.sendAllProperties.bind(this);
 
+    if (Array.isArray(buttonSelector)) {
+      // If input is an array, join the selectors into one string
+      buttonSelector = buttonSelector.join(', ');
+    }
+
+    console.log(buttonSelector);
     
     this.toggleButton = document.querySelectorAll(buttonSelector);
+
+
     this.toggleButton.forEach((button) => {
       this._toggleButtons.push(new Button({
         button: button,
