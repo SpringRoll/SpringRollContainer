@@ -4,58 +4,9 @@ beforeEach(() => {
   document.cookie = '';
 });
 
-/**
- * 
- */
-async function indexed() {
-  const request = window.indexedDB.open('testing123');
-
-  request.onsuccess = e => {
-
-    // this.db = e.target.result;
-
-    console.log('Here: \n\n\n\n\n\n\n\n');
-
-    console.log(e.target.result);
-
-    console.log('there: \n\n\n\n\n\n\n\n');
-    
-  };
-
-  request.onerror = () => {
-
-  };
-}
-
-onReturn(METHOD, data, attempts = 3) {
-  return new Promise((resolve, reject) => {
-    let success = false;
-    let count = 0;
-
-    const onReturn = event => {
-      BellhopSingleton.off(METHOD, onReturn);
-      success = true;
-      resolve(event);
-    };
-    BellhopSingleton.on(METHOD, onReturn);
-
-    BellhopSingleton.send(METHOD, data);
-
-    const interval = setInterval(() => {
-      if (success) {
-        clearInterval(interval);
-        return;
-      }
-
-      if (count >= attempts) {
-        clearInterval(interval);
-        BellhopSingleton.off(METHOD, onReturn);
-        reject('No Response');
-      }
-      count++;
-    }, 100);
-  });
-}
+const sleep = (millis) => {
+  return new Promise((resolve) => setTimeout(resolve, millis));
+};
 
 describe('SavedData', () => {
   const test = { foo: 'bar' };
@@ -114,80 +65,172 @@ describe('SavedData', () => {
   });
 
   it('Database should create a database, connect to it, and close without issue', async () => {
-    const savedData = new SavedData();
+    const savedData = new SavedData('testingDB1');
+    let result = undefined;
+    savedData.IDBOpen('testingDB1', 1, null, null, (val) => {
+      if (val.success) {
+        result = val.success;
+      }
+    }
+    );
 
-    await savedData.IDBOpen('newDataBase');
+    await sleep(600);
 
-    await savedData.IDBClose();
+    expect(result).to.be.true;
 
-  });
-  it('The database should be able to close and re-open as well as delete stores and indexes', async () => {
+    result = undefined;
+    savedData.IDBClose((val) => {
+      if (val.success) {
+        result = val.success;
+      }
+    }
+    );
 
-    const savedData = new SavedData('dbName');
-    await savedData.IDBOpen('testing', 11, {
-      stores: [{storeName: 'storeOne'}],
-      indexes: [{storeName: 'storeOne', indexName: 'indexName'}]
+    await sleep(900);
+    expect(result).to.be.true;
+
+    savedData.IDBDeleteDB('testingDB1', null, (val) => {
+      result = val.success;
     });
 
-    savedData.IDBClose();
+    await sleep(600);
+    
 
-    await savedData.IDBOpen('testing', 11, null, {
-      stores: [{storeName: 'storeOne'}],
-      indexes: [{storeName: 'storeOne', indexName: 'indexName'}]
+
+  }).timeout(10000);
+  it('The database should be able to close and re-open as well as delete stores and indexes', async () => {
+
+    const savedData = new SavedData('testing');
+    let result = undefined;
+    savedData.IDBOpen('testing2', 2, {
+      stores : [{storeName : 'newStore'}],
+      indexes : [{storeName : 'newStore',indexName : 'newIndex'}]
+    }, null, (val) => {
+      if (val.success) {
+        result = val.success;
+      }
     }
     );
 
-  });
+    await sleep(600);
+    expect(result).to.be.true;
 
-  it('The database should be able to create a store and an index then create a record then read it, update it, and delete it', async () => {
-    
-    // window.indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-
-    // console.log(await indexed());
-
-    // console.log('\n\n\n\n\n\n\n\n\n');
-    // console.log(request.version);
-    // console.log('\n\n\n\n\n\n\n\n\n');
-
-    const savedData = new SavedData('dbName');
-    // const version = await savedData.IDBGetVersion('testing');
-    // const userData = new UserData('dbName');
-    const openResult = await savedData.IDBOpen('testing', 19, null, null, async (val) => {
-      console.log('Inside Callback');
-      return new Promise((resolve) =>{
-        // console.log('Here: \n\n\n\n\n\n\n\n');
-        console.log(val);
-
-        // console.log(val);
-        resolve(val);
-      });
+    result = undefined;
+    savedData.IDBClose( (val) => {
+      if (val.success) {
+        result = val.success;
+      }
     }
     );
 
-    console.log('Here: \n\n\n\n\n\n\n\n');
-    console.log(openResult);
-    console.log('There \n\n\n\n\n\n\n\n');
+    await sleep(600);
+    expect(result).to.be.true;
 
-    // indexed();
+    result = undefined;
+    savedData.IDBOpen('testing2', 3, null, {
+      stores : [{storeName : 'newStore', key : 'key'}],
+      indexes : [{storeName : 'newStore', indexName : 'newIndex'}]
+    }, (val) => {
+      result = val.success;
+    }
+    );
 
-    // console.log('There: \n\n\n\n\n\n\n\n\n');
+    await sleep(600);
+    expect(result).to.be.true;
+
+    result = undefined;
     
-    // console.log(returnOpen);
+    savedData.IDBClose( (val) => {
+      if (val.success) {
+        result = val.success;
+      }
+    }
+    );
 
-    // console.log('\n\n\n\n\n\n\n\n\n');
+    await sleep(600);
+    expect(result).to.be.true;
 
-    // await savedData.IDBAdd('storeOne', 'valuable', 'key' + Math.random().toString(36).substring(7));
+    savedData.IDBDeleteDB('testing2', null, (val) => {
+      result = val.success;
+    });
+
+  }).timeout(10000);
+
+  it('The database should be able to create a store and an index then create a record then read it, update it, and delete it',  async() => {
+
+    const savedData = new SavedData('testingDB3');
+
+    let result = undefined;
+    savedData.IDBOpen('testingDB3', 1, {
+      stores : [{storeName : 'storeOne'}]
+    }, null, (val) => {
+      if (val.success) {
+        result = val.success;
+      }
+    }
+    );
+
+    await sleep(900);
+
+    expect(result).to.be.true;
+
+    result = false;
+
+    savedData.IDBAdd('storeOne', 'valuable', 'key', (val) => {
+      result = val.success;
+    });
+
+    await sleep(600);
+
+    expect(result).to.be.true;
+
+    result = false;
     
-    // await savedData.IDBUpdate('storeOne', 'key', 'valueless');
+    await savedData.IDBUpdate('storeOne', 'key', 'valueless', (val) => {
+      result = val.success;
+    });
+
+    await sleep(600);
+
+    expect(result).to.be.true;
+
+    result = false;
     
-    // const data = await savedData.IDBRead('storeOne', 'key');
+    savedData.IDBRead('storeOne', 'key', (val) => {
+      result = val.result;
+    });
+    await sleep(600);
 
-    // expect(data.data.result.value).to.equal('valueless');
+    expect(result).to.equal('valueless');
 
-    // await savedData.IDBRemove('storeOne', 'key');
+    result = false;
 
-    // await savedData.IDBClose();
 
-  });
+
+    savedData.IDBRemove('storeOne', 'key', (val) => {
+      result = val.success;
+    });
+
+    await sleep(900);
+
+    expect(result).to.be.true;
+
+    result = false;
+
+
+    savedData.IDBClose((val) => {
+      result = val.success;
+    });
+    savedData.IDBDeleteDB('testingDB', null, (val) => {
+      result = val.success;
+    });
+
+    await sleep(900);
+
+    expect(result).to.be.true;
+
+
+
+  }).timeout(10000);
 
 });

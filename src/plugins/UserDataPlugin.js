@@ -145,7 +145,7 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * Get all records from a store
    * @param {string} storeName The store to get all records from
-   * @param {integer} count Optionally the count of records to return
+   * @param {integer} count Optionally the number of records to return
    */
   onIDBReadAll({ type, data: {storeName, count} }) {
     this.savedData.IDBReadAll(storeName, count, value => this.client.send(type, value));
@@ -161,7 +161,7 @@ export class UserDataPlugin extends BasePlugin {
   }
   
   /**
-   * 
+   * Close the connection with the database
    */
   onIDBClose({type}) {
     this.savedDataHandler.IDBClose(value => this.client.send(type, value));

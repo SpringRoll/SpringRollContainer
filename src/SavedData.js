@@ -80,11 +80,10 @@ export class SavedData {
     const request = dbVersion ? indexedDB.open(dbName, dbVersion): indexedDB.open(dbName);
 
     request.onsuccess = e => {
-
+      // Database successfully opened. This will run along with onupgradeneeded
       this.db = e.target.result;
 
       if (this.db.version == dbVersion) {
-        // console.log('Got Here Bud \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n');
         callback({result: 'Success: IDBOpen', success: true});
       }
     };
@@ -95,46 +94,61 @@ export class SavedData {
 
     // on upgrade needed fires only if the dbVersion is higher than the current version number
     request.onupgradeneeded = e => {
+      // Ensure the proper database object is stored
       this.db = e.target.result;
 
       if (additions != null) {
         if (additions.stores) {
           additions.stores.forEach(store => {
             this.db.createObjectStore(store.storeName, store.options);
-            
           });
         }
-        if (additions.indexes) {
+        if (additions.indexes != null) {
           additions.indexes.forEach(index => {
+            // Add indexes last to avoid adding an index to a store that has yet to be created
             // Open a transaction returning a store object
             const storeObject = request.transaction.objectStore(index.storeName);
             storeObject.createIndex(index.indexName, index.keyPath, index.options);
           });
         }
       }
-
+      
       if (deletions != null) {
-        if (deletions.stores) {
-          deletions.stores.forEach((store) => {
-            this.db.deleteObjectStore(store.storeName);
-          });
-        }
-        if (deletions.indexes) {
+        if (deletions.indexes != null) {
+          // delete indexes first to avoid deleting an index to a store that has already to been deleted
           deletions.indexes.forEach((index) => {
             // Open a transaction returning a store object
             const storeObject = request.transaction.objectStore(index.storeName);
             storeObject.deleteIndex(index.indexName);
           });
         }
+        if (deletions.stores) {
+          deletions.stores.forEach((store) => {
+            this.db.deleteObjectStore(store.storeName);
+          });
+        }
       }
       callback({result: 'Success: IDBOpen onupgradeneeded ran', success: true});
-
-
     };
+  }
 
+  /**
+   * Delete a database and all records, stores, and indexes associated
+   * @param {*} dbName Name of the database to delete 
+   * @param {*} options Optionally pass in options
+   * @param {*} callback The callback to be run on success or error. One value will be passed into this function
+   */
+  IDBDeleteDB(dbName, options = null, callback = {}) {
+    const request = options ? indexedDB.deleteDatabase(dbName, options): indexedDB.deleteDatabase(dbName);
+
+    request.onsuccess = () => {
+      callback({result: 'Success: Database Deleted', success: true});
+    };
     request.onerror = () => {
-      callback({result: this.db.error.toString(), success: false});
+      callback({result: request.error.toString(), success: false});
     };
+
+
   }
 
   /**
@@ -142,24 +156,20 @@ export class SavedData {
    * @param {string} storeName The name of the store from which the record will be updated
    * @param {string} key the key of the record to be updated 
    * @param {*} value The value for the record with the given key to be updated
+   * @param {function} callback The method to call on success or failure. A single value will be passed in
    */
   IDBAdd(storeName, value, key, callback) {
-    
     if ( !this.db && this.dbName != '') {
       this.IDBOpen(this.dbName);
     }
     
     const tx = this.db.transaction(storeName, 'readwrite');
-    tx.onerror = callback({result: tx.error != null ? tx.error.toString() : 'Aborted: No error given, was the record already added?', success: false});
-    tx.onabort = callback({result: tx.error != null ? tx.error.toString() : 'Aborted: No error given, was the record already added?', success: false});
-
+    tx.onerror = () => callback({result: tx.error != null ? tx.error.toString() : 'Aborted: No error given, was the record already added?', success: false});
+    tx.onabort = () => callback({result: tx.error != null ? tx.error.toString() : 'Aborted: No error given, was the record already added?', success: false});
     
     tx.oncomplete = () => callback({result: 'Success: Record Added', success: true});
     const store = tx.objectStore(storeName);
-    console.log('here');
     store.add(value, key);
-
-    
   }
 
   /**
@@ -173,11 +183,13 @@ export class SavedData {
     const tx = this.db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
     
-    const updateRequest = store.put(key, value);
+    const updateRequest = store.put(value, key);
 
     updateRequest.onsuccess = () => {
       callback({result: 'Success: Record Updated', success: true});
     };
+
+    updateRequest.onerror = () => callback({result: updateRequest.error.toString(), success: false});
   }
 
   /**
@@ -207,7 +219,9 @@ export class SavedData {
    * @param {function} callback The method to call on success or failure. A single value will be passed in
    */
   IDBRead(storeName, key, callback) {
+    // Open transaction with a store
     const tx = this.db.transaction(storeName, 'readonly');
+    // Get the store object from the transaction
     const store = tx.objectStore(storeName);
 
     tx.onerror = () => callback({result: this.db.error.toString(), success: false});
@@ -227,8 +241,9 @@ export class SavedData {
    * @param {function} callback The method to call on success or failure. A single value will be passed in
    */
   IDBGetIndexKeys (storeName, indexName, query = null, count = null, callback = {}) {
-
-    const tx = this.db.transaction(storeName, 'readWrite');
+    // Open transaction with a store
+    const tx = this.db.transaction(storeName, 'readonly');
+    // Get the store object from the transaction
     const store = tx.objectStore(storeName);
 
     let index;
@@ -258,7 +273,9 @@ export class SavedData {
    * @param {function} callback The method to call on success or failure. A single value will be passed in
    */
   IDBReadAll(storeName, count, callback) {
+    // Open transaction with a store
     const tx = this.db.transaction(storeName, 'readonly');
+    // Get the store object from the transaction
     const store = tx.objectStore(storeName);
     
     const readRequest = count != null ? store.getAll(storeName) : store.getAll(storeName, count);
