@@ -11,5 +11,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fullscreen Plugin. The ability to add in a fullscreen button within container
 - Fullscreen Plugin Automated Testing
 - Fullscreen Plugin Documentation
-
+- update NPM modules to remove security vulnerabilities
+- Indexeddb additions to the userdata class
 
