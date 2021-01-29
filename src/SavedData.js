@@ -6,12 +6,11 @@
 export class SavedData {
 
   /**
-   * 
+   * Constructor for IndexedDB work
    */
   constructor(dbName = '') {
     this.db = null;
     this.dbName = dbName;
-
   }
   /**
    * Remove a saved variable by name.
@@ -77,7 +76,7 @@ export class SavedData {
    * @param {array} additions.indexes Any Indexes to be added to the database syntax: {storeName: '[name]', options: {[optionally add options]}}
    */
   IDBOpen( dbName, dbVersion = null, additions = {}, deletions = {}, callback ) {
-    const request = dbVersion ? indexedDB.open(dbName, dbVersion): indexedDB.open(dbName);
+    const request = dbVersion ? indexedDB.open(dbName, dbVersion) : indexedDB.open(dbName);
 
     request.onsuccess = e => {
       // Database successfully opened. This will run along with onupgradeneeded
@@ -180,6 +179,10 @@ export class SavedData {
    * @param {function} callback The method to call on success or failure. A single value will be passed in
    */
   IDBUpdate (storeName, key, value, callback) {
+    if ( !this.db && this.dbName != '') {
+      this.IDBOpen(this.dbName);
+    }
+
     const tx = this.db.transaction(storeName, 'readwrite');
     const store = tx.objectStore(storeName);
     
@@ -278,19 +281,22 @@ export class SavedData {
     // Get the store object from the transaction
     const store = tx.objectStore(storeName);
     
-    const readRequest = count != null ? store.getAll(storeName) : store.getAll(storeName, count);
+    const readRequest = count != null ? store.getAll(null, count) : store.getAll();
+
+    // const readRequest = store.getAll();
 
     tx.onerror = () => callback({result: tx.error.toString(), success: false});
 
 
     readRequest.onsuccess = () => {
+      console.log(JSON.stringify(readRequest.result));
       callback({result: readRequest.result, success: true});
     };
   }
 
   /**
    * Get the version number of a given database. This will create a database if it doesn't exist. 
-   * Do not call this after opening a connection with 
+   * Do not call this after opening a connection with the database
    * @param {string} dbName The name of the database for which the version will be returned
    * @param {function} callback The method to call on success or failure. A single value will be passed in
    */

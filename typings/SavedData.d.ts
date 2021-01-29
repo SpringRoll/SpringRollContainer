@@ -4,7 +4,7 @@ export class SavedData {
   static remove(name: string): void;
   static write(name: string, value: any, tempOnly: boolean): void;
 
-  IDBOpen(dbName: string, dbVersion: INT | null, additions: JSON | null, deletions: JSON | null, callback: function | null): void;
+  IDBOpen(dbName: string, dbVersion: number | null, additions: object | null, deletions: object | null, callback: function | null): void;
   IDBAdd(storeName: string, value: any, key: string | number, callback: function | null): void;
   IDBUpdate(storeName: string, key: string | number, value: any, callback: function | null): void;
   IDBRemove(storeName: string, key: string | number, callback: function): void;

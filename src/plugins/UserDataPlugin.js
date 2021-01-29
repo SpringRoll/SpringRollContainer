@@ -20,7 +20,7 @@ export class UserDataPlugin extends BasePlugin {
     this.onIDBAdd = this.onIDBAdd.bind(this);
     this.onIDBOpen = this.onIDBOpen.bind(this);
     this.onIDBRead = this.onIDBRead.bind(this);
-    this.onIDBRead = this.onIDBRead.bind(this);
+    this.onIDBReadAll = this.onIDBReadAll.bind(this);
     this.onIDBRemove = this.onIDBRemove.bind(this);
     this.onIDBUpdate = this.onIDBUpdate.bind(this);
     this.onIDBUpdate = this.onIDBUpdate.bind(this);
@@ -43,6 +43,7 @@ export class UserDataPlugin extends BasePlugin {
 
     this.client.on('IDBOpen', this.onIDBOpen);
     this.client.on('IDBRead', this.onIDBRead);
+    this.client.on('IDBReadAll', this.onIDBReadAll);
     this.client.on('IDBAdd', this.onIDBAdd);
     this.client.on('IDBRemove', this.onIDBRemove);
     this.client.on('IDBUpdate', this.onIDBUpdate);
@@ -148,7 +149,9 @@ export class UserDataPlugin extends BasePlugin {
    * @param {integer} count Optionally the number of records to return
    */
   onIDBReadAll({ type, data: {storeName, count} }) {
-    this.savedData.IDBReadAll(storeName, count, value => this.client.send(type, value));
+    console.log('got to plugin');
+
+    this.savedDataHandler.IDBReadAll(storeName, count, value => this.client.send(type, value));
   }
   
   /**
@@ -156,8 +159,8 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} dbName The name of the database to return the version of
    */
   onIDBGetVersion({type, data: {dbName}}) {
-    const savedDataHandler = new SavedDataHandler();
-    savedDataHandler.IDBGetVersion(dbName, value => this.client.send(type, value));
+    const sdh = new SavedDataHandler();
+    sdh.IDBGetVersion(dbName, value => this.client.send(type, value));
   }
   
   /**

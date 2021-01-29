@@ -3,7 +3,7 @@ export class SavedDataHandler {
   static write(name:string, value:any, callback:function): void;
   static read(name:string, callback:function(data)):void
 
-  IDBOpen(dbName: string, dbVersion: INT | null, additions: JSON | null, deletions: JSON | null, callback: function | null): void;
+  IDBOpen(dbName: string, dbVersion: number | null, additions: object | null, deletions: object | null, callback: function | null): void;
   IDBAdd(storeName: string, value: any, key: string | number, callback: function | null): void;
   IDBUpdate(storeName: string, key: string | number, value: any, callback: function | null): void;
   IDBRemove(storeName: string, key: string | number, callback: function): void;

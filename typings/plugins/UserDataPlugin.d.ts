@@ -9,7 +9,7 @@ export class UserDataPlugin extends BasePlugin {
   onUserDataRead($event: DataFormat): void;
   onUserDataWrite($event: DataFormat): void;
 
-  onIDBOpen(dbName: string, dbVersion: INT | null, additions: JSON | null, deletions: JSON | null): void;
+  onIDBOpen(dbName: string, dbVersion: number | null, additions: object | null, deletions: object | null): void;
   onIDBAdd(storeName: string, value: any, key: string | number): void;
   onIDBUpdate(storeName: string, key: string | number, value: any): void;
   onIDBRemove(storeName: string, key: string | number) : void;

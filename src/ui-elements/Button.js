@@ -3,7 +3,6 @@
  * @class Button
  */
 export class Button {
-  // TODO: Shouldn't there be a way in this method to add a class?
   /**
    *Creates an instance of Button
    * @param {object} params

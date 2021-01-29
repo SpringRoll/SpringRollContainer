@@ -128,9 +128,9 @@ export class SavedDataHandler {
    * @param {function} callback The method to call on success or failure. A single value will be passed in
    */
   IDBGetVersion(dbName, callback) {
-    const savedData = new SavedData(dbName);
+    const sd = new SavedData(dbName);
 
-    savedData.IDBGetVersion(dbName, callback);
+    sd.IDBGetVersion(dbName, callback);
   }
 
   /**
