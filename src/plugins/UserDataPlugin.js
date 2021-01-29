@@ -93,9 +93,12 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} dbVersion The version number of the database
    * @param {JSON} additions Any additions to the structure of the database
    * @param {array} additions.stores Any stores to be added into the database syntax: 
-   * {storeName: '[name]', options: {[optionally add options]}}
+   * @param {string} additions.stores.storeName The name of the store
+   * @param {object} additions.stores.options Optionally, the option parameter for the createStore method 
    * @param {array} additions.indexes Any Indexes to be added to the database syntax: 
-   * {storeName: '[name]', options: {[optionally add options]}}
+   * @param {string} additions.indexes.storeName The name of the store
+   * @param {object} additions.indexes.options Optionally, the option parameter for the createIndex method 
+   * @param type - The type of request being sent
    */
   onIDBOpen({type, data: {dbName, dbVersion = null, additions = {}, deletions = {} }}) {
     // Keep an instance open to use on open
@@ -108,6 +111,7 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} storeName The name of the store from which the record will be updated
    * @param {string} key the key of the record to be updated 
    * @param {*} value The value for the record with the given key to be updated
+   * @param type - The type of request being sent
    */
   onIDBAdd({type, data: { storeName, value, key}}) {
     this.savedDataHandler.IDBAdd(storeName, value, key, value => this.client.send(type, value));
@@ -119,6 +123,7 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} record 
    * @param {string} key 
    * @param {function} callback 
+   * @param type - The type of request being sent
    */
   onIDBUpdate({type, data: { storeName, key, value}}) {
     this.savedDataHandler.IDBUpdate(storeName, key, value, value => this.client.send(type, value));
@@ -128,6 +133,7 @@ export class UserDataPlugin extends BasePlugin {
    * Remove a record from a store
    * @param {*} storeName The name of the store from which the record will be removed
    * @param {*} key the key of the record to be removed 
+   * @param type - The type of request being sent
    */
   onIDBRemove({type, data: {storeName, key}}) {
     this.savedDataHandler.IDBRemove(storeName, key, value => this.client.send(type, value));
@@ -138,6 +144,7 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} storeName 
    * @param {string} key The key for the record in the given store 
    * @param {function} callback The method to call on success or failure. A single value will be passed in
+   * @param type - The type of request being sent
    */
   onIDBRead({type, data: {storeName, key}}) {
     this.savedDataHandler.IDBRead(storeName, key, value => this.client.send(type, value));
@@ -147,6 +154,7 @@ export class UserDataPlugin extends BasePlugin {
    * Get all records from a store
    * @param {string} storeName The store to get all records from
    * @param {integer} count Optionally the number of records to return
+   * @param type - The type of request being sent
    */
   onIDBReadAll({ type, data: {storeName, count} }) {
     console.log('got to plugin');
@@ -157,6 +165,7 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * Get the version of a given database
    * @param {string} dbName The name of the database to return the version of
+   * @param type - The type of request being sent
    */
   onIDBGetVersion({type, data: {dbName}}) {
     const sdh = new SavedDataHandler();
@@ -165,6 +174,7 @@ export class UserDataPlugin extends BasePlugin {
   
   /**
    * Close the connection with the database
+   * @param type - The type of request being sent
    */
   onIDBClose({type}) {
     this.savedDataHandler.IDBClose(value => this.client.send(type, value));

@@ -477,7 +477,7 @@ let dbVersion = 1
 let dbName = 'dbName';
 
 // Finally, pass these parameters in to establish a connection with the database
-SavedData.onOpenDb( dbName, dbVersion, additions, deletions)
+savedData.onOpenDb( dbName, dbVersion, additions, deletions)
 ```
 
 There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message 
@@ -485,20 +485,20 @@ There are other methods currently supported to interact with the database. These
 ``` javascript
 
 //Delete a record by the key in a specific store
-SavedData.deleteRecord('storeName', 'key');
+savedData.IDBRemove('storeName', 'key');
 
 // add a record to a store. The record can be any type of object accepted by indexedDB
-SavedData.onIDBAdd('storeName', 'record');
+savedData.IDBAdd('storeName', 'record');
 
 // returns the record with the given key from the store with the given storeName
-SavedData.onIDBRead('storeName', 'key');
+savedData.IDBRead('storeName', 'key');
 
 // Finally, close the connection to the database
-SavedData.closeDb();
+savedData.closeDb();
 
 // Return all records from a database or optionally a specified amount defined by the second parameter
-SavedData.IDBReadAll('storeName');
-SavedData.IDBReadAll('storeName', 5);
+savedData.IDBReadAll('storeName');
+savedData.IDBReadAll('storeName', 5);
 
 
 
