@@ -51,7 +51,7 @@ export class SavedData {
    * @param {String} name The name of the variable
    * @return {*} The value (run through `JSON.parse()`) or null if it doesn't exist
    */
-  static read(name) { 
+  static read(name) {
     const value = localStorage.getItem(name) || sessionStorage.getItem(name);
 
     if ('string' === typeof value) {
