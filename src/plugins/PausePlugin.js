@@ -3,11 +3,13 @@ import { PageVisibility } from '../PageVisibility';
 import { Button } from '../ui-elements';
 /**
  * @class Container
+ * @property {object[]} sliders an array of all slider objects attached to PausePlugin
+ * @extends ButtonPlugin
  */
 export class PausePlugin extends ButtonPlugin {
   /**
-   *Creates an instance of PausePlugin.
-   * @param {string} pauseButton
+   * Creates an instance of PausePlugin.
+   * @param {string | HTMLElement} pauseButton selector string or HTML Element for the input(s) 
    * @memberof PausePlugin
    */
   constructor(pauseButton) {
@@ -33,19 +35,20 @@ export class PausePlugin extends ButtonPlugin {
       this.onContainerBlur.bind(this)
     );
 
-    //Set up the pause buttons
-    this.pauseButtons = document.querySelectorAll(pauseButton);
-    if (0 < this.pauseButtons.length) {
-
-      for (let i = 0, l = this.pauseButtons.length; i < l; i++) {
-        this._pauseButton.push(
-          new Button({
-            button: this.pauseButtons[i],
-            onClick: onPauseToggle,
-            channel: 'pause'
-          })
-        );
-      }
+    if ( pauseButton instanceof HTMLElement ) {
+      this._pauseButton[0] = new Button({
+        button: pauseButton,
+        onClick: onPauseToggle,
+        channel: PausePlugin.pauseKey
+      });
+    } else {
+      document.querySelectorAll(pauseButton).forEach((button) => {
+        this._pauseButton.push(new Button({
+          button: button,
+          onClick: onPauseToggle,
+          channel: PausePlugin.pauseKey
+        }));
+      });
     }
   }
 
@@ -62,7 +65,7 @@ export class PausePlugin extends ButtonPlugin {
     }
     this._paused = paused;
 
-    this.client.send('pause', paused);
+    this.client.send(PausePlugin.pauseKey, paused);
     this.client.trigger(paused ? 'paused' : 'resumed', {
       paused: paused
     });
@@ -78,7 +81,7 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    * @returns {Boolean}
    */
-  get pause() {
+  get pause() { 
     return this._paused;
   }
 
@@ -88,6 +91,7 @@ export class PausePlugin extends ButtonPlugin {
    */
   focusApp() {
     if (!this.hasDom) {
+      // We don't have a dom with a content window, fail quietly
       return;
     }
 
@@ -253,5 +257,15 @@ export class PausePlugin extends ButtonPlugin {
       buttons.push(this._pauseButton[i].button);
     }
     return buttons;
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof PausePlugin
+   * @returns {string}
+   */
+  static get pauseKey() {
+    return 'pause';
   }
 }

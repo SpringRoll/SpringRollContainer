@@ -202,11 +202,11 @@ Some games will support many of these features, some none at all. We doubt one g
 
 Each plugin is responsible for one of the listed mechanics and should be provided a
 [HTML range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range), and an optional default value.
-Each mechanic's value will range between 0 to 1, and the default initial value is aways 0.5.
+Each mechanic's value will range between 0 to 1, and the default initial value is always 0.5.
 
 ```javascript
 import {
-  HitAreaScalePlugin, DragThresholdScalePlugin, HealtPlugin, ObjectCountPlugin,
+  HitAreaScalePlugin, DragThresholdScalePlugin, HealthPlugin, ObjectCountPlugin,
   CompletionPercentagePlugin, SpeedScalePlugin, TimersScalePlugin, InputCountPlugin,
   Container
   } from 'springroll-container';
@@ -370,7 +370,7 @@ For example the SoundPlugin can accept more than one volume slider or button if 
     musicSliders: '#musicSlider, #musicSliderTwo',
   });
 ```
-As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if neccessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
+As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if necessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
 
 *Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
@@ -477,7 +477,7 @@ let dbVersion = 1
 let dbName = 'dbName';
 
 // Finally, pass these parameters in to establish a connection with the database
-savedData.onOpenDb( dbName, dbVersion, additions, deletions)
+savedData.onOpenDb(dbName, dbVersion, additions, deletions);
 ```
 
 There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message 
