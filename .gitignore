@@ -3,6 +3,7 @@ node_modules
 docs
 .grunt
 .env
+.DS_Store
 e2e/client.js
 local.log
 .DS_Store
