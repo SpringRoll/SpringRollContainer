@@ -289,7 +289,7 @@ export class SavedData {
 
 
     readRequest.onsuccess = () => {
-      callback({result: readRequest.result, success: true});
+      callback({result: readRequest.result, success: readRequest.result != undefined ? true : false});
     };
   }
 
