@@ -82,7 +82,7 @@ export class SavedData {
       // Database successfully opened. This will run along with onupgradeneeded
       this.db = e.target.result;
 
-      if (this.db.version == dbVersion) {
+      if (this.db.version == dbVersion | dbVersion == null) {
         callback({result: 'Success: IDBOpen', success: true});
       }
     };
@@ -232,7 +232,7 @@ export class SavedData {
     const readRequest = store.get(key);
 
     readRequest.onsuccess = () => {
-      callback({result: readRequest.result, success: true});
+      callback({result: readRequest.result, success: readRequest.result != undefined ? true : false});
     };
 
   }
@@ -289,7 +289,6 @@ export class SavedData {
 
 
     readRequest.onsuccess = () => {
-      console.log(JSON.stringify(readRequest.result));
       callback({result: readRequest.result, success: true});
     };
   }
