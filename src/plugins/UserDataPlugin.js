@@ -27,6 +27,7 @@ export class UserDataPlugin extends BasePlugin {
     this.onIDBClose = this.onIDBClose.bind(this);
     this.IDBReadAll = this.onIDBReadAll.bind(this);
     this.onIDBGetVersion = this.onIDBGetVersion.bind(this);
+    this.onIDBDeleteDB = this.onIDBDeleteDB.bind(this);
 
     this.savedDataHandler = null;
   }
@@ -49,6 +50,7 @@ export class UserDataPlugin extends BasePlugin {
     this.client.on('IDBUpdate', this.onIDBUpdate);
     this.client.on('IDBClose', this.onIDBClose);
     this.client.on('IDBGetVersion', this.onIDBGetVersion);
+    this.client.on('IDBDeleteDB', this.onIDBDeleteDB);
 
   }
 
@@ -157,8 +159,6 @@ export class UserDataPlugin extends BasePlugin {
    * @param type - The type of request being sent
    */
   onIDBReadAll({ type, data: {storeName, count} }) {
-    console.log('got to plugin');
-
     this.savedDataHandler.IDBReadAll(storeName, count, value => this.client.send(type, value));
   }
   
@@ -178,5 +178,15 @@ export class UserDataPlugin extends BasePlugin {
    */
   onIDBClose({type}) {
     this.savedDataHandler.IDBClose(value => this.client.send(type, value));
+  }
+  /**
+   * Close the connection with the database
+   * @param type - The type of request being sent
+   */
+  onIDBDeleteDB({type, data: {dbName, options }}) {
+    const sdh = new SavedDataHandler();
+
+
+    sdh.IDBDeleteDB(dbName, options, value => this.client.send(type, value));
   }
 }

@@ -138,10 +138,10 @@ export class SavedData {
    * @param {*} callback The callback to be run on success or error. One value will be passed into this function
    */
   IDBDeleteDB(dbName, options = null, callback = {}) {
-    const request = options ? indexedDB.deleteDatabase(dbName, options): indexedDB.deleteDatabase(dbName);
+    const request = options != null ? indexedDB.deleteDatabase(dbName, options): indexedDB.deleteDatabase(dbName);
 
-    request.onsuccess = () => {
-      callback({result: 'Success: Database Deleted', success: true});
+    request.onsuccess = (e) => {
+      callback({result: 'Success: Database Deleted, returned: ' + e.result, success: true});
     };
     request.onerror = () => {
       callback({result: request.error.toString(), success: false});
