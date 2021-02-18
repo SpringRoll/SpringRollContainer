@@ -462,6 +462,7 @@ used to store user data for use across the Springroll environment. Examples are 
 The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
 be used wherever necessary.
 
+Following is an example of interacting with Local Storage
 ```javascript
 import { SavedData } from 'springroll-container';
 
@@ -475,6 +476,18 @@ let data = SavedData.read('user-value-key'); //data will be either the value in 
 
 SavedData.remove('user-value-key'); //removes the value from both local and session storage.
 ```
+
+Following is an example of interacting with [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) through the UserData class
+
+
+``` javascript
+import { SavedData } from 'springroll-container';
+
+// Firstly, construct the SavedData object. This is only needed for IndexedDB work
+savedData = new SavedData('dbName');
+```
+All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
+
 
 ### SavedDataHandler
 The SavedDataHandler class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
