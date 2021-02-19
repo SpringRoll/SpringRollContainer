@@ -48,4 +48,12 @@ export class Button {
     }
     this.button.classList.remove('disabled');
   }
+
+  /**
+   * 
+   * @param {string} className The classname to be appended to the end of the class property
+   */
+  addClass(className) {
+    this.button.className = this.button.className ? this.button.className + ` ${ className }` : ` ${ className }`;
+  }
 }

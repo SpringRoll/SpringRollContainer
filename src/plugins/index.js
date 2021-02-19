@@ -19,4 +19,6 @@ export * from './CompletionPercentagePlugin';
 export * from './SpeedScalePlugin';
 export * from './TimersScalePlugin';
 export * from './InputCountPlugin';
+export * from './FullScreenPlugin';
+
 
