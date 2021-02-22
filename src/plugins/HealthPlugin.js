@@ -7,10 +7,9 @@ import { SliderPlugin } from '../base-plugins';
  */
 export class HealthPlugin extends SliderPlugin {
   /**
-   *Creates an instance of HealthPlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.healthSliders
-   * @param {number} [params.defaultHealth=0.5]
+   * Creates an instance of HealthPlugin.
+   * @param {string | HTMLElement} healthSliders
+   * @param {number} [defaultHealth=0.5]
    * @memberof HealthPlugin
    */
   constructor(healthSliders, {defaultHealth = 0.5 } = {}) {
@@ -23,8 +22,7 @@ export class HealthPlugin extends SliderPlugin {
 
   /**
    * @memberof HealthPlugin
-   * @param {Event} target
-   * @param {string} control
+   * @param {Event} e
    */
   onHealthChange(e) {
     this.currentValue = e.target.value;
@@ -35,6 +33,7 @@ export class HealthPlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof HealthPlugin
+   * @returns {string}
    */
   static get healthKey() {
     return 'health';

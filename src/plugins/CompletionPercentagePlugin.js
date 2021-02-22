@@ -3,14 +3,14 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class CompletionPercentagePlugin
+ * @property {object[]} sliders an array of all slider objects attached to CompletePercentagePlugin
  * @extends {SliderPlugin}
  */
 export class CompletionPercentagePlugin extends SliderPlugin {
   /**
-   *Creates an instance of CompletionPercentagePlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.completionPercentageSliders
-   * @param {number} [params.defaultCompletionPercentage=0.5]
+   * Creates an instance of CompletionPercentagePlugin.
+   * @param {string | HTMLElement} completionPercentageSliders The selector or HTMLSliderElement of the slider
+   * @param {number} [defaultCompletionPercentage=0.5] Default selected completion percentage
    * @memberof CompletionPercentagePlugin
    */
   constructor(completionPercentageSliders, { defaultCompletionPercentage = 0.5 } = {}) {
@@ -23,8 +23,7 @@ export class CompletionPercentagePlugin extends SliderPlugin {
 
   /**
    * @memberof CompletionPercentagePlugin
-   * @param {Event} target
-   * @param {string} control
+   * @param {Event} e
    */
   onCompletionPercentageChange(e) {
     this.currentValue = e.target.value;
@@ -35,6 +34,7 @@ export class CompletionPercentagePlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof CompletionPercentagePlugin
+   * @returns {string}
    */
   static get completionPercentageKey() {
     return 'completionPercentage';
