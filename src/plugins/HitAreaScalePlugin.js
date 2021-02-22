@@ -3,14 +3,15 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class HitAreaScalePlugin
+ * @property {object[]} sliders an array of all slider objects attached to ControlSensitivityPlugin
  * @extends {SliderPlugin}
+ * 
  */
 export class HitAreaScalePlugin extends SliderPlugin {
   /**
-   *Creates an instance of HitAreaScalePlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.hitAreaScaleSliders
-   * @param {number} [params.defaultHitAreaScale=0.5]
+   * Creates an instance of HitAreaScalePlugin.
+   * @param {string | HTMLElement} hitAreaScaleSliders The selector or HTMLElement for the slider
+   * @param {number} [defaultHitAreaScale=0.5] The default hit area scale value
    * @memberof HitAreaScalePlugin
    */
   constructor(hitAreaScaleSliders, { defaultHitAreaScale = 0.5 } = {}) {
@@ -35,6 +36,7 @@ export class HitAreaScalePlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof HitAreaScalePlugin
+   * @returns {string}
    */
   static get hitAreaScaleKey() {
     return 'hitAreaScale';

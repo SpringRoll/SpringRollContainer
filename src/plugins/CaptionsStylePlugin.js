@@ -2,8 +2,6 @@ import { SavedData } from '../SavedData';
 import { ButtonPlugin } from '../base-plugins';
 import { RadioGroup } from '../ui-elements';
 
-// Private Variables
-const CAPTIONS_STYLES = 'captionsStyles';
 const DEFAULT_CAPTIONS_STYLES = {
   size: 'medium',
   background: 'black',
@@ -29,17 +27,20 @@ const ALIGN_VALUES = ['top', 'bottom'];
  * @property {Object[]} fontSizeRadios array that contains each radio group
  * @property {Object[]} colorRadios array that contains each radio group
  * @property {Object[]} alignmentRadios array that contains each radio group
- * @property {number} fontSizeRadiosLength
- * @property {number} colorRadiosLength
- * @property {number} alignmentRadiosLength
+ * @property {number} fontSizeRadiosLength Length of the fontSizeRadios array
+ * @property {number} colorRadiosLength Length of the colorRadios array
+ * @property {number} alignmentRadiosLength Length of the alignmentRadios array
  * @extends {ButtonPlugin}
  */
 export class CaptionsStylePlugin extends ButtonPlugin {
   /**
-   *Creates an instance of CaptionsStylePlugin.
-   * @param {string } fontSizeRadios selector string for one or more radio groups for caption font size
-   * @param {string } colorRadios selector string for one or more radio groups for caption font/background colors
-   * @param {string } alignmentRadios selector string for one or more radio groups for caption position
+   * Creates an instance of CaptionsStylePlugin.
+   * @param {string} fontSizeRadios selector string for one or more radio groups for caption font size
+   * @param {string} colorRadios selector string for one or more radio groups for caption font/background colors
+   * @param {string} alignmentRadios selector string for one or more radio groups for caption position
+   * @param {string} [defaultFontSize='medium'] Default selected font size
+   * @param {string} [defaultColor='default'] Default selected color
+   * @param {string} [defaultAlignment='top'] Default selected alignment
    * @memberof CaptionsStylePlugin
    */
   constructor(fontSizeRadios, colorRadios, alignmentRadios,
@@ -50,7 +51,7 @@ export class CaptionsStylePlugin extends ButtonPlugin {
     this.captionsStyles = Object.assign(
       {},
       DEFAULT_CAPTIONS_STYLES,
-      SavedData.read(CAPTIONS_STYLES) || {}
+      SavedData.read(CaptionsStylePlugin.captionStyleKey) || {}
     );
 
     //split the selector strings into individual selectors.
@@ -230,7 +231,7 @@ export class CaptionsStylePlugin extends ButtonPlugin {
   * @memberof CaptionsStylePlugin
   */
   start() {
-    this.setCaptionsStyles(SavedData.read(CAPTIONS_STYLES));
+    this.setCaptionsStyles(SavedData.read(CaptionsStylePlugin.captionStyleKey));
 
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
@@ -242,7 +243,7 @@ export class CaptionsStylePlugin extends ButtonPlugin {
   * @memberof CaptionsStylePlugin
   */
   sendAllProperties() {
-    this.sendProperty(CAPTIONS_STYLES, this.captionsStyles);
+    this.sendProperty(CaptionsStylePlugin.captionStyleKey, this.captionsStyles);
   }
   /**
    * Fired whenever the font size radios are updated
@@ -330,9 +331,9 @@ export class CaptionsStylePlugin extends ButtonPlugin {
       this.captionsStyles[styles] = value;
     }
 
-    SavedData.write(CAPTIONS_STYLES, this.captionsStyles);
+    SavedData.write(CaptionsStylePlugin.captionStyleKey, this.captionsStyles);
     if (this.client) {
-      this.client.send(CAPTIONS_STYLES, this.captionsStyles);
+      this.client.send(CaptionsStylePlugin.captionStyleKey, this.captionsStyles);
     }
   }
 
@@ -346,4 +347,15 @@ export class CaptionsStylePlugin extends ButtonPlugin {
       .concat(this.alignmentRadios)
       .concat(this.fontSizeRadios);
   }
+  /**
+   * Get captionStyle Key
+   * @readonly
+   * @static
+   * @memberof CaptionStyleKey
+   * @returns {string}
+   */
+  static get captionStyleKey() {
+    return 'captionsStyles';
+  }
+
 }
