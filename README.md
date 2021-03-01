@@ -359,6 +359,56 @@ container.openPath('game.html');
 any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
 for more information on the request format.
 
+### Fullscreen Plugin
+The fullscreen plugin hooks up an element or elements to set the iframe to full screen then communicates this through Bellhop. The plugin will also add the class ```'--fullScreen'``` to the element(s) given
+
+```javascript
+import { FullScreenPlugin, Container } from  'springroll-container';
+
+const container = new Container('#game', {
+
+  plugins: [
+    // FullScreenPlugin expects the selector for the element(s) to hook onto
+    new FullScreenPlugin('#fullScreenButton'),
+  ]
+  });
+
+container.openPath('game.html');
+
+```
+
+The plugin will accept either a selector or an array of selectors as a parameter
+
+```javascript
+new FullScreenPlugin('#fullScreenButton');
+new FullScreenPlugin(['#fullScreenButton', '.fullScreenButtonSideNav']);
+
+// It will also accept one string with all selectors each seperated by a comma
+new FullScreenPlugin('#fullScreenButton, .fullScreenButtonSideNav');
+
+
+```
+
+The typical html can look something like this however, the element may be positioned anywhere in the html as long as it is not inside the iframe
+  
+
+```html
+
+<nav>
+  <!-- May be a button or any other element that can create an onclick event -->
+  <button id='fullScreenButton'>Fullscreen</button>
+</nav>
+<!-- The element cannot be inside the source file -->
+<iframe id="game" scrolling="no"></iframe>
+
+
+```
+isFullScreen returns true if there is a fullscreen element
+`` FullScreenPlugin.isFullScreen ``
+
+
+---
+
 ### Multiple Plugin Controls
 All Plugins accept one or more HTML elements as controls in their constructor.
 For example the SoundPlugin can accept more than one volume slider or button if your set up requires it:
@@ -436,73 +486,8 @@ import { SavedData } from 'springroll-container';
 // Firstly, construct the SavedData object. This is only needed for IndexedDB work
 savedData = new SavedData('dbName');
 
-// Then, open a connection to the database. All changes to the structure of the database should be passed in here
 ```
-Additions is an optional parameter expecting a JSON object with any additions to the databases structure namely new [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore) and [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/createIndex). These are placed inside of an array 
-
-Deletions is an optional parameter used to delete any [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/deleteIndex) or [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/deleteObjectStore)
-
-``` javascript
-
-let additions = {
-  stores: [{
-    storeName: 'storeOne',
-    // optionally define a keyPath and/or set autoIncrement to true or false
-    options: { keyPath: "taskTitle" }
-  },
-  {
-    storeName: 'storeTwo'
-  }],
-  indexes: [{
-    indexName: 'newIndex',
-    keyPath: 'key',
-    // Any objectParameters for the Index
-    options: {
-      unique: false
-    }
-  }]
-};
-
-// Deletions is an optional parameter used to delete any indexes or stores
-let deletions = {
-  stores: ['storeOne', 'storeTwo'],
-  indexes: ['newIndex']
-};
-
-// Optionally pass in the new database version. Set to true to increment the database version.
-// Leave this parameter out or pass in false to connect without making any changes to the structure of the database
-let dbVersion = 1 
-
-// The name of the database to connect to
-let dbName = 'dbName';
-
-// Finally, pass these parameters in to establish a connection with the database
-savedData.onOpenDb(dbName, dbVersion, additions, deletions);
-```
-
-There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message 
-
-``` javascript
-
-//Delete a record by the key in a specific store
-savedData.IDBRemove('storeName', 'key');
-
-// add a record to a store. The record can be any type of object accepted by indexedDB
-savedData.IDBAdd('storeName', 'record');
-
-// returns the record with the given key from the store with the given storeName
-savedData.IDBRead('storeName', 'key');
-
-// Finally, close the connection to the database
-savedData.closeDb();
-
-// Return all records from a database or optionally a specified amount defined by the second parameter
-savedData.IDBReadAll('storeName');
-savedData.IDBReadAll('storeName', 5);
-
-
-
-```
+All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
 
 
 ### SavedDataHandler

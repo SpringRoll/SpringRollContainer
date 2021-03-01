@@ -2,7 +2,7 @@ import { ButtonPlugin } from '../base-plugins/ButtonPlugin';
 import { Button } from '../ui-elements';
 
 /**
- * A Springroll plugin to easily set up togglable fullscreen 
+ * A Springroll plugin to easily set up togglable fullscreen
  */
 export class FullScreenPlugin extends ButtonPlugin {
   

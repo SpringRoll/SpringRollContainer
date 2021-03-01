@@ -11,7 +11,6 @@ module.exports = function(config) {
     logLevel: config.LOG_INFO,
     browsers: ['ChromeHeadless', 'FirefoxHeadless'],
     autoWatch: true,
-    concurrency: Infinity,
-    browserDisconnectTimeout: 10000
+    concurrency: Infinity
   });
 };

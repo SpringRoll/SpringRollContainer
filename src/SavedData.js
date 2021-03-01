@@ -51,7 +51,7 @@ export class SavedData {
    * @param {String} name The name of the variable
    * @return {*} The value (run through `JSON.parse()`) or null if it doesn't exist
    */
-  static read(name) { 
+  static read(name) {
     const value = localStorage.getItem(name) || sessionStorage.getItem(name);
 
     if ('string' === typeof value) {
@@ -82,7 +82,7 @@ export class SavedData {
       // Database successfully opened. This will run along with onupgradeneeded
       this.db = e.target.result;
 
-      if (this.db.version == dbVersion) {
+      if (this.db.version == dbVersion | dbVersion == null) {
         callback({result: 'Success: IDBOpen', success: true});
       }
     };
@@ -138,10 +138,10 @@ export class SavedData {
    * @param {*} callback The callback to be run on success or error. One value will be passed into this function
    */
   IDBDeleteDB(dbName, options = null, callback = {}) {
-    const request = options ? indexedDB.deleteDatabase(dbName, options): indexedDB.deleteDatabase(dbName);
+    const request = options != null ? indexedDB.deleteDatabase(dbName, options): indexedDB.deleteDatabase(dbName);
 
-    request.onsuccess = () => {
-      callback({result: 'Success: Database Deleted', success: true});
+    request.onsuccess = (e) => {
+      callback({result: 'Success: Database Deleted, returned: ' + e.result, success: true});
     };
     request.onerror = () => {
       callback({result: request.error.toString(), success: false});
@@ -232,7 +232,7 @@ export class SavedData {
     const readRequest = store.get(key);
 
     readRequest.onsuccess = () => {
-      callback({result: readRequest.result, success: true});
+      callback({result: readRequest.result, success: readRequest.result != undefined ? true : false});
     };
 
   }
@@ -289,8 +289,7 @@ export class SavedData {
 
 
     readRequest.onsuccess = () => {
-      console.log(JSON.stringify(readRequest.result));
-      callback({result: readRequest.result, success: true});
+      callback({result: readRequest.result, success: readRequest.result != undefined ? true : false});
     };
   }
 
