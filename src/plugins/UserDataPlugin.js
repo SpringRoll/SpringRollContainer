@@ -55,11 +55,11 @@ export class UserDataPlugin extends BasePlugin {
    * Handler for the userDataRemove event 
    * @method onUserDataRemove
    * @private
-   * @param {string} name The name of the record to be removed
+   * @param {string} data The name of the record to be removed
    * @param {string} type The type of listener for bellhop to send to
    */
-  onUserDataRemove({ name, type }) { 
-    SavedDataHandler.remove(name, () => {
+  onUserDataRemove({ data, type }) { 
+    SavedDataHandler.remove(data, () => {
       this.client.send(type);
     });
   }
@@ -68,11 +68,11 @@ export class UserDataPlugin extends BasePlugin {
    * Handler for the userDataRead event
    * @method onUserDataRead
    * @private   
-   * @param {string} name The name of the record to be removed
+   * @param {string} data The name of the record to be removed
    * @param {string} type The type of listener for bellhop to send to
    */
-  onUserDataRead({ name, type }) {
-    SavedDataHandler.read(name, value => this.client.send(type, value));
+  onUserDataRead({ data, type }) {
+    SavedDataHandler.read(data, value => this.client.send(type, value));
   }
 
   /**
@@ -80,8 +80,8 @@ export class UserDataPlugin extends BasePlugin {
    * @method onUserDataWrite
    * @private
    * @param {string} type The type of listener for bellhop to send to
-   * @param {string} name The name for the record. This is what is used to read or remove the record
-   * @param {object | string} value The data object with the name ond value for the record
+   * @param {string} data The name for the record. This is what is used to read or remove the record
+   * @param {object | string} value The data object with the data and value for the record
    */
   onUserDataWrite({type, data: { name, value } }) {
 
