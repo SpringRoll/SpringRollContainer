@@ -3028,7 +3028,7 @@
 				if (features.vo && this.voButton) this.voButton.style.display = 'inline-block';
 				if (features.music && this.musicButton) this.musicButton.style.display = 'inline-block';
 				if (features.sound && this.soundButton) this.soundButton.style.display = 'inline-block';
-				if (features.sfxButton && this.sfxButton) this.sfxButton.style.display = 'inline-block';
+				if (features.sfx && this.sfxButton) this.sfxButton.style.display = 'inline-block';
 			}.bind(this)
 		);
 	};
