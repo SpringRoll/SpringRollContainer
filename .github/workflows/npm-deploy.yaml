@@ -27,11 +27,6 @@ jobs:
         env:
           CI: true
 
-      # - name: test
-      #   run: npm run github-test
-      #   env:
-      #     CI: true
-
       - name: publish
         run: npm publish
         env:
