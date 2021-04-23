@@ -21,12 +21,6 @@ jobs:
         env:
           CI: true
 
-      - name: build
-        run: |
-          npm run build
-        env:
-          CI: true
-
       - name: publish
         run: npm publish
         env:
