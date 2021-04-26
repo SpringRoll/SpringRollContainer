@@ -6,10 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.1.1] - UNRELEASED
 ### Added
+- Indexeddb additions to the userdata class
+
+### Changed
+- update NPM modules to remove security vulnerabilities
 - This CHANGELOG
 - Fullscreen Plugin. The ability to add in a fullscreen button within container
 - Fullscreen Plugin Automated Testing
 - Fullscreen Plugin Documentation
 - Indexeddb additions to the userdata class
-### Changed
 - update NPM modules to remove security vulnerabilities

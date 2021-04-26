@@ -51,7 +51,6 @@ export class UserDataPlugin extends BasePlugin {
     this.client.on('IDBClose', this.onIDBClose);
     this.client.on('IDBGetVersion', this.onIDBGetVersion);
     this.client.on('IDBDeleteDB', this.onIDBDeleteDB);
-
   }
 
   /**
@@ -83,8 +82,8 @@ export class UserDataPlugin extends BasePlugin {
    * @method onUserDataWrite
    * @private
    * @param {string} type The type of listener for bellhop to send to
-   * @param {string} name The name for the record. This is what is used to read or remove the record
-   * @param {object | string} value The data object with the name ond value for the record
+   * @param {string} data.name The name for the record. This is what is used to read or remove the record
+   * @param {object | string} data.value The data object with the data and value for the record
    */
   onUserDataWrite({type, data: { name, value } }) {
 

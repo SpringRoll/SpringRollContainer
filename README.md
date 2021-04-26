@@ -552,7 +552,6 @@ savedData.IDBReadAll('storeName', 5);
 
 
 
-```
 All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
 
 
