@@ -140,5 +140,13 @@ export class SavedDataHandler {
   IDBClose(callback) {
     this.savedData.IDBClose(callback);
   }
+  /**
+   * Closes the connection to the database
+   * @param {function} callback The method to call on success or failure. A single value will be passed in
+   */
+  IDBDeleteDB(dbName, options, callback) {
+    const sd = new SavedData(dbName);
+    sd.IDBDeleteDB(dbName, options, callback);
+  }
 
 }
