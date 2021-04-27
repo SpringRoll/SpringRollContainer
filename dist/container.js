@@ -1,4 +1,4 @@
-/*! SpringRoll Container 1.1.2 */
+/*! SpringRoll Container 1.1.5 */
 /**
  * @module Core
  * @namespace window
@@ -1389,9 +1389,9 @@
 	 * @property {String} version
 	 * @static
 	 * @readOnly
-	 * @default "1.1.2"
+	 * @default "1.1.5"
 	 */
-	Container.version = "1.1.2";
+	Container.version = "1.1.5";
 
 	//Reference to the prototype
 	var s = EventDispatcher.prototype;

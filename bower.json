@@ -1,13 +1,11 @@
 {
 	"name": "springroll-container",
-	"version": "1.1.2",
+	"version": "1.1.5",
 	"main": "dist/container.min.js",
-	"dependencies":
-	{
+	"dependencies": {
 		"bellhop": "*"
 	},
-	"devDependencies":
-	{
+	"devDependencies": {
 		"easeljs": "https://github.com/SpringRoll/EaselJS.git",
 		"qunit": "2.6.*",
 		"springroll": "*",
