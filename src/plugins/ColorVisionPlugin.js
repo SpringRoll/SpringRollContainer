@@ -12,13 +12,16 @@ const COLOR_BLIND_TYPES = [
 /**
  * @export
  * @class ColorVisionPlugin
+ * @property {boolean} sendAfterFetch Whether to send the properties after fetch or not
+ * @property {boolean} canEmit Whether or not the plugin can send properties
+ * @property {string} colors 
  * @extends {RadioGroupPlugin}
  */
 export class ColorVisionPlugin extends RadioGroupPlugin {
   /**
-   *Creates an instance of ColorVisionPlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.colorSelects
+   * Creates an instance of ColorVisionPlugin.
+   * @param {string | HTMLElement} colorSelects
+   * @param {string } [defaultValue] Default selected value
    * @memberof ColorVision
    */
   constructor(colorVisionRadios, { defaultValue = COLOR_BLIND_TYPES[0] } = {}) {
@@ -133,9 +136,11 @@ export class ColorVisionPlugin extends RadioGroupPlugin {
   }
 
   /**
+   * Get the ColorVisionPlugin key
    * @readonly
    * @static
    * @memberof ColorVisionPlugin
+   * @returns {string}
    */
   static get colorVisionKey() {
     return 'colorVision';

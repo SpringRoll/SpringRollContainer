@@ -5,10 +5,11 @@ import { BasePlugin } from '../base-plugins';
  * @export
  * @class UserDataPlugin
  * @extends {BasePlugin}
+ * @property {SavedDataHandler} SavedDataHandler The handler to work with the savedData class 
  */
 export class UserDataPlugin extends BasePlugin {
   /**
-   *Creates an instance of UserDataPlugin.
+   * Creates an instance of UserDataPlugin.
    * @memberof UserDataPlugin
    */
   constructor() {
@@ -33,8 +34,7 @@ export class UserDataPlugin extends BasePlugin {
   }
 
   /**
-   *
-   *
+   * 
    * @memberof UserDataPlugin
    */
   init() {
@@ -51,16 +51,17 @@ export class UserDataPlugin extends BasePlugin {
     this.client.on('IDBClose', this.onIDBClose);
     this.client.on('IDBGetVersion', this.onIDBGetVersion);
     this.client.on('IDBDeleteDB', this.onIDBDeleteDB);
-
   }
 
   /**
    * Handler for the userDataRemove event 
    * @method onUserDataRemove
    * @private
+   * @param {string} name The name of the record to be removed
+   * @param {string} type The type of listener for bellhop to send to
    */
-  onUserDataRemove({ data, type }) { 
-    SavedDataHandler.remove(data, () => {
+  onUserDataRemove({ name, type }) { 
+    SavedDataHandler.remove(name, () => {
       this.client.send(type);
     });
   }
@@ -68,16 +69,21 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * Handler for the userDataRead event
    * @method onUserDataRead
-   * @private
+   * @private   
+   * @param {string} name The name of the record to be removed
+   * @param {string} type The type of listener for bellhop to send to
    */
-  onUserDataRead({ data, type }) {
-    SavedDataHandler.read(data, value => this.client.send(type, value));
+  onUserDataRead({ name, type }) {
+    SavedDataHandler.read(name, value => this.client.send(type, value));
   }
 
   /**
    * Handler for the userDataWrite event
    * @method onUserDataWrite
    * @private
+   * @param {string} type The type of listener for bellhop to send to
+   * @param {string} data.name The name for the record. This is what is used to read or remove the record
+   * @param {object | string} data.value The data object with the data and value for the record
    */
   onUserDataWrite({type, data: { name, value } }) {
 
@@ -92,15 +98,15 @@ export class UserDataPlugin extends BasePlugin {
    * Open a connection with the IDB Database and optionally add or delete
    * Indexes and stores
    * @param {string} dbName The name of your IndexedDB database
-   * @param {string} dbVersion The version number of the database
-   * @param {JSON} additions Any additions to the structure of the database
-   * @param {array} additions.stores Any stores to be added into the database syntax: 
-   * @param {string} additions.stores.storeName The name of the store
-   * @param {object} additions.stores.options Optionally, the option parameter for the createStore method 
-   * @param {array} additions.indexes Any Indexes to be added to the database syntax: 
-   * @param {string} additions.indexes.storeName The name of the store
-   * @param {object} additions.indexes.options Optionally, the option parameter for the createIndex method 
-   * @param type - The type of request being sent
+   * @param {string} [dbVersion] The version number of the database
+   * @param {JSON} [additions] Any additions to the structure of the database
+   * @param {array} [additions.stores] Any stores to be added into the database syntax: 
+   * @param {string} [additions.stores.storeName] The name of the store
+   * @param {object} [additions.stores.options] Optionally, the option parameter for the createStore method 
+   * @param {array} [additions.indexes] Any Indexes to be added to the database syntax: 
+   * @param {string} [additions.indexes.storeName] The name of the store
+   * @param {object} [additions.indexes.options] Optionally, the option parameter for the createIndex method 
+   * @param {string} type The type of listener for bellhop to send to
    */
   onIDBOpen({type, data: {dbName, dbVersion = null, additions = {}, deletions = {} }}) {
     // Keep an instance open to use on open
@@ -110,10 +116,10 @@ export class UserDataPlugin extends BasePlugin {
 
   /**
    * Add a record to a given store
+   * @param {string} type The type of listener for bellhop to send to
    * @param {string} storeName The name of the store from which the record will be updated
-   * @param {string} key the key of the record to be updated 
    * @param {*} value The value for the record with the given key to be updated
-   * @param type - The type of request being sent
+   * @param {string} key the key of the record to be updated 
    */
   onIDBAdd({type, data: { storeName, value, key}}) {
     this.savedDataHandler.IDBAdd(storeName, value, key, value => this.client.send(type, value));
@@ -121,11 +127,10 @@ export class UserDataPlugin extends BasePlugin {
   
   /**
    * Update a record from a given store
-   * @param {string} storeName 
-   * @param {string} record 
-   * @param {string} key 
-   * @param {function} callback 
-   * @param type - The type of request being sent
+   * @param {string} type The type of listener for bellhop to send to
+   * @param {string} storeName The name of the store with the record to update
+   * @param {string} key The key of the record to be updated
+   * @param {*} value The record value
    */
   onIDBUpdate({type, data: { storeName, key, value}}) {
     this.savedDataHandler.IDBUpdate(storeName, key, value, value => this.client.send(type, value));
@@ -133,9 +138,9 @@ export class UserDataPlugin extends BasePlugin {
 
   /**
    * Remove a record from a store
-   * @param {*} storeName The name of the store from which the record will be removed
+   * @param {string} type The type of listener for bellhop to send to
+   * @param {string} storeName The name of the store from which the record will be removed
    * @param {*} key the key of the record to be removed 
-   * @param type - The type of request being sent
    */
   onIDBRemove({type, data: {storeName, key}}) {
     this.savedDataHandler.IDBRemove(storeName, key, value => this.client.send(type, value));
@@ -143,10 +148,9 @@ export class UserDataPlugin extends BasePlugin {
 
   /**
    * Return a record from a given store with a given key
-   * @param {string} storeName 
+   * @param {string} storeName The name of the store to read from
    * @param {string} key The key for the record in the given store 
-   * @param {function} callback The method to call on success or failure. A single value will be passed in
-   * @param type - The type of request being sent
+   * @param {string} type The type of listener for bellhop to send to
    */
   onIDBRead({type, data: {storeName, key}}) {
     this.savedDataHandler.IDBRead(storeName, key, value => this.client.send(type, value));
@@ -156,7 +160,7 @@ export class UserDataPlugin extends BasePlugin {
    * Get all records from a store
    * @param {string} storeName The store to get all records from
    * @param {integer} count Optionally the number of records to return
-   * @param type - The type of request being sent
+   * @param {string} type The type of listener for bellhop to send to
    */
   onIDBReadAll({ type, data: {storeName, count} }) {
     this.savedDataHandler.IDBReadAll(storeName, count, value => this.client.send(type, value));
@@ -165,16 +169,17 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * Get the version of a given database
    * @param {string} dbName The name of the database to return the version of
-   * @param type - The type of request being sent
+   * @param {string} type The type of listener for bellhop to send to
    */
   onIDBGetVersion({type, data: {dbName}}) {
+    // Create a new instance of savedDataHandler to avoid mutating the current instance
     const sdh = new SavedDataHandler();
     sdh.IDBGetVersion(dbName, value => this.client.send(type, value));
   }
   
   /**
    * Close the connection with the database
-   * @param type - The type of request being sent
+   * @param {string} type The type of listener for bellhop to send to
    */
   onIDBClose({type}) {
     this.savedDataHandler.IDBClose(value => this.client.send(type, value));

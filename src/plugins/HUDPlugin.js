@@ -11,9 +11,8 @@ const SUPPORTED_POSITIONS = ['top', 'bottom', 'left', 'right'];
 export class HUDPlugin extends RadioGroupPlugin {
   /**
    * Creates an instance of HUDPlugin
-   * @param {string} hudSelectorRadios css selector for the radio buttons
-   * @param {object} params
-   * @param {string[]} [params.defaultValue='top'] default value for the HUD position. Top will usually be the default in most cases.
+   * @param {string} hudSelectorRadios  selector string or for the input(s)
+   * @param {string[]} [defaultValue='top'] default value for the HUD position
    * @memberof HUDPlugin
    */
   constructor(hudSelectorRadios, { defaultValue = SUPPORTED_POSITIONS[0] } = {}) {
@@ -129,6 +128,7 @@ export class HUDPlugin extends RadioGroupPlugin {
    * @static
    * @readonly
    * @memberof HUDPlugin
+   * @returns {string}
    */
   static get hudPositionKey() {
     return 'hudPosition';

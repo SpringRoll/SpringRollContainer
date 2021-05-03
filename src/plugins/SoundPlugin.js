@@ -10,16 +10,15 @@ import { Slider, Button } from '../ui-elements';
  */
 export class SoundPlugin extends ButtonPlugin {
   /**
-   *Creates an instance of SoundPlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} [params.soundButtons]
-   * @param {string | HTMLElement} [params.musicButtons]
-   * @param {string | HTMLElement} [params.voButtons]
-   * @param {string | HTMLElement} [params.sfxButtons]
-   * @param {string | HTMLElement} [params.soundSliders]
-   * @param {string | HTMLElement} [params.musicSliders]
-   * @param {string | HTMLElement} [params.sfxSliders]
-   * @param {string | HTMLElement} [params.voSliders]
+   * Creates an instance of SoundPlugin.
+   * @param {string | HTMLElement} [soundButtons] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [musicButtons] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [voButtons] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [sfxButtons] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [soundSliders] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [musicSliders] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [sfxSliders] selector string or HTML Element for the input(s)
+   * @param {string | HTMLElement} [voSliders] selector string or HTML Element for the input(s)
    * @memberof SoundPlugin
    */
   constructor({
@@ -132,14 +131,14 @@ export class SoundPlugin extends ButtonPlugin {
       this.soundButtons[0] = new Button({
         button: soundButtons,
         onClick: this.onSoundToggle.bind(this),
-        channel: 'sound'
+        channel: SoundPlugin.soundKey
       });
     } else {
       document.querySelectorAll(soundButtons).forEach((button) => {
         this.soundButtons.push(new Button({
           button: button,
           onClick: this.onSoundToggle.bind(this),
-          channel: 'sound'
+          channel: SoundPlugin.soundKey
         }));
       });
     }
@@ -589,5 +588,15 @@ export class SoundPlugin extends ButtonPlugin {
    */
   get voButton() {
     return this._voButton.button;
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof SpeedScalePlugin
+   * @return {string}
+   */
+  static get soundKey() {
+    return 'sound';
   }
 }
