@@ -2,14 +2,12 @@ import { SavedData } from '../SavedData';
 import { ButtonPlugin } from '../base-plugins';
 import { Button } from '../ui-elements';
 
-// Private Variables
-const CAPTIONS_MUTED = 'captionsMuted';
-
 /**
  * @export
  * @class CaptionsTogglePlugin
- * @property {Button[]} _captionsButtons array of caption mute buttons
- * @property {number} captionsButtonsLength
+ * @property {Button[]} _captionsButtons An array of caption mute buttons
+ * @property {boolean} _captionsMuted True if captions are muted
+ * @property {number} captionsButtonLength The length of the captionsButtons array
  * @extends {ButtonPlugin}
  */
 export class CaptionsTogglePlugin extends ButtonPlugin {
@@ -63,11 +61,11 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
           this._captionsButtons[i].displayButton($event.data);
         }
 
-        if (null === SavedData.read(CAPTIONS_MUTED)) {
+        if (null === SavedData.read(CaptionsTogglePlugin.captionsToggleKey)) {
           return;
         }
 
-        this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+        this.captionsMuted = !!SavedData.read(CaptionsTogglePlugin.captionsToggleKey);
 
       }.bind(this)
     );
@@ -76,7 +74,7 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
   * @memberof CaptionsTogglePlugin
   */
   start() {
-    this.captionsMuted = !!SavedData.read(CAPTIONS_MUTED);
+    this.captionsMuted = !!SavedData.read(CaptionsTogglePlugin.captionsToggleKey);
 
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
@@ -88,7 +86,7 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
   * @memberof CaptionsTogglePlugin
   */
   sendAllProperties() {
-    this.sendProperty(CAPTIONS_MUTED, this.captionsMuted);
+    this.sendProperty(CaptionsTogglePlugin.captionsToggleKey, this.captionsMuted);
   }
 
   /**
@@ -117,5 +115,16 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
       this._captionsButtons,
       this._captionsMuted
     );
+  }
+
+  /**
+   * Get CaptionToggle Key
+   * @readonly
+   * @static
+   * @memberof captionsToggleKey
+   * @returns {string}
+   */
+  static get captionsToggleKey() {
+    return 'captionsMuted';
   }
 }

@@ -4,14 +4,14 @@ import { SliderPlugin } from '../base-plugins';
  * @export
  * @class PointerSizePlugin
  * @extends {SliderPlugin}
- *
+ * @property {object[]} sliders an array of all slider objects attached to PointerSizePlugin
+ * @extends SliderPlugin
  */
 export class PointerSizePlugin extends SliderPlugin {
   /**
-   *Creates an instance of PointerSizePlugin.
-   * @param {object} options
-   * @param {string | HTMLElement} [pointerSliders]
-   * @param {number} [options.defaultPointerSize=0.5]
+   * Creates an instance of PointerSizePlugin.
+   * @param {string | HTMLElement} [pointerSliders] selector string or HTML Element for the input(s)
+   * @param {number} [defaultPointerSize=0.5] The default value for the pointer size slider
    * @memberof PointerSizePlugin
    */
   constructor(pointerSliders, { defaultPointerSize = 0.5 } = {}) {
@@ -37,6 +37,7 @@ export class PointerSizePlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof PointerSizePlugin
+   * @return {string}
    */
   static get pointerSizeKey() {
     return 'pointerSize';

@@ -202,11 +202,11 @@ Some games will support many of these features, some none at all. We doubt one g
 
 Each plugin is responsible for one of the listed mechanics and should be provided a
 [HTML range input](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/range), and an optional default value.
-Each mechanic's value will range between 0 to 1, and the default initial value is aways 0.5.
+Each mechanic's value will range between 0 to 1, and the default initial value is always 0.5.
 
 ```javascript
 import {
-  HitAreaScalePlugin, DragThresholdScalePlugin, HealtPlugin, ObjectCountPlugin,
+  HitAreaScalePlugin, DragThresholdScalePlugin, HealthPlugin, ObjectCountPlugin,
   CompletionPercentagePlugin, SpeedScalePlugin, TimersScalePlugin, InputCountPlugin,
   Container
   } from 'springroll-container';
@@ -420,7 +420,7 @@ For example the SoundPlugin can accept more than one volume slider or button if 
     musicSliders: '#musicSlider, #musicSliderTwo',
   });
 ```
-As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if neccessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
+As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if necessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
 
 *Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
@@ -485,7 +485,73 @@ import { SavedData } from 'springroll-container';
 
 // Firstly, construct the SavedData object. This is only needed for IndexedDB work
 savedData = new SavedData('dbName');
+
+// Then, open a connection to the database. All changes to the structure of the database should be passed in here
 ```
+Additions is an optional parameter expecting a JSON object with any additions to the databases structure namely new [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore) and [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/createIndex). These are placed inside of an array 
+
+Deletions is an optional parameter used to delete any [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/deleteIndex) or [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/deleteObjectStore)
+
+``` javascript
+
+let additions = {
+  stores: [{
+    storeName: 'storeOne',
+    // optionally define a keyPath and/or set autoIncrement to true or false
+    options: { keyPath: "taskTitle" }
+  },
+  {
+    storeName: 'storeTwo'
+  }],
+  indexes: [{
+    indexName: 'newIndex',
+    keyPath: 'key',
+    // Any objectParameters for the Index
+    options: {
+      unique: false
+    }
+  }]
+};
+
+// Deletions is an optional parameter used to delete any indexes or stores
+let deletions = {
+  stores: ['storeOne', 'storeTwo'],
+  indexes: ['newIndex']
+};
+
+// Optionally pass in the new database version. Set to true to increment the database version.
+// Leave this parameter out or pass in false to connect without making any changes to the structure of the database
+let dbVersion = 1 
+
+// The name of the database to connect to
+let dbName = 'dbName';
+
+// Finally, pass these parameters in to establish a connection with the database
+savedData.onOpenDb(dbName, dbVersion, additions, deletions);
+```
+
+There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message 
+
+``` javascript
+
+//Delete a record by the key in a specific store
+savedData.IDBRemove('storeName', 'key');
+
+// add a record to a store. The record can be any type of object accepted by indexedDB
+savedData.IDBAdd('storeName', 'record');
+
+// returns the record with the given key from the store with the given storeName
+savedData.IDBRead('storeName', 'key');
+
+// Finally, close the connection to the database
+savedData.closeDb();
+
+// Return all records from a database or optionally a specified amount defined by the second parameter
+savedData.IDBReadAll('storeName');
+savedData.IDBReadAll('storeName', 5);
+
+
+
 All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
 
 

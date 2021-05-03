@@ -2,16 +2,19 @@ import { ButtonPlugin } from '../base-plugins';
 import { Button } from '../ui-elements';
 
 /**
- *
- *
- * @export
+ * Requests a hint or help from the game
  * @class HelpPlugin
+ * @property {boolean} paused
+ * @property {boolean} _helpEnabled
+ * @property {boolean} onPause
+ * @property {number} helpButtonsLength
  * @extends {ButtonPlugin}
+ * @export
  */
 export class HelpPlugin extends ButtonPlugin {
   /**
-   *Creates an instance of HelpPlugin.
-   * @param {string} helpButtons
+   * Creates an instance of HelpPlugin.
+   * @param {string | HTMLElement} helpButtons The selector or HTMLElement for the button
    * @memberof HelpPlugin
    */
   constructor(helpButtons) {
@@ -134,6 +137,16 @@ export class HelpPlugin extends ButtonPlugin {
     }
 
     this.client.trigger('helpEnabled');
+  }
+
+  /**
+   * @readonly
+   * @static
+   * @memberof HelpPlugin
+   * @returns {string}
+   */
+  static get helpKey() {
+    return 'help';
   }
 
 }

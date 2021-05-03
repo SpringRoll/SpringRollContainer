@@ -3,14 +3,14 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class LayersPlugin
+ * @property {object[]} sliders an array of all slider objects attached to LayersPlugin
  * @extends {SliderPlugin}
  */
 export class LayersPlugin extends SliderPlugin {
   /**
-   *
-   * @param {Object} options
-   * @param {number} [options.defaultValue=0]
+   * Creates an instance of KeyboardMapPlugin.
    * @param {string | HTMLInputElement} layersSliders selector string or HTML Element for the input(s)
+   * @param {number} [defaultValue=0] The default value for the slider
    */
   constructor(layersSliders, { defaultValue = 0 } = {}) {
     super(layersSliders, 'Layer-Plugin', { defaultValue: defaultValue, featureName: LayersPlugin.layersSliderKey });
@@ -33,6 +33,7 @@ export class LayersPlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof LayersPlugin
+   * @returns {string}
    */
   static get layersSliderKey() {
     return 'removableLayers';

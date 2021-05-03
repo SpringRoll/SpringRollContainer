@@ -3,14 +3,14 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class InputCountPlugin
+ * @property {object[]} sliders an array of all slider objects attached to InputCountPlugin
  * @extends {SliderPlugin}
  */
 export class InputCountPlugin extends SliderPlugin {
   /**
-   *Creates an instance of InputCountPlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.inputCountSliders
-   * @param {number} [params.defaultInputCount=0.5]
+   * Creates an instance of InputCountPlugin.
+   * @param {string | HTMLElement} inputCountSliders selector string or HTML Element for the input(s)
+   * @param {number} [defaultInputCount=0.5] The default value for the slider
    * @memberof InputCountPlugin
    */
   constructor(inputCountSliders, { defaultInputCount = 0.5 } = {}) {
@@ -35,6 +35,7 @@ export class InputCountPlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof InputCountPlugin
+   * @returns {string}
    */
   static get inputCountKey() {
     return 'inputCount';

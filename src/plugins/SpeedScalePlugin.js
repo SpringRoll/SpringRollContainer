@@ -8,9 +8,8 @@ import { SliderPlugin } from '../base-plugins';
 export class SpeedScalePlugin extends SliderPlugin {
   /**
    *Creates an instance of SpeedScalePlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.speedScaleSliders
-   * @param {number} [params.defaultSpeedScale=0.5]
+   * @param {string | HTMLElement} speedScaleSliders selector string or HTML Element for the input(s)
+   * @param {number} [defaultSpeedScale=0.5] The default value for the speed scale slider
    * @memberof SpeedScalePlugin
    */
   constructor(speedScaleSliders, { defaultSpeedScale = 0.5 } = {}) {
@@ -23,8 +22,7 @@ export class SpeedScalePlugin extends SliderPlugin {
 
   /**
    * @memberof SpeedScalePlugin
-   * @param {Event} target
-   * @param {string} control
+   * @param {Event} e
    */
   onSpeedScaleChange(e) {
     this.currentValue = e.target.value;
@@ -35,6 +33,7 @@ export class SpeedScalePlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof SpeedScalePlugin
+   * @return {string}
    */
   static get speedScaleKey() {
     return 'speedScale';

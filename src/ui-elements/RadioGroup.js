@@ -3,6 +3,10 @@ import { BasePlugin } from '../base-plugins/BasePlugin';
 /**
  * @export
  * @class RadioGroup
+ * @property {string} controlName
+ * @property {string} featureName
+ * @property {string} radioElements
+ * @property {string} defaultValue
  */
 export class RadioGroup extends BasePlugin {
   /**

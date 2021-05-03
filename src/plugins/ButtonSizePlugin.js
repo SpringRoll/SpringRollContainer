@@ -3,13 +3,14 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class ButtonSizePlugin
+ * @property {object[]} sliders An array of slider objects given to ButtonSizePlugin
+ * @property {number} currentValue The current button size value
  * @extends {SliderPlugin}
- *
  */
 export class ButtonSizePlugin extends SliderPlugin {
   /**
-   *Creates an instance of ButtonSizePlugin.
-   * @param {string | HTMLElement} buttonSliders selector string for the inputs
+   * Creates an instance of ButtonSizePlugin.
+   * @param {string | HTMLElement} buttonSliders selector string or html element(s) for the inputs
    * @param {object} options
    * @param {number} [options.defaultButtonSize=0.5]
    * @memberof ButtonSizePlugin
@@ -32,9 +33,11 @@ export class ButtonSizePlugin extends SliderPlugin {
   }
 
   /**
+   * Get ButtonSize Key
    * @readonly
    * @static
    * @memberof ButtonSizePlugin
+   * @returns {string}
    */
   static get buttonSizeKey() {
     return 'buttonSize';

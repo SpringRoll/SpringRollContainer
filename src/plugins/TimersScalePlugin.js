@@ -3,14 +3,14 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class TimersScalePlugin
+ * @property {number} currentValue
  * @extends {SliderPlugin}
  */
 export class TimersScalePlugin extends SliderPlugin {
   /**
-   *Creates an instance of TimersScalePlugin.
-   * @param {object} params
-   * @param {string | HTMLElement} params.timersScaleSliders
-   * @param {number} [params.defaultTimersScale=0.5]
+   * Creates an instance of TimersScalePlugin.
+   * @param {string | HTMLElement} timersScaleSliders selector string or HTML Element for the input(s)
+   * @param {number} [defaultTimersScale=0.5] Default Value for the timer scale slider
    * @memberof TimersScalePlugin
    */
   constructor(timersScaleSliders, { defaultTimersScale = 0.5 } = {}) {
@@ -23,8 +23,7 @@ export class TimersScalePlugin extends SliderPlugin {
 
   /**
    * @memberof TimersScalePlugin
-   * @param {Event} target
-   * @param {string} control
+   * @param {Event} e
    */
   onTimersScaleChange(e) {
     this.currentValue = e.target.value;
@@ -35,6 +34,7 @@ export class TimersScalePlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof TimersScalePlugin
+   * @return {string}
    */
   static get timersScaleKey() {
     return 'timersScale';
