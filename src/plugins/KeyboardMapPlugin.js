@@ -8,17 +8,16 @@ import { SavedData } from '../SavedData';
  */
 export class KeyboardMapPlugin extends BasePlugin {
   /**
-   *Creates an instance of KeyboardMapPlugin.
-   * @param {string | HTMLElement} keyContainers //div or similar container element that will contain the remappable keys
-   * @param {object} [options]
-   * @param {string} [options.customClassName='springrollContainerKeyBinding__button']
+   * Creates an instance of KeyboardMapPlugin.
+   * @param {string | HTMLElement} keyContainers div or similar container element that will contain the re-mappable keys
+   * @param {string} [customClassName='springrollContainerKeyBinding__button'] A custom class name that will be applied to the container element
    * @memberof KeyboardMapPlugin
    */
   constructor(keyContainers, {customClassName = 'springrollContainerKeyBinding__button'} = {}) {
     super('Keyboard-Map-Plugin');
 
     this.sendAllProperties = this.sendAllProperties.bind(this);
-    //Allows for removing and readding event listeners
+    //Allows for removing and reading event listeners
     this.bindKey = this.bindKey.bind(this);
     this.onKeyButtonClick = this.onKeyButtonClick.bind(this);
 
@@ -176,6 +175,7 @@ export class KeyboardMapPlugin extends BasePlugin {
    * @readonly
    * @static
    * @memberof KeyboardMapPlugin
+   * @returns {string}
    */
   static get keyBindingKey() {
     return 'keyBinding';

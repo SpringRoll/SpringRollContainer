@@ -3,14 +3,14 @@ import { SliderPlugin } from '../base-plugins';
 /**
  * @export
  * @class ControlSensitivityPlugin
+ * @property {object[]} sliders an array of all slider objects attached to ControlSensitivityPlugin
  * @extends {SliderPlugin}
  */
 export class ControlSensitivityPlugin extends SliderPlugin {
   /**
-   *Creates an instance of ControlSensitivityPlugin.
+   * Creates an instance of ControlSensitivityPlugin.
    * @param {string | HTMLElement} sensitivitySliders
-   * @param {object} options
-   * @param {number} [options.defaultSensitivity=0.5]
+   * @param {number} [defaultSensitivity=0.5]
    * @memberof ControlSensitivityPlugin
    */
   constructor(sensitivitySliders, { defaultSensitivity = 0.5 } = {}) {
@@ -36,6 +36,7 @@ export class ControlSensitivityPlugin extends SliderPlugin {
    * @readonly
    * @static
    * @memberof ControlSensitivityPlugin
+   * @returns {string}
    */
   static get controlSensitivityKey() {
     return 'controlSensitivity';
