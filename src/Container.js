@@ -164,7 +164,7 @@ export class Container extends PluginManager {
     this.iframe.classList.add('loading');
     this.iframe.setAttribute('src', path);
 
-    this.client.respond('singlePlay', { singlePlay });
+    this.client.respond('singlePlay', singlePlay);
     this.client.respond('playOptions', playOptions);
     this.client.trigger('open');
   }
