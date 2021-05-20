@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Changed
 - updated `singlePlay` response to not return an object containing the boolean, but just the boolean itself.
 
-## [2.2.2] - 2021-05-03
+## [2.2.2] - 2021-05-05
 ## Changed
 - Updated comments and docs to be more accurate and up to date
 ## [2.2.1] - 2021-03-04
