@@ -122,7 +122,7 @@ There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `
 `CaptionsStylePlugin` allows the user to control the size, placement, and color of the captions.
 
 ```javascript
-import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
+import { CaptionsStylePlugin, CaptionsTogglePlugin, Container } from 'springroll-container';
 
 const container = new Container('#game', {
   plugins: [
@@ -237,7 +237,7 @@ container.openPath('game.html');
 
 MechanicsPlugin Options:
 
-See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "Springroll Application Documentation") for more detailed information.
+See the [SpringRoll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "SpringRoll Application Documentation") for more detailed information.
 | Feature             | Key               | Description   |
 | ------------------- | ----------------- | ------------- |
 | Hit Area Scale      | hitAreaScale      | Allows the player to define how large or small they want hit boxes for clicking/touching to be in the game. Gives the player the ability to make elements easier or harder to hit. |
@@ -336,7 +336,7 @@ const container = new Container('#game', {
 container.openPath('game.html');
 ```
 
-*The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+*The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the SpringRoll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
 The HTML output within the key container will look like the following:
 The className shown is the default, but can be overridden through the `customClassName` option. The IDs are generated based on the action name.
@@ -398,7 +398,7 @@ The plugin will accept either a selector or an array of selectors as a parameter
 new FullScreenPlugin('#fullScreenButton');
 new FullScreenPlugin(['#fullScreenButton', '.fullScreenButtonSideNav']);
 
-// It will also accept one string with all selectors each seperated by a comma
+// It will also accept one string with all selectors each separated by a comma
 new FullScreenPlugin('#fullScreenButton, .fullScreenButtonSideNav');
 
 
@@ -420,8 +420,6 @@ The typical html can look something like this however, the element may be positi
 
 isFullScreen returns true if there is a fullscreen element
 `` FullScreenPlugin.isFullScreen ``
-
----
 
 ### Multiple Plugin Controls
 
@@ -474,8 +472,8 @@ Any JSON-serializable object can be set as a `playOption`.
 ## Saved Data API
 
 The SavedData API is made up of three classes: `SavedData`, `SavedDataHandler`, and the `UserDataPlugin`.
-It allows the container (or the Springroll Application) to store key-value pairs in local or session storage. It is primarily
-used to store user data for use across the Springroll environment. Examples are listed below for each class.
+It allows the container (or the SpringRoll Application) to store key-value pairs in local or session storage. It is primarily
+used to store user data for use across the SpringRoll environment. Examples are listed below for each class.
 
 ### SavedData
 
@@ -595,7 +593,7 @@ We don't expect this handler to be used very often, but it is available if requi
 
 ### UserDataPlugin
 
-This plugin allows the container to respond to requests from the Springroll Application's [User Data Class](https://github.com/SpringRoll/SpringRoll/tree/master/src/state).
+This plugin allows the container to respond to requests from the SpringRoll Application's [User Data Class](https://github.com/SpringRoll/SpringRoll/tree/master/src/state).
 It is included in the container constructor like any other plugin:
 
 ```javascript
