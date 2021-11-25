@@ -613,6 +613,6 @@ There is no configuration required for the UserDataPlugin as it just handles req
 
 ## License
 
-Copyright (c) 2020 [SpringRoll](http://github.com/SpringRoll)
+Copyright (c) 2021 [SpringRoll](http://github.com/SpringRoll)
 
 Released under the MIT License.
