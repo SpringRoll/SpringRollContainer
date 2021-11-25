@@ -307,7 +307,7 @@ The HUD Plugin requests the supported positions directly from the game itself an
 e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will hide the "left" and "right"
 radio buttons so only the valid ones are displayed to users.
 
-See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on
+See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container) for more information on
 the request format and how game developers provide those values.
 
 ### Controls
@@ -336,7 +336,7 @@ const container = new Container('#game', {
 container.openPath('game.html');
 ```
 
-*The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the SpringRoll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
+*The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the SpringRoll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container) for more information on the request format.
 
 The HTML output within the key container will look like the following:
 The className shown is the default, but can be overridden through the `customClassName` option. The IDs are generated based on the action name.
@@ -370,7 +370,7 @@ container.openPath('game.html');
 ```
 
 *The color vision radio group builds out the supported values dynamically based on what the application reports back and hides
-any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
+any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container)
 for more information on the request format.
 
 ### Fullscreen Plugin
@@ -454,7 +454,7 @@ container.openPath('game.html', {
 });
 ```
 
-In a SpringRoll Application, the Container Client Plugin [mirrors this data directly onto the object](https://github.com/SpringRoll/SpringRoll/blob/master/src/container-client/ContainerClientPlugin.js#L316).
+The Container includes any data included this way as queryString parameters that can be read by the SpringRoll Application.
 Once the application finishes its `init` process, this data will be available directly on the application instance:
 
 ```javascript
