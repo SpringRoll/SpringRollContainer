@@ -122,7 +122,7 @@ There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `
 `CaptionsStylePlugin` allows the user to control the size, placement, and color of the captions.
 
 ```javascript
-import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
+import { CaptionsStylePlugin, CaptionsTogglePlugin, Container } from 'springroll-container';
 
 const container = new Container('#game', {
   plugins: [
@@ -237,7 +237,7 @@ container.openPath('game.html');
 
 MechanicsPlugin Options:
 
-See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "Springroll Application Documentation") for more detailed information.
+See the [SpringRoll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src) for more detailed information.
 | Feature             | Key               | Description   |
 | ------------------- | ----------------- | ------------- |
 | Hit Area Scale      | hitAreaScale      | Allows the player to define how large or small they want hit boxes for clicking/touching to be in the game. Gives the player the ability to make elements easier or harder to hit. |
@@ -307,7 +307,7 @@ The HUD Plugin requests the supported positions directly from the game itself an
 e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will hide the "left" and "right"
 radio buttons so only the valid ones are displayed to users.
 
-See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on
+See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container) for more information on
 the request format and how game developers provide those values.
 
 ### Controls
@@ -370,7 +370,7 @@ container.openPath('game.html');
 ```
 
 *The color vision radio group builds out the supported values dynamically based on what the application reports back and hides
-any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
+any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container)
 for more information on the request format.
 
 ### Fullscreen Plugin
@@ -398,7 +398,7 @@ The plugin will accept either a selector or an array of selectors as a parameter
 new FullScreenPlugin('#fullScreenButton');
 new FullScreenPlugin(['#fullScreenButton', '.fullScreenButtonSideNav']);
 
-// It will also accept one string with all selectors each seperated by a comma
+// It will also accept one string with all selectors each separated by a comma
 new FullScreenPlugin('#fullScreenButton, .fullScreenButtonSideNav');
 
 
@@ -416,8 +416,6 @@ The typical html can look something like this however, the element may be positi
 ```
 
 `isFullScreen` returns true if there is a fullscreen element `FullScreenPlugin.isFullScreen`
-
----
 
 ### Multiple Plugin Controls
 
@@ -452,7 +450,7 @@ container.openPath('game.html', {
 });
 ```
 
-In a SpringRoll Application, the Container Client Plugin [mirrors this data directly onto the object](https://github.com/SpringRoll/SpringRoll/blob/master/src/container-client/ContainerClientPlugin.js#L316).
+The Container adds any data included this way as queryString parameters that can be read by the SpringRoll Application.
 Once the application finishes its `init` process, this data will be available directly on the application instance:
 
 ```javascript
@@ -470,20 +468,20 @@ Any JSON-serializable object can be set as a `playOption`.
 ## Saved Data API
 
 The SavedData API is made up of three classes: `SavedData`, `SavedDataHandler`, and the `UserDataPlugin`.
-It allows the container (or the Springroll Application) to store key-value pairs in local or session storage. It is primarily
-used to store user data for use across the Springroll environment. Examples are listed below for each class.
+It allows the container (or the SpringRoll Application) to store key-value pairs in local/session storage. It also gives access to the
+IndexedDB API.
+It is primarily used to store user data for use across the SpringRoll environment. Examples are listed below for each class.
 
 ### SavedData
 
-The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
-be used wherever necessary.
+The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may be used wherever necessary.
 
-Following is an example of interacting with Local Storage
+The following is an example of interacting with Local/Session Storage
 
 ```javascript
 import { SavedData } from 'springroll-container';
 
-//the last argument, tempOnly, is optional (defaults to false) and decides whether the value should be saved in session (temporary),
+//the last argument, tempOnly, is optional (default = false) and decides whether the value should be saved in session (temporary),
 //or local (not temporary) storage.
 const tempOnly = false;
 SavedData.write('user-value-key', 'user-value', tempOnly);
@@ -494,17 +492,21 @@ let data = SavedData.read('user-value-key'); //data will be either the value in 
 SavedData.remove('user-value-key'); //removes the value from both local and session storage.
 ```
 
-Following is an example of interacting with [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) through the UserData class
+The following is an example of interacting with [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) through the UserData class
 
 ``` javascript
 import { SavedData } from 'springroll-container';
 
 // Firstly, construct the SavedData object. This is only needed for IndexedDB work
-savedData = new SavedData('dbName');
+const savedData = new SavedData('dbName');
 
-// Then, open a connection to the database. All changes to the structure of the database should be passed in here
+// Then, open a connection to the database (this is using all default parameters)
+savedData.IDBOpen('dbName','1', {}, {}, (result) => console.log(result))
 
 ```
+
+If you want to make changes to the strucutre of the DB you would do so during the open connection step
+via Additions and Deletions:
 
 Additions is an optional parameter expecting a JSON object with any additions to the databases structure namely new [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore) and [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/createIndex). These are placed inside of an array
 
@@ -550,24 +552,27 @@ savedData.onOpenDb(dbName, dbVersion, additions, deletions);
 
 There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message
 
+All the below methods accept a callback as a last parameter if you need to do something with the response.
+
 ``` javascript
 
 //Delete a record by the key in a specific store
 savedData.IDBRemove('storeName', 'key');
 
-// add a record to a store. The record can be any type of object accepted by indexedDB
+//add a record to a store. The record can be any type of object accepted by indexedDB
 savedData.IDBAdd('storeName', 'record');
 
-// returns the record with the given key from the store with the given storeName
+//returns the record with the given key from the store with the given storeName
 savedData.IDBRead('storeName', 'key');
 
-// Finally, close the connection to the database
-savedData.closeDb();
-
-// Return all records from a database or optionally a specified amount defined by the second parameter
+//Return all records from a database or optionally a specified amount defined by the second parameter
 savedData.IDBReadAll('storeName');
 savedData.IDBReadAll('storeName', 5);
 
+// Return all keys in a given Index
+
+// Finally, close the connection to the database
+savedData.closeDb();
 
 
 All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
@@ -576,6 +581,7 @@ All other methods will work the same as the documentation [here](https://github.
 ### SavedDataHandler
 The SavedDataHandler class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
 if you require a callback when reading or writing from `SavedData`. Like `SavedData` all of the methods are static.
+
 ```javascript
 import { SavedDataHandler } from 'springroll-container';
 
@@ -584,7 +590,6 @@ SavedDataHandler.write('user-value-name', 'value-to-be-stored', () => console.lo
 SavedDataHandler.read('user-value-name', value => console.log('Returned value: ' + value));
 
 SavedDataHandler.remove('user-value-name', () => console.log('user-value-name removed from storage'));
-
 ```
 
 We don't expect this handler to be used very often, but it is available if required.
