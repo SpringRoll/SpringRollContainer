@@ -243,7 +243,7 @@ export class SavedData {
    * @param {string} indexName the name of the index to be read from
    * @param {string} query Optionally give a keyRange of records to return
    * @param {string} count Optionally give a max limit on records to be returned
-   * @param {function} callback The method to call on success or failure. A single value will be passed in
+   * @param {function} callback The method to call on success or failure. A single value will be passed in as a parameter
    */
   IDBGetIndexKeys (storeName, indexName, query = null, count = null, callback = {}) {
     // Open transaction with a store

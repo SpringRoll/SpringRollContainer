@@ -500,7 +500,7 @@ import { SavedData } from 'springroll-container';
 // Firstly, construct the SavedData object. This is only needed for IndexedDB work
 const savedData = new SavedData('dbName');
 
-// Then, open a connection to the database (this is using all default parameters)
+// Then, open a connection to the database (this is using all default parameters, more info on parameters below)
 savedData.IDBOpen('dbName','1', {}, {}, (result) => console.log(result))
 
 ```
@@ -550,7 +550,7 @@ let dbName = 'dbName';
 savedData.onOpenDb(dbName, dbVersion, additions, deletions);
 ```
 
-There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message
+There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Delete a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Read a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), or [Read all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll). Each will return a success, or on failure, an error message
 
 All the below methods accept a callback as a last parameter if you need to do something with the response.
 
@@ -569,14 +569,16 @@ savedData.IDBRead('storeName', 'key');
 savedData.IDBReadAll('storeName');
 savedData.IDBReadAll('storeName', 5);
 
-// Return all keys in a given Index
+// Return all keys in a given Index. [Docs](https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex/getAllKeys)
+// See [here](https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange) for keyRange info
+const keyRange = IDBKeyRange.bound("A", "F");
+const count = 5;
+savedData.IDBGetIndexKeys('storeName', 'indexName', query, 5);
 
 // Finally, close the connection to the database
 savedData.closeDb();
 
-
 All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
-
 
 ### SavedDataHandler
 The SavedDataHandler class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
@@ -614,6 +616,6 @@ There is no configuration required for the UserDataPlugin as it just handles req
 
 ## License
 
-Copyright (c) 2021 [SpringRoll](http://github.com/SpringRoll)
+Copyright (c) 2022 [SpringRoll](http://github.com/SpringRoll)
 
 Released under the MIT License.
