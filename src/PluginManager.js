@@ -46,7 +46,7 @@ export default class PluginManager {
         this.plugins[i].preload(this).catch(function preloadFail(error) {
           this.plugins[i].preloadFailed = true;
           console.warn(this.plugins[i].name, 'Preload Failed:', error);
-        })
+        }.bind(this))
       );
     }
 
