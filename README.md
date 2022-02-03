@@ -11,7 +11,9 @@ npm install --save springroll-container
 ```
 
 ## Glossary
+
 Here's a handful of libraries and terms that we'll use throughout this document:
+
 - [SpringRoll](https://github.com/SpringRoll/SpringRoll) an JavaScript library for building portable and accessible HTML5 games
 - [Bellhop](https://github.com/SpringRoll/Bellhop) an event-based wrapper around the [`postMessage` API](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
 - [SpringRollConnect](https://github.com/SpringRoll/SpringRollConnect) a content-management system for SpringRoll games.
@@ -71,6 +73,7 @@ container.openPath('path/to/game.html');
 ```
 
 ### Opening a Game with a Dynamically Created Iframe
+
 In some cases, you may have an existing [HTMLIframeElement](https://developer.mozilla.org/en-US/docs/Web/API/HTMLIFrameElement) rather than a CSS selector.
 You can also instantiate a container from the DOM element as well:
 
@@ -85,18 +88,19 @@ container.openPath('/path/to/game.html');
 ```
 
 ## Plugins
+
 This section provides instructions on how to use the built-in plugins for SpringRoll Container. For writing or updating older plugins, see the [Plugin Authoring Guide](https://github.com/SpringRoll/SpringRollContainer/tree/main/src/plugins).
 
 The Container has several built-in plugins that allow the user to control various aspects of a game/application.
 These are initialized with either a query selector string (similar to what you would pass to [document.querySelector](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector))
 or an `HTMLElement`.
 
-
 Plugins in the SpringRollContainer correspond to a matching [feature in SpringRoll Core](https://github.com/SpringRoll/SpringRoll/tree/develop/src#features).
 If the container has a plugin enabled corresponding to a feature that the game doesn't contain, the container will automatically _hide the corresponding UI element_.
 For example, if the container has the `CaptionsTogglePlugin` enabled with a corresponding button to toggle captions but the game doesn't actually _have_ captions, the container will hide the captions toggle button automatically.
 
-### PausePlugin, HelpPlugin:
+### PausePlugin, HelpPlugin
+
 ```javascript
 import { PausePlugin, HelpPlugin, Container } from 'springroll-container';
 
@@ -111,13 +115,14 @@ container.openPath('game.html');
 
 `PausePlugin` sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
-### Captions:
+### Captions
+
 There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `CaptionsStylePlugin`.
 `CaptionsTogglePlugin` allows the user to hide or show the captions in the game.
 `CaptionsStylePlugin` allows the user to control the size, placement, and color of the captions.
 
 ```javascript
-import { CaptionsStylePlugin, CaptionsToggleplugin, Container } from 'springroll-container';
+import { CaptionsStylePlugin, CaptionsTogglePlugin, Container } from 'springroll-container';
 
 const container = new Container('#game', {
   plugins: [
@@ -163,11 +168,13 @@ Typical HTML for powering the captions plugin might look like this:
 
 Note that the captions plugin sets a class of `muted` or `unmuted` on the caption buttons as they are toggled.
 
-### SoundPlugin:
+### SoundPlugin
+
 The sound plugin allows users to control the volume of individual audio channels within the game.
 SpringRoll supports three audio channels: VO, SFX, and Music and we encourage developers to use them as it empowers users to customize their game play to suite their needs.
 
 The sound plugin supports a total of eight controls:
+
 - A global sound mute
 - Mute buttons for each of the three audio channels mentioned above - VO, SFX, Music
 - A global sound volume slider
@@ -194,9 +201,11 @@ const container = new Container('#game', {
 });
 container.openPath('game.html');
 ```
+
 `SoundPlugin` will set a class of `muted` or `unmuted` on each button as they are toggled
 
-### Mechanics:
+### Mechanics
+
 Mechanics are various configurable aspects of the game that can determine how a user plays the game (see table below for details).
 Some games will support many of these features, some none at all. We doubt one game will use all of them though.
 
@@ -225,9 +234,10 @@ const container = new Container('#game', {
 });
 container.openPath('game.html');
 ```
+
 MechanicsPlugin Options:
 
-See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src "Springroll Application Documentation") for more detailed information.
+See the [SpringRoll Application Docs](https://github.com/SpringRoll/SpringRoll/tree/master/src) for more detailed information.
 | Feature             | Key               | Description   |
 | ------------------- | ----------------- | ------------- |
 | Hit Area Scale      | hitAreaScale      | Allows the player to define how large or small they want hit boxes for clicking/touching to be in the game. Gives the player the ability to make elements easier or harder to hit. |
@@ -239,8 +249,8 @@ See the [Springroll Application Docs](https://github.com/SpringRoll/SpringRoll/t
 | Timer Scale | timerScale | Allows the player to adjust timers in game to give more or less time to complete tasks. |
 | Input Count | inputCount | Allows the player to define how many clicks, taps, or keyboard inputs are required to complete objectives.  |
 
+### PointerSizePlugin, ButtonSizePlugin, LayersPlugin
 
-### PointerSizePlugin, ButtonSizePlugin, LayersPlugin:
 The Button Size plugin allows users to control the size of buttons within the game. The size value ranges from 0 to 1, defaulting to 0.5.
 
 The Pointer Size plugin allows users to control the size of custom pointers within the game. The size value ranges from 0 to 1, defaulting to 0.5.
@@ -275,6 +285,7 @@ container.openPath('game.html');
 ```
 
 ### HUDPlugin
+
 The HUD plugin allows users to position HUD elements within a game by docking to different sides of the screen.
 
 ```javascript
@@ -296,10 +307,11 @@ The HUD Plugin requests the supported positions directly from the game itself an
 e.g. if the game supports Top and Bottom HUD docking (stored internally as `['top', 'bottom']`) then the plugin will hide the "left" and "right"
 radio buttons so only the valid ones are displayed to users.
 
-See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/develop/src#responding-to-the-container) for more information on
+See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container) for more information on
 the request format and how game developers provide those values.
 
 ### Controls
+
 There are two plugins associated with in-game controls: `ControlSensitivityPlugin` and `KeyboardMapPlugin`.
 The Control Sensitivity Plugin allows the user to determine the sensitivity of custom pointers in game. This plugin expects an HTML Input
 The Keyboard Map Plugin allows users to re-map the keys/controls used in-game to something they are more comfortable with.
@@ -323,6 +335,7 @@ const container = new Container('#game', {
 });
 container.openPath('game.html');
 ```
+
 *The Key Binding functionality of the `KeyboardMapPlugin` works similarly to the HUDPlugin in that it requests information from the Springroll Application. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change) for more information on the request format.
 
 The HTML output within the key container will look like the following:
@@ -337,10 +350,10 @@ The className shown is the default, but can be overridden through the `customCla
 </div>
 ```
 
-
 Keybindings are tracked visually by setting the textContent of the buttons themselves.
 
 ### ColorVisionPlugin
+
 ```javascript
 import { ColorVisionPlugin, Container } from 'springroll-container';
 
@@ -355,11 +368,13 @@ const container = new Container('#game', {
 });
 container.openPath('game.html');
 ```
+
 *The color vision radio group builds out the supported values dynamically based on what the application reports back and hides
-any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/v2/src#handling-state-change)
+any unsupported values. See [the SpringRoll Application Class docs](https://github.com/SpringRoll/SpringRoll/tree/main/src#responding-to-the-container)
 for more information on the request format.
 
 ### Fullscreen Plugin
+
 The fullscreen plugin hooks up an element or elements to set the iframe to full screen then communicates this through Bellhop. The plugin will also add the class ```'--fullScreen'``` to the element(s) given
 
 ```javascript
@@ -383,35 +398,30 @@ The plugin will accept either a selector or an array of selectors as a parameter
 new FullScreenPlugin('#fullScreenButton');
 new FullScreenPlugin(['#fullScreenButton', '.fullScreenButtonSideNav']);
 
-// It will also accept one string with all selectors each seperated by a comma
+// It will also accept one string with all selectors each separated by a comma
 new FullScreenPlugin('#fullScreenButton, .fullScreenButtonSideNav');
 
 
 ```
 
 The typical html can look something like this however, the element may be positioned anywhere in the html as long as it is not inside the iframe
-  
 
 ```html
-
 <nav>
   <!-- May be a button or any other element that can create an onclick event -->
   <button id='fullScreenButton'>Fullscreen</button>
 </nav>
 <!-- The element cannot be inside the source file -->
 <iframe id="game" scrolling="no"></iframe>
-
-
 ```
-isFullScreen returns true if there is a fullscreen element
-`` FullScreenPlugin.isFullScreen ``
 
-
----
+`isFullScreen` returns true if there is a fullscreen element `FullScreenPlugin.isFullScreen`
 
 ### Multiple Plugin Controls
+
 All Plugins accept one or more HTML elements as controls in their constructor.
 For example the SoundPlugin can accept more than one volume slider or button if your set up requires it:
+
 ```javascript
   new SoundPlugin({
     soundButtons: '#soundButton, #soundButtonTwo',
@@ -420,11 +430,13 @@ For example the SoundPlugin can accept more than one volume slider or button if 
     musicSliders: '#musicSlider, #musicSliderTwo',
   });
 ```
+
 As long as the string you pass to the constructor is a valid selector string the plugin will use anything you pass to it. The plugins will keep settings in sync across the controls if necessary as well. Sliders will update each other, buttons will set a dataSet attribute or class (see individual plugin sections for the exact attribute), and any other controls will match each other appropriately.
 
 *Note: at this time there is no support for multiple HTMLElements as parameters. If you are passing an HTMLElement as the parameter rather than a selector string you cannot pass multiple controls. If you do wish to use multiple controls, pass the plugin a selector string instead.
 
 ## Play Options
+
 The `openPath` method of the Container provides a mechanism for providing options directly to the game, called
 `playOptions`:
 
@@ -438,7 +450,7 @@ container.openPath('game.html', {
 });
 ```
 
-In a SpringRoll Application, the Container Client Plugin [mirrors this data directly onto the object](https://github.com/SpringRoll/SpringRoll/blob/master/src/container-client/ContainerClientPlugin.js#L316).
+The Container adds any data included this way as queryString parameters that can be read by the SpringRoll Application.
 Once the application finishes its `init` process, this data will be available directly on the application instance:
 
 ```javascript
@@ -454,19 +466,22 @@ app.on('init', function() {
 Any JSON-serializable object can be set as a `playOption`.
 
 ## Saved Data API
+
 The SavedData API is made up of three classes: `SavedData`, `SavedDataHandler`, and the `UserDataPlugin`.
-It allows the container (or the Springroll Application) to store key-value pairs in local or session storage. It is primarily
-used to store user data for use across the Springroll environment. Examples are listed below for each class.
+It allows the container (or the SpringRoll Application) to store key-value pairs in local/session storage. It also gives access to the
+IndexedDB API.
+It is primarily used to store user data for use across the SpringRoll environment. Examples are listed below for each class.
 
 ### SavedData
-The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may
-be used wherever necessary.
 
-Following is an example of interacting with Local Storage
+The `SavedData` class is the most direct way to access the Container storage options. It is used primarily in plugin classes, but may be used wherever necessary.
+
+The following is an example of interacting with Local/Session Storage
+
 ```javascript
 import { SavedData } from 'springroll-container';
 
-//the last argument, tempOnly, is optional (defaults to false) and decides whether the value should be saved in session (temporary),
+//the last argument, tempOnly, is optional (default = false) and decides whether the value should be saved in session (temporary),
 //or local (not temporary) storage.
 const tempOnly = false;
 SavedData.write('user-value-key', 'user-value', tempOnly);
@@ -477,18 +492,23 @@ let data = SavedData.read('user-value-key'); //data will be either the value in 
 SavedData.remove('user-value-key'); //removes the value from both local and session storage.
 ```
 
-Following is an example of interacting with [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) through the UserData class
-
+The following is an example of interacting with [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) through the UserData class
 
 ``` javascript
 import { SavedData } from 'springroll-container';
 
 // Firstly, construct the SavedData object. This is only needed for IndexedDB work
-savedData = new SavedData('dbName');
+const savedData = new SavedData('dbName');
 
-// Then, open a connection to the database. All changes to the structure of the database should be passed in here
+// Then, open a connection to the database (this is using all default parameters, more info on parameters below)
+savedData.IDBOpen('dbName','1', {}, {}, (result) => console.log(result))
+
 ```
-Additions is an optional parameter expecting a JSON object with any additions to the databases structure namely new [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore) and [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/createIndex). These are placed inside of an array 
+
+If you want to make changes to the strucutre of the DB you would do so during the open connection step
+via Additions and Deletions:
+
+Additions is an optional parameter expecting a JSON object with any additions to the databases structure namely new [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore) and [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/createIndex). These are placed inside of an array
 
 Deletions is an optional parameter used to delete any [indexes](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/deleteIndex) or [stores](https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/deleteObjectStore)
 
@@ -521,7 +541,7 @@ let deletions = {
 
 // Optionally pass in the new database version. Set to true to increment the database version.
 // Leave this parameter out or pass in false to connect without making any changes to the structure of the database
-let dbVersion = 1 
+let dbVersion = 1
 
 // The name of the database to connect to
 let dbName = 'dbName';
@@ -530,34 +550,40 @@ let dbName = 'dbName';
 savedData.onOpenDb(dbName, dbVersion, additions, deletions);
 ```
 
-There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Deleting a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Reading](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), [reading all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll) Each will return a success, or on failure, an error message 
+There are other methods currently supported to interact with the database. These allow you to [Add a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/add), [Delete a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/delete), [Read a record](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/get), or [Read all records](https://developer.mozilla.org/en-US/docs/Web/API/IDBObjectStore/getAll). Each will return a success, or on failure, an error message
+
+All the below methods accept a callback as a last parameter if you need to do something with the response.
 
 ``` javascript
 
 //Delete a record by the key in a specific store
 savedData.IDBRemove('storeName', 'key');
 
-// add a record to a store. The record can be any type of object accepted by indexedDB
+//add a record to a store. The record can be any type of object accepted by indexedDB
 savedData.IDBAdd('storeName', 'record');
 
-// returns the record with the given key from the store with the given storeName
+//returns the record with the given key from the store with the given storeName
 savedData.IDBRead('storeName', 'key');
+
+//Return all records from a database or optionally a specified amount defined by the second parameter
+savedData.IDBReadAll('storeName');
+savedData.IDBReadAll('storeName', 5);
+
+// Return all keys in a given Index. [Docs](https://developer.mozilla.org/en-US/docs/Web/API/IDBIndex/getAllKeys)
+// See [here](https://developer.mozilla.org/en-US/docs/Web/API/IDBKeyRange) for keyRange info
+const keyRange = IDBKeyRange.bound("A", "F");
+const count = 5;
+savedData.IDBGetIndexKeys('storeName', 'indexName', query, 5);
 
 // Finally, close the connection to the database
 savedData.closeDb();
 
-// Return all records from a database or optionally a specified amount defined by the second parameter
-savedData.IDBReadAll('storeName');
-savedData.IDBReadAll('storeName', 5);
-
-
-
 All other methods will work the same as the documentation [here](https://github.com/SpringRoll/SpringRoll/tree/main/src/state#userdata);
-
 
 ### SavedDataHandler
 The SavedDataHandler class is used primarily in the `UserDataPlugin` to interact with the `SavedData` class. But can be used directly
 if you require a callback when reading or writing from `SavedData`. Like `SavedData` all of the methods are static.
+
 ```javascript
 import { SavedDataHandler } from 'springroll-container';
 
@@ -566,13 +592,15 @@ SavedDataHandler.write('user-value-name', 'value-to-be-stored', () => console.lo
 SavedDataHandler.read('user-value-name', value => console.log('Returned value: ' + value));
 
 SavedDataHandler.remove('user-value-name', () => console.log('user-value-name removed from storage'));
-
 ```
+
 We don't expect this handler to be used very often, but it is available if required.
 
 ### UserDataPlugin
+
 This plugin allows the container to respond to requests from the Springroll Application's [User Data Class](https://github.com/SpringRoll/SpringRoll/tree/master/src/state).
 It is included in the container constructor like any other plugin:
+
 ```javascript
 import { UserDataPlugin, Container } from 'springroll-container';
 
@@ -583,10 +611,11 @@ const container = new Container('#game', {
 });
 container.openPath('game.html');
 ```
+
 There is no configuration required for the UserDataPlugin as it just handles requests from the Application.
 
 ## License
 
-Copyright (c) 2020 [SpringRoll](http://github.com/SpringRoll)
+Copyright (c) 2022 [SpringRoll](http://github.com/SpringRoll)
 
 Released under the MIT License.

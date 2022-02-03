@@ -2,19 +2,22 @@ import sinon from 'sinon';
 import { Container, Features } from './index';
 import { BasePlugin } from './base-plugins';
 
+const sleep = (millis) => {
+  return new Promise((resolve) => setTimeout(resolve, millis));
+};
+
 document.body.innerHTML = '';
 const iframe = document.createElement('iframe');
 iframe.id = 'test';
 document.body.appendChild(iframe);
 const container = new Container('#test');
 
-
 describe('Container', () => {
   it('Should Construct', () => {
     expect(container).to.be.instanceof(Container);
   });
 
-  it('should contruct with a Iframe DOM element', () => {                                                                  
+  it('should contruct with a Iframe DOM element', () => {
     new Container(iframe);
   });
 
@@ -171,5 +174,31 @@ describe('Container', () => {
     container.uses(new barFoo());
 
     expect(container.plugins.length).to.not.equal(length);
+  });
+
+  it('Should still construct with a plugin that fails its preload', async () => {
+
+    /*eslint-disable */
+    class PreloadFailPlugin extends BasePlugin {
+      constructor() {
+        super('preload-fail-plugin');
+      }
+      async preload() {
+        throw 'It was rigged from the start';
+      }
+    }
+    /*eslint-enable */
+
+    const container2 = new Container('#iframe', {plugins: [
+      new PreloadFailPlugin(),
+      new BasePlugin('base plugin')
+    ]});
+
+    await sleep(100);
+
+    // Preload should fail on one and it should be filtered out
+    expect(container2.plugins.length).to.equal(1);
+
+
   });
 });
