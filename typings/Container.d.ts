@@ -15,7 +15,8 @@ export class PluginManager {
 }
 
 type containerOptions = {
-  plugins?: Array<IPlugin>
+  plugins?: Array<IPlugin>,
+  context?: object
 };
 
 export class Container extends PluginManager {

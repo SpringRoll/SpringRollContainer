@@ -20,10 +20,11 @@ export class Container extends PluginManager {
    *Creates an instance of Container.
    * @param {object} config
    * @param {string | HTMLIFrameElement} iframeOrSelector
-   * @param {Array<BasePlugin> | null} [config.plugins=[]]
+   * @param {Array<BasePlugin> | null} [config.plugins]
+   * @param {object | null} [config.context={}]
    * @memberof Container
    */
-  constructor(iframeOrSelector, { plugins } = {}) {
+  constructor(iframeOrSelector, { plugins, context = {} } = {}) {
     super({ plugins });
 
     this.iframe = iframeOrSelector instanceof HTMLIFrameElement ? iframeOrSelector : document.querySelector(iframeOrSelector);
@@ -35,6 +36,9 @@ export class Container extends PluginManager {
     this.loaded = false;
     this.loading = false;
     this.release = null;
+
+    // context object that plugins can pick up on
+    this._context = context;
 
     this.onLoading = this.onLoading.bind(this);
     this.onLoadDone = this.onLoadDone.bind(this);
@@ -269,9 +273,35 @@ export class Container extends PluginManager {
   }
 
   /**
+   * the current _context object
+   * @readonly
+   * @memberof Container
+   * @return {object}
+   */
+  get context() {
+    return this._context;
+  }
+
+  /**
+   * sets _context object to new object
+   * @param {object} context
+   * @memberof Container
+   */
+  set context(newContext) {
+    if (typeof newContext !== 'object') {
+      console.error('[SpringRollContainer] Context: new context provided is not an object');
+      return;
+    }
+    this._context = newContext;
+  }
+
+
+
+  /**
    * The current version of SpringRollContainer
    * @readonly
    * @static
+   * @return {string}
    * @memberof Container
    */
   static get version() {
