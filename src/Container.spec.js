@@ -48,6 +48,17 @@ describe('Container', () => {
       expect(container.context.test).to.equal(newContext.test);
     });
 
+    it('should allow adding a single field to the context', () => {
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+
+      container.context.newField = 'test';
+
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+      expect(container.context.newField).to.equal('test');
+    });
+
     it('should not update context if the provided paramater is not an object', () => {
       const badContext = 'it was rigged from the start';
 
