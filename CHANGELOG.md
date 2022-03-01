@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.3.0] - unreleased
 
+### Added
+
+- Added context object to Container to allow data sharing between Container and plugins
+
 ## Changed
+
 - Bumped karma dependency from 5.2.3 to 6.3.14
 
 ## [2.2.5] - 2022-02-03

@@ -45,7 +45,7 @@ export class BasePlugin {
    * @param {Container} [_]
    * @memberof BasePlugin
    */
-  init(_) {}
+  init(_) { }
 
   /**
    *
@@ -65,7 +65,7 @@ export class BasePlugin {
    * @param {Container} [_]
    * @memberof BasePlugin
    */
-  sendAllProperties(_) {}
+  sendAllProperties(_) { }
 
   /**
    *
@@ -73,6 +73,6 @@ export class BasePlugin {
    * @memberof BasePlugin
    */
   warn(warningText) {
-    console.warn(`[SpringrollContainer] ${this.name}: ${warningText}`);
+    console.warn(`[SpringRollContainer] ${this.name}: ${warningText}`);
   }
 }
