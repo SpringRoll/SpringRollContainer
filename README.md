@@ -465,6 +465,51 @@ app.on('init', function() {
 
 Any JSON-serializable object can be set as a `playOption`.
 
+## Context
+Container has an optional parameter at instantiation time which allows the opener to attach any data they require to the Container
+instance which any plugins can interact with to share data. This data can be mutated or replaced at any time.
+
+```javascript
+
+const initialContext = {
+  hostEnvironment: 'web',
+  gameBuildInfo: {
+    commit: '#abcd123',
+    name: 'game-name'
+  }
+};
+
+const container = new Container('#game', { context: initialContext });
+
+// Once the container instance is created you can access the context from any plugin or anywhere else there is access to Container
+console.log(container.context); // { "hostEnvironment": "web", "gameBuildInfo": { "commit": "#abcd123", "name": "game-name" } }
+
+```
+
+The context can be accessed via the `container.context` getter. It can also be modified by simply adding or changing fields
+
+```javascript
+container.context.newField = 'hello';
+container.context.gamebBuildInfo = 'newInfo';
+
+// { "hostEnvironment": "web", "gameBuildInfo": "newInfo", "newField": "hello" }
+console.log(container.context);
+```
+
+You can also overwrite the context object entirely if you need to:
+
+```javascript
+container.context = {
+  newField: {
+    newKey: 'newField'
+  }
+}
+```
+
+The only caveat here is that this will check to make sure the new data is an object. If not it will log an error and leave the
+context unchanged.
+
+
 ## Saved Data API
 
 The SavedData API is made up of three classes: `SavedData`, `SavedDataHandler`, and the `UserDataPlugin`.
