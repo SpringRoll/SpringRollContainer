@@ -6,15 +6,70 @@ const sleep = (millis) => {
   return new Promise((resolve) => setTimeout(resolve, millis));
 };
 
+const defaultContext = {
+  build_info: {
+    commit: '#abcd123'
+  },
+  game_commit: '#123abcd'
+};
+
 document.body.innerHTML = '';
 const iframe = document.createElement('iframe');
 iframe.id = 'test';
 document.body.appendChild(iframe);
-const container = new Container('#test');
+const container = new Container('#test', { context: defaultContext });
 
 describe('Container', () => {
   it('Should Construct', () => {
     expect(container).to.be.instanceof(Container);
+  });
+
+  describe('container.context', () => {
+    beforeEach(() => {
+      container.context = defaultContext;
+    });
+
+    it('should set context object to the passed in default', () => {
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+    });
+
+    it('should allow for updating the entire context object', () => {
+
+      const newContext = {
+        test: 'hello'
+      };
+
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+
+      container.context = newContext;
+
+      expect(container.context.test).to.equal(newContext.test);
+    });
+
+    it('should allow adding a single field to the context', () => {
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+
+      container.context.newField = 'test';
+
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+      expect(container.context.newField).to.equal('test');
+    });
+
+    it('should not update context if the provided paramater is not an object', () => {
+      const badContext = 'it was rigged from the start';
+
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+
+      container.context = badContext;
+
+      expect(container.context.build_info.commit).to.equal(defaultContext.build_info.commit);
+      expect(container.context.game_commit).to.equal(defaultContext.game_commit);
+    });
   });
 
   it('should contruct with a Iframe DOM element', () => {
@@ -189,10 +244,12 @@ describe('Container', () => {
     }
     /*eslint-enable */
 
-    const container2 = new Container('#iframe', {plugins: [
-      new PreloadFailPlugin(),
-      new BasePlugin('base plugin')
-    ]});
+    const container2 = new Container('#iframe', {
+      plugins: [
+        new PreloadFailPlugin(),
+        new BasePlugin('base plugin')
+      ]
+    });
 
     await sleep(100);
 
