@@ -274,7 +274,10 @@ describe('Container', () => {
 
     await sleep(100);
 
+    // Both plugins should still be valid
     expect(container.plugins.length).to.equal(2);
+
+    //The BasePlugin client should be not null. This proves that the preload function ran properly
     expect(container.plugins[1].client).to.not.be.null;
 
   });
