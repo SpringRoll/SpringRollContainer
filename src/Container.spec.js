@@ -258,4 +258,24 @@ describe('Container', () => {
 
 
   });
+
+  it('should properly skip plugins without preload functions', async () => {
+    /*eslint-disable */
+    class PreloadMissingPlugin {
+      constructor() { }
+    }
+    /*eslint-enable */
+    const container = new Container('#iframe', {
+      plugins: [
+        new PreloadMissingPlugin(),
+        new BasePlugin('base plugin')
+      ]
+    });
+
+    await sleep(100);
+
+    expect(container.plugins.length).to.equal(2);
+    expect(container.plugins[1].client).to.not.be.null;
+
+  });
 });
