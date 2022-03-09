@@ -19,10 +19,10 @@ export default class PluginManager {
     this.client.hidden = this.client.receive.bind(this.client);
     // @ts-ignore
     this.client.hiddenSend = this.client.send.bind(this.client);
-    this.client.receive = function(event) {
+    this.client.receive = function (event) {
       this.hidden(event);
     }.bind(this.client);
-    this.client.send = function(event, data) {
+    this.client.send = function (event, data) {
       this.hiddenSend(event, data);
     }.bind(this.client);
 
@@ -39,7 +39,7 @@ export default class PluginManager {
     const preloads = [];
     for (let i = 0, l = this.plugins.length; i < l; i++) {
       if (!this.plugins[i].preload) {
-        return;
+        continue;
       }
 
       preloads.push(
@@ -90,7 +90,7 @@ export default class PluginManager {
    * @returns {BasePlugin}
    */
   getPlugin(name) {
-    return this.plugins.find(function(plugin) {
+    return this.plugins.find(function (plugin) {
       return plugin.name === name;
     });
   }
