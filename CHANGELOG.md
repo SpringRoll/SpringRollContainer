@@ -5,8 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.3.1] unreleased
+## [2.3.2] unreleased
+
+## Fixed
+
+- re-re-named UserDataPlugin onUserDataRead and onUserDataRemove parameters from 'name' to 'data' to match Bellhop
+
+## [2.3.1] 2022-03-10
+
 ### Fixed
+
 - replaced `return` with `continue` in set up plugin function
 
 ## [2.3.0] - 2022-03-03
@@ -20,9 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bumped karma dependency from 5.2.3 to 6.3.14
 
 ## [2.2.5] - 2022-02-03
+
 - Upgraded follow-redirects dependency for security alert
 
 ## Fixed
+
 - Fixed error when reporting a plugin preload failure
 
 ## [2.2.4] - 2021-06-04
