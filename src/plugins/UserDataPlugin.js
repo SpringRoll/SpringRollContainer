@@ -5,7 +5,7 @@ import { BasePlugin } from '../base-plugins';
  * @export
  * @class UserDataPlugin
  * @extends {BasePlugin}
- * @property {SavedDataHandler} SavedDataHandler The handler to work with the savedData class 
+ * @property {SavedDataHandler} SavedDataHandler The handler to work with the savedData class
  */
 export class UserDataPlugin extends BasePlugin {
   /**
@@ -34,7 +34,7 @@ export class UserDataPlugin extends BasePlugin {
   }
 
   /**
-   * 
+   *
    * @memberof UserDataPlugin
    */
   init() {
@@ -54,14 +54,14 @@ export class UserDataPlugin extends BasePlugin {
   }
 
   /**
-   * Handler for the userDataRemove event 
+   * Handler for the userDataRemove event
    * @method onUserDataRemove
    * @private
-   * @param {string} name The name of the record to be removed
+   * @param {string} data The name of the record to be removed
    * @param {string} type The type of listener for bellhop to send to
    */
-  onUserDataRemove({ name, type }) { 
-    SavedDataHandler.remove(name, () => {
+  onUserDataRemove({ data, type }) {
+    SavedDataHandler.remove(data, () => {
       this.client.send(type);
     });
   }
@@ -69,12 +69,12 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * Handler for the userDataRead event
    * @method onUserDataRead
-   * @private   
-   * @param {string} name The name of the record to be removed
+   * @private
+   * @param {string} data The name of the record to be removed
    * @param {string} type The type of listener for bellhop to send to
    */
-  onUserDataRead({ name, type }) {
-    SavedDataHandler.read(name, value => this.client.send(type, value));
+  onUserDataRead({ data, type }) {
+    SavedDataHandler.read(data, value => this.client.send(type, value));
   }
 
   /**
@@ -91,7 +91,7 @@ export class UserDataPlugin extends BasePlugin {
   }
 
   // ----------------------------------------------------------------
-  //                      IndexedDB Manipulation        
+  //                      IndexedDB Manipulation
   // ----------------------------------------------------------------
 
   /**
@@ -100,12 +100,12 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} dbName The name of your IndexedDB database
    * @param {string} [dbVersion] The version number of the database
    * @param {JSON} [additions] Any additions to the structure of the database
-   * @param {array} [additions.stores] Any stores to be added into the database syntax: 
+   * @param {array} [additions.stores] Any stores to be added into the database syntax:
    * @param {string} [additions.stores.storeName] The name of the store
-   * @param {object} [additions.stores.options] Optionally, the option parameter for the createStore method 
-   * @param {array} [additions.indexes] Any Indexes to be added to the database syntax: 
+   * @param {object} [additions.stores.options] Optionally, the option parameter for the createStore method
+   * @param {array} [additions.indexes] Any Indexes to be added to the database syntax:
    * @param {string} [additions.indexes.storeName] The name of the store
-   * @param {object} [additions.indexes.options] Optionally, the option parameter for the createIndex method 
+   * @param {object} [additions.indexes.options] Optionally, the option parameter for the createIndex method
    * @param {string} type The type of listener for bellhop to send to
    */
   onIDBOpen({type, data: {dbName, dbVersion = null, additions = {}, deletions = {} }}) {
@@ -119,12 +119,12 @@ export class UserDataPlugin extends BasePlugin {
    * @param {string} type The type of listener for bellhop to send to
    * @param {string} storeName The name of the store from which the record will be updated
    * @param {*} value The value for the record with the given key to be updated
-   * @param {string} key the key of the record to be updated 
+   * @param {string} key the key of the record to be updated
    */
   onIDBAdd({type, data: { storeName, value, key}}) {
     this.savedDataHandler.IDBAdd(storeName, value, key, value => this.client.send(type, value));
   }
-  
+
   /**
    * Update a record from a given store
    * @param {string} type The type of listener for bellhop to send to
@@ -140,7 +140,7 @@ export class UserDataPlugin extends BasePlugin {
    * Remove a record from a store
    * @param {string} type The type of listener for bellhop to send to
    * @param {string} storeName The name of the store from which the record will be removed
-   * @param {*} key the key of the record to be removed 
+   * @param {*} key the key of the record to be removed
    */
   onIDBRemove({type, data: {storeName, key}}) {
     this.savedDataHandler.IDBRemove(storeName, key, value => this.client.send(type, value));
@@ -149,13 +149,13 @@ export class UserDataPlugin extends BasePlugin {
   /**
    * Return a record from a given store with a given key
    * @param {string} storeName The name of the store to read from
-   * @param {string} key The key for the record in the given store 
+   * @param {string} key The key for the record in the given store
    * @param {string} type The type of listener for bellhop to send to
    */
   onIDBRead({type, data: {storeName, key}}) {
     this.savedDataHandler.IDBRead(storeName, key, value => this.client.send(type, value));
   }
-  
+
   /**
    * Get all records from a store
    * @param {string} storeName The store to get all records from
@@ -165,7 +165,7 @@ export class UserDataPlugin extends BasePlugin {
   onIDBReadAll({ type, data: {storeName, count} }) {
     this.savedDataHandler.IDBReadAll(storeName, count, value => this.client.send(type, value));
   }
-  
+
   /**
    * Get the version of a given database
    * @param {string} dbName The name of the database to return the version of
@@ -176,7 +176,7 @@ export class UserDataPlugin extends BasePlugin {
     const sdh = new SavedDataHandler();
     sdh.IDBGetVersion(dbName, value => this.client.send(type, value));
   }
-  
+
   /**
    * Close the connection with the database
    * @param {string} type The type of listener for bellhop to send to
