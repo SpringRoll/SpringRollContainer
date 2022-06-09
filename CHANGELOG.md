@@ -6,12 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [2.3.4] 2022-06-08
+## [2.3.4] 2022-06-09
 
 ## Changed
 
 - Bumped path-parse dependency from 1.0.6 to 1.0.7
-- Bumped glob-parent dependenc from 5.1.1 to 5.1.2
+- Bumped glob-parent dependency from 5.1.1 to 5.1.2
 
 ## [2.3.3] 2022-05-05
 
