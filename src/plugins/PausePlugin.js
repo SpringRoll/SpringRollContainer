@@ -9,11 +9,13 @@ import { Button } from '../ui-elements';
 export class PausePlugin extends ButtonPlugin {
   /**
    * Creates an instance of PausePlugin.
-   * @param {string | HTMLElement} pauseButton selector string or HTML Element for the input(s) 
+   * @param {string | HTMLElement} pauseButton selector string or HTML Element for the input(s)
+   * @param {boolean} manageOwnVisibility whether the plugin should manage container's visibility or some other source will handle it
    * @memberof PausePlugin
    */
-  constructor(pauseButton) {
+  constructor(pauseButton, manageOwnVisibility = true) {
     super('Pause-Button-plugin');
+    this._manageOwnVisibility = manageOwnVisibility;
     this._appBlurred = false;
     this._containerBlurred = false;
     this._focusTimer = null;
@@ -35,7 +37,9 @@ export class PausePlugin extends ButtonPlugin {
       this.onContainerBlur.bind(this)
     );
 
-    if ( pauseButton instanceof HTMLElement ) {
+    this.pageVisibility.enabled = this.manageOwnVisibility;
+
+    if (pauseButton instanceof HTMLElement) {
       this._pauseButton[0] = new Button({
         button: pauseButton,
         onClick: onPauseToggle,
@@ -81,8 +85,27 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    * @returns {Boolean}
    */
-  get pause() { 
+  get pause() {
     return this._paused;
+  }
+
+  /**
+   * updates _manageOwnVisibility and also re-enables pageVisibility
+   * @memberof PausePlugin
+   * @param {Boolean} manageOwnVisibility
+   */
+  set manageOwnVisibility(manageOwnVisibility) {
+    this._manageOwnVisibility = manageOwnVisibility;
+
+    this.pageVisibility.enabled = this._manageOwnVisibility;
+  }
+
+  /**
+ * @memberof PausePlugin
+ * @returns {Boolean}
+ */
+  get manageOwnVisibility() {
+    return this._manageOwnVisibility;
   }
 
   /**
@@ -116,6 +139,9 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   manageFocus() {
+    if (!this.manageOwnVisibility) {
+      return;
+    }
     // Unfocus on the iframe
     if (this._keepFocus) {
       this.blurApp();
@@ -132,7 +158,7 @@ export class PausePlugin extends ButtonPlugin {
     // causing rapid toggling of the pause state and related issues,
     // especially in Internet Explorer
     this._focusTimer = setTimeout(
-      function() {
+      function () {
         this._focusTimer = null;
         // A manual pause cannot be overriden by focus events.
         // User must click the resume button.
@@ -215,9 +241,10 @@ export class PausePlugin extends ButtonPlugin {
    */
   init({ iframe }) {
     this.iframe = iframe;
+
     this.client.on(
       'features',
-      function(features) {
+      function (features) {
         if (features.disablePause) {
           this.pauseDisabled = true;
         }
