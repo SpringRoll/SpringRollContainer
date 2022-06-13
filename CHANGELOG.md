@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.4.0] unreleased
 
+## Added
+
+- Added `manageOwnVisibility` flag to the PausePlugin to make turning off visibility/focus management easier
+
 ## [2.3.4] 2022-06-09
 
 ## Changed
