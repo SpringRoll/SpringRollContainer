@@ -115,6 +115,23 @@ container.openPath('game.html');
 
 `PausePlugin` sets a className of 'paused' or 'unpaused' on individual pause buttons.
 
+The `PausePlugin` also has an optional flag
+`manageOwnVisibility`. This defaults to `true` and is intended to disable the visibility management of the plugin for environements
+that handle visibility/focus themselves. For most web based contexts this flag will not be needed.
+
+```javascript
+import { PausePlugin, Container } from 'springroll-container';
+
+const container = new Container("#game", {
+  plugins: [
+    // manageOwnVisibility is set to false which means the plugin will not send pause or unpause events if the app is no longer
+    // focused or other similar states (switched tabs, etc)
+    new PausePlugin('button#pause-button', false),
+  ]
+});
+container.openPath('game.html');
+```
+
 ### Captions
 
 There are two plugins that interact with captions: `CaptionsTogglePlugin`, and `CaptionsStylePlugin`.
