@@ -44,6 +44,54 @@ describe('PausePlugin', () => {
     expect(pp.pauseButton[0].classList.contains('unpaused')).to.be.true;
   });
 
+  describe('manageOwnVisibility', () => {
+    let disabledPlugin;
+    before(() => {
+      const button = document.createElement('button');
+      document.body.innerHTML = '';
+      button.id = 'ignore';
+      document.body.appendChild(button);
+      disabledPlugin = new PausePlugin('#ignore', false); // disable the focus management of the plugin
+      disabledPlugin.preload({ client: new Bellhop() });
+    });
+
+    it('should set manageOwnVisibility to false', () => {
+      // control
+      expect(pp.manageOwnVisibility).to.be.true;
+
+      expect(disabledPlugin.manageOwnVisibility).to.be.false;
+    });
+
+    it('should set pageVisibility.enabled to false', () => {
+      expect(disabledPlugin.pageVisibility.enabled).to.be.false;
+    });
+
+    it('manageFocus() should not change pause state', async () => {
+      expect(disabledPlugin.pause).to.be.false;
+
+      disabledPlugin._containerBlurred = true;
+      disabledPlugin._appBlurred = true;
+
+      disabledPlugin.manageFocus();
+      await sleep(150);
+      expect(disabledPlugin.pause).to.be.false;
+    });
+
+    it('setting flag to true should re-enable everything', async () => {
+      disabledPlugin.manageOwnVisibility = true;
+
+      expect(disabledPlugin.pageVisibility.enabled).to.be.true;
+      disabledPlugin._containerBlurred = true;
+      disabledPlugin._appBlurred = true;
+
+      disabledPlugin.manageFocus();
+      await sleep(150);
+      expect(disabledPlugin.pause).to.be.true;
+    });
+
+
+  });
+
   describe('manageFocus()', () => {
     it('should set pause to false if only app is blurred', async () => {
       pp.onPauseToggle(); //reset the manual pause state which was being set to true for some reason.
