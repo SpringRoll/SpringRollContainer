@@ -2,7 +2,7 @@ import { ButtonPlugin } from '../base-plugins';
 import { Button } from '../ui-elements';
 import { PageVisibility } from '..'
 export class PausePlugin extends ButtonPlugin {
-  constructor(pauseButton: string);
+  constructor(pauseButton: string,manageOwnVisibility = true);
 
   _appBlurred: boolean;
   _containerBlurred: boolean;
