@@ -70,9 +70,7 @@ export class PausePlugin extends ButtonPlugin {
     this._paused = paused;
 
     this.client.send(PausePlugin.pauseKey, paused);
-    this.client.trigger(paused ? 'paused' : 'resumed', {
-      paused: paused
-    });
+    this.client.trigger(paused ? 'paused' : 'resumed', { paused });
 
     for (let i = 0, l = this._pauseButton.length; i < l; i++) {
       this._pauseButton[i].button.classList.remove('unpaused');
@@ -118,7 +116,6 @@ export class PausePlugin extends ButtonPlugin {
       return;
     }
 
-    this._containerBlurred = true;
     this.iframe.contentWindow.focus();
   }
 
@@ -208,7 +205,6 @@ export class PausePlugin extends ButtonPlugin {
    */
   onContainerFocus() {
     this._containerBlurred = false;
-    this.focusApp();
     this.manageFocus();
   }
 
@@ -257,7 +253,7 @@ export class PausePlugin extends ButtonPlugin {
     this.client.on('focus', this.onFocus);
     this.client.on('keepFocus', this.onKeepFocus);
 
-    this.pause = this.pause;
+    this.pause = this._paused;
 
     //ensure app has focus after setting up plugin
     this.focusApp();
