@@ -69,6 +69,7 @@ export class PausePlugin extends ButtonPlugin {
     }
     this._paused = paused;
 
+    console.log('[PausePlugin] - sending pause to Application', paused);
     this.client.send(PausePlugin.pauseKey, paused);
     this.client.trigger(paused ? 'paused' : 'resumed', { paused });
 
@@ -136,9 +137,7 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   manageFocus() {
-    console.log(`[SpringRollContainer PausePlugin] - Focus Changed. 
-      ContainerBlurred: ${this._containerBlurred}
-      ApplicationBlurred: ${this._appBlurred}
+    console.log(`[PausePlugin] - Focus Changed. ContainerBlurred: ${this._containerBlurred}, ApplicationBlurred: ${this._appBlurred}
     `);
     if (!this.manageOwnVisibility) {
       return;
