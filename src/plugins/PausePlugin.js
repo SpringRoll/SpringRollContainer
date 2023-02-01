@@ -69,7 +69,6 @@ export class PausePlugin extends ButtonPlugin {
     }
     this._paused = paused;
 
-    console.log('[PausePlugin] - sending pause to Application', paused);
     this.client.send(PausePlugin.pauseKey, paused);
     this.client.trigger(paused ? 'paused' : 'resumed', { paused });
 
@@ -137,8 +136,6 @@ export class PausePlugin extends ButtonPlugin {
    * @memberof PausePlugin
    */
   manageFocus() {
-    console.log(`[PausePlugin] - Focus Changed. ContainerBlurred: ${this._containerBlurred}, ApplicationBlurred: ${this._appBlurred}
-    `);
     if (!this.manageOwnVisibility) {
       return;
     }
@@ -196,7 +193,6 @@ export class PausePlugin extends ButtonPlugin {
    * @private
    */
   onFocus($event) {
-    console.log(`[PausePlugin] - Application Focus Event: ${$event.data}`);
     this._appBlurred = !$event.data;
     this.manageFocus();
   }
@@ -208,7 +204,6 @@ export class PausePlugin extends ButtonPlugin {
    * @private
    */
   onContainerFocus() {
-    console.log('[PausePlugin] - onContainerFocus');
     this._containerBlurred = false;
     this.manageFocus();
   }
@@ -225,7 +220,7 @@ export class PausePlugin extends ButtonPlugin {
     //If container is blurred because application area was just focused,
     //the application's focus event will override the blur imminently.
     this._containerBlurred = this._appBlurred = true;
-    console.log('[PausePlugin] - onContainerBlur');
+
     this.manageFocus();
   }
 
@@ -261,8 +256,6 @@ export class PausePlugin extends ButtonPlugin {
 
     this.pause = this._paused;
 
-    //ensure app has focus after setting up plugin
-    // this.focusApp();
   }
 
   /**
