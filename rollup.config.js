@@ -38,7 +38,7 @@ const umd = Object.assign({}, base, {
     format: 'umd',
     name: 'springroll',
     extend: true,
-    sourceMap: true,
+    sourcemap: true,
     globals: {
       'bellhop-iframe': 'Bellhop'
     }
