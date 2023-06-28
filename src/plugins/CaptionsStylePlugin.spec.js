@@ -110,8 +110,21 @@ describe('CaptionsStylePlugin', () => {
   });
 
   it('.setCaptionsStyles()', () => {
-    cp.setCaptionsStyles({ font: 'comic-sans' });
+    expect(cp.colorRadios[0].radioGroup.inverted.checked).to.be.false;
+    expect(cp.colorRadios[1].radioGroup.inverted.checked).to.be.false;
+    expect(cp.alignmentRadios[0].radioGroup.top.checked).to.be.true;
+    expect(cp.alignmentRadios[1].radioGroup.top.checked).to.be.true;
+    expect(cp.fontSizeRadios[0].radioGroup.large.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.large.checked).to.be.true;
+
+    cp.setCaptionsStyles({ font: 'comic-sans', color: 'black', background: 'white', align: 'bottom', size: 'small' });
     expect(cp.captionsStyles.font).to.equal('comic-sans');
+    expect(cp.colorRadios[0].radioGroup.inverted.checked).to.be.true;
+    expect(cp.colorRadios[1].radioGroup.inverted.checked).to.be.true;
+    expect(cp.alignmentRadios[0].radioGroup.bottom.checked).to.be.true;
+    expect(cp.alignmentRadios[1].radioGroup.bottom.checked).to.be.true;
+    expect(cp.fontSizeRadios[0].radioGroup.small.checked).to.be.true;
+    expect(cp.fontSizeRadios[1].radioGroup.small.checked).to.be.true;
   });
 
   it('.clearCaptionStyles()', () => {
