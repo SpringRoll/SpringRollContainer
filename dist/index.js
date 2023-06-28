@@ -8011,10 +8011,6 @@ var CaptionsStylePlugin = /*#__PURE__*/function (_ButtonPlugin) {
     key: "onFontSizeChange",
     value: function onFontSizeChange(e) {
       this.setCaptionsStyles('size', e.target.value);
-
-      // this.fontSizeRadios.forEach((group) => {
-      //   group.radioGroup[e.target.value].checked = true;
-      // });
     }
 
     /**
@@ -8026,10 +8022,6 @@ var CaptionsStylePlugin = /*#__PURE__*/function (_ButtonPlugin) {
     key: "onAlignmentChange",
     value: function onAlignmentChange(e) {
       this.setCaptionsStyles('align', e.target.value);
-
-      // this.alignmentRadios.forEach((group) => {
-      //   group.radioGroup[e.target.value].checked = true;
-      // });
     }
 
     /**
@@ -8042,10 +8034,6 @@ var CaptionsStylePlugin = /*#__PURE__*/function (_ButtonPlugin) {
     value: function onColorChange(e) {
       var styles = e.target.value === 'default' ? DEFAULT_COLOR_STYLE : INVERTED_COLOR_STYLE;
       this.setCaptionsStyles(styles);
-
-      // this.colorRadios.forEach((group) => {
-      //   group.radioGroup[e.target.value].checked = true;
-      // });
     }
 
     /**
