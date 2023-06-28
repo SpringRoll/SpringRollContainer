@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.4] 2023-02-27
+
+### Fixed
+
+- Changed deploy workflow to only run when an actual release is made
+
+### Changed
+
+- Update Rollup to 3.17.2
+- Changed nvmrc version to v16.19.1
+- Bump minimatch from 3.0.4 to 3.1.2, and mocha from 8.2.1 to 10.2.0
+- Bump loader-utils from 1.1.0 to 1.4.2
+- Bump ua-parser-js from 0.7.31 to 0.7.33
+- Bump nanoid from 3.1.12 to 3.3.3
+- Bump socket.io-parser from 4.0.4 to 4.0.5
+- Bump engine.io from 6.1.3 to 6.4.0, and socket.io from 4.4.1 to 4.6.0
+
+
 ## [2.4.3] 2023-02-03
 
 ### Fixed
