@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CaptionsStylesPlugin now correctly updates radio button status when the style is changed programatically
+- Changed CaptionsStylePlugin to have distinct name
 
 ## [2.4.4] 2023-02-27
 

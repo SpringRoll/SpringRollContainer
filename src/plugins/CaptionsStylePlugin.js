@@ -46,7 +46,7 @@ export class CaptionsStylePlugin extends ButtonPlugin {
   constructor(fontSizeRadios, colorRadios, alignmentRadios,
     { defaultFontSize = 'medium', defaultColor = 'default', defaultAlignment = 'top' } = {}
   ) {
-    super('Caption-Button-Plugin');
+    super('Caption-Style-Plugin');
     this.sendAllProperties = this.sendAllProperties.bind(this);
     this.captionsStyles = Object.assign(
       {},
@@ -321,7 +321,7 @@ export class CaptionsStylePlugin extends ButtonPlugin {
 
     // update radios to match
     this.colorRadios.forEach((group) => {
-      const style = this.captionsStyles.color === 'white' ? 'default' : 'inverted'
+      const style = this.captionsStyles.color === 'white' ? 'default' : 'inverted';
       group.radioGroup[style].checked = true;
     });
     this.alignmentRadios.forEach((group) => {
