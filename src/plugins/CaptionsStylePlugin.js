@@ -252,10 +252,6 @@ export class CaptionsStylePlugin extends ButtonPlugin {
    */
   onFontSizeChange(e) {
     this.setCaptionsStyles('size', e.target.value);
-
-    this.fontSizeRadios.forEach((group) => {
-      group.radioGroup[e.target.value].checked = true;
-    });
   }
 
   /**
@@ -265,10 +261,6 @@ export class CaptionsStylePlugin extends ButtonPlugin {
    */
   onAlignmentChange(e) {
     this.setCaptionsStyles('align', e.target.value);
-
-    this.alignmentRadios.forEach((group) => {
-      group.radioGroup[e.target.value].checked = true;
-    });
   }
 
   /**
@@ -280,10 +272,6 @@ export class CaptionsStylePlugin extends ButtonPlugin {
     const styles = e.target.value === 'default' ? DEFAULT_COLOR_STYLE : INVERTED_COLOR_STYLE;
 
     this.setCaptionsStyles(styles);
-
-    this.colorRadios.forEach((group) => {
-      group.radioGroup[e.target.value].checked = true;
-    });
   }
 
   /**
@@ -330,6 +318,18 @@ export class CaptionsStylePlugin extends ButtonPlugin {
     } else if (typeof styles === 'string') {
       this.captionsStyles[styles] = value;
     }
+
+    // update radios to match
+    this.colorRadios.forEach((group) => {
+      const style = this.captionsStyles.color === 'white' ? 'default' : 'inverted'
+      group.radioGroup[style].checked = true;
+    });
+    this.alignmentRadios.forEach((group) => {
+      group.radioGroup[this.captionsStyles.align].checked = true;
+    });
+    this.fontSizeRadios.forEach((group) => {
+      group.radioGroup[this.captionsStyles.size].checked = true;
+    });
 
     SavedData.write(CaptionsStylePlugin.captionStyleKey, this.captionsStyles);
     if (this.client) {
