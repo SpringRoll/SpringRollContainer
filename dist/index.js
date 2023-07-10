@@ -7817,7 +7817,7 @@ var CaptionsStylePlugin = /*#__PURE__*/function (_ButtonPlugin) {
       _ref$defaultAlignment = _ref.defaultAlignment,
       defaultAlignment = _ref$defaultAlignment === void 0 ? 'top' : _ref$defaultAlignment;
     _classCallCheck(this, CaptionsStylePlugin);
-    _this = _super.call(this, 'Caption-Button-Plugin');
+    _this = _super.call(this, 'Caption-Style-Plugin');
     _this.sendAllProperties = _this.sendAllProperties.bind(_assertThisInitialized(_this));
     _this.captionsStyles = Object.assign({}, DEFAULT_CAPTIONS_STYLES, SavedData.read(CaptionsStylePlugin.captionStyleKey) || {});
 
