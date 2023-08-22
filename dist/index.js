@@ -8762,6 +8762,10 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
     _this._musicMuted = false;
     _this._voMuted = false;
     _this._sfxMuted = false;
+    _this.soundMuteEnabled = false;
+    _this.musicMuteEnabled = false;
+    _this.sfxMuteEnabled = false;
+    _this.voMuteEnabled = false;
     _this.soundVolume = 1;
     _this.musicVolume = 1;
     _this.sfxVolume = 1;
@@ -8952,9 +8956,15 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
   _createClass(SoundPlugin, [{
     key: "onSoundVolumeChange",
     value: function onSoundVolumeChange(e) {
+      if (this.soundSlidersLength <= 0) {
+        this.soundVolume = e.target.value;
+        return;
+      }
       this.soundVolume = this.soundSliders[0].sliderRange(Number(e.target.value));
-      this.soundMuted = !this.soundVolume;
-      this._checkSoundMute();
+      if (!this.soundVolume !== this.soundMuted) {
+        this.soundMuted = !this.soundVolume;
+        this._checkSoundMute();
+      }
       this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
       for (var i = 0; i < this.soundSlidersLength; i++) {
         this.soundSliders[i].value = this.soundVolume;
@@ -8968,9 +8978,15 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
   }, {
     key: "onMusicVolumeChange",
     value: function onMusicVolumeChange(e) {
+      if (this.musicSlidersLength <= 0) {
+        this.musicVolume = e.target.value;
+        return;
+      }
       this.musicVolume = this.musicSliders[0].sliderRange(Number(e.target.value));
-      this.musicMuted = !this.musicVolume;
-      this._checkSoundMute();
+      if (!this.musicVolume !== this.musicMuted) {
+        this.musicMuted = !this.musicVolume;
+        this._checkSoundMute();
+      }
       this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
       for (var i = 0; i < this.musicSlidersLength; i++) {
         this.musicSliders[i].value = this.musicVolume;
@@ -8984,9 +9000,15 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
   }, {
     key: "onVOVolumeChange",
     value: function onVOVolumeChange(e) {
+      if (this.voSlidersLength <= 0) {
+        this.voVolume = e.target.value;
+        return;
+      }
       this.voVolume = this.voSliders[0].sliderRange(Number(e.target.value));
-      this.voMuted = !this.voVolume;
-      this._checkSoundMute();
+      if (!this.voVolume !== this.voMuted) {
+        this.voMuted = !this.voVolume;
+        this._checkSoundMute();
+      }
       this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
       for (var i = 0; i < this.voSlidersLength; i++) {
         this.voSliders[i].value = this.voVolume;
@@ -9000,9 +9022,15 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
   }, {
     key: "onSFXVolumeChange",
     value: function onSFXVolumeChange(e) {
+      if (this.sfxSlidersLength <= 0) {
+        this.sfxVolume = e.target.value;
+        return;
+      }
       this.sfxVolume = this.sfxSliders[0].sliderRange(Number(e.target.value));
-      this.sfxMuted = !this.sfxVolume;
-      this._checkSoundMute();
+      if (!this.sfxVolume !== this.sfxMuted) {
+        this.sfxMuted = !this.sfxVolume;
+        this._checkSoundMute();
+      }
       this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
       for (var i = 0; i < this.sfxSlidersLength; i++) {
         this.sfxSliders[i].value = this.sfxVolume;
@@ -9084,6 +9112,12 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
         if (!features.data) {
           return;
         }
+
+        // Confirm that the mute features are supported
+        this.soundMuteEnabled = !!features.data.sound;
+        this.musicMuteEnabled = !!features.data.music;
+        this.sfxMuteEnabled = !!features.data.sfx;
+        this.voMuteEnabled = !!features.data.vo;
         for (var i = 0; i < this.soundButtonsLength; i++) {
           this.soundButtons[i].displayButton(features.data);
         }
@@ -9145,14 +9179,28 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
   }, {
     key: "sendAllProperties",
     value: function sendAllProperties() {
+      console.log('sending all properties from sound plugin');
       this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
       this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
       this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
       this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
-      this.sendProperty(SoundPlugin.voMutedKey, this.voMuted);
-      this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
-      this.sendProperty(SoundPlugin.musicMutedKey, this.musicMuted);
-      this.sendProperty(SoundPlugin.sfxMutedKey, this.sfxMuted);
+      console.log('sound, music, vo, sfx', this.soundMuteEnabled, this.musicMuteEnabled, this.voMuteEnabled, this.sfxMuteEnabled);
+      if (this.voMuteEnabled) {
+        console.log('voMUTED ENABLED');
+        this.sendProperty(SoundPlugin.voMutedKey, this.voMuted);
+      }
+      if (this.soundMuteEnabled) {
+        console.log('soundMUTED ENABLED');
+        this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
+      }
+      if (this.musicMuteEnabled) {
+        console.log('music MUTED ENABLED');
+        this.sendProperty(SoundPlugin.musicMutedKey, this.musicMuted);
+      }
+      if (this.sfxMuteEnabled) {
+        console.log('sfxMUTED ENABLED');
+        this.sendProperty(SoundPlugin.sfxMutedKey, this.sfxMuted);
+      }
     }
 
     /**
