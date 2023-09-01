@@ -5112,7 +5112,7 @@ var PluginManager = /*#__PURE__*/function () {
   return PluginManager;
 }();
 
-var version = "2.4.3";
+var version = "2.4.6";
 
 /**
  * The application container
