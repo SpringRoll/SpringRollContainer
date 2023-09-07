@@ -1,6 +1,6 @@
 {
   "name": "springroll-container",
-  "version": "2.4.6",
+  "version": "2.4.5",
   "description": "The iframe controller for interacting with SpringRoll applications",
   "main": "./dist/index.js",
   "license": "MIT",

@@ -5112,7 +5112,7 @@ var PluginManager = /*#__PURE__*/function () {
   return PluginManager;
 }();
 
-var version = "2.4.6";
+var version = "2.4.5";
 
 /**
  * The application container
@@ -9122,17 +9122,6 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
         this.musicVolumeEnabled = !!features.data.musicVolume;
         this.sfxVolumeEnabled = !!features.data.sfxVolume;
         this.voVolumeEnabled = !!features.data.voVolume;
-
-        // this.volumeEnabled = !!features.data.soundVolume 
-        //                     || !!features.data.musicVolume 
-        //                     || !!features.data.sfxVolume 
-        //                     || !!features.data.voVolume;
-
-        // this.muteEnabled = !!features.data.sound 
-        //                     || !!features.data.musi
-        //                     || !!features.data.sfx 
-        //                     || !!features.data.vo;
-
         for (var i = 0; i < this.soundButtonsLength; i++) {
           this.soundButtons[i].displayButton(features.data);
         }
@@ -9199,7 +9188,7 @@ var SoundPlugin = /*#__PURE__*/function (_ButtonPlugin) {
       this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
       this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
 
-      // to avoid the mute property overwriting the volum, mutes should only send if they're true
+      // to avoid the mute property overwriting the volume, mutes should only send if they're true
       // or the volume channel isn't enabled
       if (this.soundMuteEnabled && (this.soundMuted || !this.soundVolumeEnabled)) {
         this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
