@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - CaptionsStylesPlugin now correctly updates radio button status when the style is changed programatically
 - Changed CaptionsStylePlugin to have distinct name
+- added logic to SoundPlugin.sendAllProperties to ensure sound mutes don't overwrite volume
 
 ## [2.4.4] 2023-02-27
 
