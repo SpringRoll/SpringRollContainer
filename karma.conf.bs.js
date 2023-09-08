@@ -1,5 +1,6 @@
-const [umd] = require('./rollup.config');
-require('dotenv').config();
+// const [umd] = require('./rollup.config.mjs');
+import { umd } from './rollup.config.mjs';
+// require('dotenv').config();
 module.exports = function(config) {
   config.set({
     customLaunchers: {
