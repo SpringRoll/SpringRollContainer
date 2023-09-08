@@ -49,6 +49,7 @@
     "bellhop-iframe": "^3.2.0",
     "core-js": "^3.6.5",
     "http-proxy": "^1.18.1",
+    "webpack": "^5.88.2",
     "whatwg-fetch": "^3.0.0"
   },
   "keywords": [
