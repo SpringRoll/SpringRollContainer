@@ -1,4 +1,5 @@
-const [umd] = require('./rollup.config');
+// const [umd] = require('./rollup.config.mjs');
+import { umd } from './rollup.config.mjs';
 module.exports = function(config) {
   config.set({
     frameworks: ['mocha', 'chai'],
