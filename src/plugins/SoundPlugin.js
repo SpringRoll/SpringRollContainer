@@ -268,11 +268,14 @@ export class SoundPlugin extends ButtonPlugin {
       this.musicVolume = e.target.value;
       return;
     }
+
+    console.log('music volume change', e.target.value);
     this.musicVolume = this.musicSliders[0].sliderRange(
       Number(e.target.value)
     );
 
     if (!this.musicVolume !== this.musicMuted) {
+      console.log('!musicVolume !== music mute?', !this.musicVolume, this.musicMuted);
       this.musicMuted = !this.musicVolume;
       this._checkSoundMute();
     }
@@ -365,6 +368,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   _checkSoundMute() {
+    console.log('Checking sound Mute');
     this.soundMuted = this.sfxMuted && this.voMuted && this.musicMuted;
   }
 
@@ -467,7 +471,7 @@ export class SoundPlugin extends ButtonPlugin {
     this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
     this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
 
-    // to avoid the mute property overwriting the volume, mutes should only send if they're true
+    // to avoid the mute property overwriting the volume on startup, mutes should only send if they're true
     // or the volume channel isn't enabled
     if ( this.soundMuteEnabled && (this.soundMuted || !this.soundVolumeEnabled )) {
       this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
@@ -488,6 +492,12 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {boolean} muted
    */
   set soundMuted(muted) {
+    // if sound is NOT being muted and the sliders are enabled we don't want to send the value because it overwrites the games volume
+    if (!muted && this.soundVolumeEnabled) {
+      this._soundMuted = false;
+      return;
+    }
+    console.log('changing sound muted ', muted);
     this.setMuteProp('soundMuted', muted, this.soundButtons);
   }
 
