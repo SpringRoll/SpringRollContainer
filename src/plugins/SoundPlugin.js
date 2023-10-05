@@ -269,13 +269,11 @@ export class SoundPlugin extends ButtonPlugin {
       return;
     }
 
-    console.log('music volume change', e.target.value);
     this.musicVolume = this.musicSliders[0].sliderRange(
       Number(e.target.value)
     );
 
     if (!this.musicVolume !== this.musicMuted) {
-      console.log('!musicVolume !== music mute?', !this.musicVolume, this.musicMuted);
       this.musicMuted = !this.musicVolume;
       this._checkSoundMute();
     }
@@ -368,7 +366,6 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   _checkSoundMute() {
-    console.log('Checking sound Mute');
     this.soundMuted = this.sfxMuted && this.voMuted && this.musicMuted;
   }
 
@@ -497,7 +494,6 @@ export class SoundPlugin extends ButtonPlugin {
       this._soundMuted = false;
       return;
     }
-    console.log('changing sound muted ', muted);
     this.setMuteProp('soundMuted', muted, this.soundButtons);
   }
 
