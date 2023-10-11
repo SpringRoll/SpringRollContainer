@@ -39,6 +39,11 @@ export class SoundPlugin extends ButtonPlugin {
     this._voMuted = false;
     this._sfxMuted = false;
 
+    this._musicMutedByUser = false;
+    this._soundMutedByUser = false;
+    this._sfxMutedByUser = false;
+    this._voMutedByUser = false;
+
     this.soundMuteEnabled = false;
     this.musicMuteEnabled = false;
     this.sfxMuteEnabled = false;
@@ -246,10 +251,16 @@ export class SoundPlugin extends ButtonPlugin {
     this.soundVolume = this.soundSliders[0].sliderRange(
       Number(e.target.value)
     );
+    this.soundMuted = !this.soundVolume;
 
-    if (!this.soundVolume !== this.soundMuted) {
-      this.soundMuted = !this.soundVolume;
-      this._checkSoundMute();
+    if (!this._musicMutedByUser) {
+      this.musicMuted = this.soundMuted;
+    }
+    if (!this._sfxMutedByUser) {
+      this.sfxMuted = this.soundMuted;
+    }
+    if (!this._voMutedByUser) {
+      this.voMuted = this.soundMuted;
     }
 
     this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
@@ -273,10 +284,10 @@ export class SoundPlugin extends ButtonPlugin {
       Number(e.target.value)
     );
 
-    if (!this.musicVolume !== this.musicMuted) {
-      this.musicMuted = !this.musicVolume;
-      this._checkSoundMute();
-    }
+    // if (!this.musicVolume !== this.musicMuted) {
+    this.musicMuted = !this.musicVolume;
+    this._checkSoundMute();
+    // }
     this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
 
     for (let i = 0; i < this.musicSlidersLength; i++) {
@@ -294,11 +305,10 @@ export class SoundPlugin extends ButtonPlugin {
       return;
     }
     this.voVolume = this.voSliders[0].sliderRange(Number(e.target.value));
+   
+    this.voMuted = !this.voVolume;
+    this._checkSoundMute();
 
-    if (!this.voVolume !== this.voMuted) {      
-      this.voMuted = !this.voVolume;
-      this._checkSoundMute();
-    }
     this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
     for (let i = 0; i < this.voSlidersLength; i++) {
       this.voSliders[i].value = this.voVolume;
@@ -316,10 +326,9 @@ export class SoundPlugin extends ButtonPlugin {
     }
     this.sfxVolume = this.sfxSliders[0].sliderRange(Number(e.target.value));
 
-    if (!this.sfxVolume !== this.sfxMuted) {
-      this.sfxMuted = !this.sfxVolume;
-      this._checkSoundMute();
-    }
+    this.sfxMuted = !this.sfxVolume;
+    this._checkSoundMute();
+
     this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
 
     for (let i = 0; i < this.sfxSlidersLength; i++) {
@@ -333,9 +342,16 @@ export class SoundPlugin extends ButtonPlugin {
   onSoundToggle() {
     const muted = !this.soundMuted;
     this.soundMuted = muted;
-    this.musicMuted = muted;
-    this.voMuted = muted;
-    this.sfxMuted = muted;
+
+    if (!this._musicMutedByUser || muted) {
+      this.musicMuted = muted;
+    }
+    if (!this._sfxMutedByUser || muted) {
+      this.sfxMuted = muted;
+    }
+    if (!this._voMutedByUser || muted) {
+      this.voMuted = muted;
+    }
   }
 
   /**
@@ -343,6 +359,7 @@ export class SoundPlugin extends ButtonPlugin {
    */
   onMusicToggle() {
     this.musicMuted = !this.musicMuted;
+    this._musicMutedByUser = this.musicMuted;
     this._checkSoundMute();
   }
 
@@ -351,6 +368,7 @@ export class SoundPlugin extends ButtonPlugin {
    */
   onVOToggle() {
     this.voMuted = !this.voMuted;
+    this._voMutedByUser = this.voMuted;
     this._checkSoundMute();
   }
 
@@ -359,6 +377,7 @@ export class SoundPlugin extends ButtonPlugin {
    */
   onSFXToggle() {
     this.sfxMuted = !this.sfxMuted;
+    this._sfxMutedByUser = this.sfxMuted;
     this._checkSoundMute();
   }
 
@@ -375,9 +394,9 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {Element} element
    * @memberof SoundPlugin
    */
-  setMuteProp(key, value, element) {
+  setMuteProp(key, value, element, disableSend = false) {
     this['_' + key] = value;
-    this._setMuteProp(key, element, value);
+    this._setMuteProp(key, element, value, disableSend);
   }
 
   /**
@@ -489,12 +508,19 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {boolean} muted
    */
   set soundMuted(muted) {
-    // if sound is NOT being muted and the sliders are enabled we don't want to send the value because it overwrites the games volume
-    if (!muted && this.soundVolumeEnabled) {
-      this._soundMuted = false;
+    if (muted === this.soundMuted) {
+      // have to do this to make sure it gets set up properly on start up
+      this.setMuteProp('soundMuted', muted, this.soundButtons, true);
       return;
     }
-    this.setMuteProp('soundMuted', muted, this.soundButtons);
+
+    let disableSend = false;
+    // if volume is enabled and the channel is becoming unmuted we update everything but only send the volume
+    if (this.soundVolumeEnabled && !muted) {
+      this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
+      disableSend = true;
+    }
+    this.setMuteProp('soundMuted', muted, this.soundButtons, disableSend);
   }
 
   /**
@@ -509,7 +535,17 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {boolean} muted
    */
   set voMuted(muted) {
-    this.setMuteProp('voMuted', muted, this.voButtons);
+    let disableSend = false;
+    if (this.voMuted === muted) {
+      // have to do this to make sure it gets set up properly on start up
+      this.setMuteProp('voMuted', muted, this.voButtons, true);
+      return;
+    }
+    if ((this.voVolumeEnabled && !muted)) {
+      this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
+      disableSend = true;
+    }
+    this.setMuteProp('voMuted', muted, this.voButtons, disableSend);
   }
 
   /**
@@ -524,7 +560,18 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {boolean} muted
    */
   set musicMuted(muted) {
-    this.setMuteProp('musicMuted', muted, this.musicButtons);
+    if (this.musicMuted === muted) {
+      // have to do this to make sure it gets set up properly on start up
+      this.setMuteProp('musicMuted', muted, this.musicButtons, true);
+      return;  
+    }
+    let disableSend = false;
+    if (this.musicVolumeEnabled && !muted) {
+      this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
+      disableSend = true;
+    }
+
+    this.setMuteProp('musicMuted', muted, this.musicButtons, disableSend);
   }
 
   /**
@@ -539,7 +586,17 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {boolean} muted
    */
   set sfxMuted(muted) {
-    this.setMuteProp('sfxMuted', muted, this.sfxButtons);
+    if (this.sfxMuted === muted) {
+      // have to do this to make sure it gets set up properly on start up
+      this.setMuteProp('sfxMuted', muted, this.sfxButtons, true);
+      return;
+    }
+    let disableSend = false;
+    if (this.sfxVolumeEnabled && !muted) {
+      this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
+      disableSend = true;
+    }
+    this.setMuteProp('sfxMuted', muted, this.sfxButtons, disableSend);
   }
 
   /**
