@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - added check to prevent sub sound channel volumes being set to 0 causing soundVolume to be set to 1 in the game
+- Added/fixed logic in volume and toggle handlers to make sure everything stays in sync and respects user preferences better
 
 ## [2.4.5] 2023-09-08
 
