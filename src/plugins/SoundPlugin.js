@@ -284,10 +284,9 @@ export class SoundPlugin extends ButtonPlugin {
       Number(e.target.value)
     );
 
-    // if (!this.musicVolume !== this.musicMuted) {
     this.musicMuted = !this.musicVolume;
+    if (!this.musicMuted) { this._musicMutedByUser = false; }
     this._checkSoundMute();
-    // }
     this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
 
     for (let i = 0; i < this.musicSlidersLength; i++) {
@@ -305,7 +304,7 @@ export class SoundPlugin extends ButtonPlugin {
       return;
     }
     this.voVolume = this.voSliders[0].sliderRange(Number(e.target.value));
-   
+    if (!this.voMuted) { this._voMutedByUser = false; }
     this.voMuted = !this.voVolume;
     this._checkSoundMute();
 
@@ -325,7 +324,7 @@ export class SoundPlugin extends ButtonPlugin {
       return;
     }
     this.sfxVolume = this.sfxSliders[0].sliderRange(Number(e.target.value));
-
+    if (!this.sfxMuted) { this._sfxMutedByUser = false; }
     this.sfxMuted = !this.sfxVolume;
     this._checkSoundMute();
 
