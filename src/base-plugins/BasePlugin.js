@@ -52,10 +52,12 @@ export class BasePlugin {
    *
    * @param {string} prop
    * @param {any} value
+   * @param {Boolean} disableSend
    * @memberof BasePlugin
    */
-  sendProperty(prop, value) {
+  sendProperty(prop, value, disableSend = false) {
     SavedData.write(prop, value);
+    if (disableSend) { return; }
     this.client.send(prop, value);
   }
 
