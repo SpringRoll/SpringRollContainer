@@ -446,6 +446,7 @@ export class SoundPlugin extends ButtonPlugin {
         }
 
 
+        console.log('setting the mute props for sound et all');
         const soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
         const musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
         const sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
