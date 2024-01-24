@@ -444,6 +444,19 @@ export class SoundPlugin extends ButtonPlugin {
         for (let i = 0; i < this.voSlidersLength; i++) {
           this.voSliders[i].displaySlider(features.data);
         }
+
+
+        const soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
+        const musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
+        const sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
+        const voMuted = !!SavedData.read(SoundPlugin.voMutedKey);
+
+        // set the property in case buttons exist but disable the send here
+        // properties will be sent in sendAllProperties
+        this.setMuteProp('soundMuted', soundMuted, this.soundButtons, true);
+        this.setMuteProp('musicMuted', musicMuted, this.musicButtons, true);
+        this.setMuteProp('sfxMuted', sfxMuted, this.sfxButtons, true);
+        this.setMuteProp('voMuted', voMuted, this.voButtons, true);
       }.bind(this)
     );
   }
@@ -452,7 +465,6 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   start() {
-
     for (let i = 0; i < this.soundButtonsLength; i++) {
       this.soundButtons[i].enableButton();
     }
@@ -465,11 +477,6 @@ export class SoundPlugin extends ButtonPlugin {
     for (let i = 0; i < this.voButtonsLength; i++) {
       this.voButtons[i].enableButton();
     }
-
-    this.soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
-    this.musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
-    this.sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
-    this.voMuted = !!SavedData.read(SoundPlugin.voMutedKey);
 
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
