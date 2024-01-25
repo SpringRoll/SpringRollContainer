@@ -402,9 +402,11 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   init() {
+    console.log('sound plugin init');
     this.client.on(
       'features',
       function(features) {
+        console.log('features!', features);
         if (!features.data) {
           return;
         }
@@ -489,23 +491,32 @@ export class SoundPlugin extends ButtonPlugin {
    * @memberof SoundPlugin
    */
   sendAllProperties() {
-    this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
-    this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
-    this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
-    this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
+
+    if ( this.soundVolumeEnabled && this.soundSlidersLength > 0 ) {
+      this.sendProperty(SoundPlugin.soundVolumeKey, this.soundVolume);
+    }
+    if ( this.musicVolumeEnabled && this.musicSlidersLength > 0 ) {
+      this.sendProperty(SoundPlugin.musicVolumeKey, this.musicVolume);
+    }
+    if ( this.voVolumeEnabled && this.voSlidersLength > 0 ) {
+      this.sendProperty(SoundPlugin.voVolumeKey, this.voVolume);
+    }
+    if ( this.sfxVolumeEnabled && this.sfxSlidersLength > 0 ) {
+      this.sendProperty(SoundPlugin.sfxVolumeKey, this.sfxVolume);
+    }
 
     // to avoid the mute property overwriting the volume on startup, mutes should only send if they're true
     // or the volume channel isn't enabled
-    if ( this.soundMuteEnabled && (this.soundMuted || !this.soundVolumeEnabled )) {
+    if ( (this.soundButtonsLength > 0 && this.soundMuteEnabled) && (this.soundMuted || !this.soundVolumeEnabled )) {
       this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
     }
-    if ( this.musicMuteEnabled && (this.musicMuted || !this.musicVolumeEnabled )) {
+    if ( (this.musicButtonsLength > 0 && this.musicMuteEnabled) && (this.musicMuted || !this.musicVolumeEnabled )) {
       this.sendProperty(SoundPlugin.musicMutedKey, this.musicMuted);
     }
-    if ( this.voMuteEnabled && ( this.voMuted || !this.voVolumeEnabled )) {
+    if ( (this.voButtonsLength > 0 && this.voMuteEnabled) && ( this.voMuted || !this.voVolumeEnabled )) {
       this.sendProperty(SoundPlugin.voMutedKey, this.voMuted);
     }
-    if ( this.sfxMuteEnabled && (this.sfxMuted || !this.sfxVolumeEnabled )) {
+    if ( (this.sfxButtonsLength > 0 && this.sfxMuteEnabled) && (this.sfxMuted || !this.sfxVolumeEnabled )) {
       this.sendProperty(SoundPlugin.sfxMutedKey, this.sfxMuted);
     }
   }
