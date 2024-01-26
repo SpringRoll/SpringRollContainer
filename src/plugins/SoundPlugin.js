@@ -401,8 +401,9 @@ export class SoundPlugin extends ButtonPlugin {
   /**
    * @memberof SoundPlugin
    */
-  init() {
-    console.log('sound plugin init');
+  async preload({ client }) {
+    this.client = client;
+    console.log('sound plugin preload');
     this.client.on(
       'features',
       function(features) {
