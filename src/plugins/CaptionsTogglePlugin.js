@@ -65,7 +65,9 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
           return;
         }
 
-        this.captionsMuted = !!SavedData.read(CaptionsTogglePlugin.captionsToggleKey);
+        const captionsMuted = !!SavedData.read(CaptionsTogglePlugin.captionsToggleKey);
+
+        this.setMuteProp('captionsMuted', captionsMuted, this._captionsButtons, true);
 
       }.bind(this)
     );
@@ -74,8 +76,9 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
   * @memberof CaptionsTogglePlugin
   */
   start() {
-    this.captionsMuted = !!SavedData.read(CaptionsTogglePlugin.captionsToggleKey);
-
+    for (let i = 0; i < this.captionsButtonsLength; i++) {
+      this.captionsButtons[i].enableButton();
+    }
     this.client.on('loaded', this.sendAllProperties);
     this.client.on('loadDone', this.sendAllProperties);
   }

@@ -7,16 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.5.0] - unreleased
 
+### Changed
+
+- Prevent SoundPlugin from sending mute state before Application is loaded. 
+- Prevent CaptionsTogglePlugin from sending mute state before Application is loaded. 
+- updated .nvmrc to 18
+
 ### Added
 
 - Added a check to make sure plugin preloads are finished before opening up the application to avoid race conditions. 
 
-## [2.4.6] - unreleased
+https://github.com/SpringRoll/SpringRollContainer/pull/169
+
 
 ### Fixed
 
 - added check to prevent sub sound channel volumes being set to 0 causing soundVolume to be set to 1 in the game
-- Added/fixed logic in volume and toggle handlers to make sure everything stays in sync and respects user preferences better
+- Added/fixed logic in `SoundPlugin` volume and toggle handlers to make sure everything stays in sync and respects user preferences better
 
 ## [2.4.5] 2023-09-08
 
