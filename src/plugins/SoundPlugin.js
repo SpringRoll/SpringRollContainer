@@ -403,11 +403,9 @@ export class SoundPlugin extends ButtonPlugin {
    */
   async preload({ client }) {
     this.client = client;
-    console.log('sound plugin preload');
     this.client.on(
       'features',
       function(features) {
-        console.log('features!', features);
         if (!features.data) {
           return;
         }
@@ -448,8 +446,6 @@ export class SoundPlugin extends ButtonPlugin {
           this.voSliders[i].displaySlider(features.data);
         }
 
-
-        console.log('setting the mute props for sound et all');
         const soundMuted = !!SavedData.read(SoundPlugin.soundMutedKey);
         const musicMuted = !!SavedData.read(SoundPlugin.musicMutedKey);
         const sfxMuted = !!SavedData.read(SoundPlugin.sfxMutedKey);
