@@ -413,10 +413,10 @@ export class SoundPlugin extends ButtonPlugin {
         }
         
         // Confirm that the mute features are supported
-        this.soundMuteEnabled = !!features.data.sound;
-        this.musicMuteEnabled = !!features.data.music;
-        this.sfxMuteEnabled = !!features.data.sfx;
-        this.voMuteEnabled = !!features.data.vo;
+        this.soundMutedEnabled = !!features.data.sound;
+        this.musicMutedEnabled = !!features.data.music;
+        this.sfxMutedEnabled = !!features.data.sfx;
+        this.voMutedEnabled = !!features.data.vo;
         
         this.soundVolumeEnabled = !!features.data.soundVolume;
         this.musicVolumeEnabled = !!features.data.musicVolume;
