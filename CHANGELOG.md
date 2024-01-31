@@ -17,8 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a check to make sure plugin preloads are finished before opening up the application to avoid race conditions. 
 
-https://github.com/SpringRoll/SpringRollContainer/pull/169
-
+## [2.4.6] - 2023-10-16
 
 ### Fixed
 
