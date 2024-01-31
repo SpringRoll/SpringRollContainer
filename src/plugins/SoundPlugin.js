@@ -44,10 +44,10 @@ export class SoundPlugin extends ButtonPlugin {
     this._sfxMutedByUser = false;
     this._voMutedByUser = false;
 
-    this.soundMuteEnabled = false;
-    this.musicMuteEnabled = false;
-    this.sfxMuteEnabled = false;
-    this.voMuteEnabled = false;
+    this.soundMutedEnabled = false;
+    this.musicMutedEnabled = false;
+    this.sfxMutedEnabled = false;
+    this.voMutedEnabled = false;
 
     this.soundVolume = 1;
     this.musicVolume = 1;
@@ -504,16 +504,16 @@ export class SoundPlugin extends ButtonPlugin {
 
     // to avoid the mute property overwriting the volume on startup, mutes should only send if they're true
     // or the volume channel isn't enabled
-    if ( (this.soundButtonsLength > 0 && this.soundMuteEnabled) && (this.soundMuted || !this.soundVolumeEnabled )) {
+    if ( (this.soundButtonsLength > 0 && this.soundMutedEnabled) && (this.soundMuted || !this.soundVolumeEnabled )) {
       this.sendProperty(SoundPlugin.soundMutedKey, this.soundMuted);
     }
-    if ( (this.musicButtonsLength > 0 && this.musicMuteEnabled) && (this.musicMuted || !this.musicVolumeEnabled )) {
+    if ( (this.musicButtonsLength > 0 && this.musicMutedEnabled) && (this.musicMuted || !this.musicVolumeEnabled )) {
       this.sendProperty(SoundPlugin.musicMutedKey, this.musicMuted);
     }
-    if ( (this.voButtonsLength > 0 && this.voMuteEnabled) && ( this.voMuted || !this.voVolumeEnabled )) {
+    if ( (this.voButtonsLength > 0 && this.voMutedEnabled) && ( this.voMuted || !this.voVolumeEnabled )) {
       this.sendProperty(SoundPlugin.voMutedKey, this.voMuted);
     }
-    if ( (this.sfxButtonsLength > 0 && this.sfxMuteEnabled) && (this.sfxMuted || !this.sfxVolumeEnabled )) {
+    if ( (this.sfxButtonsLength > 0 && this.sfxMutedEnabled) && (this.sfxMuted || !this.sfxVolumeEnabled )) {
       this.sendProperty(SoundPlugin.sfxMutedKey, this.sfxMuted);
     }
   }
