@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added a check to make sure plugin preloads are finished before opening up the application to avoid race conditions. 
 
+## [2.4.6] - 2023-10-16
+
 ### Fixed
 
 - added check to prevent sub sound channel volumes being set to 0 causing soundVolume to be set to 1 in the game
