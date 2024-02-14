@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.6] - 2023-10-16
+
+### Fixed
+
+- added check to prevent sub sound channel volumes being set to 0 causing soundVolume to be set to 1 in the game
+- Added/fixed logic in `SoundPlugin` volume and toggle handlers to make sure everything stays in sync and respects user preferences better
+
+## [2.4.5] 2023-09-08
+
+### Fixed
+
+- CaptionsStylesPlugin now correctly updates radio button status when the style is changed programatically
+- Changed CaptionsStylePlugin to have distinct name
+- added logic to SoundPlugin.sendAllProperties to ensure sound mutes don't overwrite volume
+
 ## [2.4.4] 2023-02-27
 
 ### Fixed
