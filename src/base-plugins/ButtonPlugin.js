@@ -62,6 +62,7 @@ export class ButtonPlugin extends BasePlugin {
    * @memberof ButtonPlugin
    */
   _setMuteProp(prop, button, muted, disableSend = false) {
+    console.log('_setmuteprop', prop, muted, disableSend);
     if (Array.isArray(button)) {
       button.forEach(b => this.changeMutedState(b, muted));
     } else {

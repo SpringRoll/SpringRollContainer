@@ -15,6 +15,7 @@ export default class PluginManager {
    */
   constructor({ plugins = [] }) {
     this.client = new Bellhop();
+    this.preloading = true;
     // @ts-ignore
     this.client.hidden = this.client.receive.bind(this.client);
     // @ts-ignore
@@ -56,6 +57,9 @@ export default class PluginManager {
       this.plugins = this.plugins.filter(
         plugin => plugin.preloadFailed !== true
       );
+
+      this.preloading = false;
+      this.client.trigger('preloadsFinished');
 
       //init
       this.plugins.forEach(plugin => {

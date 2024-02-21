@@ -28,6 +28,7 @@ export class Container extends PluginManager {
     super({ plugins });
 
     this.iframe = iframeOrSelector instanceof HTMLIFrameElement ? iframeOrSelector : document.querySelector(iframeOrSelector);
+    this.iframe.style.backgroundColor = 'black';
 
     if (null === this.iframe) {
       throw new Error('No iframe was found with the provided selector');
@@ -141,6 +142,15 @@ export class Container extends PluginManager {
    * @memberof Container
    */
   _internalOpen(userPath, { singlePlay = false, playOptions = null } = {}) {
+    // If plugin preloads are still going wait for them to finish before opening the Application
+    if (this.preloading) {
+      this.client.on('preloadsFinished', () => {
+        this._internalOpen(userPath, { singlePlay, playOptions });
+      });
+
+      return;
+    }
+
     const options = { singlePlay, playOptions };
     this.reset();
 
