@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed order of parameters in `_setMuteProp()` call in `CaptionsTogglePlugin` so Container correctly sets initial state of toggle button
 
-## [2.5.0] - unreleased
+## [2.5.0] - 2023-02-21
 
 ### Changed
 
