@@ -68,6 +68,11 @@ export class SoundPlugin extends ButtonPlugin {
     this.sfxButtons = [];
     this.voButtons= [];
 
+    if (stepOverride >= 1 || stepOverride <= 0) {
+      console.warn('SpringRollContainer [SoundPlugin] - stepOverride must be between 0 and 1, defaulting to 0.1');
+      stepOverride = 0.1;
+    }
+
     if (soundSliders instanceof HTMLElement) {
       this.soundSliders[0] = new Slider({
         slider: soundSliders,
