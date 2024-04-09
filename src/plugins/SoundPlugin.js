@@ -2,6 +2,8 @@ import { SavedData } from '../SavedData';
 import { ButtonPlugin } from '../base-plugins';
 import { Slider, Button } from '../ui-elements';
 
+const DEFAULT_STEP_VALUE = 0.1; // default step value for sliders
+
 /**
  * @export
  * @class SoundPlugin
@@ -19,6 +21,7 @@ export class SoundPlugin extends ButtonPlugin {
    * @param {string | HTMLElement} [musicSliders] selector string or HTML Element for the input(s)
    * @param {string | HTMLElement} [sfxSliders] selector string or HTML Element for the input(s)
    * @param {string | HTMLElement} [voSliders] selector string or HTML Element for the input(s)
+   * @param {number} [stepOverride=0.1] value to use as range input step value
    * @memberof SoundPlugin
    */
   constructor({
@@ -29,7 +32,8 @@ export class SoundPlugin extends ButtonPlugin {
     soundSliders,
     musicSliders,
     sfxSliders,
-    voSliders
+    voSliders,
+    stepOverride = DEFAULT_STEP_VALUE,
   } = {}) {
     super('Sound-Button-Plugin');
     const saved = SavedData.read(SoundPlugin.soundMutedKey);
@@ -67,6 +71,7 @@ export class SoundPlugin extends ButtonPlugin {
     if (soundSliders instanceof HTMLElement) {
       this.soundSliders[0] = new Slider({
         slider: soundSliders,
+        step: stepOverride,
         control: SoundPlugin.soundVolumeKey,
         defaultValue: this.soundVolume
       });
@@ -74,6 +79,7 @@ export class SoundPlugin extends ButtonPlugin {
       document.querySelectorAll(soundSliders).forEach((slider) => {
         const newSlider = new Slider({
           slider: slider,
+          step: stepOverride,
           control: SoundPlugin.soundVolumeKey,
           defaultValue: this.soundVolume
         });
@@ -85,6 +91,7 @@ export class SoundPlugin extends ButtonPlugin {
     if (musicSliders instanceof HTMLElement) {
       this.musicSliders[0] = new Slider({
         slider: musicSliders,
+        step: stepOverride,
         control: SoundPlugin.musicVolumeKey,
         defaultValue: this.musicVolume
       });
@@ -92,6 +99,7 @@ export class SoundPlugin extends ButtonPlugin {
       document.querySelectorAll(musicSliders).forEach((slider) => {
         const newSlider = new Slider({
           slider: slider,
+          step: stepOverride,
           control: SoundPlugin.musicVolumeKey,
           defaultValue: this.musicVolume
         });
@@ -103,6 +111,7 @@ export class SoundPlugin extends ButtonPlugin {
     if (sfxSliders instanceof HTMLElement) {
       this.sfxSliders[0] = new Slider({
         slider: sfxSliders,
+        step: stepOverride,
         control: SoundPlugin.sfxVolumeKey,
         defaultValue: this.sfxVolume
       });
@@ -110,6 +119,7 @@ export class SoundPlugin extends ButtonPlugin {
       document.querySelectorAll(sfxSliders).forEach((slider) => {
         const newSlider = new Slider({
           slider: slider,
+          step: stepOverride,
           control: SoundPlugin.sfxVolumeKey,
           defaultValue: this.sfxVolume
         });
@@ -121,6 +131,7 @@ export class SoundPlugin extends ButtonPlugin {
     if (voSliders instanceof HTMLElement) {
       this.voSliders[0] = new Slider({
         slider: voSliders,
+        step: stepOverride,
         control: SoundPlugin.voVolumeKey,
         defaultValue: this.voVolume
       });
@@ -128,6 +139,7 @@ export class SoundPlugin extends ButtonPlugin {
       document.querySelectorAll(voSliders).forEach((slider) => {
         const newSlider = new Slider({
           slider: slider,
+          step: stepOverride,
           control: SoundPlugin.voVolumeKey,
           defaultValue: this.voVolume
         });
