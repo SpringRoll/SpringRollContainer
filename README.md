@@ -197,6 +197,10 @@ The sound plugin supports a total of eight controls:
 - A global sound volume slider
 - Volume sliders for each of the three audio channels mentioned above - VO, SFX, Music
 
+The sound plugin also supports customizing the step value (default = 0.1) of the volume sliders via the `stepOverride` param, this can be any value between 0 and 1. 
+
+e.g. if you'd like your volume slider to have only 4 volume levels you'd set it to 0.25 and the slider would use 0, 0.25, 0.5, 0.75, and 1. 
+
 ```javascript
 import { SoundPlugin, Container } from 'springroll-container';
 
@@ -213,6 +217,7 @@ const container = new Container('#game', {
       musicSliders: '#musicSlider', // controls the game's music volume
       voSliders: '#voSlider', // controls the game's voice-over volume
       sfxSliders: '#sfxSlider', // controls the game's sound effects volume
+      stepOverride: 0.1 // allows control over the step value for the range inputs
     }),
   ]
 });
