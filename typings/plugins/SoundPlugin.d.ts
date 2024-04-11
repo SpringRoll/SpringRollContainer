@@ -9,7 +9,8 @@ type SoundPluginOptions = {
   soundSliders?: string,
   musicSliders?: string,
   sfxSliders?: string,
-  voSliders?: string
+  voSliders?: string,
+  stepOverride?: number
 };
 
 export class SoundPlugin extends ButtonPlugin {

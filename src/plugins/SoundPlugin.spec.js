@@ -334,6 +334,138 @@ describe('SoundPlugin', () => {
     expect(sp.voSliders[0].slider.style.display).to.equal('');
   });
 
+  it('should allow custom step value for sliders', () => {
+    document.body.innerHTML = '';
+    const sliderOptions = {
+      soundSliders: 'ss',
+      musicSliders: 'ms',
+      sfxSliders: 'sfxs',
+      voSliders: 'vs',
+      stepOverride: 0.25,
+    };
+
+    Object.keys(sliderOptions).forEach(key => {
+      if (/Slider/.test(key)) {
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = sliderOptions[key];
+        sliderOptions[key] = slider;
+        document.body.appendChild(slider);
+      }
+    });
+
+    sp = new SoundPlugin(sliderOptions);
+    sp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
+
+    new Container('#sound-plugin-iframe').client.trigger(
+      'features'
+    );
+
+    //sliders
+    expect(sp.soundSliders[0].slider.step).to.equal('0.25');
+
+    expect(sp.musicSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.musicSliders[0].slider.step).to.equal('0.25');
+
+    expect(sp.sfxSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.sfxSliders[0].slider.step).to.equal('0.25');
+
+    expect(sp.voSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.voSliders[0].slider.step).to.equal('0.25');
+  });
+
+  it('should ignore step value greater than or equal to 1', () => {
+    document.body.innerHTML = '';
+    const sliderOptions = {
+      soundSliders: 'ss',
+      musicSliders: 'ms',
+      sfxSliders: 'sfxs',
+      voSliders: 'vs',
+      stepOverride: 1,
+    };
+
+    Object.keys(sliderOptions).forEach(key => {
+      if (/Slider/.test(key)) {
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = sliderOptions[key];
+        sliderOptions[key] = slider;
+        document.body.appendChild(slider);
+      }
+    });
+
+    sp = new SoundPlugin(sliderOptions);
+    sp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
+
+    new Container('#sound-plugin-iframe').client.trigger(
+      'features'
+    );
+
+    //sliders
+    expect(sp.soundSliders[0].slider.step).to.equal('0.1');
+
+    expect(sp.musicSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.musicSliders[0].slider.step).to.equal('0.1');
+
+    expect(sp.sfxSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.sfxSliders[0].slider.step).to.equal('0.1');
+
+    expect(sp.voSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.voSliders[0].slider.step).to.equal('0.1');
+  });
+
+  it('should ignore step value less than or equal to 0', () => {
+    document.body.innerHTML = '';
+    const sliderOptions = {
+      soundSliders: 'ss',
+      musicSliders: 'ms',
+      sfxSliders: 'sfxs',
+      voSliders: 'vs',
+      stepOverride: 0,
+    };
+
+    Object.keys(sliderOptions).forEach(key => {
+      if (/Slider/.test(key)) {
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = sliderOptions[key];
+        sliderOptions[key] = slider;
+        document.body.appendChild(slider);
+      }
+    });
+
+    sp = new SoundPlugin(sliderOptions);
+    sp.preload({ client: new Bellhop() });
+
+    const iframe = document.createElement('iframe');
+    iframe.id = 'sound-plugin-iframe';
+    document.body.appendChild(iframe);
+
+    new Container('#sound-plugin-iframe').client.trigger(
+      'features'
+    );
+
+    //sliders
+    expect(sp.soundSliders[0].slider.step).to.equal('0.1');
+
+    expect(sp.musicSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.musicSliders[0].slider.step).to.equal('0.1');
+
+    expect(sp.sfxSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.sfxSliders[0].slider.step).to.equal('0.1');
+
+    expect(sp.voSliders[0].slider).to.be.instanceof(HTMLInputElement);
+    expect(sp.voSliders[0].slider.step).to.equal('0.1');
+  });
+
   it('should work without any controls', () => {
     sp = new SoundPlugin();
     sp.preload({ client: new Bellhop() });
