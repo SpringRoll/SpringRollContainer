@@ -67,7 +67,7 @@ export class CaptionsTogglePlugin extends ButtonPlugin {
 
         const captionsMuted = !!SavedData.read(CaptionsTogglePlugin.captionsToggleKey);
 
-        this._setMuteProp('captionsMuted', captionsMuted, this._captionsButtons, true);
+        this._setMuteProp('captionsMuted', this._captionsButtons, captionsMuted, true);
 
       }.bind(this)
     );
