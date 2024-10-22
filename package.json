@@ -4,7 +4,6 @@
   "description": "The iframe controller for interacting with SpringRoll applications",
   "main": "./dist/index.js",
   "license": "MIT",
-  "type": "module",
   "typings": "typings/index.d.ts",
   "repository": {
     "type": "git",
