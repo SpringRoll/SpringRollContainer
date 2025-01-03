@@ -139,10 +139,6 @@ export class PausePlugin extends ButtonPlugin {
     if (!this.manageOwnVisibility) {
       return;
     }
-    // Unfocus on the iframe
-    if (this._keepFocus) {
-      this.blurApp();
-    }
 
     // we only need one delayed call, at the end of any
     // sequence of rapidly-fired blur/focus events
@@ -157,13 +153,10 @@ export class PausePlugin extends ButtonPlugin {
     this._focusTimer = setTimeout(
       function () {
         this._focusTimer = null;
-        // A manual pause cannot be overriden by focus events.
-        // User must click the resume button.
-        if (this._isManualPause) {
-          return;
-        }
 
-        this.pause = Boolean(this._containerBlurred && this._appBlurred);
+        if (this._appBlurred && this._containerBlurred) {
+          this.pause = true;
+        }
 
         // Focus on the content window when blurring the app
         // but selecting the container
