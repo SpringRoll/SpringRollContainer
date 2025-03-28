@@ -1,3 +1,5 @@
+## <span style="color:red"> Important: This repo is no longer being actively maintained and is set to be archived by the end of 2025! </span>
+
 # SpringRoll Container
 
 The SpringRoll Container is an `<iframe>` controller for interacting with SpringRoll applications hosted locally or in [SpringRoll Connect](https://github.com/SpringRoll/SpringRollConnect).
